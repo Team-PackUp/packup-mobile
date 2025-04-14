@@ -1,0 +1,40 @@
+{
+  "login": "로그인",
+  "@login": {
+    "description": "로그인"
+  },
+  "id": "아이디",
+  "@id": {
+    "description": "아이디"
+  },
+  "password": "비밀번호",
+  "@password": {
+    "description": "비밀번호"
+  },
+  "join": "회원가입",
+  "@join": {
+    "description": "회원가입"
+  },
+  "profile": "{name}님의 개인 정보",
+  "@my_info": {
+    "description": "개인 페이지 텍스트",
+    "placeholders": {
+      "name": {
+        "description": "사용자의 이름",
+        "example": "홍길동"
+      }
+    }
+  },
+  "empty_id": "아이디를 입력해주세요",
+  "@empty_id": {
+    "description": "아이디 미입력"
+  },
+  "empty_password": "비밀번호를 입력해주세요",
+  "@empty_password": {
+    "description": "비밀번호 미입력"
+  },
+  "invalid_credentials": "아이디 또는 비밀번호가 잘못되었습니다",
+  "@invalid_credentials_description": {
+    "description": "잘못된 아이디 혹은 비밀번호 입력"
+  }
+}

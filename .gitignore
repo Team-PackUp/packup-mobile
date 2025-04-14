@@ -1,0 +1,87 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+.env
+
+# generated_plugin_registrant.dart 자동 생성 파일
+**/generated_plugin_registrant.*
+
+# Flutter ephemeral 디렉토리들
+**/Flutter/ephemeral/
+
+# Firebase App ID JSON
+firebase_app_id_file.json
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Android 기타
+/android/.gradle/
+/android/local.properties
+/android/.idea/
+/android/.settings/
+
+# iOS
+/ios/Pods/
+/ios/.symlinks/
+/ios/Flutter/App.framework
+/ios/Flutter/Flutter.framework
+/ios/Flutter/Flutter.podspec
+/ios/Flutter/Generated.xcconfig
+/ios/Runner.xcworkspace
+/ios/DerivedData/
+
+# macOS
+/macos/Pods/
+/macos/Flutter/ephemeral/
+/macos/Runner.xcworkspace
+/macos/Podfile.lock
+
+# Windows
+/windows/Flutter/ephemeral/
+/windows/Runner/generated_plugin_registrant.cc
+
+# Linux
+/linux/Flutter/ephemeral/
+/linux/runner/generated_plugin_registrant.cc
+
+# Web (임시 빌드 디렉토리)
+/web/build/
+/web/.dart_tool/

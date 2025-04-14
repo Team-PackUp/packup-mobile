@@ -1,0 +1,1 @@
+const KAKAO_LOGIN_BTN = 'assets/image/login/kakao_login_btn.png';

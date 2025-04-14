@@ -1,0 +1,40 @@
+{
+  "login": "LOGIN",
+  "@login": {
+    "description": "로그인"
+  },
+  "id": "id",
+  "@id": {
+    "description": "아이디"
+  },
+  "password": "password",
+  "@password": {
+    "description": "비밀번호"
+  },
+  "join": "JOIN",
+  "@join": {
+    "description": "회원가입"
+  },
+  "profile": "Profile of {name}",
+  "@my_info": {
+    "description": "개인 페이지",
+    "placeholders": {
+      "name": {
+        "description": "User's name",
+        "example": "Alice"
+      }
+    }
+  },
+  "empty_id": "Empty ID",
+  "@empty_id": {
+    "description": "아이디 미입력"
+  },
+  "empty_password": "Empty password",
+  "@empty_password": {
+    "description": "비밀번호 미입력"
+  },
+  "invalid_credentials": "Wrong ID or password",
+  "@invalid_credentials_description": {
+    "description": "잘못된 아이디 혹은 비밀번호 입력"
+  }
+}
