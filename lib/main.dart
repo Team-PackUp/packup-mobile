@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'l10n/app_localizations.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:mob/Common/router.dart';
+import 'package:packup/common/router.dart';
 import 'package:provider/provider.dart';
 
-import 'package:mob/theme/theme.dart';
+import 'package:packup/theme/theme.dart';
 
-import 'package:mob/view/login/login_view_model.dart';
+import 'package:packup/view/login/login_view_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
@@ -69,7 +70,8 @@ class PackUp extends StatelessWidget {
               AppLocalizations.delegate, // 코드 추가
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate
+              GlobalCupertinoLocalizations.delegate,
+              FlutterQuillLocalizations.delegate,
             ],
         );
       },

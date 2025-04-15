@@ -1,10 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mob/widget/payment/toss/toss_payment/screen/tosspayment_widget/widget_home.dart';
+import 'package:packup/widget/payment/toss/toss_payment/screen/tosspayment_widget/widget_home.dart';
 import 'package:tosspayments_widget_sdk_flutter/utils/phase.dart';
-import 'package:mob/widget/payment/toss/toss_payment/component.dart';
-import 'package:mob/widget/payment/toss/toss_payment/screen/tosspayment/home.dart';
+import 'package:packup/widget/payment/toss/toss_payment/component.dart';
+import 'package:packup/widget/payment/toss/toss_payment/screen/tosspayment/home.dart';
 
 class Intro extends StatelessWidget {
   const Intro({super.key});

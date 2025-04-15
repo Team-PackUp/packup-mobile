@@ -1,6 +1,6 @@
 
-import 'package:mob/model/common/result_model.dart';
-import 'package:mob/http/dio_service.dart';
+import 'package:packup/model/common/result_model.dart';
+import 'package:packup/http/dio_service.dart';
 
 class LoginService {
 

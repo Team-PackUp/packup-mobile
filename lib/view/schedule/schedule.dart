@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:packup/l10n/app_localizations.dart';
 
-import 'package:mob/const/color.dart';
-import 'package:mob/common/util.dart';
+import 'package:packup/const/color.dart';
 
-import 'package:mob/widget/schedule/calendar.dart';
-import 'package:mob/view/schedule/schedule_view_model.dart';
+import 'package:packup/widget/schedule/calendar.dart';
+import 'package:packup/view/schedule/schedule_view_model.dart';
 import 'package:provider/provider.dart';
 
 class Schedule extends StatefulWidget {
@@ -16,33 +15,34 @@ class Schedule extends StatefulWidget {
 }
 
 class _ScheduleState extends State<Schedule> {
-  final TextEditingController _userIdController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  String _userIdErrorText = '';
-  String _userPasswordErrorText = '';
-
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final appBarHeight = AppBar().preferredSize.height;
+    final paddingTop = MediaQuery.of(context).padding.top;
 
-    // final viewModel = context.watch<ScheduleViewModel>();
+    final usableHeight = screenHeight - appBarHeight - paddingTop;
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: PRIMARY_COLOR,
         title: Text(
-            AppLocalizations.of(context)!.login,
-            style: TextStyle(color: TEXT_COLOR_W)
+          AppLocalizations.of(context)!.login,
+          style: TextStyle(color: TEXT_COLOR_W),
         ),
       ),
       body: SafeArea(
-        child: ListView(
-          children: const [
-            Calendar()
-          ]
+        child: Column(
+            children: [
+              Calendar(),
+            ],
+          ),
         ),
-      )
     );
   }
+
 }
+
+
+

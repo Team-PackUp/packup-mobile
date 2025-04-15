@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'package:mob/model/common/result_model.dart';
+import 'package:packup/model/common/result_model.dart';
 import 'interceptor.dart';
 
 class DioService {

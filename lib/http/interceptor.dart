@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mob/common/util.dart';
-import 'package:mob/const/const.dart';
+import 'package:packup/common/util.dart';
+import 'package:packup/const/const.dart';
 
 class CustomInterceptor extends Interceptor {
 

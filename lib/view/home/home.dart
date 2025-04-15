@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:mob/const/color.dart';
+import 'package:packup/const/color.dart';
 
-import 'package:mob/widget/payment/toss/toss_payment/toss_payment.dart';
+import 'package:packup/widget/payment/toss/toss_payment/toss_payment.dart';
 
-import 'package:mob/widget/payment/toss/toss_widget/toss_payment2.dart';
+import 'package:packup/widget/payment/toss/toss_widget/toss_payment2.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});

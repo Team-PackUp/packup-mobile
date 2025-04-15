@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mob/Const/color.dart';
+import 'package:packup/Const/color.dart';
 
-import 'package:mob/view/home/home.dart';
-import 'package:mob/view/profile/profile.dart';
-import 'package:mob/view/schedule/schedule.dart';
+import 'package:packup/view/home/home.dart';
+import 'package:packup/view/profile/profile.dart';
+import 'package:packup/view/schedule/schedule.dart';
 
+import '../widget/editor/editor.dart';
 
 class Index extends StatefulWidget {
   final int? index;
@@ -110,7 +111,7 @@ class _IndexState extends State<Index> {
       case 1:
         return const Schedule();
       case 2:
-        return const SizedBox();
+        return Editor();
       case 3:
         return const Profile();
       default:

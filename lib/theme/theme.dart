@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mob/common/util.dart';
+import 'package:packup/common/util.dart';
 
-import 'package:mob/main.dart';
+import 'package:packup/main.dart';
 
 // 화이트 모드
 ThemeData lightTheme = ThemeData(

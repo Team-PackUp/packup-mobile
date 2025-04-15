@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mob/widget/payment/toss/toss_payment/screen/tosspayment/payment.dart';
+import 'package:packup/widget/payment/toss/toss_payment/screen/tosspayment/payment.dart';
 import 'package:tosspayments_widget_sdk_flutter/model/paymentData.dart';
 
 /// [Home] 위젯은 사용자에게 결제 수단 및 주문 관련 정보를 입력받아

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mob/widget/payment/toss/toss_payment/screen/intro.dart';
-import 'package:mob/widget/payment/toss/toss_payment/screen/result.dart';
-import 'package:mob/widget/payment/toss/toss_payment/screen/tosspayment_widget/widget_home.dart';
+import 'package:packup/widget/payment/toss/toss_payment/screen/intro.dart';
+import 'package:packup/widget/payment/toss/toss_payment/screen/result.dart';
+import 'package:packup/widget/payment/toss/toss_payment/screen/tosspayment_widget/widget_home.dart';
 
-import 'package:mob/widget/payment/toss/toss_payment/screen/tosspayment/home.dart';
+import 'package:packup/widget/payment/toss/toss_payment/screen/tosspayment/home.dart';
 
 
 class TossPayment extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:mob/const/image.dart';
+import 'package:packup/const/image.dart';
 
 enum SocialLoginType { kakao, google }
 

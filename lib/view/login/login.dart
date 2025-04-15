@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mob/view/login/login_view_model.dart';
+import 'package:packup/view/login/login_view_model.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:packup/l10n/app_localizations.dart';
 
-import 'package:mob/widget/common/custom_dialog.dart';
+import 'package:packup/widget/common/custom_dialog.dart';
 
-import 'package:mob/const/color.dart';
-import 'package:mob/common/util.dart';
+import 'package:packup/const/color.dart';
+import 'package:packup/common/util.dart';
 
-import 'package:mob/widget/login/social_login_btn.dart';
+import 'package:packup/widget/login/social_login_btn.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -92,8 +92,22 @@ class _LoginState extends State<Login> {
                 //     ),
                 //   ),
                 // ),
+                SizedBox(height: MediaQuery.of(context).size.width * 0.1),
+                ElevatedButton(
+                  onPressed: () {
+                    login(_userIdController.text, _passwordController.text, context, viewModel);
+                  },
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(PRIMARY_COLOR)),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Text(
+                      AppLocalizations.of(context)!.login,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: TEXT_COLOR_W),
+                    ),
+                  ),
+                ),
                 SizedBox(height: MediaQuery.of(context).size.width * 0.02),
-                // SizedBox(height: MediaQuery.of(context).size.width * 0.02),
                 // 회원가입 버튼
                 ElevatedButton(
                   onPressed: () {
@@ -118,17 +132,18 @@ class _LoginState extends State<Login> {
   }
 
   login(String userId, String password, BuildContext context, UserViewModel viewModel) async {
-    validation(userId, password);
+    // validation(userId, password);
+    await viewModel.getUserInfo(2);
 
     if (userId.isNotEmpty && password.isNotEmpty) {
       logger("로그인중입니다.");
 
-      // await viewModel.checkLogin(userId, password);
+      await viewModel.getUserInfo(2);
 
       if (viewModel.resultModel?.statusCode == 1) {
-          if (context.mounted) {
-            context.push('/index');
-          }
+        if (context.mounted) {
+          context.push('/index');
+        }
       } else {
         context.push('/index');
         // setState(() {

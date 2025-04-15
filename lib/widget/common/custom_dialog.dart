@@ -4,7 +4,7 @@ enum DialogType { modal, fullscreen }
 
 class CustomDialog extends StatelessWidget {
   final DialogType type;
-  final String message;
+  final dynamic message;
 
   const CustomDialog({
     super.key,

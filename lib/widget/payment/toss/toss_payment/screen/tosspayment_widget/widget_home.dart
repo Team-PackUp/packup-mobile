@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mob/widget/payment/toss/toss_payment/screen/tosspayment_widget/payment_widget_example.dart';
+import 'package:packup/widget/payment/toss/toss_payment/screen/tosspayment_widget/payment_widget_example.dart';
 import 'package:tosspayments_widget_sdk_flutter/model/payment_info.dart';
 import 'package:tosspayments_widget_sdk_flutter/model/payment_widget_options.dart';
 
