@@ -4,8 +4,10 @@ import 'package:packup/l10n/app_localizations.dart';
 import 'package:packup/const/color.dart';
 
 import 'package:packup/widget/schedule/calendar.dart';
-import 'package:packup/view/schedule/schedule_view_model.dart';
 import 'package:provider/provider.dart';
+
+import 'package:packup/widget/search/custom_search_view_model.dart';
+import 'package:packup/widget/search/custom_search_bar.dart';
 
 class Schedule extends StatefulWidget {
   const Schedule({super.key});
@@ -23,22 +25,29 @@ class _ScheduleState extends State<Schedule> {
 
     final usableHeight = screenHeight - appBarHeight - paddingTop;
 
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: PRIMARY_COLOR,
-        title: Text(
-          AppLocalizations.of(context)!.login,
-          style: TextStyle(color: TEXT_COLOR_W),
-        ),
-      ),
-      body: SafeArea(
-        child: Column(
-            children: [
-              Calendar(),
-            ],
+    return ChangeNotifierProvider(
+      create: (_) => CustomSearchViewModel()..setApiUrl('schedule/search'),
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: PRIMARY_COLOR,
+          title: Text(
+            AppLocalizations.of(context)!.login,
+            style: TextStyle(color: TEXT_COLOR_W),
           ),
         ),
+        body: Center(
+          child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: CustomSearchBar(),
+                ),
+                Calendar(),
+              ],
+            ),
+          ),
+      ),
     );
   }
 

@@ -69,10 +69,11 @@ class _IndexState extends State<Index> {
   }
 
   final List<Map<String, dynamic>> bottomNavItems = [
-    {'icon': Icons.home, 'label': ''},
-    {'icon': Icons.edit_calendar, 'label': ''},
-    {'icon': Icons.account_box_outlined, 'label': ''},
-    {'icon': Icons.account_circle_outlined, 'label': ''},
+    {'icon': Icons.home, 'label': '가이드'},
+    {'icon': Icons.card_travel, 'label': '투어'},
+    {'icon': Icons.home, 'label': '홈'},
+    {'icon': Icons.airline_seat_recline_normal, 'label': '위시리스트'},
+    {'icon': Icons.supervised_user_circle, 'label': '마이페이지'},
   ];
 
   @override
