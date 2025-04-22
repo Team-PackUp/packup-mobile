@@ -50,6 +50,8 @@ class UserViewModel extends ChangeNotifier {
       if (isResult) {
         final token = await socialLogin.getAccessToken();
         _accessToken = token;
+
+        _httpService.checkLogin(_accessToken);
       }
 
     } catch (e) {

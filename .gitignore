@@ -32,7 +32,9 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-.env
+.env.android
+.env.ios
+.env.prod
 
 # generated_plugin_registrant.dart 자동 생성 파일
 **/generated_plugin_registrant.*

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -13,9 +14,28 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // 환경 변수 파일 로드
-  await dotenv.load();
+
+  String envFile = ".env";  // 기본 파일
+
+  /**
+   * 배포용 빌드 AOS: flutter build apk --dart-define=ENV=prod
+   * 개발용 빌드 AOS: flutter build apk --dart-define=ENV=dev
+   * 배포용 빌드 IOS: 확인 필요
+   * 개발용 빌드 IOS: 확인 필요
+   * IDE에서 실행하는 경우 실행 플랫폼에 맞게 설정
+   *
+   * >> prod 환경에서 OS별 환경변수 파일 구분 필요한 경우 수정 해야됨
+   */
+  const String environment = String.fromEnvironment('ENV', defaultValue: 'dev');
+  if (environment == 'prod') {
+    envFile = ".env.prod";
+  } else if (defaultTargetPlatform == TargetPlatform.android) {
+    envFile = ".env.android";
+  } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+    envFile = ".env.ios";
+  }
+
+  await dotenv.load(fileName: envFile);
 
   // 초기 테마 세팅
   String defaultTheme = await getDefaultTheme();

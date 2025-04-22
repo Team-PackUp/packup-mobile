@@ -82,7 +82,9 @@ flutter:
   assets:
     - assets/image/
     - assets/image/login/
-    - .env
+    - .env.prod
+    - .env.ios
+    - .env.android
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

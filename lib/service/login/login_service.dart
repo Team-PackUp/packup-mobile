@@ -1,10 +1,13 @@
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:packup/model/common/result_model.dart';
 import 'package:packup/http/dio_service.dart';
 
 class LoginService {
 
   static final LoginService _instance = LoginService._internal();
+
+  String httpPrefix = dotenv.env['HTTP_URL']!;
 
   // 객체 생성 방지
   LoginService._internal();
@@ -14,15 +17,11 @@ class LoginService {
     return _instance;
   }
 
-  Future<ResultModel> checkLogin(loginModel) async {
-    String url = '/user/login_check';
-
-    return await DioService().postRequest(url, loginModel);
+  Future<ResultModel> checkLogin(accessToken) async {
+    return await DioService().postRequest('/auth', accessToken);
   }
 
   Future<ResultModel> getUserInfo(Map<String, dynamic> data) async {
-    String url = '/user/get_user_info';
-
-    return await DioService().getRequest(url, data);
+    return await DioService().getRequest('get_user_info', data);
   }
 }

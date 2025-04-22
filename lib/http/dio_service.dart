@@ -13,6 +13,8 @@ class DioService {
 
   late Dio dio;
 
+  String httpPrefix = dotenv.env['HTTP_URL']!;
+
   DioService._internal() {
     dio = Dio(BaseOptions(
       baseUrl: dotenv.env['HTTP_URL']!,
@@ -26,7 +28,9 @@ class DioService {
       ..interceptors.add(CustomInterceptor());
   }
 
-  Future<ResultModel> postRequest(String url, dynamic data) async {
+  Future<ResultModel> postRequest(String uri, dynamic data) async {
+
+    String url = httpPrefix + uri;
     final response = await dio.post(
       url,
       data: data != null ? json.encode(data) : null,
@@ -34,7 +38,10 @@ class DioService {
     return ResultModel.fromJson(response.data);
   }
 
-  Future<ResultModel> getRequest(String url, Map<String, dynamic> data) async {
+  Future<ResultModel> getRequest(String uri, Map<String, dynamic> data) async {
+
+    String url = httpPrefix + uri;
+
     final response = await dio.get(url, queryParameters: data);
     return ResultModel.fromJson(response.data);
   }
