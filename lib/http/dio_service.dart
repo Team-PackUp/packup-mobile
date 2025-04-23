@@ -17,7 +17,7 @@ class DioService {
 
   DioService._internal() {
     dio = Dio(BaseOptions(
-      baseUrl: dotenv.env['HTTP_URL']!,
+      baseUrl: httpPrefix,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       headers: {
@@ -28,21 +28,25 @@ class DioService {
       ..interceptors.add(CustomInterceptor());
   }
 
-  Future<ResultModel> postRequest(String uri, dynamic data) async {
+  Future<ResultModel> postRequest(String uri, [Map<String, dynamic>? data]) async {
 
     String url = httpPrefix + uri;
     final response = await dio.post(
       url,
-      data: data != null ? json.encode(data) : null,
+      data: data ?? {},
     );
     return ResultModel.fromJson(response.data);
   }
 
-  Future<ResultModel> getRequest(String uri, Map<String, dynamic> data) async {
-
+  Future<ResultModel> getRequest(String uri, [Map<String, dynamic>? data]) async {
     String url = httpPrefix + uri;
 
-    final response = await dio.get(url, queryParameters: data);
+    final response = await dio.get(
+      url,
+      queryParameters: data ?? {},
+    );
+
     return ResultModel.fromJson(response.data);
   }
+
 }

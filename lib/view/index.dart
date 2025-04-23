@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:packup/Const/color.dart';
+import 'package:packup/view/chat/chat_room.dart';
 
 import 'package:packup/view/home/home.dart';
 import 'package:packup/view/profile/profile.dart';
@@ -69,8 +70,8 @@ class _IndexState extends State<Index> {
   }
 
   final List<Map<String, dynamic>> bottomNavItems = [
-    {'icon': Icons.home, 'label': '가이드'},
     {'icon': Icons.card_travel, 'label': '투어'},
+    {'icon': Icons.chat_bubble, 'label': '채팅'},
     {'icon': Icons.home, 'label': '홈'},
     {'icon': Icons.airline_seat_recline_normal, 'label': '위시리스트'},
     {'icon': Icons.supervised_user_circle, 'label': '마이페이지'},
@@ -108,15 +109,15 @@ class _IndexState extends State<Index> {
   Widget _buildCurrentWidget() {
     switch (_currentIndex) {
       case 0:
-        return const Home();
-      case 1:
         return const Schedule();
+      case 1:
+        return const ChatRoom();
       case 2:
-        return Editor();
+      return const Home();
       case 3:
         return const Profile();
       default:
-        return const SizedBox();
+        return Editor();
     }
   }
 }

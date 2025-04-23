@@ -7,8 +7,6 @@ class LoginService {
 
   static final LoginService _instance = LoginService._internal();
 
-  String httpPrefix = dotenv.env['HTTP_URL']!;
-
   // 객체 생성 방지
   LoginService._internal();
 
@@ -18,7 +16,8 @@ class LoginService {
   }
 
   Future<ResultModel> checkLogin(accessToken) async {
-    return await DioService().postRequest('/auth', accessToken);
+    final data = {'access_token' : accessToken};
+    return await DioService().postRequest('/auth/login/google', data);
   }
 
   Future<ResultModel> getUserInfo(Map<String, dynamic> data) async {
