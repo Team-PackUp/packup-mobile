@@ -21,18 +21,17 @@ class GoogleLogin implements SocialLogin {
 
   @override
   Future<bool> logout() async {
-    try {
+    if (googleUser == null) return false;
+      await _googleSignIn.signOut();
 
       return true;
-    } catch(error) {
-      return false;
-    }
   }
 
   @override
   Future<String?> getAccessToken() async {
     if (googleUser == null) return '';
     final googleAuth = await googleUser!.authentication;
+
     return googleAuth.accessToken;
   }
 }

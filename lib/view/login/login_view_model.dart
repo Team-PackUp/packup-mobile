@@ -86,4 +86,8 @@ class UserViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> logout() async {
+    await socialLogin.logout();
+  }
 }

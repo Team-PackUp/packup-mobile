@@ -59,6 +59,10 @@ class _LoginState extends State<Login> {
                   type: SocialLoginType.google,
                   onPressed: () => handleGoogleLogin(viewModel),
                 ),
+                TextButton(
+                  child: const Text('로그아웃'),
+                  onPressed: () => logout(viewModel),
+                ),
                 // 아이디 입력 필드
                 // TextField(
                 //   controller: _userIdController,
@@ -129,6 +133,10 @@ class _LoginState extends State<Login> {
         },
       ),
     );
+  }
+
+  logout(UserViewModel viewModel) async {
+    await viewModel.logout();
   }
 
   login(String userId, String password, BuildContext context, UserViewModel viewModel) async {
