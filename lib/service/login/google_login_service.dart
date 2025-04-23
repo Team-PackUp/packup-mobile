@@ -15,6 +15,7 @@ class GoogleLogin implements SocialLogin {
   @override
   Future<bool> login() async {
     try {
+      await _googleSignIn.signOut();
       googleUser = await _googleSignIn.signIn();
       return googleUser != null;
     } catch (error) {
