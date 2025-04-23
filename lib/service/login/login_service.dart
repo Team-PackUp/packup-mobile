@@ -7,8 +7,6 @@ class LoginService {
 
   static final LoginService _instance = LoginService._internal();
 
-  String httpPrefix = dotenv.env['HTTP_URL']!;
-
   // 객체 생성 방지
   LoginService._internal();
 
