@@ -16,7 +16,8 @@ class LoginService {
   }
 
   Future<ResultModel> checkLogin(accessToken) async {
-    return await DioService().postRequest('/auth', accessToken);
+    final data = {'access_token' : accessToken};
+    return await DioService().postRequest('/auth/login/google', data);
   }
 
   Future<ResultModel> getUserInfo(Map<String, dynamic> data) async {
