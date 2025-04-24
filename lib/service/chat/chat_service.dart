@@ -8,6 +8,18 @@ import '../../http/dio_service.dart';
 import '../../model/chat/ChatModel.dart';
 
 class ChatService {
+
+  static final ChatService _instance = ChatService._internal();
+
+  // 객체 생성 방지
+  ChatService._internal();
+
+  // 싱글톤 보장용 > 팩토리 생성자 > 실제로 객체 생성 없이 상황에 맞는 객체 반환
+  factory ChatService() {
+    return _instance;
+  }
+
+
   final String httpPrefix = dotenv.env['HTTP_URL']!;
   final String socketPrefix = dotenv.env['SOCKET_URL']!;
   WebSocketChannel? _channel;
@@ -26,7 +38,7 @@ class ChatService {
 
   /// 2. 채팅방 목록 조회 (HTTP)
   Future<ResultModel> getRoom() async {
-    return await DioService().getRequest('/chatRoom');
+    return await DioService().getRequest('/chat/room/list');
   }
 
   /// 3. 채팅 내역 가져오기 (HTTP)

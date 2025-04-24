@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:packup/const/color.dart';
 import 'package:packup/widget/search/custom_search_bar.dart';
-import 'message.dart';
+import 'chat_message.dart';
 
 class ChatRoom extends StatefulWidget {
 
@@ -24,27 +24,29 @@ class _ChatRoom extends State<ChatRoom> {
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
-    // 최초 데이터 조회
-    Provider.of<ChatViewModel>(context, listen: false).getRoom();
   }
 
   _scrollListener() {
-    if (_scrollController.position.maxScrollExtent ==
-        _scrollController.position.pixels) {
-      // 추가 데이터 조회
+    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => CustomSearchViewModel(),
-      child: Consumer<CustomSearchViewModel>(
-        builder: (context, searchViewModel, child) {
-          final chatViewModel = context.watch<ChatViewModel>();
-          var filteredChatRooms = chatViewModel.getRoom();
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ChatViewModel()),
+        ChangeNotifierProvider(create: (_) => CustomSearchViewModel()),
+      ],
+      child: Consumer2<ChatViewModel, CustomSearchViewModel>(
+        builder: (context, chatViewModel, searchViewModel, child) {
+          if (chatViewModel.chatRoom.isEmpty) {
+            chatViewModel.getRoom();
+          }
 
-          // 방 리스트 검색 필터링
+          var filteredChatRooms = chatViewModel.chatRoom;
+
+          // 검색 필터
           if (searchViewModel.searchText.isNotEmpty) {
             filteredChatRooms = filteredChatRooms.where((room) {
               return room["chatRoomId"]
