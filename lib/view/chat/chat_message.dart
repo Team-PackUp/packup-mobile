@@ -2,15 +2,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:packup/Common/util.dart';
-import 'package:packup/view/chat/chat_view_model.dart';
+import 'package:packup/provider/chat/chat_provider.dart';
 import 'package:packup/widget/chat/bubble_message.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/ChatModel.dart';
-
-import 'package:packup/service/chat/chat_service.dart';
 
 class Message extends StatefulWidget {
   final int? chatRoomId;
@@ -28,7 +26,7 @@ class _MessageState extends State<Message> {
   late final TextEditingController _controller;
   late List<ChatModel> messages = [];
   late ScrollController scrollController;
-  late final ChatViewModel chatViewModel;
+  late final ChatProvider chatProvider;
   late final int userSeq;
 
   @override
@@ -41,9 +39,9 @@ class _MessageState extends State<Message> {
 
   // 최초 채팅방 진입시 기존 채팅 내역 세팅
   void dataSetting() async {
-    chatViewModel = context.read<ChatViewModel>();
+    chatProvider = context.read<ChatProvider>();
     List<ChatModel> getMessage =
-    await chatViewModel.getMessage(chatRoomId: widget.chatRoomId);
+    await chatProvider.getMessage(chatRoomId: widget.chatRoomId);
 
     if (getMessage.isNotEmpty) {
       setState(() {
@@ -52,8 +50,8 @@ class _MessageState extends State<Message> {
     }
 
     // 소켓 연결
-    chatViewModel.chatService.connectWebSocket(widget.chatRoomId!);
-    chatViewModel.chatService.messageStream.listen((event) {
+    chatProvider.chatService.connectWebSocket(widget.chatRoomId!);
+    chatProvider.chatService.messageStream.listen((event) {
       if (event is String) {
         try {
           Map<String, dynamic> jsonMap = jsonDecode(event);
@@ -70,7 +68,7 @@ class _MessageState extends State<Message> {
 
   @override
   void dispose() {
-    chatViewModel.chatService.disconnect();
+    chatProvider.chatService.disconnect();
     super.dispose();
   }
 
@@ -163,7 +161,7 @@ class _MessageState extends State<Message> {
         sender: userSeq,
         chatRoomId: widget.chatRoomId!,
       );
-      chatViewModel.chatService.sendMessage(chat);
+      chatProvider.chatService.sendMessage(chat);
 
       _controller.text = '';
     }

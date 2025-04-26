@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-class UserModel extends ChangeNotifier {
+class UserModel {
   final String userId;
   final String userAge;
   final String userNation;

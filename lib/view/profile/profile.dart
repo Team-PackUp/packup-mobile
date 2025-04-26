@@ -11,10 +11,10 @@ class Profile extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<Profile> createState() => ProfileState();
+  State<Profile> createState() => _ProfileState();
 }
 
-class ProfileState extends State<Profile> {
+class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

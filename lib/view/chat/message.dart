@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:packup/provider/chat/chat_provider.dart';
 import 'package:packup/widget/chat/bubble_message.dart';

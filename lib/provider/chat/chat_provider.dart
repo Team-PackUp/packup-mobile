@@ -4,11 +4,7 @@ import 'package:packup/service/chat/chat_service.dart';
 import 'package:packup/model/chat/ChatModel.dart';
 
 class ChatProvider with ChangeNotifier {
-  final ChatService chatService;
-
-  ChatProvider({
-    required this.chatService
-  }) : super();
+  final ChatService chatService = ChatService();
 
   List<dynamic> _chatRoom = [];
   List<dynamic> get chatRoom => _chatRoom;

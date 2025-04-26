@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:packup/provider/chat/chat_provider.dart';
-import 'package:packup/widget/search/custom_search_view_model.dart';
+import 'package:packup/provider/search_bar/custom_search_bar_provider.dart';
 import 'package:provider/provider.dart';
-
+import 'package:packup/widget/search_bar/custom_search_bar.dart';
 import 'package:packup/const/color.dart';
-import 'package:packup/widget/search/custom_search_bar.dart';
 import 'chat_message.dart';
 
 class ChatRoom extends StatefulWidget {
@@ -38,9 +37,9 @@ class _ChatRoom extends State<ChatRoom> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ChatProvider()),
-        ChangeNotifierProvider(create: (_) => CustomSearchViewModel()),
+        ChangeNotifierProvider(create: (_) => SearchBarProvider()),
       ],
-      child: Consumer2<ChatProvider, CustomSearchViewModel>(
+      child: Consumer2<ChatProvider, SearchBarProvider>(
         builder: (context, chatProvider, searchViewModel, child) {
           if (chatProvider.chatRoom.isEmpty) {
             chatProvider.getRoom();

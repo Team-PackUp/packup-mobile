@@ -111,7 +111,8 @@ class _IndexState extends State<Index> {
       case 0:
         return const Schedule();
       case 1:
-        return const ChatRoom();
+        // return const ChatRoom();
+        return const SizedBox();
       case 2:
       return const Home();
       case 3:

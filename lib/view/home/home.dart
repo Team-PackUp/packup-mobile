@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:packup/provider/search_bar/custom_search_bar_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:packup/const/color.dart';
 import 'package:packup/widget/payment/toss/toss_payment/toss_payment.dart';
 import 'package:packup/widget/payment/toss/toss_widget/toss_payment2.dart';
 
-import 'package:packup/widget/search/custom_search_view_model.dart';
-import 'package:packup/widget/search/custom_search_bar.dart';
+import '../../widget/search_bar/custom_search_bar.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -14,7 +14,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => CustomSearchViewModel()..setApiUrl('home/search'),
+      create: (_) => SearchBarProvider()..setApiUrl('home/search'),
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
