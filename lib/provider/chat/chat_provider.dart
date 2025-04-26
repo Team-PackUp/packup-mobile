@@ -3,24 +3,24 @@ import 'package:packup/service/chat/chat_service.dart';
 
 import 'package:packup/model/chat/ChatModel.dart';
 
-class ChatViewModel with ChangeNotifier {
+class ChatProvider with ChangeNotifier {
   final ChatService chatService;
 
-  ChatViewModel({
+  ChatProvider({
     required this.chatService
   }) : super();
 
   List<dynamic> _chatRoom = [];
   List<dynamic> get chatRoom => _chatRoom;
 
-  setChatViewModel(List<dynamic> chatRoom) {
+  setChatProvider(List<dynamic> chatRoom) {
     _chatRoom = chatRoom;
     notifyListeners();
   }
 
   getRoom() async {
     final response = await chatService.getRoom();
-    setChatViewModel(response.response);
+    setChatProvider(response.response);
   }
 
   Future<List<ChatModel>> getMessage({

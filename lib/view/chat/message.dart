@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:packup/view/chat/chat_view_model.dart';
+import 'package:packup/provider/chat/chat_provider.dart';
 import 'package:packup/widget/chat/bubble_message.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -27,7 +27,7 @@ class _MessageState extends State<Message> {
   late List<ChatModel> messages = [];
   late ScrollController scrollController;
   late final WebSocketChannel _channel;
-  late final ChatViewModel provider;
+  late final ChatProvider provider;
   late final int userSeq;
   late final String token;
   final String socketPrefix = dotenv.env['SOCKET_URL']!;
@@ -43,7 +43,7 @@ class _MessageState extends State<Message> {
   void dataSetting() async {
     _channel = WebSocketChannel.connect(Uri.parse('$socketPrefix/ws/chat'));
 
-    provider = context.read<ChatViewModel>();
+    provider = context.read<ChatProvider>();
     List<ChatModel> getMessage =
         await provider.getMessage(chatRoomId: widget.chatRoomId);
 

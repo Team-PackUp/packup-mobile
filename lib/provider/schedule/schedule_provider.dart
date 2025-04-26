@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
-class ScheduleViewModel with ChangeNotifier {
+class ScheduleProvider with ChangeNotifier {
 
   // 선택한 날짜
   DateTime selectedDate = DateTime.utc(

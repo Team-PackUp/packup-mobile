@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:packup/view/chat/chat_view_model.dart';
+import 'package:packup/provider/chat/chat_provider.dart';
 import 'package:packup/widget/search/custom_search_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +25,7 @@ class _ChatRoom extends State<ChatRoom> {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     // 최초 데이터 조회
-    Provider.of<ChatViewModel>(context, listen: false).getRoom();
+    Provider.of<ChatProvider>(context, listen: false).getRoom();
   }
 
   _scrollListener() {
@@ -41,7 +41,7 @@ class _ChatRoom extends State<ChatRoom> {
       create: (_) => CustomSearchViewModel(),
       child: Consumer<CustomSearchViewModel>(
         builder: (context, searchViewModel, child) {
-          final chatViewModel = context.watch<ChatViewModel>();
+          final chatViewModel = context.watch<ChatProvider>();
           var filteredChatRooms = chatViewModel.getRoom();
 
           // 방 리스트 검색 필터링

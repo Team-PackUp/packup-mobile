@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:packup/Const/color.dart';
-import 'package:packup/view/schedule/schedule_view_model.dart';
+import 'package:packup/provider/schedule/schedule_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 

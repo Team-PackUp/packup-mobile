@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/view/login/login_view_model.dart';
+import 'package:packup/provider/user/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/l10n/app_localizations.dart';
 
@@ -37,7 +37,7 @@ class _LoginState extends State<Login> {
             style: TextStyle(color: TEXT_COLOR_W)
         ),
       ),
-      body: Consumer<UserViewModel>(
+      body: Consumer<UserProvider>(
         builder: (context, viewModel, child) {
           // if (viewModel.isLoading) {
           //   return const Center(child: CircularProgressIndicator());
@@ -135,11 +135,11 @@ class _LoginState extends State<Login> {
     );
   }
 
-  logout(UserViewModel viewModel) async {
+  logout(UserProvider viewModel) async {
     await viewModel.logout();
   }
 
-  login(String userId, String password, BuildContext context, UserViewModel viewModel) async {
+  login(String userId, String password, BuildContext context, UserProvider viewModel) async {
     // validation(userId, password);
     await viewModel.getUserInfo(2);
 
@@ -162,7 +162,7 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Future<void> handleSocialLogin(SocialLoginType type, UserViewModel viewModel) async {
+  Future<void> handleSocialLogin(SocialLoginType type, UserProvider viewModel) async {
     await viewModel.checkLogin(type);
 
     if (!context.mounted) return;
@@ -180,11 +180,11 @@ class _LoginState extends State<Login> {
 
 
 
-  Future<void> handleKakaoLogin(UserViewModel viewModel) async {
+  Future<void> handleKakaoLogin(UserProvider viewModel) async {
     await handleSocialLogin(SocialLoginType.kakao, viewModel);
   }
 
-  Future<void> handleGoogleLogin(UserViewModel viewModel) async {
+  Future<void> handleGoogleLogin(UserProvider viewModel) async {
     await handleSocialLogin(SocialLoginType.google, viewModel);
   }
 

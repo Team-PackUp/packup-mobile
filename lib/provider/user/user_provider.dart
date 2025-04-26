@@ -10,7 +10,7 @@ import 'package:packup/service/login/kakao_login_service.dart';
 import 'package:packup/service/login/social_login.dart';
 
 /// UserModel 구독
-class UserViewModel extends ChangeNotifier {
+class UserProvider extends ChangeNotifier {
 
   late SocialLogin socialLogin;
   UserModel? _userModel;
