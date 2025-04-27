@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:packup/Common/util.dart';
 import 'package:packup/const/const.dart';
 
-class CustomSearchViewModel with ChangeNotifier {
+class SearchBarProvider with ChangeNotifier {
   String _searchText = '';
   String _apiUrl = '';
 

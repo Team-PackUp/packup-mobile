@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 
-class LoginModel extends ChangeNotifier {
+class LoginModel {
   final String userId;
   final String userPassword;
 

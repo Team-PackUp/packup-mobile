@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:packup/view/chat/chat_view_model.dart';
-import 'package:packup/widget/search/custom_search_view_model.dart';
+import 'package:packup/provider/chat/chat_provider.dart';
+import 'package:packup/provider/search_bar/custom_search_bar_provider.dart';
 import 'package:provider/provider.dart';
-
+import 'package:packup/widget/search_bar/custom_search_bar.dart';
 import 'package:packup/const/color.dart';
-import 'package:packup/widget/search/custom_search_bar.dart';
-import 'message.dart';
+import 'chat_message.dart';
 
 class ChatRoom extends StatefulWidget {
 
@@ -25,26 +24,30 @@ class _ChatRoom extends State<ChatRoom> {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     // 최초 데이터 조회
-    Provider.of<ChatViewModel>(context, listen: false).getRoom();
+    Provider.of<ChatProvider>(context, listen: false).getRoom();
   }
 
   _scrollListener() {
-    if (_scrollController.position.maxScrollExtent ==
-        _scrollController.position.pixels) {
-      // 추가 데이터 조회
+    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => CustomSearchViewModel(),
-      child: Consumer<CustomSearchViewModel>(
-        builder: (context, searchViewModel, child) {
-          final chatViewModel = context.watch<ChatViewModel>();
-          var filteredChatRooms = chatViewModel.getRoom();
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
+        ChangeNotifierProvider(create: (_) => SearchBarProvider()),
+      ],
+      child: Consumer2<ChatProvider, SearchBarProvider>(
+        builder: (context, chatProvider, searchViewModel, child) {
+          if (chatProvider.chatRoom.isEmpty) {
+            chatProvider.getRoom();
+          }
 
-          // 방 리스트 검색 필터링
+          var filteredChatRooms = chatProvider.chatRoom;
+
+          // 검색 필터
           if (searchViewModel.searchText.isNotEmpty) {
             filteredChatRooms = filteredChatRooms.where((room) {
               return room["chatRoomId"]

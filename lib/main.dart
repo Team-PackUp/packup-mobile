@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 import 'package:packup/theme/theme.dart';
 
-import 'package:packup/view/login/login_view_model.dart';
+import 'package:packup/provider/user/user_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
@@ -57,7 +57,7 @@ void main() async {
   runApp(
     // 모든 페이지에서 사용할 모델 등록
     ChangeNotifierProvider(
-      create: (context) => UserViewModel(),
+      create: (context) => UserProvider(),
       child: const PackUp(),
   ),);
 }

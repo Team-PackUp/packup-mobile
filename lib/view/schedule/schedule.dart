@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:packup/l10n/app_localizations.dart';
 
 import 'package:packup/const/color.dart';
+import 'package:packup/provider/search_bar/custom_search_bar_provider.dart';
 
 import 'package:packup/widget/schedule/calendar.dart';
 import 'package:provider/provider.dart';
 
-import 'package:packup/widget/search/custom_search_view_model.dart';
-import 'package:packup/widget/search/custom_search_bar.dart';
+import 'package:packup/widget/search_bar/custom_search_bar.dart';
 
 class Schedule extends StatefulWidget {
   const Schedule({super.key});
 
   @override
-  State<StatefulWidget> createState() => _ScheduleState();
+  State<Schedule> createState() => _ScheduleState();
 }
 
 class _ScheduleState extends State<Schedule> {
@@ -26,7 +26,7 @@ class _ScheduleState extends State<Schedule> {
     final usableHeight = screenHeight - appBarHeight - paddingTop;
 
     return ChangeNotifierProvider(
-      create: (_) => CustomSearchViewModel()..setApiUrl('schedule/search'),
+      create: (_) => SearchBarProvider()..setApiUrl('schedule/search'),
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,

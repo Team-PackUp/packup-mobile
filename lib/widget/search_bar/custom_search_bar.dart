@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:packup/widget/search/custom_search_view_model.dart';
+import 'package:packup/provider/search_bar/custom_search_bar_provider.dart';
 
 class CustomSearchBar extends StatefulWidget {
-  CustomSearchBar({Key? key}) : super(key: key);
+  const CustomSearchBar({super.key});
 
   @override
-  _CustomSearchBarState createState() => _CustomSearchBarState();
+  State<CustomSearchBar> createState() => _CustomSearchBarState();
 }
 
 class _CustomSearchBarState extends State<CustomSearchBar> {
@@ -37,7 +37,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                 labelText: "검색어를 입력해주세요",
               ),
               onChanged: (value) {
-                context.read<CustomSearchViewModel>().setSearchText(value);
+                context.read<SearchBarProvider>().setSearchText(value);
               },
             ),
           ),
@@ -47,7 +47,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
               size: 30,
             ),
             onPressed: () {
-              context.read<CustomSearchViewModel>().fetchResults();
+              context.read<SearchBarProvider>().fetchResults();
             },
           ),
         ],
