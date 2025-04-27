@@ -4,7 +4,7 @@ import 'package:packup/provider/search_bar/custom_search_bar_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/search_bar/custom_search_bar.dart';
 import 'package:packup/const/color.dart';
-import 'package:packup/widget/chat/chat_message.dart';
+import 'package:packup/view/chat/chat_message.dart';
 
 class ChatRoom extends StatefulWidget {
 

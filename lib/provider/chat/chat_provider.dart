@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:packup/model/common/result_model.dart';
 import 'package:packup/service/chat/chat_service.dart';
 
 import 'package:packup/model/chat/ChatModel.dart';
@@ -19,32 +20,20 @@ class ChatProvider with ChangeNotifier {
     setChatProvider(response.response);
   }
 
-  Future<List<ChatModel>> getMessage({
-    int? chatRoomId,
+  Future<ResultModel> getMessage({
+    required chatRoomId,
   }) async {
-    final data = {'chat_room_id' : chatRoomId};
-    final response = await chatService.getMessage(data);
 
-    return response.response;
+    final response = await chatService.getMessage(chatRoomId);
+
+    return response;
   }
 
   Future<int> createChatRoom({
     required receiver
   }) async {
-    final data = {'receiver' : receiver};
-    final response = await chatService.createRoom(data);
+    final response = await chatService.createRoom(receiver);
 
     return response.response;
   }
-//
-// void saveMessage({required ChatModel chatModel}) async {
-//   Map<String, dynamic>? savedMessage = await repository.saveMessage(chatModel);
-//   ChatModel newChat = ChatModel.fromJson(savedMessage?['response'] ?? {});
-//   //
-//   // // 기존 리스트 복제
-//   List<ChatModel> totalList = List.from(_chatMessage ?? []);
-//   totalList.add(newChat);
-//
-//   setChatMessageProvider(totalList);
-// }
 }

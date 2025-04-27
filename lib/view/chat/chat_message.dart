@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:packup/service/chat/chat_service.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/Common/util.dart';
 import 'package:packup/provider/chat/chat_provider.dart';
@@ -8,8 +9,10 @@ import 'package:packup/widget/chat/bubble_message.dart';
 import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/ChatModel.dart';
 
+import '../../model/common/result_model.dart';
+
 class ChatMessage extends StatefulWidget {
-  final int? chatRoomId;
+  final int chatRoomId;
 
   const ChatMessage({
     super.key,
@@ -21,10 +24,11 @@ class ChatMessage extends StatefulWidget {
 }
 
 class _ChatMessageState extends State<ChatMessage> {
+  ChatService chatService = ChatService();
+
   late final TextEditingController _controller;
   late final ScrollController scrollController;
   List<ChatModel> messages = [];
-  late ChatProvider chatProvider;
   late int userSeq;
 
   StreamSubscription? messageSubscription;
@@ -41,10 +45,8 @@ class _ChatMessageState extends State<ChatMessage> {
   }
 
   Future<void> dataSetting() async {
-    chatProvider = context.read<ChatProvider>();
-
-    List<ChatModel> getMessage =
-    await chatProvider.getMessage(chatRoomId: widget.chatRoomId);
+    ResultModel resultModel = await chatService.getMessage(widget.chatRoomId);
+    List<ChatModel> getMessage = resultModel.response;
 
     if (getMessage.isNotEmpty) {
       setState(() {
@@ -52,8 +54,8 @@ class _ChatMessageState extends State<ChatMessage> {
       });
     }
 
-    chatProvider.chatService.connectWebSocket(widget.chatRoomId!);
-    messageSubscription = chatProvider.chatService.messageStream.listen((event) {
+    chatService.connectWebSocket(widget.chatRoomId!);
+    messageSubscription = chatService.messageStream.listen((event) {
       if (event is String) {
         try {
           Map<String, dynamic> jsonMap = jsonDecode(event);
@@ -71,7 +73,7 @@ class _ChatMessageState extends State<ChatMessage> {
   @override
   void dispose() {
     messageSubscription?.cancel();
-    chatProvider.chatService.disconnect();
+    chatService.disconnect();
     _controller.dispose();
     scrollController.dispose();
     super.dispose();
@@ -166,7 +168,7 @@ class _ChatMessageState extends State<ChatMessage> {
         sender: userSeq,
         chatRoomId: widget.chatRoomId!,
       );
-      chatProvider.chatService.sendMessage(chat);
+      chatService.sendMessage(chat);
 
       _controller.clear();
     }

@@ -32,23 +32,31 @@ class ChatService {
   };
 
   /// 1. 채팅방 생성 (HTTP)
-  Future<ResultModel> createRoom(Map<String, dynamic> data) async {
-      return await DioService().postRequest('/createRoom', data);
+  Future<ResultModel> createRoom(List receiver) async {
+
+    final data = {'receiver' : receiver};
+
+    final response = await DioService().postRequest('/createRoom', data);
+
+    return ResultModel.fromJson(response.response);
   }
 
   /// 2. 채팅방 목록 조회 (HTTP)
   Future<ResultModel> getRoom() async {
-    return await DioService().getRequest('/chat/room/list');
+
+    final response = await DioService().getRequest('/chat/room/list');
+
+    return ResultModel.fromJson(response.response);
   }
 
   /// 3. 채팅 내역 가져오기 (HTTP)
-  Future<ResultModel> getMessage(Map<String, dynamic> data) async {
-    return await DioService().getRequest('/chat/getMessage', data);
-  }
+  Future<ResultModel> getMessage(int chatRoomId) async {
 
-  /// 4. 메시지 저장 (HTTP - DB 영속화)
-  Future<ResultModel> saveMessage(Map<String, dynamic> data) async {
-    return await DioService().postRequest('/saveMessage', data);
+    final data = {'chat_room_id' : chatRoomId};
+
+    final response = await DioService().getRequest('/chat/getMessage', data);
+
+    return ResultModel.fromJson(response.response);
   }
 
   /// 5. WebSocket 연결

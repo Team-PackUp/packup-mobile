@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:packup/widget/chat/chat_message.dart';
+import 'package:packup/view/chat/chat_message.dart';
 import 'package:packup/view/chat/chat_room.dart';
 import 'package:packup/view/home/home.dart';
 import 'package:packup/view/login/login.dart';
