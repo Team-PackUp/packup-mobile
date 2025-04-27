@@ -1,45 +1,48 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 import 'package:packup/Common/util.dart';
 import 'package:packup/provider/chat/chat_provider.dart';
 import 'package:packup/widget/chat/bubble_message.dart';
-import 'package:provider/provider.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-
 import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/ChatModel.dart';
 
-class Message extends StatefulWidget {
+class ChatMessage extends StatefulWidget {
   final int? chatRoomId;
 
-  const Message({
+  const ChatMessage({
     super.key,
-    this.chatRoomId,
+    this.chatRoomId = 1,
   });
 
   @override
-  _MessageState createState() => _MessageState();
+  _ChatMessageState createState() => _ChatMessageState();
 }
 
-class _MessageState extends State<Message> {
+class _ChatMessageState extends State<ChatMessage> {
   late final TextEditingController _controller;
-  late List<ChatModel> messages = [];
-  late ScrollController scrollController;
-  late final ChatProvider chatProvider;
-  late final int userSeq;
+  late final ScrollController scrollController;
+  List<ChatModel> messages = [];
+  late ChatProvider chatProvider;
+  late int userSeq;
+
+  StreamSubscription? messageSubscription;
 
   @override
   void initState() {
     super.initState();
-    scrollController = ScrollController();
     _controller = TextEditingController();
-    dataSetting();
+    scrollController = ScrollController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      dataSetting();
+    });
   }
 
-  // 최초 채팅방 진입시 기존 채팅 내역 세팅
-  void dataSetting() async {
+  Future<void> dataSetting() async {
     chatProvider = context.read<ChatProvider>();
+
     List<ChatModel> getMessage =
     await chatProvider.getMessage(chatRoomId: widget.chatRoomId);
 
@@ -49,9 +52,8 @@ class _MessageState extends State<Message> {
       });
     }
 
-    // 소켓 연결
     chatProvider.chatService.connectWebSocket(widget.chatRoomId!);
-    chatProvider.chatService.messageStream.listen((event) {
+    messageSubscription = chatProvider.chatService.messageStream.listen((event) {
       if (event is String) {
         try {
           Map<String, dynamic> jsonMap = jsonDecode(event);
@@ -68,7 +70,10 @@ class _MessageState extends State<Message> {
 
   @override
   void dispose() {
+    messageSubscription?.cancel();
     chatProvider.chatService.disconnect();
+    _controller.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -154,7 +159,7 @@ class _MessageState extends State<Message> {
     ),
   );
 
-  void _sendMessage() async {
+  void _sendMessage() {
     if (_controller.text.isNotEmpty) {
       final chat = ChatModel(
         message: _controller.text,
@@ -163,7 +168,7 @@ class _MessageState extends State<Message> {
       );
       chatProvider.chatService.sendMessage(chat);
 
-      _controller.text = '';
+      _controller.clear();
     }
   }
 

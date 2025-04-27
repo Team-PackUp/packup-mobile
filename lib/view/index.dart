@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:packup/Const/color.dart';
+import 'package:packup/view/chat/chat_screen.dart';
+import 'package:packup/widget/chat/chat_message.dart';
 import 'package:packup/view/chat/chat_room.dart';
 
 import 'package:packup/view/home/home.dart';
@@ -111,8 +113,8 @@ class _IndexState extends State<Index> {
       case 0:
         return const Schedule();
       case 1:
-        // return const ChatRoom();
-        return const SizedBox();
+        return const ChatRoom();
+        // return const SizedBox();
       case 2:
       return const Home();
       case 3:

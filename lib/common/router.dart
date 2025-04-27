@@ -1,4 +1,6 @@
 import 'package:go_router/go_router.dart';
+import 'package:packup/widget/chat/chat_message.dart';
+import 'package:packup/view/chat/chat_room.dart';
 import 'package:packup/view/home/home.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
@@ -38,6 +40,14 @@ final router = GoRouter(
     GoRoute(
         path: '/home',
         builder: (context, state) => const Home()
+    ),
+    GoRoute(
+        path: '/chat_room',
+        builder: (context, state) => const ChatRoom()
+    ),
+    GoRoute(
+        path: '/chat_message',
+        builder: (context, state) => const ChatMessage()
     ),
   ],
 );

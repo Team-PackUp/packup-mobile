@@ -1,9 +1,11 @@
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:packup/model/common/result_model.dart';
+
+import 'package:packup/common/util.dart';
 import 'interceptor.dart';
 
 class DioService {
@@ -14,6 +16,7 @@ class DioService {
   late Dio dio;
 
   String httpPrefix = dotenv.env['HTTP_URL']!;
+  String accessTokenKey = dotenv.env['ACCESS_TOKEN_KEY']!;
 
   DioService._internal() {
     dio = Dio(BaseOptions(
@@ -22,11 +25,18 @@ class DioService {
       receiveTimeout: const Duration(seconds: 10),
       headers: {
         'Content-Type': 'application/json',
-        // HttpHeaders.authorizationHeader: 'Bearer ${await getToken()}'
       },
     ))
+      ..interceptors.add(InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          final token = await getToken(accessTokenKey);
+          options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+          return handler.next(options);
+        },
+      ))
       ..interceptors.add(CustomInterceptor());
   }
+
 
   Future<ResultModel> postRequest(String uri, [Map<String, dynamic>? data]) async {
 
@@ -48,5 +58,4 @@ class DioService {
 
     return ResultModel.fromJson(response.data);
   }
-
 }

@@ -4,7 +4,7 @@ import 'package:packup/provider/search_bar/custom_search_bar_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/search_bar/custom_search_bar.dart';
 import 'package:packup/const/color.dart';
-import 'chat_message.dart';
+import 'package:packup/widget/chat/chat_message.dart';
 
 class ChatRoom extends StatefulWidget {
 
@@ -23,8 +23,6 @@ class _ChatRoom extends State<ChatRoom> {
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
-    // 최초 데이터 조회
-    Provider.of<ChatProvider>(context, listen: false).getRoom();
   }
 
   _scrollListener() {
@@ -40,7 +38,7 @@ class _ChatRoom extends State<ChatRoom> {
         ChangeNotifierProvider(create: (_) => SearchBarProvider()),
       ],
       child: Consumer2<ChatProvider, SearchBarProvider>(
-        builder: (context, chatProvider, searchViewModel, child) {
+        builder: (context, chatProvider, searchProvider, child) {
           if (chatProvider.chatRoom.isEmpty) {
             chatProvider.getRoom();
           }
@@ -48,11 +46,11 @@ class _ChatRoom extends State<ChatRoom> {
           var filteredChatRooms = chatProvider.chatRoom;
 
           // 검색 필터
-          if (searchViewModel.searchText.isNotEmpty) {
+          if (searchProvider.searchText.isNotEmpty) {
             filteredChatRooms = filteredChatRooms.where((room) {
               return room["chatRoomId"]
                   .toString()
-                  .contains(searchViewModel.searchText);
+                  .contains(searchProvider.searchText);
             }).toList();
           }
 
@@ -79,7 +77,7 @@ class _ChatRoom extends State<ChatRoom> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  Message(chatRoomId: room["chatRoomId"]),
+                                  ChatMessage(),
                             ),
                           );
                         },
