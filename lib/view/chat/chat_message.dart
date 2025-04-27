@@ -2,14 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:packup/service/chat/chat_service.dart';
-import 'package:provider/provider.dart';
 import 'package:packup/Common/util.dart';
-import 'package:packup/provider/chat/chat_provider.dart';
 import 'package:packup/widget/chat/bubble_message.dart';
 import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/ChatModel.dart';
 
-import '../../model/common/result_model.dart';
+import 'package:packup/model/common/result_model.dart';
 
 class ChatMessage extends StatefulWidget {
   final int chatRoomId;

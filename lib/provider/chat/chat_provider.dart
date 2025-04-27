@@ -19,21 +19,4 @@ class ChatProvider with ChangeNotifier {
     final response = await chatService.getRoom();
     setChatProvider(response.response);
   }
-
-  Future<ResultModel> getMessage({
-    required chatRoomId,
-  }) async {
-
-    final response = await chatService.getMessage(chatRoomId);
-
-    return response;
-  }
-
-  Future<int> createChatRoom({
-    required receiver
-  }) async {
-    final response = await chatService.createRoom(receiver);
-
-    return response.response;
-  }
 }
