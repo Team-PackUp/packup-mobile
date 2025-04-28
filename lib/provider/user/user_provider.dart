@@ -54,7 +54,8 @@ class UserProvider with ChangeNotifier {
         _accessToken = token;
 
         _resultModel = await _httpService.checkLogin(_accessToken);
-        
+        _resultModel = ResultModel.fromJson(_resultModel?.response);        
+
         jwt = _resultModel?.response;
 
         if (jwt != null && jwt!.isNotEmpty) {
