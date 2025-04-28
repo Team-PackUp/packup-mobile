@@ -68,6 +68,14 @@ class UserProvider with ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+
+      // 제대로 저장됐는지 디버깅 
+      print('aaaaaaaaaaaaaaaaaaaa');
+      final token = await getToken(ACCESS_TOKEN);
+      print(token);
+      print('aaaaaaaaaaaaaaaaaaaa');
+
+
     }
   }
 
@@ -99,4 +107,15 @@ class UserProvider with ChangeNotifier {
   Future<void> logout() async {
     await socialLogin.logout();
   }
+
+  Future<void> getMyInfo() async {
+    _resultModel = await _httpService.getMyInfo();
+
+    if (_resultModel?.statusCode == 200) {
+      _userModel = UserModel.fromJson(_resultModel?.response);
+      notifyListeners();
+    }
+
+  }
+
 }
