@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:packup/Common/util.dart';
+import 'package:packup/const/const.dart';
 import 'package:packup/model/common/user_model.dart';
 import 'package:packup/model/common/result_model.dart';
 import 'package:packup/service/login/login_service.dart';
@@ -18,6 +19,7 @@ class UserProvider with ChangeNotifier {
   late bool _isLoading;
   String? _accessToken = '';
   late bool _isResult;
+  String? jwt = '';
 
   final LoginService _httpService = LoginService();
 
@@ -51,7 +53,14 @@ class UserProvider with ChangeNotifier {
         final token = await socialLogin.getAccessToken();
         _accessToken = token;
 
-        _httpService.checkLogin(_accessToken);
+        _resultModel = await _httpService.checkLogin(_accessToken);
+        
+        jwt = _resultModel?.response;
+
+        if (jwt != null && jwt!.isNotEmpty) {
+          saveToken(ACCESS_TOKEN, jwt!);
+        }
+
       }
 
     } catch (e) {
