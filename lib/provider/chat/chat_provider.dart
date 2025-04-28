@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:packup/model/common/result_model.dart';
+import 'package:packup/model/chat/ChatMessageModel.dart';
 import 'package:packup/service/chat/chat_service.dart';
-
-import 'package:packup/model/chat/ChatModel.dart';
 
 class ChatProvider with ChangeNotifier {
   final ChatService chatService = ChatService();
@@ -18,5 +16,14 @@ class ChatProvider with ChangeNotifier {
   getRoom() async {
     final response = await chatService.getRoom();
     setChatProvider(response.response);
+  }
+
+  Future<List<ChatMessageModel>> getMessage(int chatRoomId) async {
+    final response = await chatService.getMessage(chatRoomId);
+    List<ChatMessageModel> getMessage = response.response;
+
+    print(getMessage);
+
+    return getMessage;
   }
 }

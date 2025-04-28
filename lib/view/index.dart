@@ -9,6 +9,7 @@ import 'package:packup/view/profile/profile.dart';
 import 'package:packup/view/schedule/schedule.dart';
 
 import '../widget/editor/editor.dart';
+import 'chat/chat_message_screen.dart';
 
 class Index extends StatefulWidget {
   final int? index;
@@ -112,7 +113,8 @@ class _IndexState extends State<Index> {
       case 0:
         return const Schedule();
       case 1:
-        return const ChatMessage();
+        // return const ChatMessageScreen();
+        return const ChatMessageScreen();
         // return const SizedBox();
       case 2:
       return const Home();

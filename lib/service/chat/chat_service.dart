@@ -4,8 +4,8 @@ import 'package:packup/model/common/result_model.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../../http/dio_service.dart';
-import '../../model/chat/ChatModel.dart';
+import 'package:packup/http/dio_service.dart';
+import 'package:packup/model/chat/ChatMessageModel.dart';
 
 class ChatService {
 
@@ -46,30 +46,38 @@ class ChatService {
 
     final response = await DioService().getRequest('/chat/room/list');
 
-    return ResultModel.fromJson(response.response);
+    return response;
   }
 
   /// 3. 채팅 내역 가져오기 (HTTP)
-  Future<ResultModel> getMessage(int chatRoomId) async {
-
-    final data = {'chat_room_id' : chatRoomId};
-
-    final response = await DioService().getRequest('/chat/getMessage', data);
+  Future<ResultModel> getMessage(int chatRoomSeq) async {
+    chatRoomSeq = 2;
+    final response = await DioService().getRequest("/chat/message/list/$chatRoomSeq");
 
     return ResultModel.fromJson(response.response);
   }
 
   /// 5. WebSocket 연결
-  void connectWebSocket(int roomId) {
-    final uri = Uri.parse("$socketPrefix/ws/chat?roomId=$roomId");
-    _channel = WebSocketChannel.connect(uri);
-    _stream = _channel!.stream.asBroadcastStream();
+  void connectWebSocket(int chatRoomSeq) {
+    print(chatRoomSeq);
+    print("$socketPrefix/chat_message?chatRoomSeq=$chatRoomSeq");
+    final uri = Uri.parse("$socketPrefix/ws/chat_message?chatRoomSeq=$chatRoomSeq");
+    try {
+      // _channel = WebSocketChannel.connect(
+      //   Uri.parse('ws://10.0.2.2:8080/ws/chat'),
+      // );
+      // 연결 성공 시 로직
+    } catch (e) {
+      print('WebSocket connection error: $e');
+    }
   }
 
   /// 6. WebSocket 메시지 보내기
-  void sendMessage(ChatModel chat) {
+  void sendMessage(ChatMessageModel chat) {
+    print(chat);
     if (_channel != null) {
-      _channel!.sink.add(json.encode(chat.toJson()));
+      print("메시지 발송 ");
+      _channel!.sink.add(chat.message);
     }
   }
 
@@ -78,6 +86,7 @@ class ChatService {
 
   /// 8. 연결 종료
   void disconnect() {
+    print("소켓 해제");
     _channel?.sink.close();
     _channel = null;
   }

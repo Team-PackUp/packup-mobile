@@ -1,20 +1,23 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:packup/provider/chat/chat_provider.dart';
 import 'package:packup/service/chat/chat_service.dart';
 import 'package:packup/Common/util.dart';
 import 'package:packup/widget/chat/bubble_message.dart';
 import 'package:packup/const/color.dart';
-import 'package:packup/model/chat/ChatModel.dart';
+import 'package:packup/model/chat/ChatMessageModel.dart';
 
 import 'package:packup/model/common/result_model.dart';
 
 class ChatMessage extends StatefulWidget {
-  final int chatRoomId;
+  final int chatRoomSeq;
+  final int userSeq;
 
   const ChatMessage({
     super.key,
-    this.chatRoomId = 1,
+    this.chatRoomSeq = 1,
+    this.userSeq = 1,
   });
 
   @override
@@ -24,10 +27,11 @@ class ChatMessage extends StatefulWidget {
 class _ChatMessageState extends State<ChatMessage> {
   ChatService chatService = ChatService();
 
+  ChatProvider chatProvider = ChatProvider();
+
   late final TextEditingController _controller;
   late final ScrollController scrollController;
-  List<ChatModel> messages = [];
-  late int userSeq;
+  List<ChatMessageModel> messages = [];
 
   StreamSubscription? messageSubscription;
 
@@ -43,21 +47,20 @@ class _ChatMessageState extends State<ChatMessage> {
   }
 
   Future<void> dataSetting() async {
-    ResultModel resultModel = await chatService.getMessage(widget.chatRoomId);
-    List<ChatModel> getMessage = resultModel.response;
+    // List<ChatMessageModel> chatMessageList = await chatProvider.getMessage(widget.chatRoomSeq);
+    //
+    // if (chatMessageList.isNotEmpty) {
+    //   setState(() {
+    //     messages = chatMessageList;
+    //   });
+    // }
 
-    if (getMessage.isNotEmpty) {
-      setState(() {
-        messages = getMessage;
-      });
-    }
-
-    chatService.connectWebSocket(widget.chatRoomId!);
+    chatService.connectWebSocket(widget.chatRoomSeq);
     messageSubscription = chatService.messageStream.listen((event) {
       if (event is String) {
         try {
           Map<String, dynamic> jsonMap = jsonDecode(event);
-          ChatModel data = ChatModel.fromJson(jsonMap);
+          ChatMessageModel data = ChatMessageModel.fromJson(jsonMap);
           if (data.sender > 0) {
             processReceivedData(data);
           }
@@ -101,7 +104,7 @@ class _ChatMessageState extends State<ChatMessage> {
                     return BubbleMessage(
                       message: messages[index].message,
                       sender: messages[index].sender,
-                      userSeq: userSeq,
+                      userSeq: widget.userSeq,
                     );
                   },
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
@@ -161,18 +164,20 @@ class _ChatMessageState extends State<ChatMessage> {
 
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {
-      final chat = ChatModel(
+      final chat = ChatMessageModel(
         message: _controller.text,
-        sender: userSeq,
-        chatRoomId: widget.chatRoomId!,
+        sender: widget.userSeq,
+        chatRoomSeq: widget.chatRoomSeq,
+        createdAt: null,
       );
+      print(chat.message);
       chatService.sendMessage(chat);
 
       _controller.clear();
     }
   }
 
-  void processReceivedData(ChatModel data) {
+  void processReceivedData(ChatMessageModel data) {
     setState(() {
       messages.insert(0, data);
       scrollController.animateTo(
