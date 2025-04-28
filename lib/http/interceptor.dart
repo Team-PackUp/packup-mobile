@@ -10,8 +10,16 @@ class CustomInterceptor extends Interceptor {
   String accessTokenKey = dotenv.env['ACCESS_TOKEN_KEY']!;
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     logger('[REQ] [${options.method}] ${options.uri}');
+
+    final accessToken = await getToken(ACCESS_TOKEN);
+
+    if (accessToken != null && accessToken.isNotEmpty) {
+      options.headers.addAll({
+        'Authorization': 'Bearer $accessToken',
+      });
+    }
 
     return super.onRequest(options, handler);
   }

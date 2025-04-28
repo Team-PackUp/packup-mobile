@@ -1,7 +1,7 @@
 class ResultModel {
-  final String message;
-  final bool resultFlag;
-  final int statusCode;
+  final String? message;
+  final bool? resultFlag;
+  final int? statusCode;
   final dynamic response;
 
   ResultModel({

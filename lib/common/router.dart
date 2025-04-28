@@ -4,6 +4,7 @@ import 'package:packup/view/chat/chat_room.dart';
 import 'package:packup/view/home/home.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
+import 'package:packup/view/preference/preference_view.dart';
 
 /// 라우트 사용
 /// push => 라우트를 쌓아올려서 뒤로가기 하면 이전 스크린으로 이동
@@ -30,8 +31,13 @@ import 'package:packup/view/index.dart';
 final router = GoRouter(
   routes: [
     GoRoute(
+      path: '/preference',
+      builder: (context, state) => const PreferenceView(),
+    ),
+    GoRoute(
         path: '/',
         builder: (context, state) => const Login()
+        // builder: (context, state) => const PreferenceView(),
     ),
     GoRoute(
         path: '/index',

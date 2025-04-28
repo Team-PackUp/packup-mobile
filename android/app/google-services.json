@@ -1,0 +1,70 @@
+{
+  "project_info": {
+    "project_number": "413154186328",
+    "project_id": "packup-90eda",
+    "storage_bucket": "packup-90eda.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413154186328:android:081b9d1c50828b6410662d",
+        "android_client_info": {
+          "package_name": "com.packup.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "413154186328-84nion7l8heo6c3t3gsqcokpvm0hs0hu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.packup.mobile",
+            "certificate_hash": "0f65a4c1c120a75cff1084ee177c77a182dea62d"
+          }
+        },
+        {
+          "client_id": "413154186328-muerp6mi39nol0e3r66na51u6te2ksdt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.packup.mobile",
+            "certificate_hash": "e211715b1ad052945c7bf55ee9945d7c8b5eb5d0"
+          }
+        },
+        {
+          "client_id": "413154186328-q5fltt1dppdvt4rej9ku3csp287l90bl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.packup.mobile",
+            "certificate_hash": "6a7656abf448f38daee66d498eaa6aab1ce3a531"
+          }
+        },
+        {
+          "client_id": "413154186328-m8vcjk6jego987f1dcohtks9soq4shno.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsvP0n8lZOZJ_7mDSLH4DLdrIxmqhJvi8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "413154186328-j8l1276ldrppo0p3jd6jr8uuoe9i3159.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "413154186328-vgu30o62g4iq90oiivhd541msavb0175.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "packup.com.mobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

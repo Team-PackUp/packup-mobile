@@ -127,6 +127,23 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
+                SizedBox(height: MediaQuery.of(context).size.width * 0.02),
+                
+                // 디버깅용 
+                ElevatedButton(
+                  onPressed: () {
+                    getMyInfo(viewModel);
+                  },
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(PRIMARY_COLOR)),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Text(
+                      'JWT 로 내 정보 확인하기',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: TEXT_COLOR_W),
+                    ),
+                  ),
+                ),
               ],
             ),
           );
@@ -138,6 +155,57 @@ class _LoginState extends State<Login> {
   logout(UserProvider viewModel) async {
     await viewModel.logout();
   }
+
+  // getMyInfo(UserProvider viewModel) async {
+  //   await viewModel.getMyInfo();
+  // }
+
+  getMyInfo(UserProvider viewModel) async {
+    await viewModel.getMyInfo();
+
+    if (!mounted) return;
+
+    if (viewModel.resultModel?.statusCode == 200) {
+      // 정상 응답이면 유저 정보 Alert 띄우기
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('내 정보'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('이메일: ${viewModel.userModel?.email ?? "알 수 없음"}'),
+              Text('닉네임: ${viewModel.userModel?.nickname ?? "알 수 없음"}'),
+              Text('선호도: ${viewModel.userModel?.preferCategorySeqJson ?? "없음"}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('확인'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      // 실패했을 때
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('에러'),
+          content: const Text('내 정보 불러오기 실패했습니다.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('확인'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
 
   login(String userId, String password, BuildContext context, UserProvider viewModel) async {
     // validation(userId, password);

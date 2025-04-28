@@ -8,6 +8,7 @@ class GoogleLogin implements SocialLogin {
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     clientId: Platform.isIOS ? dotenv.env['IOS_CLIENT_ID'] : null,
     scopes: ['email'],
+    hostedDomain: '',
   );
 
   GoogleSignInAccount? googleUser;
@@ -22,6 +23,7 @@ class GoogleLogin implements SocialLogin {
       return false;
     }
   }
+
 
   @override
   Future<bool> logout() async {

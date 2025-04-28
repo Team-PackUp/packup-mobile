@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:packup/Common/util.dart';
+import 'package:packup/const/const.dart';
 import 'package:packup/model/common/user_model.dart';
 import 'package:packup/model/common/result_model.dart';
 import 'package:packup/service/login/login_service.dart';
@@ -18,6 +19,7 @@ class UserProvider with ChangeNotifier {
   late bool _isLoading;
   String? _accessToken = '';
   late bool _isResult;
+  String? jwt = '';
 
   final LoginService _httpService = LoginService();
 
@@ -51,7 +53,15 @@ class UserProvider with ChangeNotifier {
         final token = await socialLogin.getAccessToken();
         _accessToken = token;
 
-        _httpService.checkLogin(_accessToken);
+        _resultModel = await _httpService.checkLogin(_accessToken);
+        _resultModel = ResultModel.fromJson(_resultModel?.response);        
+
+        jwt = _resultModel?.response;
+
+        if (jwt != null && jwt!.isNotEmpty) {
+          saveToken(ACCESS_TOKEN, jwt!);
+        }
+
       }
 
     } catch (e) {
@@ -59,6 +69,14 @@ class UserProvider with ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+
+      // 제대로 저장됐는지 디버깅 
+      print('aaaaaaaaaaaaaaaaaaaa');
+      final token = await getToken(ACCESS_TOKEN);
+      print(token);
+      print('aaaaaaaaaaaaaaaaaaaa');
+
+
     }
   }
 
@@ -90,4 +108,15 @@ class UserProvider with ChangeNotifier {
   Future<void> logout() async {
     await socialLogin.logout();
   }
+
+  Future<void> getMyInfo() async {
+    _resultModel = await _httpService.getMyInfo();
+
+    if (_resultModel?.statusCode == 200) {
+      _userModel = UserModel.fromJson(_resultModel?.response);
+      notifyListeners();
+    }
+
+  }
+
 }

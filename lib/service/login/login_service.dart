@@ -23,4 +23,8 @@ class LoginService {
   Future<ResultModel> getUserInfo(Map<String, dynamic> data) async {
     return await DioService().getRequest('get_user_info', data);
   }
+  
+  Future<ResultModel> getMyInfo() async {
+    return await DioService().getRequest('/user/me');
+  }
 }
