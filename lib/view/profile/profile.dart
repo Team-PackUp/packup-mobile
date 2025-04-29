@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:packup/l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:packup/const/color.dart';
 import 'package:packup/theme/theme.dart';

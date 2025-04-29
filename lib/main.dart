@@ -2,11 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'l10n/app_localizations.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:packup/common/router.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:packup/theme/theme.dart';
 
 import 'package:packup/provider/user/user_provider.dart';
@@ -85,14 +84,28 @@ class PackUp extends StatelessWidget {
           supportedLocales: const [
             Locale('en', ''), // 영어
             Locale('ko', ''), // 한국어
+            Locale('ja', ''), // 일본어
           ],
-            localizationsDelegates: const [
-              AppLocalizations.delegate, // 코드 추가
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-              FlutterQuillLocalizations.delegate,
-            ],
+          localeResolutionCallback: (locale, supportedLocales) {
+            if (locale == null) {
+              return const Locale('en');
+            }
+
+            for (var supportedLocale in supportedLocales) {
+              if (supportedLocale.languageCode == locale.languageCode) {
+                return supportedLocale;
+              }
+            }
+
+            return const Locale('en');
+          },
+          localizationsDelegates: const [
+            AppLocalizations.delegate, // 코드 추가
+            GlobalMaterialLocalizations.delegate, // 텍스트 및 날짜 형식을 현지화 값으로 제공
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            FlutterQuillLocalizations.delegate,
+          ],
         );
       },
     );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/provider/user/user_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:packup/l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:packup/widget/common/custom_dialog.dart';
 
