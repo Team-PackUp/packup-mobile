@@ -1,9 +1,9 @@
 // preference_view.dart
 import 'package:flutter/material.dart';
-import 'package:packup/widget/preference/preference_form.dart';
+import 'package:packup/widget/user/preference/preference_form.dart';
 
-class PreferenceView extends StatelessWidget {
-  const PreferenceView({super.key});
+class Preference extends StatelessWidget {
+  const Preference({super.key});
 
   @override
   Widget build(BuildContext context) {
