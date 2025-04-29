@@ -43,6 +43,8 @@ class _ChatMessageState extends State<ChatMessage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       dataSetting();
+
+      chatService.initConnect(); // STOMP 소켓 연결
     });
   }
 
@@ -54,21 +56,6 @@ class _ChatMessageState extends State<ChatMessage> {
     //     messages = chatMessageList;
     //   });
     // }
-
-    chatService.connectWebSocket(widget.chatRoomSeq);
-    messageSubscription = chatService.messageStream.listen((event) {
-      if (event is String) {
-        try {
-          Map<String, dynamic> jsonMap = jsonDecode(event);
-          ChatMessageModel data = ChatMessageModel.fromJson(jsonMap);
-          if (data.sender > 0) {
-            processReceivedData(data);
-          }
-        } catch (e) {
-          logger('채팅 수신 실패', 'ERROR');
-        }
-      }
-    });
   }
 
   @override
@@ -170,7 +157,7 @@ class _ChatMessageState extends State<ChatMessage> {
         chatRoomSeq: widget.chatRoomSeq,
         createdAt: null,
       );
-      print(chat.message);
+
       chatService.sendMessage(chat);
 
       _controller.clear();

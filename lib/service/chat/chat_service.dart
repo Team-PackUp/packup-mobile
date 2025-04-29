@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:packup/Common/util.dart';
 import 'package:packup/model/common/result_model.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:packup/http/dio_service.dart';
-import 'package:packup/model/chat/ChatMessageModel.dart';
+
+import 'package:stomp_dart_client/stomp_dart_client.dart';
+import 'package:stomp_dart_client/src/stomp.dart';
+import 'package:stomp_dart_client/src/stomp_config.dart';
+import 'package:stomp_dart_client/src/stomp_frame.dart';
 
 class ChatService {
 
@@ -19,11 +23,9 @@ class ChatService {
     return _instance;
   }
 
-
+  late StompClient stompClient;
   final String httpPrefix = dotenv.env['HTTP_URL']!;
   final String socketPrefix = dotenv.env['SOCKET_URL']!;
-  WebSocketChannel? _channel;
-  Stream? _stream;
 
   /// HTTP header
   Future<Map<String, String>> get header async => {
@@ -57,37 +59,52 @@ class ChatService {
     return ResultModel.fromJson(response.response);
   }
 
-  /// 5. WebSocket 연결
-  void connectWebSocket(int chatRoomSeq) {
-    print(chatRoomSeq);
-    print("$socketPrefix/chat_message?chatRoomSeq=$chatRoomSeq");
-    final uri = Uri.parse("$socketPrefix/ws/chat_message?chatRoomSeq=$chatRoomSeq");
-    try {
-      // _channel = WebSocketChannel.connect(
-      //   Uri.parse('ws://10.0.2.2:8080/ws/chat'),
-      // );
-      // 연결 성공 시 로직
-    } catch (e) {
-      print('WebSocket connection error: $e');
-    }
+  void initConnect() {
+    print("커넥트 시작");
+    initStompClient();
+    stompClient.activate();
   }
 
-  /// 6. WebSocket 메시지 보내기
-  void sendMessage(ChatMessageModel chat) {
-    print(chat);
-    if (_channel != null) {
-      print("메시지 발송 ");
-      _channel!.sink.add(chat.message);
-    }
+  void initStompClient() {
+    stompClient = StompClient(
+      config: StompConfig(
+        url: '$socketPrefix/chat',
+        onConnect: onConnect,
+        beforeConnect: () async {
+          await Future.delayed(const Duration(milliseconds: 200));
+        },
+        onWebSocketError: (dynamic error) => logger(error.toString(), 'ERROR'),
+        stompConnectHeaders: {'Authorization': 'Bearer yourToken'},
+        webSocketConnectHeaders: {'Authorization': 'Bearer yourToken'},
+      ),
+    );
   }
 
-  /// 7. WebSocket 메시지 수신 스트림
-  Stream<dynamic> get messageStream => _stream!;
+  void onConnect(StompFrame frame) {
+    stompClient.subscribe(
+      destination: '/sub/chat/room/1',
+      callback: (frame) {
+        final result = json.decode(frame.body!);
+      },
+    );
 
-  /// 8. 연결 종료
+    Timer.periodic(const Duration(seconds: 10), (_) {
+      stompClient.send(
+        destination: '/pub/chat/message',
+        body: json.encode({'a': 123}),
+      );
+    });
+  }
+
+  void sendMessage(chatMessageModel) {
+    stompClient.send(
+      destination: '/pub/sendMessage',
+      body: json.encode(chatMessageModel),
+      headers: {'content-type': 'application/json'},
+    );
+  }
+
   void disconnect() {
-    print("소켓 해제");
-    _channel?.sink.close();
-    _channel = null;
+    stompClient.deactivate();
   }
 }
