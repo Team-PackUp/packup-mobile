@@ -16,7 +16,7 @@ class ChatMessage extends StatefulWidget {
 
   const ChatMessage({
     super.key,
-    this.chatRoomSeq = 1,
+    this.chatRoomSeq = 2,
     this.userSeq = 1,
   });
 

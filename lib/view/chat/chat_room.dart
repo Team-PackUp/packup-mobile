@@ -48,7 +48,7 @@ class _ChatRoom extends State<ChatRoom> {
           // 검색 필터
           if (searchProvider.searchText.isNotEmpty) {
             filteredChatRooms = filteredChatRooms.where((room) {
-              return room["chatRoomId"]
+              return room.seq
                   .toString()
                   .contains(searchProvider.searchText);
             }).toList();
@@ -88,7 +88,7 @@ class _ChatRoom extends State<ChatRoom> {
                             right: 8.0,
                           ),
                           child: _buildCard(
-                            title: room["chatRoomId"].toString(),
+                            title: room.seq.toString(),
                             content: 1,
                           ),
                         ),

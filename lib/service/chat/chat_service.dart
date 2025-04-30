@@ -7,9 +7,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:packup/http/dio_service.dart';
 
 import 'package:stomp_dart_client/stomp_dart_client.dart';
-import 'package:stomp_dart_client/src/stomp.dart';
-import 'package:stomp_dart_client/src/stomp_config.dart';
-import 'package:stomp_dart_client/src/stomp_frame.dart';
 
 class ChatService {
 

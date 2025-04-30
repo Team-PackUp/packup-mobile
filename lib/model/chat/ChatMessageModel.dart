@@ -1,35 +1,48 @@
 class ChatMessageModel {
+  final int? seq;
   final String message;
   final int sender;
   final int chatRoomSeq;
   final DateTime? createdAt;
 
-  // 생성자
   ChatMessageModel({
+    this.seq,
+    this.createdAt,
     required this.message,
     required this.sender,
     required this.chatRoomSeq,
-    required this.createdAt,
   });
 
   Map<String, dynamic> toJson() {
-    return <String, dynamic> {
+    return {
       'message': message,
       'sender': sender,
       'chatRoomSeq': chatRoomSeq,
-      'createdAt': createdAt,
     };
   }
 
-  factory ChatMessageModel.fromJson(Map<String, dynamic> json) {
-    return ChatMessageModel(
-      message: json['message'] ?? "",
-      sender: json['sender'] ?? 0,
-      chatRoomSeq: json['chatRoomSeq'] ?? 0,
-      createdAt: json['createdAt'] != null && json['createdAt'] != ''
-          ? DateTime.parse(json['createdAt'])
-          : null,
+  factory ChatMessageModel.fromJsonWithBase(
+      Map<String, dynamic> json, ChatMessageModel base,
+      ) {
+    return base.copyWith(
+      seq: json['seq'],
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
     );
   }
 
+  ChatMessageModel copyWith({
+    int? seq,
+    String? message,
+    int? sender,
+    int? chatRoomSeq,
+    DateTime? createdAt,
+  }) {
+    return ChatMessageModel(
+      seq: seq ?? this.seq,
+      message: message ?? this.message,
+      sender: sender ?? this.sender,
+      chatRoomSeq: chatRoomSeq ?? this.chatRoomSeq,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }
