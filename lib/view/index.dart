@@ -9,7 +9,6 @@ import 'package:packup/view/profile/profile.dart';
 import 'package:packup/view/schedule/schedule.dart';
 
 import '../widget/editor/editor.dart';
-import 'chat/chat_message_screen.dart';
 
 class Index extends StatefulWidget {
   final int? index;

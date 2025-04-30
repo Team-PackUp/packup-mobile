@@ -18,7 +18,7 @@ class BubbleMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMine = sender == userSeq;
-    final imagePath = profileImagePath ?? 'assets/icons/schedule/biceps_icon.png';
+    final imagePath = profileImagePath ?? '';
 
     return Row(
       mainAxisAlignment:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:packup/provider/chat/chat_provider.dart';
 import 'package:packup/provider/search_bar/custom_search_bar_provider.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +40,7 @@ class _ChatRoom extends State<ChatRoom> {
       ],
       child: Consumer2<ChatProvider, SearchBarProvider>(
         builder: (context, chatProvider, searchProvider, child) {
-          if (chatProvider.chatRoom.isEmpty) {
+          if (chatProvider.chatRoom.isEmpty && chatProvider.isLoading == false) {
             chatProvider.getRoom();
           }
 
@@ -73,13 +74,7 @@ class _ChatRoom extends State<ChatRoom> {
 
                       return InkWell(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ChatMessage(),
-                            ),
-                          );
+                          context.push('/chat_message/${room.seq}');
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(

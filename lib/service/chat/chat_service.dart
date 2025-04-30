@@ -35,25 +35,19 @@ class ChatService {
 
     final data = {'receiver' : receiver};
 
-    final response = await DioService().postRequest('/createRoom', data);
-
-    return ResultModel.fromJson(response.response);
+    return await DioService().postRequest('/createRoom', data);
   }
 
   /// 2. 채팅방 목록 조회 (HTTP)
   Future<ResultModel> getRoom() async {
 
-    final response = await DioService().getRequest('/chat/room/list');
-
-    return response;
+    return await DioService().getRequest('/chat/room/list');
   }
 
   /// 3. 채팅 내역 가져오기 (HTTP)
   Future<ResultModel> getMessage(int chatRoomSeq) async {
-    chatRoomSeq = 2;
-    final response = await DioService().getRequest("/chat/message/list/$chatRoomSeq");
 
-    return ResultModel.fromJson(response.response);
+    return await DioService().getRequest("/chat/message/list/$chatRoomSeq");
   }
 
   void initConnect() {

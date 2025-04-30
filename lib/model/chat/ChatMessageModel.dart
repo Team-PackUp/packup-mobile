@@ -1,16 +1,16 @@
 class ChatMessageModel {
   final int? seq;
-  final String message;
-  final int sender;
-  final int chatRoomSeq;
+  final String? message;
+  final int? sender;
+  final int? chatRoomSeq;
   final DateTime? createdAt;
 
   ChatMessageModel({
     this.seq,
     this.createdAt,
-    required this.message,
-    required this.sender,
-    required this.chatRoomSeq,
+    this.message,
+     this.sender,
+    this.chatRoomSeq,
   });
 
   Map<String, dynamic> toJson() {
@@ -21,28 +21,13 @@ class ChatMessageModel {
     };
   }
 
-  factory ChatMessageModel.fromJsonWithBase(
-      Map<String, dynamic> json, ChatMessageModel base,
-      ) {
-    return base.copyWith(
-      seq: json['seq'],
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-    );
-  }
-
-  ChatMessageModel copyWith({
-    int? seq,
-    String? message,
-    int? sender,
-    int? chatRoomSeq,
-    DateTime? createdAt,
-  }) {
+  factory ChatMessageModel.fromJson(Map<String, dynamic> json) {
     return ChatMessageModel(
-      seq: seq ?? this.seq,
-      message: message ?? this.message,
-      sender: sender ?? this.sender,
-      chatRoomSeq: chatRoomSeq ?? this.chatRoomSeq,
-      createdAt: createdAt ?? this.createdAt,
+              seq: json['seq'],
+          message: json['message'],
+           sender: json['sender'],
+      chatRoomSeq: json['chatRoomSeq'],
+        createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
     );
   }
 }

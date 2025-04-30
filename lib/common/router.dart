@@ -52,8 +52,11 @@ final router = GoRouter(
         builder: (context, state) => const ChatRoom()
     ),
     GoRoute(
-        path: '/chat_message',
-        builder: (context, state) => const ChatMessage()
+      path: '/chat_message/:chatRoomSeq',
+      builder: (context, state) {
+        final chatRoomSeq = int.parse(state.pathParameters['chatRoomSeq']!);
+        return ChatMessage(chatRoomSeq: chatRoomSeq);
+      },
     ),
   ],
 );

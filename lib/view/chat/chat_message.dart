@@ -1,14 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:packup/provider/chat/chat_provider.dart';
 import 'package:packup/service/chat/chat_service.dart';
-import 'package:packup/Common/util.dart';
 import 'package:packup/widget/chat/bubble_message.dart';
 import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/ChatMessageModel.dart';
+import 'package:provider/provider.dart';
 
-import 'package:packup/model/common/result_model.dart';
+import '../../provider/search_bar/custom_search_bar_provider.dart';
 
 class ChatMessage extends StatefulWidget {
   final int chatRoomSeq;
@@ -16,8 +15,8 @@ class ChatMessage extends StatefulWidget {
 
   const ChatMessage({
     super.key,
-    this.chatRoomSeq = 2,
     this.userSeq = 1,
+    required this.chatRoomSeq,
   });
 
   @override
@@ -26,82 +25,86 @@ class ChatMessage extends StatefulWidget {
 
 class _ChatMessageState extends State<ChatMessage> {
   ChatService chatService = ChatService();
-
   ChatProvider chatProvider = ChatProvider();
-
   late final TextEditingController _controller;
-  late final ScrollController scrollController;
-  List<ChatMessageModel> messages = [];
-
-  StreamSubscription? messageSubscription;
+  late final ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
     _controller = TextEditingController();
-    scrollController = ScrollController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      dataSetting();
-
       chatService.initConnect(); // STOMP 소켓 연결
+      // chatService.subscribe((ChatMessageModel message) {
+      //   context.read<ChatProvider>().addMessage(message);
+      // });
     });
   }
 
-  Future<void> dataSetting() async {
-    // List<ChatMessageModel> chatMessageList = await chatProvider.getMessage(widget.chatRoomSeq);
-    //
-    // if (chatMessageList.isNotEmpty) {
-    //   setState(() {
-    //     messages = chatMessageList;
-    //   });
-    // }
+  _scrollListener() {
+    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
+    }
   }
 
   @override
   void dispose() {
-    messageSubscription?.cancel();
     chatService.disconnect();
     _controller.dispose();
-    scrollController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        title: Text('채팅', style: TextStyle(color: TEXT_COLOR_W)),
-        backgroundColor: PRIMARY_COLOR,
-        iconTheme: IconThemeData(color: TEXT_COLOR_W),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: ListView.separated(
-                  padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                  controller: scrollController,
-                  reverse: true,
-                  itemBuilder: (context, index) {
-                    return BubbleMessage(
-                      message: messages[index].message,
-                      sender: messages[index].sender,
-                      userSeq: widget.userSeq,
-                    );
-                  },
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemCount: messages.length,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
+        ChangeNotifierProvider(create: (_) => SearchBarProvider()),
+      ],
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          title: Text('채팅', style: TextStyle(color: TEXT_COLOR_W)),
+          backgroundColor: PRIMARY_COLOR,
+          iconTheme: IconThemeData(color: TEXT_COLOR_W),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Consumer<ChatProvider>(
+                    builder: (context, chatProvider, child) {
+                      if (chatProvider.chatMessage.isEmpty && chatProvider.isLoading == false) {
+                        chatProvider.getMessage(widget.chatRoomSeq);
+                      }
+                      return ListView.separated(
+                        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        controller: _scrollController,
+                        reverse: true,
+                        itemBuilder: (context, index) {
+                          return BubbleMessage(
+                            message: chatProvider.chatMessage[index].message ?? '',
+                            sender: chatProvider.chatMessage[index].sender ?? 0,
+                            userSeq: widget.userSeq,
+                          );
+                        },
+                        separatorBuilder: (_, __) => const SizedBox(height: 12),
+                        itemCount: chatProvider.chatMessage.length,
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          sendMessage(),
-        ],
+            sendMessage(),
+          ],
+        ),
       ),
     );
   }
@@ -159,19 +162,18 @@ class _ChatMessageState extends State<ChatMessage> {
       );
 
       chatService.sendMessage(chat);
+      // context.read<ChatProvider>().addMessage(chat);
 
       _controller.clear();
-    }
-  }
 
-  void processReceivedData(ChatMessageModel data) {
-    setState(() {
-      messages.insert(0, data);
-      scrollController.animateTo(
-        0.0,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    });
+      // 스크롤 가장 아래로
+      Future.delayed(Duration(milliseconds: 100), () {
+        _scrollController.animateTo(
+          0,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      });
+    }
   }
 }
