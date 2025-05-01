@@ -7,23 +7,35 @@ import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/ChatMessageModel.dart';
 import 'package:provider/provider.dart';
 
-import '../../provider/search_bar/custom_search_bar_provider.dart';
-
-class ChatMessage extends StatefulWidget {
+class ChatMessage extends StatelessWidget {
   final int chatRoomSeq;
-  final int userSeq;
 
-  const ChatMessage({
+  const ChatMessage({super.key, required this.chatRoomSeq});
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => ChatProvider(),
+      child: ChatMessageContent(
+        chatRoomSeq: chatRoomSeq,
+      ),
+    );
+  }
+}
+
+class ChatMessageContent extends StatefulWidget {
+  final int chatRoomSeq;
+
+  const ChatMessageContent({
     super.key,
-    this.userSeq = 1,
     required this.chatRoomSeq,
   });
 
   @override
-  _ChatMessageState createState() => _ChatMessageState();
+  _ChatMessageContentState createState() => _ChatMessageContentState();
 }
 
-class _ChatMessageState extends State<ChatMessage> {
+class _ChatMessageContentState extends State<ChatMessageContent> {
   ChatService chatService = ChatService();
   ChatProvider chatProvider = ChatProvider();
   late final TextEditingController _controller;
@@ -36,17 +48,16 @@ class _ChatMessageState extends State<ChatMessage> {
     _scrollController.addListener(_scrollListener);
     _controller = TextEditingController();
 
+    chatService.initConnect(widget.chatRoomSeq); // STOMP 소켓 연결
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      chatService.initConnect(); // STOMP 소켓 연결
-      // chatService.subscribe((ChatMessageModel message) {
-      //   context.read<ChatProvider>().addMessage(message);
-      // });
+      context.read<ChatProvider>().getMessage(widget.chatRoomSeq);
     });
   }
 
   _scrollListener() {
-    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
-    }
+    if (_scrollController.position.maxScrollExtent ==
+        _scrollController.position.pixels) {}
   }
 
   @override
@@ -59,12 +70,7 @@ class _ChatMessageState extends State<ChatMessage> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ChatProvider()),
-        ChangeNotifierProvider(create: (_) => SearchBarProvider()),
-      ],
-      child: Scaffold(
+    return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: Text('채팅', style: TextStyle(color: TEXT_COLOR_W)),
@@ -80,22 +86,24 @@ class _ChatMessageState extends State<ChatMessage> {
                   alignment: Alignment.topCenter,
                   child: Consumer<ChatProvider>(
                     builder: (context, chatProvider, child) {
-                      if (chatProvider.chatMessage.isEmpty && chatProvider.isLoading == false) {
-                        chatProvider.getMessage(widget.chatRoomSeq);
-                      }
+                      var filteredChatMessage = chatProvider.chatMessage;
+                      
                       return ListView.separated(
-                        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        padding: const EdgeInsets.only(
+                          left: 10,
+                          right: 10,
+                          bottom: 10,
+                        ),
                         controller: _scrollController,
                         reverse: true,
                         itemBuilder: (context, index) {
                           return BubbleMessage(
-                            message: chatProvider.chatMessage[index].message ?? '',
-                            sender: chatProvider.chatMessage[index].sender ?? 0,
-                            userSeq: widget.userSeq,
+                            message: filteredChatMessage[index].message!,
+                            sender: filteredChatMessage[index].sender!,
                           );
                         },
                         separatorBuilder: (_, __) => const SizedBox(height: 12),
-                        itemCount: chatProvider.chatMessage.length,
+                        itemCount: filteredChatMessage.length,
                       );
                     },
                   ),
@@ -105,8 +113,7 @@ class _ChatMessageState extends State<ChatMessage> {
             sendMessage(),
           ],
         ),
-      ),
-    );
+      );
   }
 
   Widget sendMessage() => Container(
@@ -134,7 +141,10 @@ class _ChatMessageState extends State<ChatMessage> {
                 iconSize: 25,
               ),
               hintText: "",
-              contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 10,
+              ),
               fillColor: Colors.white,
               filled: true,
               enabledBorder: OutlineInputBorder(
@@ -156,9 +166,7 @@ class _ChatMessageState extends State<ChatMessage> {
     if (_controller.text.isNotEmpty) {
       final chat = ChatMessageModel(
         message: _controller.text,
-        sender: widget.userSeq,
         chatRoomSeq: widget.chatRoomSeq,
-        createdAt: null,
       );
 
       chatService.sendMessage(chat);

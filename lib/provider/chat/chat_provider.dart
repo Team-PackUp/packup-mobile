@@ -29,8 +29,6 @@ class ChatProvider with ChangeNotifier {
 
     _chatMessage = chatMessageList;
 
-    print("set " + _chatMessage[0].message!);
-
     notifyListeners();
 
     _isLoading = false;
@@ -52,10 +50,10 @@ class ChatProvider with ChangeNotifier {
   }
 
   // 채팅 이력
-  getMessage(int chatRoomId) async {
+  getMessage(int chatRoomSeq) async {
     _isLoading = true;
 
-    final response = await chatService.getMessage(chatRoomId);
+    final response = await chatService.getMessage(chatRoomSeq);
 
     final responseList = response.response as List;
 

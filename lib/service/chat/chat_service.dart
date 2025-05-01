@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:packup/Common/util.dart';
+import 'package:packup/model/chat/ChatMessageModel.dart';
 import 'package:packup/model/common/result_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:packup/http/dio_service.dart';
 
 import 'package:stomp_dart_client/stomp_dart_client.dart';
+
+import '../../const/const.dart';
 
 class ChatService {
 
@@ -19,6 +22,8 @@ class ChatService {
   factory ChatService() {
     return _instance;
   }
+
+  int? chatRoomSeq;
 
   late StompClient stompClient;
   final String httpPrefix = dotenv.env['HTTP_URL']!;
@@ -50,13 +55,20 @@ class ChatService {
     return await DioService().getRequest("/chat/message/list/$chatRoomSeq");
   }
 
-  void initConnect() {
+  Future<void> initConnect(chatRoomSeq) async {
+    this.chatRoomSeq = chatRoomSeq;
+
     print("커넥트 시작");
-    initStompClient();
+
+    await initStompClient();
+
     stompClient.activate();
   }
 
-  void initStompClient() {
+  Future<void> initStompClient() async {
+    final token = await getToken(ACCESS_TOKEN);
+    print(token);
+
     stompClient = StompClient(
       config: StompConfig(
         url: '$socketPrefix/chat',
@@ -65,15 +77,16 @@ class ChatService {
           await Future.delayed(const Duration(milliseconds: 200));
         },
         onWebSocketError: (dynamic error) => logger(error.toString(), 'ERROR'),
-        stompConnectHeaders: {'Authorization': 'Bearer yourToken'},
-        webSocketConnectHeaders: {'Authorization': 'Bearer yourToken'},
+        stompConnectHeaders: {'Authorization': "Bearer $token"},
+        webSocketConnectHeaders: {'Authorization': 'Bearer $token'},
       ),
     );
   }
 
+
   void onConnect(StompFrame frame) {
     stompClient.subscribe(
-      destination: '/sub/chat/room/1',
+      destination: '/sub/chat/room/$chatRoomSeq',
       callback: (frame) {
         final result = json.decode(frame.body!);
       },
@@ -81,16 +94,16 @@ class ChatService {
 
     Timer.periodic(const Duration(seconds: 10), (_) {
       stompClient.send(
-        destination: '/pub/chat/message',
-        body: json.encode({'a': 123}),
+        destination: '/pub/send.connection',
+        body: 'keep connection',
       );
     });
   }
 
-  void sendMessage(chatMessageModel) {
+  void sendMessage(ChatMessageModel chatMessageModel) {
     stompClient.send(
-      destination: '/pub/sendMessage',
-      body: json.encode(chatMessageModel),
+      destination: '/pub/send.message',
+      body: chatMessageModel.toJson(),
       headers: {'content-type': 'application/json'},
     );
   }

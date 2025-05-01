@@ -17,7 +17,6 @@ class ChatRoomModel {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'partUserSeq': partUserSeq,
-      'userSeq': userSeq,
     };
   }
 

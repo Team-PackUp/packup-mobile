@@ -55,6 +55,7 @@ final router = GoRouter(
       path: '/chat_message/:chatRoomSeq',
       builder: (context, state) {
         final chatRoomSeq = int.parse(state.pathParameters['chatRoomSeq']!);
+        // final userSeq = int.parse(state.pathParameters['userSeq']!);
         return ChatMessage(chatRoomSeq: chatRoomSeq);
       },
     ),

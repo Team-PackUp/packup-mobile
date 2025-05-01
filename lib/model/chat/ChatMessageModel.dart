@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class ChatMessageModel {
   final int? seq;
   final String? message;
@@ -13,12 +15,12 @@ class ChatMessageModel {
     this.chatRoomSeq,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
+  String toJson() {
+    return jsonEncode({
       'message': message,
       'sender': sender,
       'chatRoomSeq': chatRoomSeq,
-    };
+    });
   }
 
   factory ChatMessageModel.fromJson(Map<String, dynamic> json) {
