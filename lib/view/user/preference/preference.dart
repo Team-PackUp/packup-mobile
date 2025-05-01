@@ -1,5 +1,6 @@
-// preference_view.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:packup/provider/user/user_preference_provider.dart';
 import 'package:packup/widget/user/preference/preference_form.dart';
 
 class Preference extends StatelessWidget {
@@ -7,9 +8,12 @@ class Preference extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("선호도 선택")),
-      body: const PreferenceForm(),
+    return ChangeNotifierProvider(
+      create: (_) => UserPreferenceProvider(),
+      child: Scaffold(
+        appBar: AppBar(title: const Text("선호도 선택")),
+        body: const PreferenceForm(),
+      ),
     );
   }
 }

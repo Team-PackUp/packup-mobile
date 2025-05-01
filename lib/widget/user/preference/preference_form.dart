@@ -1,16 +1,14 @@
+// preference_form.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:packup/provider/user/user_preference_provider.dart';
 
-class PreferenceForm extends StatefulWidget {
+class PreferenceForm extends StatelessWidget {
   const PreferenceForm({super.key});
-  @override
-  State<PreferenceForm> createState() => _PreferenceFormState();
-}
-
-class _PreferenceFormState extends State<PreferenceForm> {
-  final selected = <String>{};
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<UserPreferenceProvider>(context);
     final options = ['문화', '역사', '자연', '음식', '체험'];
 
     return Column(
@@ -19,17 +17,14 @@ class _PreferenceFormState extends State<PreferenceForm> {
           spacing: 10,
           children: options.map((e) => ChoiceChip(
             label: Text(e),
-            selected: selected.contains(e),
-            onSelected: (val) {
-              setState(() {
-                val ? selected.add(e) : selected.remove(e);
-              });
-            },
+            selected: provider.selected.contains(e),
+            onSelected: (_) => provider.togglePreference(e),
           )).toList(),
         ),
         ElevatedButton(
-          onPressed: () {
-            // 저장 후 이동
+          onPressed: () async {
+            await provider.submitPreferences();
+            // TODO: 이동 처리 (e.g., Navigator.pop() 또는 다음 화면)
           },
           child: const Text("선택 완료"),
         ),
