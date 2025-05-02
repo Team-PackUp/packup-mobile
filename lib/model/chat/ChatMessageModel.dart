@@ -3,7 +3,7 @@ import 'dart:convert';
 class ChatMessageModel {
   final int? seq;
   final String? message;
-  final int? sender;
+  final int? userSeq;
   final int? chatRoomSeq;
   final DateTime? createdAt;
 
@@ -11,14 +11,14 @@ class ChatMessageModel {
     this.seq,
     this.createdAt,
     this.message,
-     this.sender,
+     this.userSeq,
     this.chatRoomSeq,
   });
 
   String toJson() {
     return jsonEncode({
       'message': message,
-      'sender': sender,
+      'userSeq': userSeq,
       'chatRoomSeq': chatRoomSeq,
     });
   }
@@ -27,7 +27,7 @@ class ChatMessageModel {
     return ChatMessageModel(
               seq: json['seq'],
           message: json['message'],
-           sender: json['sender'],
+          userSeq: json['userSeq'],
       chatRoomSeq: json['chatRoomSeq'],
         createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
     );

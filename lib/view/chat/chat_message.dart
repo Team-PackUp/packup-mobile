@@ -52,6 +52,8 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ChatProvider>().getMessage(widget.chatRoomSeq);
+
+      chatService.setProvider(context.read<ChatProvider>());
     });
   }
 
@@ -86,7 +88,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
                   alignment: Alignment.topCenter,
                   child: Consumer<ChatProvider>(
                     builder: (context, chatProvider, child) {
-                      var filteredChatMessage = chatProvider.chatMessage;
+                      List<ChatMessageModel> filteredChatMessage = chatProvider.chatMessage;
                       
                       return ListView.separated(
                         padding: const EdgeInsets.only(
@@ -99,7 +101,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
                         itemBuilder: (context, index) {
                           return BubbleMessage(
                             message: filteredChatMessage[index].message!,
-                            sender: filteredChatMessage[index].sender!,
+                            userSeq: filteredChatMessage[index].seq!,
                           );
                         },
                         separatorBuilder: (_, __) => const SizedBox(height: 12),

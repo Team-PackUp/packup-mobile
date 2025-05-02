@@ -64,4 +64,11 @@ class ChatProvider with ChangeNotifier {
     setChatMessageList(messageList);
   }
 
+  void addMessage(ChatMessageModel message) {
+    print("새로운 메시지 " + message.message.toString());
+
+    _chatMessage.insert(0, message);
+    notifyListeners();
+    print("메시지 발송 상태 변경 감지");
+  }
 }

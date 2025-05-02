@@ -6,10 +6,12 @@ import 'package:packup/model/common/result_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:packup/http/dio_service.dart';
+import 'package:packup/provider/chat/chat_provider.dart';
 
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 
 import '../../const/const.dart';
+import '../../provider/chat/chat_provider.dart';
 
 class ChatService {
 
@@ -28,6 +30,12 @@ class ChatService {
   late StompClient stompClient;
   final String httpPrefix = dotenv.env['HTTP_URL']!;
   final String socketPrefix = dotenv.env['SOCKET_URL']!;
+
+  late ChatProvider chatProvider;
+
+  void setProvider(ChatProvider provider) {
+    chatProvider = provider;
+  }
 
   /// HTTP header
   Future<Map<String, String>> get header async => {
@@ -57,9 +65,6 @@ class ChatService {
 
   Future<void> initConnect(chatRoomSeq) async {
     this.chatRoomSeq = chatRoomSeq;
-
-    print("커넥트 시작");
-
     await initStompClient();
 
     stompClient.activate();
@@ -71,7 +76,7 @@ class ChatService {
 
     stompClient = StompClient(
       config: StompConfig(
-        url: '$socketPrefix/chat',
+        url: '$socketPrefix/chat', // 소켓 연결을 위한 주소
         onConnect: onConnect,
         beforeConnect: () async {
           await Future.delayed(const Duration(milliseconds: 200));
@@ -83,12 +88,16 @@ class ChatService {
     );
   }
 
-
   void onConnect(StompFrame frame) {
     stompClient.subscribe(
-      destination: '/sub/chat/room/$chatRoomSeq',
+      destination: '/topic/chat/room/$chatRoomSeq', // 발행한 주소를 매칭 하여 구독
       callback: (frame) {
-        final result = json.decode(frame.body!);
+        if (frame.body != null) {
+          final data = json.decode(frame.body!);
+          final newChatMessage = ChatMessageModel.fromJson(data);
+
+          chatProvider.addMessage(newChatMessage);
+        }
       },
     );
 
@@ -102,7 +111,7 @@ class ChatService {
 
   void sendMessage(ChatMessageModel chatMessageModel) {
     stompClient.send(
-      destination: '/pub/send.message',
+      destination: '/pub/send.message', // STOMP 라우팅 키워드
       body: chatMessageModel.toJson(),
       headers: {'content-type': 'application/json'},
     );
