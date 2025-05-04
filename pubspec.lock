@@ -933,6 +933,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.2"
+  redis:
+    dependency: "direct main"
+    description:
+      name: redis
+      sha256: "4a8218ef7b0642ff499147c7a105591208259e2f55f07db0101ace7f82f66cf9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
   shared_preferences:
     dependency: "direct main"
     description:

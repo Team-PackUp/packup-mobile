@@ -18,22 +18,6 @@ class ChatProvider with ChangeNotifier {
   List<ChatRoomModel> get chatRoom => _chatRoom;
   List<ChatMessageModel> get chatMessage => _chatMessage;
 
-  setChatRoomList(List<ChatRoomModel> chatRoomList) {
-    _chatRoom = chatRoomList;
-    notifyListeners();
-
-    _isLoading = false;
-  }
-
-  setChatMessageList(List<ChatMessageModel> chatMessageList) {
-
-    _chatMessage = chatMessageList;
-
-    notifyListeners();
-
-    _isLoading = false;
-  }
-
   // 채팅방 리스트
   getRoom() async {
     _isLoading = true;
@@ -46,7 +30,8 @@ class ChatProvider with ChangeNotifier {
         .map((data) => ChatRoomModel.fromJson(data))
         .toList();
 
-    setChatRoomList(chatRoomList);
+    _chatRoom = chatRoomList;
+    notifyListeners();
   }
 
   // 채팅 이력
@@ -61,12 +46,15 @@ class ChatProvider with ChangeNotifier {
         .map((data) => ChatMessageModel.fromJson(data))
         .toList();
 
-    setChatMessageList(messageList);
+    _chatMessage = messageList;
+
+    notifyListeners();
   }
 
   void addMessage(ChatMessageModel message) {
 
     _chatMessage.insert(0, message);
+    getRoom();
     notifyListeners();
   }
 }

@@ -63,7 +63,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ChatProvider>().getMessage(widget.chatRoomSeq);
-
       chatService.setProvider(context.read<ChatProvider>());
     });
   }
