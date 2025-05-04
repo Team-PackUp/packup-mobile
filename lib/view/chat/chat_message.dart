@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:packup/provider/chat/chat_provider.dart';
 import 'package:packup/service/chat/chat_service.dart';
@@ -7,10 +8,16 @@ import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/ChatMessageModel.dart';
 import 'package:provider/provider.dart';
 
+import '../../common/util.dart';
+
 class ChatMessage extends StatelessWidget {
   final int chatRoomSeq;
+  final int userSeq;
 
-  const ChatMessage({super.key, required this.chatRoomSeq});
+  const ChatMessage({super.key,
+    required this.chatRoomSeq,
+    required this.userSeq
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +25,7 @@ class ChatMessage extends StatelessWidget {
       create: (_) => ChatProvider(),
       child: ChatMessageContent(
         chatRoomSeq: chatRoomSeq,
+        userSeq: userSeq,
       ),
     );
   }
@@ -25,10 +33,12 @@ class ChatMessage extends StatelessWidget {
 
 class ChatMessageContent extends StatefulWidget {
   final int chatRoomSeq;
+  final int userSeq;
 
   const ChatMessageContent({
     super.key,
     required this.chatRoomSeq,
+    required this.userSeq,
   });
 
   @override
@@ -42,8 +52,9 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   late final ScrollController _scrollController;
 
   @override
-  void initState() {
+  initState() {
     super.initState();
+
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     _controller = TextEditingController();
@@ -91,20 +102,21 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
                       List<ChatMessageModel> filteredChatMessage = chatProvider.chatMessage;
                       
                       return ListView.separated(
-                        padding: const EdgeInsets.only(
-                          left: 10,
-                          right: 10,
-                          bottom: 10,
+                        padding: EdgeInsets.only(
+                            left: MediaQuery.of(context).size.width * 0.02,
+                            right: MediaQuery.of(context).size.width * 0.02,
+                            bottom: MediaQuery.of(context).size.height * 0.02
                         ),
                         controller: _scrollController,
                         reverse: true,
                         itemBuilder: (context, index) {
                           return BubbleMessage(
                             message: filteredChatMessage[index].message!,
-                            userSeq: filteredChatMessage[index].seq!,
+                            userSeq: widget.userSeq,
+                            sender: filteredChatMessage[index].userSeq!,
                           );
                         },
-                        separatorBuilder: (_, __) => const SizedBox(height: 12),
+                        separatorBuilder: (_, __) => SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                         itemCount: filteredChatMessage.length,
                       );
                     },
@@ -120,7 +132,11 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
 
   Widget sendMessage() => Container(
     height: MediaQuery.of(context).size.height * 0.1,
-    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+    padding: EdgeInsets.only(
+        left: MediaQuery.of(context).size.width * 0.01,
+        right: MediaQuery.of(context).size.width * 0.01,
+        bottom: MediaQuery.of(context).size.height * 0.01
+    ),
     child: Row(
       children: [
         IconButton(
@@ -129,7 +145,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
           color: PRIMARY_COLOR,
           iconSize: 25,
         ),
-        const SizedBox(width: 10),
         Expanded(
           child: TextField(
             maxLines: null,
@@ -172,8 +187,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
       );
 
       chatService.sendMessage(chat);
-      // context.read<ChatProvider>().addMessage(chat);
-
       _controller.clear();
 
       // 스크롤 가장 아래로

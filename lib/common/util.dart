@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../const/const.dart';
 
 const storage = FlutterSecureStorage();
 
@@ -35,6 +39,22 @@ Future<String?> getToken(String key) async {
 Future<void> deleteToken(String key) async {
   return await storage.delete(key: key);
 }
+
+Future<int> decodeTokenInfo() async {
+  final token = await getToken(ACCESS_TOKEN);
+  if (token == null) throw Exception("토큰을 찾을 수 없음");
+
+  final parts = token.split('.');
+  if (parts.length != 3) throw Exception("토큰 정보 이상");
+
+  final payload = parts[1];
+  final normalized = base64.normalize(payload);
+  final decoded = utf8.decode(base64Url.decode(normalized));
+  final Map<String, dynamic> payloadMap = jsonDecode(decoded);
+
+  return int.parse(payloadMap['sub']);
+}
+
 
 /// ################### DATE ################### ///
 

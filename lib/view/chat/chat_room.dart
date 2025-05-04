@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:packup/widget/search_bar/custom_search_bar.dart';
 import 'package:packup/const/color.dart';
 
+import '../../common/util.dart';
+
 class ChatRoom extends StatelessWidget {
   const ChatRoom({super.key});
 
@@ -80,8 +82,9 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
                     final room = filteredChatRooms[index];
 
                     return InkWell(
-                      onTap: () {
-                        context.push('/chat_message/${room.seq}');
+                      onTap: () async {
+                        int userSeq = await decodeTokenInfo();
+                        context.push('/chat_message/${room.seq}/$userSeq');
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(

@@ -3,20 +3,23 @@ import 'package:flutter_chat_bubble/chat_bubble.dart';
 
 class BubbleMessage extends StatelessWidget {
   final String message;
+  final int sender;
   final int userSeq;
   final String? profileImagePath;
 
   const BubbleMessage({
     super.key,
     required this.message,
+    required this.sender,
     required this.userSeq,
     this.profileImagePath,
   });
 
   @override
   Widget build(BuildContext context) {
-    final imagePath = profileImagePath ?? '';
-    bool isMine = true;
+    final isMine = sender == userSeq;
+    final imagePath = profileImagePath ?? 'assets/icons/schedule/biceps_icon.png';
+
     return Row(
       mainAxisAlignment:
       isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
