@@ -3,7 +3,6 @@ import 'package:packup/model/chat/ChatMessageModel.dart';
 import 'package:packup/service/chat/chat_service.dart';
 
 import '../../model/chat/ChatRoomModel.dart';
-import '../../model/common/result_model.dart';
 
 class ChatProvider with ChangeNotifier {
   final ChatService chatService = ChatService();
@@ -20,19 +19,24 @@ class ChatProvider with ChangeNotifier {
 
   // 채팅방 리스트
   getRoom() async {
+    if (_isLoading) return; // 중복 호출 방지
     _isLoading = true;
 
-    final response = await chatService.getRoom();
+    try {
+      final response = await chatService.getRoom();
+      final responseList = response.response as List;
 
-    final responseList = response.response as List;
+      List<ChatRoomModel> chatRoomList = responseList
+          .map((data) => ChatRoomModel.fromJson(data))
+          .toList();
 
-    List<ChatRoomModel> chatRoomList = responseList
-        .map((data) => ChatRoomModel.fromJson(data))
-        .toList();
-
-    _chatRoom = chatRoomList;
-    notifyListeners();
+      _chatRoom = chatRoomList;
+      notifyListeners();
+    } finally {
+      _isLoading = false;
+    }
   }
+
 
   // 채팅 이력
   getMessage(int chatRoomSeq) async {

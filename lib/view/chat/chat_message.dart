@@ -74,10 +74,10 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
 
   @override
   void dispose() {
+    super.dispose();
     chatService.disconnect();
     _controller.dispose();
     _scrollController.dispose();
-    super.dispose();
   }
 
   @override

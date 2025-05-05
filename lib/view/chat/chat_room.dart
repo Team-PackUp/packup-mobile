@@ -7,7 +7,6 @@ import 'package:packup/widget/search_bar/custom_search_bar.dart';
 import 'package:packup/const/color.dart';
 
 import '../../common/util.dart';
-import '../../service/chat/chat_service.dart';
 import '../../service/chat/redis_service.dart';
 
 class ChatRoom extends StatelessWidget {
@@ -45,18 +44,15 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ChatProvider>().getRoom();
-      redisService.subscribeToChatRooms();
-
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await context.read<ChatProvider>().getRoom();
     });
   }
 
   @override
-  void dispose() {
-    _scrollController.dispose();
-    redisService.disconnect();
+  Future<void> dispose() async {
     super.dispose();
+    _scrollController.dispose();
   }
 
   void _scrollListener() {

@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:redis/redis.dart';
+
+import '../../provider/chat/chat_provider.dart';
 
 class RedisService {
 
@@ -17,37 +20,74 @@ class RedisService {
 
   final redisUrl = dotenv.env["REDIS_URL"];
   final redisPort = dotenv.env["REDIS_PORT"];
-  final RedisConnection _connection = RedisConnection();
+  final _connection = RedisConnection();
   late Command command;
-  StreamSubscription? _subscription;
+  late StreamSubscription _subscription;
+  late Stream stream;
+  late PubSub pubsub;
+  late String subscribe;
+
+  ChatProvider chatProvider = ChatProvider();
 
   // Redis 채널 구독
-  Future<void> subscribeToChatRooms() async {
+  subscribeToChatRooms(String subscribe) async {
+
+    this.subscribe = subscribe;
     print("레디스 연결");
+
     command = await _connection.connect(redisUrl, int.parse(redisPort!));
 
-    final pubsub = PubSub(command);
-    pubsub.subscribe(["chat_rooms"]);
-    final stream = pubsub.getStream();
-    print(stream);
+    pubsub = PubSub(command);
 
+    // Redis 채널 구독 활성화
+    pubsub.subscribe([subscribe]);
+
+    stream = pubsub.getStream();
     _subscription = stream.listen((message) {
-      print("메시지 수신됨: $message");
-      updateChatRoomList(message);
+      final messageType = message[0];
+      if (messageType == 'message') {
+        final channel = message[1];
+        final payload = message[2];
+        print("메시지 수신: $payload");
+        updateChatRoomList(payload);
+      } else {
+        print("REDIS 구독 성공");
+      }
     });
   }
 
   // 채팅방 리스트 갱신
-  void updateChatRoomList(message) {
-    // 메시지에 따라 채팅방 리스트를 갱신하는 로직
-    print("새로운 채팅방 메시지: $message");
-    // 예: UI 갱신
+  void updateChatRoomList(payload) {
+
+    print("메시지 수신2: $payload");
+    final int chatRoomSeq = payload['chatRoomSeq'];
+    final int chatMessage = payload['chatMessage'];
+
+    // 채팅방 목록에서 seq만 추출
+    final chatRoomSeqSet = chatProvider.chatRoom.map((room) => room.seq).toSet();
+
+    // 내가 참여한 방인지 체크
+    if (chatRoomSeqSet.contains(chatRoomSeq)) {
+      print("내 채팅방 메시지: $chatMessage");
+      chatProvider.getRoom();
+    } else {
+      print("내 채팅방 아님, 무시");
+    }
   }
 
-  void disconnect() {
-    // 먼저 스트림 리스너 해제
-    _subscription?.cancel();
-    // Redis 연결 닫기
-    _connection.close();
+  // Redis 연결 해제
+  Future<void> disconnect() async {
+    print("해제");
+    try {
+      // 스트림 리스너 취소
+      // await _subscription?.cancel();
+      // _subscription = null;
+
+      // Redis 연결 종료
+      // await _connection.close();
+      command.get_connection().close();
+    } catch (e) {
+      print("Redis disconnect 에러: $e");
+    }
   }
 }
