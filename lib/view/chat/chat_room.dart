@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/provider/chat/chat_provider.dart';
+import 'package:packup/provider/chat/chat_message_provider.dart';
+import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/provider/search_bar/custom_search_bar_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/search_bar/custom_search_bar.dart';
 import 'package:packup/const/color.dart';
 
-import '../../common/util.dart';
-import '../../service/chat/redis_service.dart';
+import 'package:packup/common/util.dart';
+
+import '../../service/chat/socket_service.dart';
 
 class ChatRoom extends StatelessWidget {
   const ChatRoom({super.key});
@@ -16,7 +18,8 @@ class ChatRoom extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ChatProvider()),
+        ChangeNotifierProvider(create: (_) => ChatMessageProvider()),
+        ChangeNotifierProvider(create: (_) => ChatRoomProvider()),
         ChangeNotifierProvider(create: (_) => SearchBarProvider()),
       ],
       child: const ChatRoomContent(),
@@ -32,8 +35,7 @@ class ChatRoomContent extends StatefulWidget {
 }
 
 class _ChatRoomContentState extends State<ChatRoomContent> {
-  ChatProvider chatProvider = ChatProvider();
-  RedisService redisService = RedisService();
+  final socketService = SocketService();
 
   late ScrollController _scrollController;
   late int page = 0;
@@ -45,7 +47,11 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
     _scrollController.addListener(_scrollListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await context.read<ChatProvider>().getRoom();
+      final chatProvider = context.read<ChatMessageProvider>();
+      final chatRoomProvider = context.read<ChatRoomProvider>();
+      await chatRoomProvider.getRoom();
+      socketService.setProvider(chatProvider, chatRoomProvider);
+      socketService.initConnect(0); // STOMP 소켓 연결
     });
   }
 
@@ -63,7 +69,7 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<ChatProvider, SearchBarProvider>(
+    return Consumer2<ChatRoomProvider, SearchBarProvider>(
       builder: (context, chatProvider, searchProvider, child) {
         var filteredChatRooms = chatProvider.chatRoom;
 

@@ -4,7 +4,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:packup/common/router.dart';
-import 'package:packup/service/chat/redis_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:packup/theme/theme.dart';
@@ -49,13 +48,6 @@ void main() async {
     nativeAppKey: KAKAO_NATIVE_APP_KEY,
     javaScriptAppKey: JAVASCRIPT_APP_KEY,
   );
-
-  // if(loginFlag == true) {
-  //   PackUp.initialRoute = '/index';
-  // }
-
-  final redisService = RedisService();
-  redisService.subscribeToChatRooms("chat_rooms");
 
   runApp(
     // 모든 페이지에서 사용할 모델 등록

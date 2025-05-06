@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:packup/provider/chat/chat_provider.dart';
+import 'package:packup/provider/chat/chat_message_provider.dart';
+import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/service/chat/chat_service.dart';
 import 'package:packup/widget/chat/bubble_message.dart';
 import 'package:packup/const/color.dart';
@@ -9,20 +10,25 @@ import 'package:packup/model/chat/ChatMessageModel.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/util.dart';
+import '../../service/chat/socket_service.dart';
 
 class ChatMessage extends StatelessWidget {
   final int chatRoomSeq;
   final int userSeq;
 
-  const ChatMessage({super.key,
+  const ChatMessage({
+    super.key,
     required this.chatRoomSeq,
-    required this.userSeq
+    required this.userSeq,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ChatProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ChatMessageProvider()),
+        ChangeNotifierProvider(create: (_) => ChatRoomProvider()), // ChatRoomProvider 추가
+      ],
       child: ChatMessageContent(
         chatRoomSeq: chatRoomSeq,
         userSeq: userSeq,
@@ -30,6 +36,7 @@ class ChatMessage extends StatelessWidget {
     );
   }
 }
+
 
 class ChatMessageContent extends StatefulWidget {
   final int chatRoomSeq;
@@ -46,8 +53,8 @@ class ChatMessageContent extends StatefulWidget {
 }
 
 class _ChatMessageContentState extends State<ChatMessageContent> {
-  ChatService chatService = ChatService();
-  ChatProvider chatProvider = ChatProvider();
+  SocketService socketService = SocketService();
+  ChatMessageProvider chatProvider = ChatMessageProvider();
   late final TextEditingController _controller;
   late final ScrollController _scrollController;
 
@@ -59,11 +66,15 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     _scrollController.addListener(_scrollListener);
     _controller = TextEditingController();
 
-    chatService.initConnect(widget.chatRoomSeq); // STOMP 소켓 연결
+    socketService.initConnect(widget.chatRoomSeq); // STOMP 소켓 연결
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ChatProvider>().getMessage(widget.chatRoomSeq);
-      chatService.setProvider(context.read<ChatProvider>());
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final chatProvider = context.read<ChatMessageProvider>();
+      final chatRoomProvider = context.read<ChatRoomProvider>();
+      await chatProvider.getMessage(widget.chatRoomSeq);
+
+      socketService.setProvider(chatProvider, chatRoomProvider);
+      socketService.initConnect(widget.chatRoomSeq);
     });
   }
 
@@ -75,7 +86,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   @override
   void dispose() {
     super.dispose();
-    chatService.disconnect();
     _controller.dispose();
     _scrollController.dispose();
   }
@@ -96,7 +106,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
                 onTap: () => FocusScope.of(context).unfocus(),
                 child: Align(
                   alignment: Alignment.topCenter,
-                  child: Consumer<ChatProvider>(
+                  child: Consumer<ChatMessageProvider>(
                     builder: (context, chatProvider, child) {
                       List<ChatMessageModel> filteredChatMessage = chatProvider.chatMessage;
                       
@@ -185,7 +195,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
         chatRoomSeq: widget.chatRoomSeq,
       );
 
-      chatService.sendMessage(chat);
+      socketService.sendMessage(chat);
       _controller.clear();
 
       // 스크롤 가장 아래로
