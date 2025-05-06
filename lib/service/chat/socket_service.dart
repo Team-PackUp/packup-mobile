@@ -42,8 +42,11 @@ Future<void> initConnect(chatRoomSeq) async {
   stompClient.activate();
 }
 
-  void setProvider(ChatMessageProvider chatMessageProvider, ChatRoomProvider chatRoomProvider) {
+  void setMessageProvider(ChatMessageProvider chatMessageProvider) {
     this.chatMessageProvider = chatMessageProvider;
+  }
+
+  void setRoomProvider(ChatRoomProvider chatRoomProvider) {
     this.chatRoomProvider = chatRoomProvider;
   }
 

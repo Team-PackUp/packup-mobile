@@ -29,6 +29,7 @@ class ChatMessageProvider with ChangeNotifier {
         .toList();
 
     _chatMessage = messageList;
+    print("메시지를 조회 합니다.");
 
     notifyListeners();
   }

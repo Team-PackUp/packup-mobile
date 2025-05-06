@@ -27,7 +27,6 @@ class ChatMessage extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ChatMessageProvider()),
-        ChangeNotifierProvider(create: (_) => ChatRoomProvider()), // ChatRoomProvider 추가
       ],
       child: ChatMessageContent(
         chatRoomSeq: chatRoomSeq,
@@ -54,7 +53,6 @@ class ChatMessageContent extends StatefulWidget {
 
 class _ChatMessageContentState extends State<ChatMessageContent> {
   SocketService socketService = SocketService();
-  ChatMessageProvider chatProvider = ChatMessageProvider();
   late final TextEditingController _controller;
   late final ScrollController _scrollController;
 
@@ -69,11 +67,10 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     socketService.initConnect(widget.chatRoomSeq); // STOMP 소켓 연결
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final chatProvider = context.read<ChatMessageProvider>();
-      final chatRoomProvider = context.read<ChatRoomProvider>();
-      await chatProvider.getMessage(widget.chatRoomSeq);
+      final chatMessageProvider = context.read<ChatMessageProvider>();
+      await chatMessageProvider.getMessage(widget.chatRoomSeq);
 
-      socketService.setProvider(chatProvider, chatRoomProvider);
+      socketService.setMessageProvider(chatMessageProvider);
       socketService.initConnect(widget.chatRoomSeq);
     });
   }

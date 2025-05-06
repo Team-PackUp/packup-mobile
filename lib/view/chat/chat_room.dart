@@ -18,7 +18,7 @@ class ChatRoom extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ChatMessageProvider()),
+        // ChangeNotifierProvider(create: (_) => ChatMessageProvider()),
         ChangeNotifierProvider(create: (_) => ChatRoomProvider()),
         ChangeNotifierProvider(create: (_) => SearchBarProvider()),
       ],
@@ -47,10 +47,10 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
     _scrollController.addListener(_scrollListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final chatProvider = context.read<ChatMessageProvider>();
+      // final chatProvider = context.read<ChatMessageProvider>();
       final chatRoomProvider = context.read<ChatRoomProvider>();
       await chatRoomProvider.getRoom();
-      socketService.setProvider(chatProvider, chatRoomProvider);
+      socketService.setRoomProvider(chatRoomProvider);
       socketService.initConnect(0); // STOMP 소켓 연결
     });
   }
