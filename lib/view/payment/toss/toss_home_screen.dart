@@ -1,21 +1,21 @@
+import 'package:packup/view/payment/toss/toss_payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:packup/widget/payment/toss/toss_payment/screen/tosspayment/payment.dart';
 import 'package:tosspayments_widget_sdk_flutter/model/paymentData.dart';
 
-/// [Home] 위젯은 사용자에게 결제 수단 및 주문 관련 정보를 입력받아
+/// [TossHomeScreen] 위젯은 사용자에게 결제 수단 및 주문 관련 정보를 입력받아
 /// 결제를 시작하는 화면을 제공합니다.
-class Home extends StatefulWidget {
+class TossHomeScreen extends StatefulWidget {
   /// 기본 생성자입니다.
-  const Home({super.key});
+  const TossHomeScreen({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<TossHomeScreen> createState() => _TossHomeScreenState();
 }
 
-/// [_HomeState]는 [Home] 위젯의 상태를 관리하는 클래스입니다.
-class _HomeState extends State<Home> {
+/// [_TossHomeScreenState]는 [Home] 위젯의 상태를 관리하는 클래스입니다.
+class _TossHomeScreenState extends State<TossHomeScreen> {
   final _form = GlobalKey<FormState>();
   late String payMethod = '카드'; // 결제수단
   late String orderId; // 주문번호
@@ -57,12 +57,12 @@ class _HomeState extends State<Home> {
                   return DropdownMenuItem<String>(
                     value: i,
                     child: Text({
-                      '카드': '카드',
-                      '가상계좌': '가상계좌',
-                      '계좌이체': '계좌이체',
-                      '휴대폰': '휴대폰',
-                      '상품권': '상품권'
-                    }[i] ??
+                          '카드': '카드',
+                          '가상계좌': '가상계좌',
+                          '계좌이체': '계좌이체',
+                          '휴대폰': '휴대폰',
+                          '상품권': '상품권'
+                        }[i] ??
                         '카드'),
                   );
                 }).toList(),
@@ -72,7 +72,7 @@ class _HomeState extends State<Home> {
                   labelText: '주문번호(orderId)',
                 ),
                 initialValue:
-                'tosspaymentsFlutter_${DateTime.now().millisecondsSinceEpoch}',
+                    'tosspaymentsFlutter_${DateTime.now().millisecondsSinceEpoch}',
                 onSaved: (String? value) {
                   orderId = value!;
                 },
@@ -92,7 +92,7 @@ class _HomeState extends State<Home> {
                 ),
                 initialValue: '50000',
                 keyboardType:
-                const TextInputType.numberWithOptions(decimal: true),
+                    const TextInputType.numberWithOptions(decimal: true),
                 onSaved: (String? value) {
                   amount = value!;
                 },
@@ -131,7 +131,7 @@ class _HomeState extends State<Home> {
                           successUrl: Constants.success,
                           failUrl: Constants.fail);
                       var result = await Get.to(
-                            () => const Payment(),
+                        () => const TossPaymentScreen(),
                         fullscreenDialog: true,
                         arguments: data,
                       );

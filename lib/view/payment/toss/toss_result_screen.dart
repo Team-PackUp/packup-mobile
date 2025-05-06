@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tosspayments_widget_sdk_flutter/model/tosspayments_result.dart';
 
-/// [ResultPage] class는 결제의 성공 혹은 실패 여부를 보여주는 위젯입니다.
-class ResultPage extends StatelessWidget {
+/// [TossResultScreen] class는 결제의 성공 혹은 실패 여부를 보여주는 위젯입니다.
+class TossResultScreen extends StatelessWidget {
   /// 기본 생성자입니다.
-  const ResultPage({super.key});
+  const TossResultScreen({super.key});
 
   /// 주어진 title과 message를 이용하여 [Row]를 생성합니다.
   ///
@@ -45,11 +45,11 @@ class ResultPage extends StatelessWidget {
                 makeRow('amount', result.amount.toString()),
                 const SizedBox(height: 20),
                 ...?result.additionalParams?.entries.map<Widget>((e) => Column(
-                  children: [
-                    makeRow(e.key, e.value),
-                    const SizedBox(height: 10),
-                  ],
-                )),
+                      children: [
+                        makeRow(e.key, e.value),
+                        const SizedBox(height: 10),
+                      ],
+                    )),
                 ElevatedButton(
                   onPressed: () {
                     // copyToClipboard 함수 구현 필요

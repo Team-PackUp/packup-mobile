@@ -1,13 +1,14 @@
 import 'dart:io';
 
+import 'package:packup/common/config.dart';
+
+import 'package:packup/view/payment/toss/toss_widget_payment_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:packup/widget/payment/toss/toss_payment/screen/tosspayment_widget/payment_widget_example.dart';
 import 'package:tosspayments_widget_sdk_flutter/model/payment_info.dart';
 import 'package:tosspayments_widget_sdk_flutter/model/payment_widget_options.dart';
-
-import '../util/config.dart';
 
 /// [WidgetHome] 위젯은 사용자에게 결제 수단 및 주문 관련 정보를 입력받아
 /// 결제를 시작하는 화면을 제공합니다.
@@ -172,7 +173,7 @@ class WidgetHomeState extends State<WidgetHome> {
                         appScheme: Platform.isIOS ? 'example://' : null,
                       );
                       var result = await Get.to(
-                            () => PaymentWidgetExamplePage(
+                        () => PaymentWidgetExamplePage(
                           data: data,
                           info: LocalConfig.uiState,
                         ),
@@ -212,11 +213,11 @@ class UIState {
 
   UIState(
       {required this.clientKey,
-        required this.customerKey,
-        required this.currency,
-        required this.country,
-        required this.amount,
-        this.variantKeyMethod,
-        this.variantKeyAgreement,
-        this.redirectUrl});
+      required this.customerKey,
+      required this.currency,
+      required this.country,
+      required this.amount,
+      this.variantKeyMethod,
+      this.variantKeyAgreement,
+      this.redirectUrl});
 }
