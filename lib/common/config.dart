@@ -1,5 +1,5 @@
 
-import 'package:packup/view/payment/toss/toss_widget_payment_screen.dart ';
+import 'package:packup/view/payment/toss/toss_widget_home_screen.dart';
 
 import 'package:tosspayments_widget_sdk_flutter/model/payment_widget_options.dart';
 import 'package:tosspayments_widget_sdk_flutter/utils/phase.dart';
