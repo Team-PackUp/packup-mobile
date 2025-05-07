@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:tosspayments_widget_sdk_flutter/model/paymentData.dart';
 import 'package:tosspayments_widget_sdk_flutter/model/tosspayments_result.dart';
@@ -17,7 +18,7 @@ class TossPaymentScreen extends StatelessWidget {
     PaymentData data = Get.arguments as PaymentData;
 
     return TossPayments(
-      clientKey: 'test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq',
+      clientKey: dotenv.env['TOSS_CLIENT_KEY']!,
       data: data,
       success: (Success success) {
         Get.back(result: success);

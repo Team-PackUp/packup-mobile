@@ -1,4 +1,5 @@
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:packup/view/payment/toss/toss_widget_home_screen.dart';
 
 import 'package:tosspayments_widget_sdk_flutter/model/payment_widget_options.dart';
@@ -17,7 +18,7 @@ class LocalConfig {
   }
 
   static final UIState _live = UIState(
-    clientKey: 'test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq',
+    clientKey: dotenv.env['TOSS_CLIENT_KEY']!,
     customerKey: 'aaaa',
     currency: Currency.KRW,
     country: "KR",
@@ -26,7 +27,7 @@ class LocalConfig {
   );
 
   static final UIState _staging = UIState(
-    clientKey: 'live_ck_JQbgMGZzorzj0ZnKbOjrl5E1em4d',
+    clientKey: dotenv.env['TOSS_CLIENT_KEY']!,
     customerKey: 'a1b2c3',
     currency: Currency.KRW,
     country: "KR",
@@ -37,7 +38,7 @@ class LocalConfig {
   );
 
   static final UIState _dev = UIState(
-    clientKey: 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm',
+    clientKey: dotenv.env['TOSS_CLIENT_KEY']!,
     customerKey: 'CUSTOMER_KEY',
     currency: Currency.KRW,
     country: "KR",
