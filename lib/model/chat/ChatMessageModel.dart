@@ -6,13 +6,15 @@ class ChatMessageModel {
   final int? userSeq;
   final int? chatRoomSeq;
   final DateTime? createdAt;
+  final bool? isImage;
 
   ChatMessageModel({
     this.seq,
     this.createdAt,
     this.message,
-     this.userSeq,
+    this.userSeq,
     this.chatRoomSeq,
+    this.isImage,
   });
 
   String toJson() {
@@ -20,6 +22,7 @@ class ChatMessageModel {
       'message': message,
       'userSeq': userSeq,
       'chatRoomSeq': chatRoomSeq,
+      'isImage': isImage,
     });
   }
 

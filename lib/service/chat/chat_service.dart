@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:image_picker/image_picker.dart';
 import 'package:packup/model/common/result_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -42,5 +43,10 @@ class ChatService {
   Future<ResultModel> getMessage(int chatRoomSeq) async {
 
     return await DioService().getRequest("/chat/message/list/$chatRoomSeq");
+  }
+
+  Future<ResultModel> sendFile(XFile file) async {
+
+    return await DioService().multipartRequest("/chat/message/save/file", file);
   }
 }

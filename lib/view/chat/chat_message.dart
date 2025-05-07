@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:packup/provider/chat/chat_message_provider.dart';
 import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/service/chat/chat_service.dart';
@@ -9,7 +11,6 @@ import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/ChatMessageModel.dart';
 import 'package:provider/provider.dart';
 
-import '../../common/util.dart';
 import '../../service/chat/socket_service.dart';
 
 class ChatMessage extends StatelessWidget {
@@ -55,6 +56,8 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   SocketService socketService = SocketService();
   late final TextEditingController _controller;
   late final ScrollController _scrollController;
+  late final ChatMessageProvider chatMessageProvider;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   initState() {
@@ -67,7 +70,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     socketService.initConnect(widget.chatRoomSeq); // STOMP 소켓 연결
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final chatMessageProvider = context.read<ChatMessageProvider>();
+      chatMessageProvider = context.read<ChatMessageProvider>();
       await chatMessageProvider.getMessage(widget.chatRoomSeq);
 
       socketService.setMessageProvider(chatMessageProvider);
@@ -146,7 +149,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     child: Row(
       children: [
         IconButton(
-          onPressed: _sendMessage,
+          onPressed: _pickImage,
           icon: const Icon(Icons.camera_alt),
           color: PRIMARY_COLOR,
           iconSize: 25,
@@ -195,14 +198,36 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
       socketService.sendMessage(chat);
       _controller.clear();
 
-      // 스크롤 가장 아래로
-      Future.delayed(Duration(milliseconds: 100), () {
-        _scrollController.animateTo(
-          0,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      });
+      scrollBottom();
+    }
+  }
+
+  void _sendImage(XFile imageFile) async {
+    final bytes = await imageFile.readAsBytes();
+    final base64Image = base64Encode(bytes);
+
+    chatMessageProvider.sendImage(imageFile);
+    _controller.clear();
+
+    scrollBottom();
+  }
+
+
+  void scrollBottom() {
+    // 스크롤 가장 아래로
+    Future.delayed(Duration(milliseconds: 100), () {
+      _scrollController.animateTo(
+        0,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
+  Future<void> _pickImage() async {
+    final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      _sendImage(pickedImage);
     }
   }
 }

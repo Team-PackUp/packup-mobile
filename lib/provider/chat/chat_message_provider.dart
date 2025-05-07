@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:packup/model/chat/ChatMessageModel.dart';
 import 'package:packup/service/chat/chat_service.dart';
 
@@ -39,9 +40,17 @@ class ChatMessageProvider with ChangeNotifier {
     bool exists = _chatMessage.any((msg) => msg.seq == message.seq);
 
     if (!exists) {
+      print("알림 시작");
       _chatMessage.insert(0, message);
       notifyListeners(); // 상태 변경 후 한 번만 호출
 
     }
+  }
+
+  sendImage(XFile file) async {
+    _isLoading = true;
+    await chatService.sendFile(file);
+
+    _isLoading = false;
   }
 }

@@ -59,6 +59,7 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
   Future<void> dispose() async {
     super.dispose();
     _scrollController.dispose();
+    socketService.disconnect();
   }
 
   void _scrollListener() {

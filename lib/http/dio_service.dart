@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:packup/model/common/result_model.dart';
 
@@ -56,6 +57,18 @@ class DioService {
       queryParameters: data ?? {},
     );
 
+    return ResultModel.fromJson(response.data);
+  }
+
+  Future<ResultModel> multipartRequest(String uri, XFile file) async {
+    String url = httpPrefix + uri;
+    String fileName = file.path.split('/').last;
+
+    FormData formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(file.path, filename: fileName),
+    });
+
+    final response = await dio.post(url, data: formData);
     return ResultModel.fromJson(response.data);
   }
 }

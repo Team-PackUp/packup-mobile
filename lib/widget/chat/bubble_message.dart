@@ -25,10 +25,10 @@ class BubbleMessage extends StatelessWidget {
       isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         if (!isMine) ...[
-          CircleAvatar(
-            backgroundImage: AssetImage(imagePath),
-            radius: 25,
-          ),
+          // CircleAvatar(
+          //   backgroundImage: AssetImage(imagePath),
+          //   radius: 25,
+          // ),
           SizedBox(width: MediaQuery.of(context).size.height * 0.01),
         ],
         ChatBubble(
