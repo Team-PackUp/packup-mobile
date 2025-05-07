@@ -11,20 +11,21 @@ import 'package:tosspayments_widget_sdk_flutter/pages/tosspayments_sdk_flutter.d
 /// [Get.arguments]를 통해 PaymentData 를 받아 처리합니다.
 /// 성공하거나 실패하면 해당 결과를 Get.back 으로 되돌려줍니다.
 class TossPaymentScreen extends StatelessWidget {
-  const TossPaymentScreen({super.key});
+  final PaymentData data;
+
+  const TossPaymentScreen({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
-    PaymentData data = Get.arguments as PaymentData;
 
     return TossPayments(
       clientKey: dotenv.env['TOSS_CLIENT_KEY']!,
       data: data,
       success: (Success success) {
-        Get.back(result: success);
+        Navigator.pop(context, success);
       },
       fail: (Fail fail) {
-        Get.back(result: fail);
+        Navigator.pop(context, fail);
       },
     );
   }

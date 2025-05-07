@@ -46,18 +46,18 @@ class Home extends StatelessWidget {
                 child: const Text('예시코드-TossHomeScreen'),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const TossPaymentScreen(),
-                    ),
-                  );
-                },
-                child: const Text('예시코드-TossPaymentScreen'),
-              ),
-              const SizedBox(height: 20),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => const TossPaymentScreen(),
+              //       ),
+              //     );
+              //   },
+              //   child: const Text('예시코드-TossPaymentScreen'),
+              // ),
+              // const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(

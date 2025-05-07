@@ -1,3 +1,4 @@
+import 'package:go_router/go_router.dart';
 import 'package:packup/view/payment/toss/toss_payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -129,14 +130,23 @@ class _TossHomeScreenState extends State<TossHomeScreen> {
                           customerName: customerName,
                           customerEmail: customerEmail,
                           successUrl: Constants.success,
-                          failUrl: Constants.fail);
-                      var result = await Get.to(
-                        () => const TossPaymentScreen(),
-                        fullscreenDialog: true,
-                        arguments: data,
+                          failUrl: Constants.fail
+                      );
+                      // var result = await Get.to(
+                      //   () => const TossPaymentScreen(),
+                      //   fullscreenDialog: true,
+                      //   arguments: data,
+                      // );
+
+                      var result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TossPaymentScreen(data: data),
+                          fullscreenDialog: true,
+                        ),
                       );
                       if (result != null) {
-                        Get.toNamed("/result", arguments: result);
+                        context.push('/result', extra: result);
                       }
                     },
                     child: const Text(
