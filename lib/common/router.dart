@@ -3,6 +3,7 @@ import 'package:packup/view/home/home.dart';
 import 'package:get/get.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
+import 'package:packup/view/payment/toss/toss_result_screen.dart';
 import 'package:packup/view/user/preference/preference.dart';
 
 /// 라우트 사용
@@ -46,6 +47,10 @@ final router = GoRouter(
     GoRoute(
         path: '/home',
         builder: (context, state) => const Home()
+    ),
+    GoRoute(
+      path: '/result',
+      builder: (context, state) => const TossResultScreen(),
     ),
   ],
 );
