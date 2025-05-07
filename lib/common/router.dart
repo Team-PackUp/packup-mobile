@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:packup/view/home/home.dart';
+import 'package:get/get.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
 import 'package:packup/view/user/preference/preference.dart';
@@ -27,6 +28,7 @@ import 'package:packup/view/user/preference/preference.dart';
 // ),
 
 final router = GoRouter(
+  navigatorKey: Get.key,
   routes: [
     GoRoute(
       path: '/preference',
@@ -34,8 +36,8 @@ final router = GoRouter(
     ),
     GoRoute(
         path: '/',
-        // builder: (context, state) => const Login()
-        builder: (context, state) => const Preference(),
+        builder: (context, state) => const Login()
+        // builder: (context, state) => const Preference(),
     ),
     GoRoute(
         path: '/index',

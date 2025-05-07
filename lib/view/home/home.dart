@@ -43,7 +43,7 @@ class Home extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text('깃'),
+                child: const Text('예시코드-TossHomeScreen'),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -55,7 +55,7 @@ class Home extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text('예시코드'),
+                child: const Text('예시코드-TossPaymentScreen'),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -67,7 +67,7 @@ class Home extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text('예시코드'),
+                child: const Text('예시코드-TossResultScreen'),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -79,7 +79,7 @@ class Home extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text('예시코드'),
+                child: const Text('예시코드-WidgetHome'),
               ),
               // const SizedBox(height: 20),
               // ElevatedButton(
