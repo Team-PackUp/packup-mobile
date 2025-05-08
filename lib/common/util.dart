@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
@@ -8,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../const/const.dart';
 
 const storage = FlutterSecureStorage();
+final httpPrefix = dotenv.env['HTTP_URL']!;
 
 /// ################### Shared preference ################### ///
 // 테마 조회
@@ -69,6 +71,11 @@ DateTime getToday() {
 
   String formattedNowDate = DateFormat("yyyy-MM-dd HH:mm:ss").format(nowDate);
   return nowDate;
+}
+
+/// ################### FILE ################### ///
+String fullFileUrl(String path) {
+  return '$httpPrefix$path';
 }
 
 /// ################### LOGGER ################### ///

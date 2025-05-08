@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:packup/model/chat/ChatMessageModel.dart';
+import 'package:packup/model/common/file_model.dart';
 import 'package:packup/service/chat/chat_service.dart';
 
 import '../../model/chat/ChatRoomModel.dart';
@@ -43,14 +44,16 @@ class ChatMessageProvider with ChangeNotifier {
       print("알림 시작");
       _chatMessage.insert(0, message);
       notifyListeners(); // 상태 변경 후 한 번만 호출
-
     }
   }
 
-  sendImage(XFile file) async {
+  Future<FileModel> sendFile(XFile file) async {
     _isLoading = true;
-    await chatService.sendFile(file);
+    final response = await chatService.sendFile(file);
+    FileModel fileModel = FileModel.fromJson(response.response);
 
     _isLoading = false;
+
+    return fileModel;
   }
 }

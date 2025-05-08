@@ -110,6 +110,7 @@ class SocketService {
   }
 
   void disconnect() {
+    print("소켓을 해지합니다.");
     stompClient.deactivate();
   }
 }

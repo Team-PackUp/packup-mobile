@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 
+import '../../common/util.dart';
+
 class BubbleMessage extends StatelessWidget {
   final String message;
   final int sender;
   final int userSeq;
+  final bool fileFlag;
   final String? profileImagePath;
 
   const BubbleMessage({
@@ -12,6 +15,7 @@ class BubbleMessage extends StatelessWidget {
     required this.message,
     required this.sender,
     required this.userSeq,
+    required this.fileFlag,
     this.profileImagePath,
   });
 
@@ -43,7 +47,12 @@ class BubbleMessage extends StatelessWidget {
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width * 0.7,
             ),
-            child: Text(
+            child: fileFlag ?
+            Image.network(
+              fullFileUrl(message),
+              errorBuilder: (context, error, stackTrace) => Text('이미지 로드 실패 >> ' + message),
+            ) :
+            Text(
               message,
               style: TextStyle(
                 // color: isMine ? Colors.white : TEXT_COLOR_B,

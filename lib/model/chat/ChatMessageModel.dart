@@ -6,7 +6,7 @@ class ChatMessageModel {
   final int? userSeq;
   final int? chatRoomSeq;
   final DateTime? createdAt;
-  final bool? isImage;
+  final bool? fileFlag;
 
   ChatMessageModel({
     this.seq,
@@ -14,7 +14,7 @@ class ChatMessageModel {
     this.message,
     this.userSeq,
     this.chatRoomSeq,
-    this.isImage,
+    this.fileFlag,
   });
 
   String toJson() {
@@ -22,7 +22,7 @@ class ChatMessageModel {
       'message': message,
       'userSeq': userSeq,
       'chatRoomSeq': chatRoomSeq,
-      'isImage': isImage,
+      'fileFlag': fileFlag,
     });
   }
 
@@ -33,6 +33,7 @@ class ChatMessageModel {
           userSeq: json['userSeq'],
       chatRoomSeq: json['chatRoomSeq'],
         createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+           fileFlag: json['fileFlag'],
     );
   }
 }

@@ -11,6 +11,8 @@ import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/ChatMessageModel.dart';
 import 'package:provider/provider.dart';
 
+import '../../common/util.dart';
+import '../../model/common/file_model.dart';
 import '../../service/chat/socket_service.dart';
 
 class ChatMessage extends StatelessWidget {
@@ -123,6 +125,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
                             message: filteredChatMessage[index].message!,
                             userSeq: widget.userSeq,
                             sender: filteredChatMessage[index].userSeq!,
+                            fileFlag: filteredChatMessage[index].fileFlag!,
                           );
                         },
                         separatorBuilder: (_, __) => SizedBox(height: MediaQuery.of(context).size.height * 0.01),
@@ -188,28 +191,39 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     ),
   );
 
+ void  _sendHandler(chat) {
+
+   socketService.sendMessage(chat);
+   _controller.clear();
+
+   scrollBottom();
+  }
+
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {
       final chat = ChatMessageModel(
         message: _controller.text,
         chatRoomSeq: widget.chatRoomSeq,
+        fileFlag: false
       );
 
-      socketService.sendMessage(chat);
-      _controller.clear();
-
-      scrollBottom();
+      _sendHandler(chat);
     }
   }
 
-  void _sendImage(XFile imageFile) async {
-    final bytes = await imageFile.readAsBytes();
-    final base64Image = base64Encode(bytes);
+  void _sendFile(XFile imageFile) async {
 
-    chatMessageProvider.sendImage(imageFile);
-    _controller.clear();
+    FileModel fileModel = await chatMessageProvider.sendFile(imageFile);
+    if (fileModel.path != null) {
 
-    scrollBottom();
+      final chat = ChatMessageModel(
+          message: "${fileModel.path}/${fileModel.encodedName}",
+          chatRoomSeq: widget.chatRoomSeq,
+          fileFlag: true
+      );
+
+      _sendHandler(chat);
+    }
   }
 
 
@@ -227,7 +241,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   Future<void> _pickImage() async {
     final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
-      _sendImage(pickedImage);
+      _sendFile(pickedImage);
     }
   }
 }
