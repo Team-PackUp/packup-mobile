@@ -1,7 +1,9 @@
 // lib/provider/payment/toss/toss_payment_provider.dart
 
 import 'package:flutter/material.dart';
+import 'package:packup/model/common/result_model.dart';
 import 'package:packup/model/payment/toss/toss_payment_info_mode.dart';
+import 'package:packup/service/payment/toss/toss_payment_service.dart';
 
 /// 결제 상태를 관리하는 Provider (MVVM ViewModel 역할)
 class TossPaymentProvider with ChangeNotifier {
@@ -10,6 +12,28 @@ class TossPaymentProvider with ChangeNotifier {
 
   TossPaymentInfo? get paymentInfo => _paymentInfo;
   bool get isProcessing => _isProcessing;
+
+  final TossPaymentService _httpService = TossPaymentService();
+
+  Future<ResultModel?> confirmPayment({
+    required String paymentKey,
+    required String orderId,
+    required int amount,
+  }) async {
+    try {
+      startProcessing();
+      return await _httpService.confirmPayment(
+        paymentKey: paymentKey,
+        orderId: orderId,
+        amount: amount,
+      );
+    } catch (e) {
+      debugPrint('결제 확인 실패: $e');
+      return null;
+    } finally {
+      endProcessing();
+    }
+  }
 
   /// 결제 정보 초기화
   void setPaymentInfo(TossPaymentInfo info) {
