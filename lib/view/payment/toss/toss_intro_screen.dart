@@ -1,10 +1,11 @@
-
+import 'package:packup/view/payment/toss/toss_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:packup/widget/payment/toss/toss_payment/screen/tosspayment_widget/widget_home.dart';
 import 'package:tosspayments_widget_sdk_flutter/utils/phase.dart';
-import 'package:packup/widget/payment/toss/toss_payment/component.dart';
-import 'package:packup/widget/payment/toss/toss_payment/screen/tosspayment/home.dart';
+
+import 'package:packup/widget/payment/toss/components.dart';
+import 'package:packup/view/payment/toss/toss_widget_home_screen.dart';
+
 
 class Intro extends StatelessWidget {
   const Intro({super.key});
@@ -22,7 +23,7 @@ class Intro extends StatelessWidget {
                         Expanded(
                             child: BlueButton(
                                 onPressed: () {
-                                  Get.to(() => const Home());
+                                  Get.to(() => const TossHomeScreen());
                                 },
                                 text: '일반결제')),
                       ],

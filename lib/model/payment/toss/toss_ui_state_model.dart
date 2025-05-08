@@ -1,0 +1,4 @@
+enum UIState {
+  production,
+  staging,
+}

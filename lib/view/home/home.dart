@@ -3,8 +3,13 @@ import 'package:packup/provider/search_bar/custom_search_bar_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:packup/const/color.dart';
-import 'package:packup/widget/payment/toss/toss_payment/toss_payment.dart';
-import 'package:packup/widget/payment/toss/toss_widget/toss_payment2.dart';
+
+import 'package:packup/view/payment/toss/toss_home_screen.dart';
+import 'package:packup/view/payment/toss/toss_intro_screen.dart';
+import 'package:packup/view/payment/toss/toss_payment_screen.dart';
+import 'package:packup/view/payment/toss/toss_result_screen.dart';
+import 'package:packup/view/payment/toss/toss_widget_home_screen.dart';
+import 'package:packup/view/payment/toss/toss_widget_payment_screen.dart';
 
 import '../../widget/search_bar/custom_search_bar.dart';
 
@@ -34,11 +39,35 @@ class Home extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const TossPayment(title: 'Tosspayments1'),
+                      builder: (context) => const TossHomeScreen(),
                     ),
                   );
                 },
-                child: const Text('깃'),
+                child: const Text('예시코드-TossHomeScreen'),
+              ),
+              const SizedBox(height: 20),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => const TossPaymentScreen(),
+              //       ),
+              //     );
+              //   },
+              //   child: const Text('예시코드-TossPaymentScreen'),
+              // ),
+              // const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TossResultScreen(),
+                    ),
+                  );
+                },
+                child: const Text('예시코드-TossResultScreen'),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -46,12 +75,24 @@ class Home extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const TossPayment2(),
+                      builder: (context) => const WidgetHome(),
                     ),
                   );
                 },
-                child: const Text('예시코드'),
+                child: const Text('예시코드-WidgetHome'),
               ),
+              // const SizedBox(height: 20),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => const PaymentWidgetExamplePage(),
+              //       ),
+              //     );
+              //   },
+              //   child: const Text('예시코드'),
+              // ),
             ],
           ),
         ),

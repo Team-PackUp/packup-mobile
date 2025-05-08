@@ -58,4 +58,17 @@ class DioService {
 
     return ResultModel.fromJson(response.data);
   }
+
+  Future<ResultModel> putRequest(String uri, [Map<String, dynamic>? data]) async {
+    String url = httpPrefix + uri;
+
+    final response = await dio.put(
+      url,
+      data: data ?? {},
+    );
+
+    return ResultModel.fromJson(response.data);
+}
+
+
 }

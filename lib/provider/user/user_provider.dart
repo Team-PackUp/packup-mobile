@@ -54,9 +54,9 @@ class UserProvider with ChangeNotifier {
         _accessToken = token;
 
         _resultModel = await _httpService.checkLogin(_accessToken);
-        _resultModel = ResultModel.fromJson(_resultModel?.response);        
 
-        jwt = _resultModel?.response;
+        Map<String, dynamic> responseJson = _resultModel?.response;
+        jwt = responseJson['response'];
 
         if (jwt != null && jwt!.isNotEmpty) {
           saveToken(ACCESS_TOKEN, jwt!);
@@ -107,6 +107,7 @@ class UserProvider with ChangeNotifier {
 
   Future<void> logout() async {
     await socialLogin.logout();
+    await deleteToken('jwt'); 
   }
 
   Future<void> getMyInfo() async {
