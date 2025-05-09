@@ -89,7 +89,7 @@ class SocketService {
       destination: '/user/queue/chatroom-refresh',
       callback: (frame) {
         final updatedRoom = frame.body!;
-        chatRoomProvider.getRoom(); // 3번 방 정보 최신화
+        chatRoomProvider.getRoom(0); // 3번 방 정보 최신화
       },
     );
 

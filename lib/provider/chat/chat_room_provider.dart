@@ -1,36 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:packup/model/common/page_model.dart';
 import 'package:packup/service/chat/chat_service.dart';
 
-import '../../model/chat/ChatRoomModel.dart';
+import 'package:packup/model/chat/ChatRoomModel.dart';
+import 'package:packup/provider/common/LoadingProvider.dart';
 
-class ChatRoomProvider with ChangeNotifier {
+class ChatRoomProvider extends LoadingNotifier {
 
   final ChatService chatService = ChatService();
 
-  bool _isLoading = false;
-
   List<ChatRoomModel> _chatRoom = [];
+  int _totalPage = 0;
 
-  bool get isLoading => _isLoading;
   List<ChatRoomModel> get chatRoom => _chatRoom;
+  int get totalPage => _totalPage;
 
   // 채팅방 리스트
-  getRoom() async {
-    if (_isLoading) return; // 중복 호출 방지
-    _isLoading = true;
+  getRoom(int page) async {
+    if(_totalPage > page) return;
 
-    try {
-      final response = await chatService.getRoom();
-      final responseList = response.response as List;
+    await handleLoading(() async {
+      final response = await chatService.getRoom(page);
+      PageModel pageModel = PageModel.fromJson(response.response);
+
+      final responseList = pageModel.objectList;
+      int totalPage  = pageModel.totalPage;
 
       List<ChatRoomModel> chatRoomList = responseList
           .map((data) => ChatRoomModel.fromJson(data))
           .toList();
 
-      _chatRoom = chatRoomList;
-      notifyListeners();
-    } finally {
-      _isLoading = false;
-    }
+      _chatRoom.insertAll(0, chatRoomList);
+      _totalPage = totalPage;
+    });
   }
 }

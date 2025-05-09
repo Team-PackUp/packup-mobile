@@ -34,15 +34,15 @@ class ChatService {
   }
 
   /// 2. 채팅방 목록 조회 (HTTP)
-  Future<ResultModel> getRoom() async {
-
-    return await DioService().getRequest('/chat/room/list');
+  Future<ResultModel> getRoom(int page) async {
+    final data = {'page' : page};
+    return await DioService().getRequest('/chat/room/list', data);
   }
 
   /// 3. 채팅 내역 가져오기 (HTTP)
-  Future<ResultModel> getMessage(int chatRoomSeq) async {
-
-    return await DioService().getRequest("/chat/message/list/$chatRoomSeq");
+  Future<ResultModel> getMessage(int chatRoomSeq, int page) async {
+    final data = {'page' : page};
+    return await DioService().getRequest("/chat/message/list/$chatRoomSeq", data);
   }
 
   Future<ResultModel> sendFile(XFile file) async {

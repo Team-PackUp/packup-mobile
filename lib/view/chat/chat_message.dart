@@ -1,19 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:packup/provider/chat/chat_message_provider.dart';
-import 'package:packup/provider/chat/chat_room_provider.dart';
-import 'package:packup/service/chat/chat_service.dart';
 import 'package:packup/widget/chat/bubble_message.dart';
 import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/ChatMessageModel.dart';
 import 'package:provider/provider.dart';
 
-import '../../common/util.dart';
-import '../../model/common/file_model.dart';
-import '../../service/chat/socket_service.dart';
+import 'package:packup/model/common/file_model.dart';
+import 'package:packup/service/chat/socket_service.dart';
 
 class ChatMessage extends StatelessWidget {
   final int chatRoomSeq;
@@ -58,11 +53,12 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   SocketService socketService = SocketService();
   late final TextEditingController _controller;
   late final ScrollController _scrollController;
-  late final ChatMessageProvider chatMessageProvider;
+  late ChatMessageProvider chatMessageProvider;
   final ImagePicker _picker = ImagePicker();
+  int page = 0;
 
   @override
-  initState() {
+  void initState() {
     super.initState();
 
     _scrollController = ScrollController();
@@ -73,7 +69,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       chatMessageProvider = context.read<ChatMessageProvider>();
-      await chatMessageProvider.getMessage(widget.chatRoomSeq);
+      await chatMessageProvider.getMessage(widget.chatRoomSeq, page);
 
       socketService.setMessageProvider(chatMessageProvider);
       socketService.initConnect(widget.chatRoomSeq);
@@ -81,8 +77,16 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   }
 
   _scrollListener() {
-    if (_scrollController.position.maxScrollExtent ==
-        _scrollController.position.pixels) {}
+    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
+      if (chatMessageProvider.isLoading) return;
+      getChatMessageMore(page);
+      page++;
+    }
+  }
+
+  getChatMessageMore(int page) async {
+    print("채팅 메시지 더! 조회 합니다");
+    chatMessageProvider.getMessage(widget.chatRoomSeq, page);
   }
 
   @override
@@ -94,52 +98,48 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
 
   @override
   Widget build(BuildContext context) {
+    chatMessageProvider = context.watch<ChatMessageProvider>();
+
     return Scaffold(
-        resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          title: Text('채팅', style: TextStyle(color: TEXT_COLOR_W)),
-          backgroundColor: PRIMARY_COLOR,
-          iconTheme: IconThemeData(color: TEXT_COLOR_W),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: GestureDetector(
-                onTap: () => FocusScope.of(context).unfocus(),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Consumer<ChatMessageProvider>(
-                    builder: (context, chatProvider, child) {
-                      List<ChatMessageModel> filteredChatMessage = chatProvider.chatMessage;
-                      
-                      return ListView.separated(
-                        padding: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width * 0.02,
-                            right: MediaQuery.of(context).size.width * 0.02,
-                            bottom: MediaQuery.of(context).size.height * 0.02
-                        ),
-                        controller: _scrollController,
-                        reverse: true,
-                        itemBuilder: (context, index) {
-                          return BubbleMessage(
-                            message: filteredChatMessage[index].message!,
-                            userSeq: widget.userSeq,
-                            sender: filteredChatMessage[index].userSeq!,
-                            fileFlag: filteredChatMessage[index].fileFlag!,
-                          );
-                        },
-                        separatorBuilder: (_, __) => SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                        itemCount: filteredChatMessage.length,
-                      );
-                    },
+      resizeToAvoidBottomInset: true,
+      appBar: AppBar(
+        title: Text('채팅', style: TextStyle(color: TEXT_COLOR_W)),
+        backgroundColor: PRIMARY_COLOR,
+        iconTheme: IconThemeData(color: TEXT_COLOR_W),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ListView.separated(
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.02,
+                      right: MediaQuery.of(context).size.width * 0.02,
+                      bottom: MediaQuery.of(context).size.height * 0.02
                   ),
+                  controller: _scrollController,
+                  reverse: true,
+                  itemBuilder: (context, index) {
+                    return BubbleMessage(
+                      message: chatMessageProvider.chatMessage[index].message!,
+                      userSeq: widget.userSeq,
+                      sender: chatMessageProvider.chatMessage[index].userSeq!,
+                      fileFlag: chatMessageProvider.chatMessage[index].fileFlag!,
+                    );
+                  },
+                  separatorBuilder: (_, __) => SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                  itemCount: chatMessageProvider.chatMessage.length,
                 ),
               ),
             ),
-            sendMessage(),
-          ],
-        ),
-      );
+          ),
+          sendMessage(),
+        ],
+      ),
+    );
   }
 
   Widget sendMessage() => Container(
@@ -191,20 +191,18 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     ),
   );
 
- void  _sendHandler(chat) {
-
-   socketService.sendMessage(chat);
-   _controller.clear();
-
-   scrollBottom();
+  void _sendHandler(chat) {
+    socketService.sendMessage(chat);
+    _controller.clear();
+    scrollBottom();
   }
 
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {
       final chat = ChatMessageModel(
-        message: _controller.text,
-        chatRoomSeq: widget.chatRoomSeq,
-        fileFlag: false
+          message: _controller.text,
+          chatRoomSeq: widget.chatRoomSeq,
+          fileFlag: false
       );
 
       _sendHandler(chat);
@@ -212,10 +210,8 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   }
 
   void _sendFile(XFile imageFile) async {
-
     FileModel fileModel = await chatMessageProvider.sendFile(imageFile);
     if (fileModel.path != null) {
-
       final chat = ChatMessageModel(
           message: "${fileModel.path}/${fileModel.encodedName}",
           chatRoomSeq: widget.chatRoomSeq,
@@ -225,7 +221,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
       _sendHandler(chat);
     }
   }
-
 
   void scrollBottom() {
     // 스크롤 가장 아래로
