@@ -8,7 +8,7 @@ import 'package:packup/const/color.dart';
 
 import 'package:packup/common/util.dart';
 
-import 'package:packup/service/chat/socket_service.dart';
+import 'package:packup/service/common/socket_service.dart';
 
 class ChatRoom extends StatelessWidget {
   const ChatRoom({super.key});
@@ -106,7 +106,9 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
 
                 return InkWell(
                   onTap: () async {
+
                     int userSeq = await decodeTokenInfo();
+                    print("현재 채팅 보는 회원 " + userSeq.toString());
                     context.push('/chat_message/${room.seq}/$userSeq');
                   },
                   child: Padding(

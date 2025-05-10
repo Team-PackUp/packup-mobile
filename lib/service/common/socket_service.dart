@@ -31,16 +31,15 @@ class SocketService {
   late ChatRoomProvider chatRoomProvider;
   late StompClient stompClient;
 
+  bool socketPage = true;
+
   Future<void> initConnect(chatRoomSeq) async {
     if (chatRoomSeq > 0) {
       this.chatRoomSeq = chatRoomSeq;
       return;
     }
 
-    // if (stompClient.isActive) {
-    //   return;
-    // }
-    print("연결");
+    print("소켓을 연결합니다.");
     await initStompClient();
 
     stompClient.activate();
@@ -55,17 +54,22 @@ class SocketService {
   }
 
   Future<void> initStompClient() async {
+    socketPage = true;
+
     final token = await getToken(ACCESS_TOKEN);
 
     stompClient = StompClient(
       config: StompConfig(
         url: '$socketPrefix/chat',
-        // 소켓 연결을 위한 주소
         onConnect: onConnect,
+        onDisconnect: onDisconnect,
         beforeConnect: () async {
           await Future.delayed(const Duration(milliseconds: 200));
         },
-        onWebSocketError: (dynamic error) => logger(error.toString(), 'ERROR'),
+        onWebSocketError: (dynamic error) {
+          logger(error.toString(), 'ERROR');
+          reconnect();
+        },
         stompConnectHeaders: {'Authorization': "Bearer $token"},
         webSocketConnectHeaders: {'Authorization': 'Bearer $token'},
       ),
@@ -77,7 +81,6 @@ class SocketService {
       destination: '/topic/chat/room/$chatRoomSeq',
       callback: (frame) {
         if (frame.body != null) {
-          print("구독!");
           final data = json.decode(frame.body!);
           final newChatMessage = ChatMessageModel.fromJson(data);
           chatMessageProvider.addMessage(newChatMessage);
@@ -111,6 +114,22 @@ class SocketService {
 
   void disconnect() {
     print("소켓을 해지합니다.");
+
     stompClient.deactivate();
+    socketPage = false;
   }
+
+  void onDisconnect(StompFrame frame) {
+    if(!socketPage) return;
+    reconnect();
+  }
+
+  void reconnect() {
+    if (stompClient.isActive) return;
+
+    Future.delayed(const Duration(seconds: 5), () {
+      stompClient.activate();
+    });
+  }
+
 }

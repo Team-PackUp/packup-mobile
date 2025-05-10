@@ -24,38 +24,55 @@ class BubbleMessage extends StatelessWidget {
     final isMine = sender == userSeq;
     final imagePath = profileImagePath ?? 'assets/icons/schedule/biceps_icon.png';
 
-    return Row(
-      mainAxisAlignment:
-      isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
-      children: [
-        if (!isMine) ...[
-          // CircleAvatar(
-          //   backgroundImage: AssetImage(imagePath),
-          //   radius: 25,
-          // ),
-          SizedBox(width: MediaQuery.of(context).size.height * 0.01),
-        ],
-        ChatBubble(
-          clipper: ChatBubbleClipper4(
-            type: isMine ? BubbleType.sendBubble : BubbleType.receiverBubble,
-          ),
-          alignment: isMine ? Alignment.topRight : Alignment.topLeft,
-          margin: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.01,
-          ),
-          child: Container(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 0.7,
+    // 파일 메시지
+    if (fileFlag) {
+      return Row(
+        mainAxisAlignment:
+        isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: fileFlag ?
-            Image.network(
+            child: Image.network(
               fullFileUrl(message),
-              errorBuilder: (context, error, stackTrace) => Text('이미지 로드 실패 >> ' + message),
-            ) :
-            Text(
-              message,
-              style: TextStyle(
-                // color: isMine ? Colors.white : TEXT_COLOR_B,
+              width: MediaQuery.of(context).size.width * 0.4,
+              height: MediaQuery.of(context).size.height * 0.4,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) =>
+                  Text('이미지 로드 실패 >> $message'),
+            ),
+          ),
+        ],
+      );
+    }
+
+    // 텍스트 메시지
+    return Row(
+      mainAxisAlignment: isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
+          child: ChatBubble(
+            clipper: ChatBubbleClipper4(
+              type: isMine ? BubbleType.sendBubble : BubbleType.receiverBubble,
+            ),
+            alignment: isMine ? Alignment.topRight : Alignment.topLeft,
+            margin: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * 0.01,
+            ),
+            backGroundColor: isMine ? Colors.grey[200]! : Colors.blue[400]!,
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.7,
+              ),
+              child: Text(
+                message,
+                style: TextStyle(
+                  color: isMine ? Colors.black : Colors.white,
+                  fontSize: 15,
+                ),
               ),
             ),
           ),

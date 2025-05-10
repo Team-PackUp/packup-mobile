@@ -4,6 +4,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:packup/common/router.dart';
+import 'package:packup/provider/common/loading_provider.dart';
+import 'package:packup/service/common/loading_service.dart';
+import 'package:packup/widget/common/loading_progress.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:packup/theme/theme.dart';
@@ -50,11 +53,21 @@ void main() async {
   );
 
   runApp(
-    // 모든 페이지에서 사용할 모델 등록
-    ChangeNotifierProvider(
-      create: (context) => UserProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider<LoadingProvider>(
+          create: (_) {
+            final notifier = LoadingProvider();
+            LoadingService.notifier = notifier;
+            return notifier;
+          },
+        ),
+      ],
       child: const PackUp(),
-  ),);
+    ),
+  );
+
 }
 
 
@@ -102,6 +115,9 @@ class PackUp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
             FlutterQuillLocalizations.delegate,
           ],
+          builder: (context, child) {
+            return LoadingProgress(child: child!);
+          },
         );
       },
     );

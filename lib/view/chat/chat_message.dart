@@ -8,7 +8,7 @@ import 'package:packup/model/chat/ChatMessageModel.dart';
 import 'package:provider/provider.dart';
 
 import 'package:packup/model/common/file_model.dart';
-import 'package:packup/service/chat/socket_service.dart';
+import 'package:packup/service/common/socket_service.dart';
 
 class ChatMessage extends StatelessWidget {
   final int chatRoomSeq;
@@ -55,7 +55,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   late final ScrollController _scrollController;
   late ChatMessageProvider chatMessageProvider;
   final ImagePicker _picker = ImagePicker();
-  int page = 0;
 
   @override
   void initState() {
@@ -69,7 +68,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       chatMessageProvider = context.read<ChatMessageProvider>();
-      await chatMessageProvider.getMessage(widget.chatRoomSeq, page);
+      await chatMessageProvider.getMessage(widget.chatRoomSeq);
 
       socketService.setMessageProvider(chatMessageProvider);
       socketService.initConnect(widget.chatRoomSeq);
@@ -79,14 +78,13 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   _scrollListener() {
     if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
       if (chatMessageProvider.isLoading) return;
-      getChatMessageMore(page);
-      page++;
+      getChatMessageMore();
     }
   }
 
-  getChatMessageMore(int page) async {
+  getChatMessageMore() async {
     print("채팅 메시지 더! 조회 합니다");
-    chatMessageProvider.getMessage(widget.chatRoomSeq, page);
+    chatMessageProvider.getMessage(widget.chatRoomSeq);
   }
 
   @override

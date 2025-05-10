@@ -3,9 +3,11 @@ import 'package:packup/model/common/page_model.dart';
 import 'package:packup/service/chat/chat_service.dart';
 
 import 'package:packup/model/chat/ChatRoomModel.dart';
-import 'package:packup/provider/common/LoadingProvider.dart';
+import 'package:packup/provider/common/loading_provider.dart';
 
-class ChatRoomProvider extends LoadingNotifier {
+import '../../service/common/loading_service.dart';
+
+class ChatRoomProvider extends LoadingProvider {
 
   final ChatService chatService = ChatService();
 
@@ -19,7 +21,7 @@ class ChatRoomProvider extends LoadingNotifier {
   getRoom(int page) async {
     if(_totalPage > page) return;
 
-    await handleLoading(() async {
+    await LoadingService.run(() async {
       final response = await chatService.getRoom(page);
       PageModel pageModel = PageModel.fromJson(response.response);
 
@@ -32,6 +34,8 @@ class ChatRoomProvider extends LoadingNotifier {
 
       _chatRoom.insertAll(0, chatRoomList);
       _totalPage = totalPage;
+
+      notifyListeners();
     });
   }
 }
