@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:packup/Common/util.dart';
+import 'package:packup/common/util.dart';
 import 'package:packup/const/const.dart';
 import 'package:packup/model/common/user_model.dart';
 import 'package:packup/model/common/result_model.dart';
@@ -17,16 +17,18 @@ class UserProvider with ChangeNotifier {
   UserModel? _userModel;
   ResultModel? _resultModel;
   late bool _isLoading;
-  String? _accessToken = '';
+  String? _socialAccessToken = '';
   late bool _isResult;
-  String? jwt = '';
+
+  String? accessToken = '';
+  String? refreshToken = '';
 
   final LoginService _httpService = LoginService();
 
   UserModel? get userModel      => _userModel;
   ResultModel? get resultModel  => _resultModel;
   bool get isLoading            => _isLoading;
-  String? get accessToken       => _accessToken;
+  String? get socialAccessToken       => _socialAccessToken;
   bool get isResult             => _isResult;
 
 
@@ -51,15 +53,19 @@ class UserProvider with ChangeNotifier {
 
       if (isResult) {
         final token = await socialLogin.getAccessToken();
-        _accessToken = token;
+        _socialAccessToken = token;
 
-        _resultModel = await _httpService.checkLogin(_accessToken);
+        _resultModel = await _httpService.checkLogin(_socialAccessToken);
 
         Map<String, dynamic> responseJson = _resultModel?.response;
-        jwt = responseJson['response'];
+        accessToken = responseJson[ACCESS_TOKEN];
+        refreshToken = responseJson[REFRESH_TOKEN];
 
-        if (jwt != null && jwt!.isNotEmpty) {
-          saveToken(ACCESS_TOKEN, jwt!);
+        if (accessToken != null) {
+          await saveToken(ACCESS_TOKEN, accessToken!);
+        }
+        if (refreshToken != null) {
+          await saveToken(REFRESH_TOKEN, refreshToken!);
         }
 
       }
@@ -107,7 +113,7 @@ class UserProvider with ChangeNotifier {
 
   Future<void> logout() async {
     await socialLogin.logout();
-    await deleteToken('jwt'); 
+    await deleteToken(ACCESS_TOKEN); 
     _httpService.logout();
   }
 
