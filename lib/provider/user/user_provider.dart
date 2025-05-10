@@ -108,6 +108,7 @@ class UserProvider with ChangeNotifier {
   Future<void> logout() async {
     await socialLogin.logout();
     await deleteToken('jwt'); 
+    _httpService.logout();
   }
 
   Future<void> getMyInfo() async {
