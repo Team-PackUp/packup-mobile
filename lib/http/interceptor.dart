@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:packup/common/util.dart';
 import 'package:packup/const/const.dart';
+import 'package:packup/const/const.dart';
 
 class CustomInterceptor extends Interceptor {
 
@@ -36,9 +37,8 @@ class CustomInterceptor extends Interceptor {
 
     logger('[REQ] [${err.requestOptions.method}] ${err.requestOptions.uri}', ERROR);
 
-    final refreshToken = await storage.read(key: refreshTokenKey);
+    final refreshToken = await getToken(REFRESH_TOKEN);
 
-    // refreshToken 이 없으면 > throw exception
     if (refreshToken == null) {
       return handler.reject(err);
     }
@@ -67,41 +67,37 @@ class CustomInterceptor extends Interceptor {
     }
 
     switch (statusCode) {
-      case 401: // 401 에러인 경우 > 토큰 재발행
-        final isPathRefresh = err.requestOptions.path == '/auth/token';
-        // 요청 URL이 토큰이 아닌 경우
-        if (!isPathRefresh) {
+      case 401:
+        final isPathRefresh = err.requestOptions.path == '/api/auth/refresh';
 
+        if (!isPathRefresh) {
           final dio = Dio(BaseOptions(
             baseUrl: httpPrefix,
             connectTimeout: const Duration(seconds: 10),
             receiveTimeout: const Duration(seconds: 10),
           ));
 
-
           try {
             final res = await dio.post(
-              '$httpPrefix/auth/token',
-              options: Options(headers: {
-                'authorization': 'Bearer $refreshToken',
-              }),
+              '$httpPrefix/auth/refresh',
+              data: {
+                'refreshToken': refreshToken,
+              },
             );
-            final accessToken = res.data['accessToken'];
+
+            final newAccessToken = res.data['response']['accessToken'];
+            await saveToken(ACCESS_TOKEN, newAccessToken);            
 
             final options = err.requestOptions;
+            options.headers['Authorization'] = 'Bearer $newAccessToken';
 
-            // 토큰 변경
-            options.headers.addAll({
-              'authorization': 'Bearer $accessToken',
-            });
+            final retryResponse = await dio.fetch(options);
+            return handler.resolve(retryResponse);
 
-            await storage.write(key: accessTokenKey, value: accessToken);
-
-            // 요청 재전송
-            final response = await dio.fetch(options);
-
-            return handler.resolve(response);
           } on DioException catch (e) {
+            // await storage.deleteAll();
+            // Get.key.currentContext?.go('/');
+
             return handler.reject(e);
           }
         }

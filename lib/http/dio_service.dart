@@ -68,7 +68,18 @@ class DioService {
     );
 
     return ResultModel.fromJson(response.data);
-}
+  }
+
+  Future<ResultModel> deleteRequest(String uri, [Map<String, dynamic>? data]) async {
+    String url = httpPrefix + uri;
+
+    final response = await dio.delete(
+      url,
+      data: data ?? {},
+    );
+
+    return ResultModel.fromJson(response.data);
+  }
 
 
 }
