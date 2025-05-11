@@ -64,14 +64,12 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     _scrollController.addListener(_scrollListener);
     _controller = TextEditingController();
 
-    socketService.initConnect(widget.chatRoomSeq); // STOMP 소켓 연결
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       chatMessageProvider = context.read<ChatMessageProvider>();
       await chatMessageProvider.getMessage(widget.chatRoomSeq);
 
       socketService.setMessageProvider(chatMessageProvider);
-      socketService.initConnect(widget.chatRoomSeq);
+      socketService.subscribeChatMessage(widget.chatRoomSeq);
     });
   }
 
@@ -92,6 +90,8 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     super.dispose();
     _controller.dispose();
     _scrollController.dispose();
+
+    socketService.unsubscribeChatMessage();
   }
 
   @override

@@ -2,65 +2,54 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:packup/model/chat/ChatRoomModel.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 
 import 'package:packup/common/util.dart';
-
 import 'package:packup/const/const.dart';
-
 import 'package:packup/model/chat/ChatMessageModel.dart';
 import 'package:packup/provider/chat/chat_message_provider.dart';
-
-import '../../provider/chat/chat_room_provider.dart';
+import 'package:packup/provider/chat/chat_room_provider.dart';
 
 class SocketService {
   static final SocketService _instance = SocketService._internal();
-
-  // 객체 생성 방지
+  factory SocketService() => _instance;
   SocketService._internal();
 
-  // 싱글톤 보장용 > 팩토리 생성자 > 실제로 객체 생성 없이 상황에 맞는 객체 반환
-  factory SocketService() {
-    return _instance;
-  }
-
   final String socketPrefix = dotenv.env['SOCKET_URL']!;
-
-  int? chatRoomSeq;
   late ChatMessageProvider chatMessageProvider;
   late ChatRoomProvider chatRoomProvider;
-  late StompClient stompClient;
+  StompClient? stompClient;
 
-  bool socketPage = true;
+  StompUnsubscribe? chatRoomSubscription;
+  StompUnsubscribe? chatMessageSubscription;
 
-  Future<void> initConnect(chatRoomSeq) async {
-    if (chatRoomSeq > 0) {
-      this.chatRoomSeq = chatRoomSeq;
+  Future<void> initConnect() async {
+    if (stompClient != null && stompClient!.isActive) {
+      print("이미 소켓이 연결되어 있음.");
       return;
     }
 
     print("소켓을 연결합니다.");
     await initStompClient();
-
-    stompClient.activate();
+    stompClient!.activate();
   }
 
-  void setMessageProvider(ChatMessageProvider chatMessageProvider) {
-    this.chatMessageProvider = chatMessageProvider;
+  void setMessageProvider(ChatMessageProvider provider) {
+    chatMessageProvider = provider;
   }
 
-  void setRoomProvider(ChatRoomProvider chatRoomProvider) {
-    this.chatRoomProvider = chatRoomProvider;
+  void setRoomProvider(ChatRoomProvider provider) {
+    chatRoomProvider = provider;
   }
 
   Future<void> initStompClient() async {
-    socketPage = true;
 
     final token = await getToken(ACCESS_TOKEN);
 
     stompClient = StompClient(
       config: StompConfig(
-        url: '$socketPrefix/chat',
+        url: socketPrefix,
         onConnect: onConnect,
         onDisconnect: onDisconnect,
         beforeConnect: () async {
@@ -77,59 +66,92 @@ class SocketService {
   }
 
   void onConnect(StompFrame frame) {
-    stompClient.subscribe(
-      destination: '/topic/chat/room/$chatRoomSeq',
-      callback: (frame) {
-        if (frame.body != null) {
-          final data = json.decode(frame.body!);
-          final newChatMessage = ChatMessageModel.fromJson(data);
-          chatMessageProvider.addMessage(newChatMessage);
-        }
-      },
-    );
+    print("소켓 연결 완료.");
 
-    stompClient.subscribe(
-      destination: '/user/queue/chatroom-refresh',
-      callback: (frame) {
-        final updatedRoom = frame.body!;
-        chatRoomProvider.getRoom(0); // 3번 방 정보 최신화
-      },
-    );
-
+    // 연결 유지용 ping
     Timer.periodic(const Duration(seconds: 10), (_) {
-      stompClient.send(
+      stompClient!.send(
         destination: '/pub/send.connection',
         body: 'keep connection',
       );
     });
   }
 
+  /// 채팅방 리스트 구독
+  void subscribeChatRoom() {
+    chatRoomSubscription?.call();
+    print("채팅방 리스트 구독 시작");
+
+    chatRoomSubscription = stompClient!.subscribe(
+      destination: '/user/queue/chatroom-refresh',
+      callback: (frame) {
+        if (frame.body != null) {
+          final data = json.decode(frame.body!);
+          final newFirstChatRoom = ChatRoomModel.fromJson(data);
+          chatRoomProvider.updateFirstChatRoom(newFirstChatRoom);
+        }
+      },
+    );
+  }
+
+  /// 채팅방 리스트 구독 해제
+  void unsubscribeChatRoom() {
+    chatRoomSubscription?.call();
+    chatRoomSubscription = null;
+    print("채팅방 리스트 구독 해제 완료");
+  }
+
+  /// 채팅방 메시지 구독
+  void subscribeChatMessage(int chatRoomSeq) {
+    chatMessageSubscription?.call(); // 기존 구독 해제
+    print("채팅방 [$chatRoomSeq] 메시지 구독 시작");
+
+    chatMessageSubscription = stompClient!.subscribe(
+      destination: '/topic/chat/room/$chatRoomSeq',
+      callback: (frame) {
+        if (frame.body != null) {
+          final data = json.decode(frame.body!);
+          final newChatMessage = ChatMessageModel.fromJson(data);
+          print("새로운 채팅이 추가 되었습니다.");
+          chatMessageProvider.addMessage(newChatMessage);
+        }
+      },
+    );
+  }
+
+  /// 채팅방 메시지 구독 해제
+  void unsubscribeChatMessage() {
+    chatMessageSubscription?.call();
+    chatMessageSubscription = null;
+    print("채팅방 메시지 구독 해제 완료");
+  }
+
+  /// 메시지 전송
   void sendMessage(ChatMessageModel chatMessageModel) {
-    stompClient.send(
-      destination: '/pub/send.message', // STOMP 라우팅 키워드
+    stompClient!.send(
+      destination: '/pub/send.message',
       body: chatMessageModel.toJson(),
       headers: {'content-type': 'application/json'},
     );
   }
 
+  /// 전체 연결 해제
   void disconnect() {
     print("소켓을 해지합니다.");
-
-    stompClient.deactivate();
-    socketPage = false;
+    unsubscribeChatRoom();
+    unsubscribeChatMessage();
+    stompClient?.deactivate();
   }
 
   void onDisconnect(StompFrame frame) {
-    if(!socketPage) return;
+    print("소켓 연결 해제됨.");
     reconnect();
   }
 
   void reconnect() {
-    if (stompClient.isActive) return;
-
     Future.delayed(const Duration(seconds: 5), () {
-      stompClient.activate();
+      print("소켓 재연결 시도");
+      stompClient?.activate();
     });
   }
-
 }

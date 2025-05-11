@@ -49,7 +49,8 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
       chatRoomProvider = context.read<ChatRoomProvider>();
       await chatRoomProvider.getRoom(page);
       socketService.setRoomProvider(chatRoomProvider);
-      socketService.initConnect(0); // STOMP 소켓 연결
+
+      socketService.subscribeChatRoom();
     });
   }
 
@@ -57,7 +58,8 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
   Future<void> dispose() async {
     super.dispose();
     _scrollController.dispose();
-    socketService.disconnect();
+
+    socketService.unsubscribeChatRoom();
   }
 
   void _scrollListener() {
@@ -108,7 +110,6 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
                   onTap: () async {
 
                     int userSeq = await decodeTokenInfo();
-                    print("현재 채팅 보는 회원 " + userSeq.toString());
                     context.push('/chat_message/${room.seq}/$userSeq');
                   },
                   child: Padding(

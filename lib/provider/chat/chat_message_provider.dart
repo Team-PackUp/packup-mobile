@@ -25,7 +25,7 @@ class ChatMessageProvider extends LoadingProvider {
 
   // 메시지 로딩
   Future<void> getMessage(int chatRoomSeq) async {
-    if (_totalPage <= _curPage) return;
+    if (_totalPage < _curPage) return;
 
     await LoadingService.run(() async {
       final response = await chatService.getMessage(chatRoomSeq, _curPage);
