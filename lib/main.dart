@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:packup/provider/payment/toss/toss_payment_provider.dart';
+// import 'l10n/app_localizations.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:packup/common/router.dart';
 import 'package:packup/provider/common/loading_provider.dart';
@@ -18,7 +20,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  String envFile = ".env";  // 기본 파일
+  String envFile = ".env"; // 기본 파일
 
   /**
    * 배포용 빌드 AOS: flutter build apk --dart-define=ENV=prod
@@ -42,7 +44,8 @@ void main() async {
 
   // 초기 테마 세팅
   String defaultTheme = await getDefaultTheme();
-  PackUp.themeNotifier.value = defaultTheme == "light" ? ThemeMode.light : ThemeMode.dark;
+  PackUp.themeNotifier.value =
+      defaultTheme == "light" ? ThemeMode.light : ThemeMode.dark;
 
   // 카카오 로그인 초기화
   String KAKAO_NATIVE_APP_KEY = dotenv.env['KAKAO_NATIVE_APP_KEY']!;
@@ -59,6 +62,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => TossPaymentProvider()),
         ChangeNotifierProvider<LoadingProvider>(
           create: (_) {
             final notifier = LoadingProvider();
@@ -70,14 +74,15 @@ void main() async {
       child: const PackUp(),
     ),
   );
-
 }
 
 
 class PackUp extends StatelessWidget {
   const PackUp({Key? key}) : super(key: key);
 
-  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
+  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(
+    ThemeMode.light,
+  );
 
   // 초기 라우트 체크 (login OR index)
   static String initialRoute = '/login';
@@ -113,7 +118,7 @@ class PackUp extends StatelessWidget {
           },
           localizationsDelegates: const [
             AppLocalizations.delegate, // 코드 추가
-            GlobalMaterialLocalizations.delegate, // 텍스트 및 날짜 형식을 현지화 값으로 제공
+            GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
             FlutterQuillLocalizations.delegate,

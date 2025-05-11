@@ -8,10 +8,11 @@ import 'package:tosspayments_widget_sdk_flutter/model/tosspayments_result.dart';
 import 'package:tosspayments_widget_sdk_flutter/payment_widget.dart';
 import 'package:tosspayments_widget_sdk_flutter/widgets/agreement.dart';
 import 'package:tosspayments_widget_sdk_flutter/widgets/payment_method.dart';
-import '../../component.dart';
-import '../result.dart';
-import '../util/toast.dart';
-import 'widget_home.dart';
+
+import 'package:packup/common/toast.dart';
+import 'package:packup/widget/payment/toss/components.dart';
+import 'package:packup/view/payment/toss/toss_result_screen.dart';
+import 'package:packup/view/payment/toss/toss_widget_home_screen.dart';
 
 class PaymentWidgetExamplePage extends StatefulWidget {
   final UIState info;
@@ -50,9 +51,9 @@ class _PaymentWidgetExamplePageState extends State<PaymentWidgetExamplePage> {
     /// [renderPaymentMethods] 함수로 결제수단 위젯을 렌더링합니다.
     _paymentWidget
         .renderPaymentMethods(
-        selector: 'methods',
-        amount: Amount(value: info.amount, currency: info.currency, country: info.country),
-        options: RenderPaymentMethodsOptions(variantKey: info.variantKeyMethod ?? ""))
+            selector: 'methods',
+            amount: Amount(value: info.amount, currency: info.currency, country: info.country),
+            options: RenderPaymentMethodsOptions(variantKey: info.variantKeyMethod ?? ""))
         .then((control) {
       _paymentMethodWidgetControl = control;
     }, onError: (fail) {
@@ -63,7 +64,7 @@ class _PaymentWidgetExamplePageState extends State<PaymentWidgetExamplePage> {
     /// [renderAgreement] 함수로 약관 위젯을 렌더링합니다.
     _paymentWidget
         .renderAgreement(
-        selector: 'agreement', options: RenderAgreementOptions(variantKey: info.variantKeyAgreement ?? ""))
+            selector: 'agreement', options: RenderAgreementOptions(variantKey: info.variantKeyAgreement ?? ""))
         .then((control) {
       _agreementWidgetControl = control; // Future.then을 통해 _agreementWidgetControl을 초기화합니다.
     }, onError: (fail) {
@@ -108,7 +109,7 @@ class _PaymentWidgetExamplePageState extends State<PaymentWidgetExamplePage> {
                               });
                             },
                             text:
-                            '(클릭시 갱신) 선택한 결제수단 : ${selectedPaymentMethod?.method} ${selectedPaymentMethod?.easyPay?.provider ?? ''}',
+                                '(클릭시 갱신) 선택한 결제수단 : ${selectedPaymentMethod?.method} ${selectedPaymentMethod?.easyPay?.provider ?? ''}',
                           ),
                           const SizedBox(height: 20),
                           BlueButton(
@@ -171,7 +172,7 @@ class _PaymentWidgetExamplePageState extends State<PaymentWidgetExamplePage> {
                               if (paymentResult.success != null) {
                                 Get.back(result: paymentResult.success);
                               } else if (paymentResult.fail != null) {
-                                Get.to(() => const ResultPage(), arguments: paymentResult.fail);
+                                Get.to(() => const TossResultScreen(), arguments: paymentResult.fail);
                               }
                             },
                             text: '결제하기')),
@@ -185,9 +186,9 @@ class _PaymentWidgetExamplePageState extends State<PaymentWidgetExamplePage> {
 }
 
 void _showNumberInputDialog(
-    BuildContext context,
-    void Function(int) onConfirm,
-    ) {
+  BuildContext context,
+  void Function(int) onConfirm,
+) {
   TextEditingController controller = TextEditingController();
 
   showDialog(

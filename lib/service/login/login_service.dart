@@ -20,6 +20,10 @@ class LoginService {
     return await DioService().postRequest('/auth/login/google', data);
   }
 
+  Future<ResultModel> logout() async {
+    return await DioService().deleteRequest('/auth/logout');
+  }
+
   Future<ResultModel> getUserInfo(Map<String, dynamic> data) async {
     return await DioService().getRequest('get_user_info', data);
   }

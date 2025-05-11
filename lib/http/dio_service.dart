@@ -71,4 +71,28 @@ class DioService {
     final response = await dio.post(url, data: formData);
     return ResultModel.fromJson(response.data);
   }
+
+  Future<ResultModel> putRequest(String uri, [Map<String, dynamic>? data]) async {
+    String url = httpPrefix + uri;
+
+    final response = await dio.put(
+      url,
+      data: data ?? {},
+    );
+
+    return ResultModel.fromJson(response.data);
+  }
+
+  Future<ResultModel> deleteRequest(String uri, [Map<String, dynamic>? data]) async {
+    String url = httpPrefix + uri;
+
+    final response = await dio.delete(
+      url,
+      data: data ?? {},
+    );
+
+    return ResultModel.fromJson(response.data);
+  }
+
+
 }
