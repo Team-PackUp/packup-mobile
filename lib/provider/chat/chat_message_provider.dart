@@ -45,7 +45,7 @@ class ChatMessageProvider extends LoadingProvider {
 
   Future<void> addMessage(ChatMessageModel message) async {
 
-    await handleLoading(() async {
+    await LoadingService.run(() async {
       bool exists = _chatMessage.any((msg) => msg.seq == message.seq);
       if (!exists) {
         _chatMessage.insert(0, message);
@@ -55,7 +55,7 @@ class ChatMessageProvider extends LoadingProvider {
 
   Future<FileModel> sendFile(XFile file) async {
 
-    return await handleLoading(() async {
+    return await LoadingService.run(() async {
       final response = await chatService.sendFile(file);
       return FileModel.fromJson(response.response);
 
