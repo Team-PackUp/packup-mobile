@@ -24,15 +24,29 @@ class SocketService {
   StompUnsubscribe? chatRoomSubscription;
   StompUnsubscribe? chatMessageSubscription;
 
+  bool isConnect = false;
+
   Future<void> initConnect() async {
-    if (stompClient != null && stompClient!.isActive) {
-      print("이미 소켓이 연결되어 있음.");
-      return;
+    if (stompClient != null) {
+      if (stompClient!.isActive && isConnect) {
+        print("이미 소켓이 연결 되어 있음.");
+        return;
+      } else {
+        stompClient!.deactivate();
+        stompClient = null;
+      }
     }
 
     print("소켓을 연결합니다.");
     await initStompClient();
     stompClient!.activate();
+
+    Future.delayed(Duration(seconds: 5), () {
+      if (!isConnect) {
+        print("소켓 최초 연결 응답 없음. 재연결 시도");
+        reconnect();
+      }
+    });
   }
 
   void setMessageProvider(ChatMessageProvider provider) {
@@ -57,6 +71,12 @@ class SocketService {
         },
         onWebSocketError: (dynamic error) {
           logger(error.toString(), 'ERROR');
+          isConnect = false;
+          reconnect();
+        },
+        onStompError: (frame) {
+          print('[SocketService] STOMP 에러: ${frame.body}');
+          isConnect = false;
           reconnect();
         },
         stompConnectHeaders: {'Authorization': "Bearer $token"},
@@ -67,13 +87,22 @@ class SocketService {
 
   void onConnect(StompFrame frame) {
     print("소켓 연결 완료.");
-
+    isConnect = true;
     // 연결 유지용 ping
     Timer.periodic(const Duration(seconds: 10), (_) {
-      stompClient!.send(
-        destination: '/pub/send.connection',
-        body: 'keep connection',
-      );
+      try {
+        if (stompClient != null && stompClient!.isActive) {
+          stompClient!.send(
+            destination: '/pub/send.connection',
+            body: 'keep connection',
+          );
+        }
+      } catch (e, stackTrace) {
+        isConnect = false;
+        print('ping 전송 중 예외: $e');
+        print(stackTrace);
+        reconnect();
+      }
     });
   }
 
@@ -112,7 +141,7 @@ class SocketService {
         if (frame.body != null) {
           final data = json.decode(frame.body!);
           final newChatMessage = ChatMessageModel.fromJson(data);
-          print("새로운 채팅이 추가 되었습니다.");
+          print("새로운 채팅이 추가 완료.");
           chatMessageProvider.addMessage(newChatMessage);
         }
       },
@@ -137,7 +166,7 @@ class SocketService {
 
   /// 전체 연결 해제
   void disconnect() {
-    print("소켓을 해지합니다.");
+    print("소켓을 해지");
     unsubscribeChatRoom();
     unsubscribeChatMessage();
     stompClient?.deactivate();
@@ -149,9 +178,10 @@ class SocketService {
   }
 
   void reconnect() {
+
     Future.delayed(const Duration(seconds: 5), () {
-      print("소켓 재연결 시도");
-      stompClient?.activate();
+      print("소켓 재연결 시도...");
+      initConnect();
     });
   }
 }
