@@ -1,12 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:packup/Common/util.dart';
 import 'package:packup/provider/payment/toss/toss_payment_provider.dart';
-// import 'l10n/app_localizations.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:packup/common/router.dart';
 import 'package:packup/provider/common/loading_provider.dart';
+
 import 'package:packup/service/common/loading_service.dart';
 import 'package:packup/service/common/socket_service.dart';
 import 'package:packup/widget/common/loading_progress.dart';
@@ -16,6 +19,8 @@ import 'package:packup/theme/theme.dart';
 
 import 'package:packup/provider/user/user_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'package:packup/service/common/firebase_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,7 +61,21 @@ void main() async {
     javaScriptAppKey: JAVASCRIPT_APP_KEY,
   );
 
+  // socket
   await SocketService().initConnect();
+
+  // firebase
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await Firebase.initializeApp(
+    // options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  final fcmTokenKey = dotenv.env['FCM_TOKEN_KEY']!;
+  final fcmToken = await FirebaseMessaging.instance.getToken();
+  saveToken(fcmTokenKey, fcmToken!);
+
+  FirebaseMessaging.onBackgroundMessage(FirebaseService.firebaseMessagingBackgroundHandler);
 
   runApp(
     MultiProvider(
