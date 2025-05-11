@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:packup/model/chat/ChatMessageModel.dart';
 import 'package:packup/model/common/file_model.dart';
@@ -8,7 +7,7 @@ import 'package:packup/model/common/page_model.dart';
 
 import 'package:packup/provider/common/loading_provider.dart';
 
-import '../../service/common/loading_service.dart';
+import 'package:packup/service/common/loading_service.dart';
 
 class ChatMessageProvider extends LoadingProvider {
 

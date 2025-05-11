@@ -4,7 +4,7 @@ import 'package:packup/service/chat/chat_service.dart';
 import 'package:packup/model/chat/ChatRoomModel.dart';
 import 'package:packup/provider/common/loading_provider.dart';
 
-import '../../service/common/loading_service.dart';
+import 'package:packup/service/common/loading_service.dart';
 
 class ChatRoomProvider extends LoadingProvider {
 
@@ -33,7 +33,7 @@ class ChatRoomProvider extends LoadingProvider {
           .map((data) => ChatRoomModel.fromJson(data))
           .toList();
 
-      _chatRoom.insertAll(0, chatRoomList);
+      _chatRoom.addAll(chatRoomList);
       _totalPage = totalPage;
 
       _curPage++;
