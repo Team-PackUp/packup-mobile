@@ -49,6 +49,7 @@ class ChatMessageProvider extends LoadingProvider {
       bool exists = _chatMessage.any((msg) => msg.seq == message.seq);
       if (!exists) {
         _chatMessage.insert(0, message);
+        notifyListeners();
       }
     });
   }
