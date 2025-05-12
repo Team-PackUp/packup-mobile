@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:packup/model/chat/ChatRoomModel.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
@@ -58,8 +59,27 @@ class SocketService {
   }
 
   Future<void> initStompClient() async {
+    String? token = await getToken(ACCESS_TOKEN);
+    String? refreshToken = await getToken(REFRESH_TOKEN);
 
-    final token = await getToken(ACCESS_TOKEN);
+    if (token == null || tokenExpired(token)) {
+      if (refreshToken != null) {
+        try {
+          final dio = Dio();
+          final res = await dio.post(
+            '${dotenv.env['HTTP_URL']!}/auth/refresh',
+            data: {'refreshToken': refreshToken},
+          );
+
+          final newAccessToken = res.data['response']['accessToken'];
+          await saveToken(ACCESS_TOKEN, newAccessToken);
+          token = newAccessToken;
+        } catch (e) {
+          print("소켓 연결 전 access token refresh 실패");
+          return;
+        }
+      }
+    }
 
     stompClient = StompClient(
       config: StompConfig(

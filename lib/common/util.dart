@@ -98,3 +98,24 @@ logger(String message, [String type = "TRACE"]) {
   }
 }
 
+bool tokenExpired(String token) {
+  try {
+    final parts = token.split('.');
+    if (parts.length != 3) return true;
+
+    final payload = parts[1];
+    final normalized = base64Url.normalize(payload);
+    final payloadMap = json.decode(utf8.decode(base64Url.decode(normalized)));
+
+    if (payloadMap is! Map<String, dynamic>) return true;
+    if (!payloadMap.containsKey('exp')) return true;
+
+    final exp = payloadMap['exp'];
+    final currentTimestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
+    return exp is int ? exp <= currentTimestamp : true;
+  } catch (e) {
+    print('tokenExpired error: $e');
+    return true;
+  }
+}
