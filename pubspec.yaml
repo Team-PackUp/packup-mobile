@@ -64,6 +64,7 @@ dependencies:
   image_picker: ^1.1.2
   firebase_messaging: ^15.2.5
   firebase_core: ^3.13.0
+  flutter_local_notifications: ^19.2.0
 
 dev_dependencies:
   build_runner: ^2.4.6
