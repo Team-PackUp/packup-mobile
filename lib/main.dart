@@ -24,6 +24,7 @@ import 'package:packup/provider/user/user_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:packup/service/common/firebase_service.dart';
+import 'common/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -69,14 +70,10 @@ void main() async {
   // ▲ socket
 
   // ▼ firebase
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
   final firebaseService = FirebaseService();
-  await Firebase.initializeApp(
-    // options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
 
-  final fireBaseInstance = await FirebaseMessaging.instance;
+  final fireBaseInstance = FirebaseMessaging.instance;
   NotificationSettings settings = await fireBaseInstance.requestPermission(
     alert: true,
     announcement: false,
@@ -123,7 +120,7 @@ void main() async {
         ?.createNotificationChannel(androidNotificationChannel);
   }
 
-  // // 백그라운드 핸들러
+  // // 백그라운드 핸들러 > 최상위 수준 함수
   FirebaseMessaging.onBackgroundMessage(FirebaseService.fcmBackgroundHandler);
   //
   // // 포그라운드 핸들러
