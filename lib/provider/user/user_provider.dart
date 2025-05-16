@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:packup/common/util.dart';
 import 'package:packup/const/const.dart';
 import 'package:packup/model/common/user_model.dart';
@@ -23,7 +24,7 @@ class UserProvider with ChangeNotifier {
   String? accessToken = '';
   String? refreshToken = '';
 
-  final LoginService _httpService = LoginService();
+  final LoginService _httpService = LoginService();  
 
   UserModel? get userModel      => _userModel;
   ResultModel? get resultModel  => _resultModel;
@@ -67,6 +68,8 @@ class UserProvider with ChangeNotifier {
         if (refreshToken != null) {
           await saveToken(REFRESH_TOKEN, refreshToken!);
         }
+        
+        await _httpService.registerFcmToken();
 
       }
 
@@ -76,12 +79,12 @@ class UserProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
 
-      // 제대로 저장됐는지 디버깅 
+      // 디버깅
       print('aaaaaaaaaaaaaaaaaaaa');
       final token = await getToken(ACCESS_TOKEN);
       print(token);
       print('aaaaaaaaaaaaaaaaaaaa');
-
+      // 디버깅
 
     }
   }
