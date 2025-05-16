@@ -21,6 +21,7 @@ class SocketService {
   late ChatRoomProvider chatRoomProvider;
   StompClient? stompClient;
 
+  int chatRoomSeq = 0;
   StompUnsubscribe? chatRoomSubscription;
   StompUnsubscribe? chatMessageSubscription;
 
@@ -88,8 +89,12 @@ class SocketService {
   void onConnect(StompFrame frame) {
     print("소켓 연결 완료.");
     isConnect = true;
+
+    // 재구독
+    reSubscribe();
+
     // 연결 유지용 ping
-    Timer.periodic(const Duration(seconds: 10), (_) {
+    Timer.periodic(const Duration(seconds: 100), (_) {
       try {
         if (stompClient != null && stompClient!.isActive) {
           stompClient!.send(
@@ -134,6 +139,7 @@ class SocketService {
   void subscribeChatMessage(int chatRoomSeq) {
     chatMessageSubscription?.call(); // 기존 구독 해제
     print("채팅방 [$chatRoomSeq] 메시지 구독 시작");
+    this.chatRoomSeq = chatRoomSeq;
 
     chatMessageSubscription = stompClient!.subscribe(
       destination: '/topic/chat/room/$chatRoomSeq',
@@ -152,6 +158,7 @@ class SocketService {
   void unsubscribeChatMessage() {
     chatMessageSubscription?.call();
     chatMessageSubscription = null;
+    chatRoomSeq = 0;
     print("채팅방 메시지 구독 해제 완료");
   }
 
@@ -183,5 +190,17 @@ class SocketService {
       print("소켓 재연결 시도...");
       initConnect();
     });
+  }
+
+  void reSubscribe() {
+    if(chatMessageSubscription != null && stompClient != null) {
+      print("채팅을 재구독." + chatRoomSeq.toString());
+      subscribeChatMessage(chatRoomSeq);
+    }
+
+    if(chatRoomSubscription != null && stompClient != null) {
+      print("채팅방 리스트를 재구독.");
+      subscribeChatRoom();
+    }
   }
 }
