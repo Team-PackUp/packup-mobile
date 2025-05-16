@@ -21,11 +21,14 @@ class SocketService {
   late ChatRoomProvider chatRoomProvider;
   StompClient? stompClient;
 
+  // ▼ 구독 리스트
   int chatRoomSeq = 0;
-  StompUnsubscribe? chatRoomSubscription;
-  StompUnsubscribe? chatMessageSubscription;
+  StompUnsubscribe? chatRoomSubscription;     // 채팅방 리스트 구독
+  StompUnsubscribe? chatMessageSubscription;  // 채팅 리스트 구독
+  // ▲ 구독 리스트
 
-  bool isConnect = false;
+  bool isConnect = false;       // 현재 연결 여부
+  bool isReconnecting = false;  // 재연결 시도 상태 여부
 
   Future<void> initConnect() async {
     if (stompClient != null) {
@@ -44,7 +47,6 @@ class SocketService {
 
     Future.delayed(Duration(seconds: 5), () {
       if (!isConnect) {
-        print("소켓 최초 연결 응답 없음. 재연결 시도");
         reconnect();
       }
     });
@@ -72,12 +74,10 @@ class SocketService {
         },
         onWebSocketError: (dynamic error) {
           logger(error.toString(), 'ERROR');
-          isConnect = false;
           reconnect();
         },
         onStompError: (frame) {
           print('[SocketService] STOMP 에러: ${frame.body}');
-          isConnect = false;
           reconnect();
         },
         stompConnectHeaders: {'Authorization': "Bearer $token"},
@@ -103,9 +103,7 @@ class SocketService {
           );
         }
       } catch (e, stackTrace) {
-        isConnect = false;
         print('ping 전송 중 예외: $e');
-        print(stackTrace);
         reconnect();
       }
     });
@@ -185,10 +183,19 @@ class SocketService {
   }
 
   void reconnect() {
+    isConnect = false;
+
+    if (isReconnecting) {
+      print("이미 재연결 중... 중복 방지.");
+      return;
+    }
+
+    isReconnecting = true;
 
     Future.delayed(const Duration(seconds: 5), () {
       print("소켓 재연결 시도...");
       initConnect();
+      isReconnecting = false;
     });
   }
 
