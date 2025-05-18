@@ -59,7 +59,6 @@ final router = GoRouter(
       builder: (context, state) {
         final chatRoomSeq = int.parse(state.pathParameters['chatRoomSeq']!);
         final userSeq = int.parse(state.pathParameters['userSeq']!);
-        // final userSeq = int.parse(state.pathParameters['userSeq']!);
         return ChatMessage(chatRoomSeq: chatRoomSeq, userSeq: userSeq,);
       },
     ),
@@ -67,5 +66,8 @@ final router = GoRouter(
       path: '/result',
       builder: (context, state) => const TossResultScreen(),
     ),
+    GoRoute(
+      path: '/notice_list'
+    )
   ],
 );

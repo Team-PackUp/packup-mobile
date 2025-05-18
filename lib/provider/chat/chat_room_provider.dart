@@ -1,7 +1,7 @@
 import 'package:packup/model/common/page_model.dart';
 import 'package:packup/service/chat/chat_service.dart';
 
-import 'package:packup/model/chat/ChatRoomModel.dart';
+import 'package:packup/model/chat/chat_room_model.dart';
 import 'package:packup/provider/common/loading_provider.dart';
 
 import 'package:packup/service/common/loading_service.dart';
