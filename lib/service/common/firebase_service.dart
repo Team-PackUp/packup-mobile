@@ -6,8 +6,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import '../../Common/util.dart';
-import '../../common/firebase_options.dart';
+import 'package:packup/common/util.dart';
+import 'package:packup/common/firebase_options.dart';
 
 @pragma('vm:entry-point')
 class FirebaseService {
@@ -100,7 +100,7 @@ class FirebaseService {
     });
 
     // 백그라운드 핸들러 > 최상위 수준 함수
-    FirebaseMessaging.onBackgroundMessage(FirebaseService.fcmBackgroundHandler);
+    FirebaseMessaging.onBackgroundMessage(fcmBackgroundHandler);
 
     // 포그라운드 핸들러
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
