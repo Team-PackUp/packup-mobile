@@ -64,6 +64,7 @@ app.*.map.json
 /android/local.properties
 /android/.idea/
 /android/.settings/
+/android/app/google-services.json
 
 # iOS
 /ios/Pods/

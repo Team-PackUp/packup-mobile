@@ -1,7 +1,11 @@
 
+import 'dart:io';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:packup/model/common/result_model.dart';
 import 'package:packup/http/dio_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:packup/common/util.dart';
 
 class LoginService {
 
@@ -31,4 +35,21 @@ class LoginService {
   Future<ResultModel> getMyInfo() async {
     return await DioService().getRequest('/user/me');
   }
+
+  Future<void> registerFcmToken() async {
+    final fcmTokenKey = dotenv.env['FCM_TOKEN_KEY']!;
+    final osType = Platform.isIOS ? 'IOS' : 'ANDROID';
+    
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
+
+    if (fcmToken != null) {
+      await saveToken(fcmTokenKey, fcmToken);
+      await DioService().postRequest('/fcm/register', {
+        'fcmToken': fcmToken,
+        'osType': osType
+      });
+    }
+
+  }
+
 }

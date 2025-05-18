@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:packup/model/chat/ChatRoomModel.dart';
+import 'package:path/path.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 
 import 'package:packup/common/util.dart';
@@ -22,10 +23,15 @@ class SocketService {
   late ChatRoomProvider chatRoomProvider;
   StompClient? stompClient;
 
-  StompUnsubscribe? chatRoomSubscription;
-  StompUnsubscribe? chatMessageSubscription;
+  // ▼ 구독 리스트
+  int chatRoomSeq = 0;
+  StompUnsubscribe? chatRoomSubscription;     // 채팅방 리스트 구독
+  StompUnsubscribe? chatMessageSubscription;  // 채팅 리스트 구독
+  // ▲ 구독 리스트
 
-  bool isConnect = false;
+  bool isConnect = false;       // 현재 연결 여부
+  bool isReconnecting = false;  // 재연결 시도 상태 여부
+  bool forceDisconnect = false;  // 강제로 소켓 해제
 
   Future<void> initConnect() async {
     if (stompClient != null) {
@@ -44,7 +50,6 @@ class SocketService {
 
     Future.delayed(Duration(seconds: 5), () {
       if (!isConnect) {
-        print("소켓 최초 연결 응답 없음. 재연결 시도");
         reconnect();
       }
     });
@@ -91,12 +96,10 @@ class SocketService {
         },
         onWebSocketError: (dynamic error) {
           logger(error.toString(), 'ERROR');
-          isConnect = false;
           reconnect();
         },
         onStompError: (frame) {
           print('[SocketService] STOMP 에러: ${frame.body}');
-          isConnect = false;
           reconnect();
         },
         stompConnectHeaders: {'Authorization': "Bearer $token"},
@@ -108,6 +111,10 @@ class SocketService {
   void onConnect(StompFrame frame) {
     print("소켓 연결 완료.");
     isConnect = true;
+
+    // 재구독
+    reSubscribe();
+
     // 연결 유지용 ping
     Timer.periodic(const Duration(seconds: 10), (_) {
       try {
@@ -118,9 +125,7 @@ class SocketService {
           );
         }
       } catch (e, stackTrace) {
-        isConnect = false;
         print('ping 전송 중 예외: $e');
-        print(stackTrace);
         reconnect();
       }
     });
@@ -154,6 +159,7 @@ class SocketService {
   void subscribeChatMessage(int chatRoomSeq) {
     chatMessageSubscription?.call(); // 기존 구독 해제
     print("채팅방 [$chatRoomSeq] 메시지 구독 시작");
+    this.chatRoomSeq = chatRoomSeq;
 
     chatMessageSubscription = stompClient!.subscribe(
       destination: '/topic/chat/room/$chatRoomSeq',
@@ -172,6 +178,7 @@ class SocketService {
   void unsubscribeChatMessage() {
     chatMessageSubscription?.call();
     chatMessageSubscription = null;
+    chatRoomSeq = 0;
     print("채팅방 메시지 구독 해제 완료");
   }
 
@@ -190,6 +197,8 @@ class SocketService {
     unsubscribeChatRoom();
     unsubscribeChatMessage();
     stompClient?.deactivate();
+
+    forceDisconnect = true;
   }
 
   void onDisconnect(StompFrame frame) {
@@ -198,10 +207,45 @@ class SocketService {
   }
 
   void reconnect() {
+    isConnect = false;
+
+    if(forceDisconnect) {
+      print("앱이 백그라운드 혹은 종료 되어 소켓 연결을 해제 합니다.");
+      return;
+    }
+
+    // 예시 조건: 이미 연결된 상태면 재연결 안 함
+    if (isConnect) {
+      print("이미 연결되어 있어 재연결하지 않음.");
+      return;
+    }
+
+    // 이미 재연결 중이면 중복 방지
+    if (isReconnecting) {
+      print("이미 재연결 중... 중복 방지.");
+      return;
+    }
+
+    isReconnecting = true;
 
     Future.delayed(const Duration(seconds: 5), () {
       print("소켓 재연결 시도...");
       initConnect();
+      isReconnecting = false;
+      forceDisconnect = false;
     });
+  }
+
+
+  void reSubscribe() {
+    if(chatMessageSubscription != null && stompClient != null) {
+      print("채팅을 재구독." + chatRoomSeq.toString());
+      subscribeChatMessage(chatRoomSeq);
+    }
+
+    if(chatRoomSubscription != null && stompClient != null) {
+      print("채팅방 리스트를 재구독.");
+      subscribeChatRoom();
+    }
   }
 }
