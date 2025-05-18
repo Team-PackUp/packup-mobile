@@ -12,6 +12,7 @@ import 'package:packup/provider/payment/toss/toss_payment_provider.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:packup/common/router.dart';
 import 'package:packup/provider/common/loading_provider.dart';
+import 'package:packup/service/common/app_state_service.dart';
 
 import 'package:packup/service/common/loading_service.dart';
 import 'package:packup/service/common/socket_service.dart';
@@ -120,13 +121,11 @@ void main() async {
         ?.createNotificationChannel(androidNotificationChannel);
   }
 
-  // // 백그라운드 핸들러 > 최상위 수준 함수
+  // 백그라운드 핸들러 > 최상위 수준 함수
   FirebaseMessaging.onBackgroundMessage(FirebaseService.fcmBackgroundHandler);
-  //
-  // // 포그라운드 핸들러
+
+  // 포그라운드 핸들러
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('[FCM - Foreground] MESSAGE.notification.title : ${message.notification?.title}');
-    print('[FCM - Foreground] MESSAGE.notification.body : ${message.notification?.body}');
     firebaseService.fcmForegroundHandler(
         message, localNotification, androidNotificationChannel);
   });
@@ -148,6 +147,10 @@ void main() async {
       child: const PackUp(),
     ),
   );
+
+  // ▼ 앱 상태 변경 감지(최초 빌드시 실행 X)
+  AppStateService();
+  // ▲ 앱 상태 변경 감지
 }
 
 

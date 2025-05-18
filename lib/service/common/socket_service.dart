@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:packup/model/chat/ChatRoomModel.dart';
+import 'package:path/path.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 
 import 'package:packup/common/util.dart';
@@ -29,6 +30,7 @@ class SocketService {
 
   bool isConnect = false;       // 현재 연결 여부
   bool isReconnecting = false;  // 재연결 시도 상태 여부
+  bool forceDisconnect = false;  // 강제로 소켓 해제
 
   Future<void> initConnect() async {
     if (stompClient != null) {
@@ -94,7 +96,7 @@ class SocketService {
     reSubscribe();
 
     // 연결 유지용 ping
-    Timer.periodic(const Duration(seconds: 100), (_) {
+    Timer.periodic(const Duration(seconds: 10), (_) {
       try {
         if (stompClient != null && stompClient!.isActive) {
           stompClient!.send(
@@ -175,6 +177,8 @@ class SocketService {
     unsubscribeChatRoom();
     unsubscribeChatMessage();
     stompClient?.deactivate();
+
+    forceDisconnect = true;
   }
 
   void onDisconnect(StompFrame frame) {
@@ -185,6 +189,18 @@ class SocketService {
   void reconnect() {
     isConnect = false;
 
+    if(forceDisconnect) {
+      print("앱이 백그라운드 혹은 종료 되어 소켓 연결을 해제 합니다.");
+      return;
+    }
+
+    // 예시 조건: 이미 연결된 상태면 재연결 안 함
+    if (isConnect) {
+      print("이미 연결되어 있어 재연결하지 않음.");
+      return;
+    }
+
+    // 이미 재연결 중이면 중복 방지
     if (isReconnecting) {
       print("이미 재연결 중... 중복 방지.");
       return;
@@ -196,8 +212,10 @@ class SocketService {
       print("소켓 재연결 시도...");
       initConnect();
       isReconnecting = false;
+      forceDisconnect = false;
     });
   }
+
 
   void reSubscribe() {
     if(chatMessageSubscription != null && stompClient != null) {
