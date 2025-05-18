@@ -3,7 +3,7 @@ import 'dart:convert';
 class NoticeModel {
   final int? seq;
   final String? title;
-  final int? content;
+  final String? content;
   final DateTime? createdAt;
 
   NoticeModel({

@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/provider/chat/chat_room_provider.dart';
-import 'package:packup/provider/search_bar/custom_search_bar_provider.dart';
+import 'package:packup/provider/notice/noticet.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/search_bar/custom_search_bar.dart';
-import 'package:packup/const/color.dart';
-
-import 'package:packup/common/util.dart';
 
 class NoticeList extends StatelessWidget {
   const NoticeList({super.key});
@@ -15,8 +11,7 @@ class NoticeList extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ChatRoomProvider()),
-        ChangeNotifierProvider(create: (_) => SearchBarProvider()),
+        ChangeNotifierProvider(create: (_) => NoticeProvider()),
       ],
       child: const NoticeListContent(),
     );
@@ -33,7 +28,7 @@ class NoticeListContent extends StatefulWidget {
 class _NoticeListContentState extends State<NoticeListContent> {
 
   late ScrollController _scrollController;
-  late ChatRoomProvider chatRoomProvider;
+  late NoticeProvider noticeProvider;
   int page = 0;
 
   @override
@@ -43,8 +38,8 @@ class _NoticeListContentState extends State<NoticeListContent> {
     _scrollController.addListener(_scrollListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      chatRoomProvider = context.read<ChatRoomProvider>();
-      await chatRoomProvider.getRoom(page);
+      noticeProvider = context.read<NoticeProvider>();
+      await noticeProvider.getNoticeList(page);
     });
   }
 
@@ -56,30 +51,21 @@ class _NoticeListContentState extends State<NoticeListContent> {
 
   void _scrollListener() {
     if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
-      getChatRoomMore(page);
+      getNoticeListMore(page);
       page++;
     }
   }
 
-  getChatRoomMore(int page) async {
-    print("채팅방 더! 조회 합니다");
-    chatRoomProvider.getRoom(page);
+  getNoticeListMore(int page) async {
+    noticeProvider.getNoticeList(page);
   }
 
   @override
   Widget build(BuildContext context) {
 
-    chatRoomProvider = context.watch<ChatRoomProvider>();
-    final searchProvider = context.watch<SearchBarProvider>();
+    noticeProvider = context.watch<NoticeProvider>();
 
-    var filteredChatRooms = chatRoomProvider.chatRoom;
-
-    // 검색 필터
-    if (searchProvider.searchText.isNotEmpty) {
-      filteredChatRooms = filteredChatRooms.where((room) {
-        return room.seq.toString().contains(searchProvider.searchText);
-      }).toList();
-    }
+    var filteredNoticeList = noticeProvider.noticeList;
 
     return Scaffold(
       appBar: AppBar(
@@ -94,15 +80,13 @@ class _NoticeListContentState extends State<NoticeListContent> {
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              itemCount: filteredChatRooms.length,
+              itemCount: filteredNoticeList.length,
               itemBuilder: (context, index) {
-                final room = filteredChatRooms[index];
+                final notice = filteredNoticeList[index];
 
                 return InkWell(
                   onTap: () async {
-
-                    int userSeq = await decodeTokenInfo();
-                    context.push('/chat_message/${room.seq}/$userSeq');
+                    context.push('/notice_view/${notice.seq}');
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -111,7 +95,7 @@ class _NoticeListContentState extends State<NoticeListContent> {
                       right: 8.0,
                     ),
                     child: _buildCard(
-                      title: room.seq.toString(),
+                      title: notice.title!,
                       content: 1,
                     ),
                   ),
@@ -120,14 +104,6 @@ class _NoticeListContentState extends State<NoticeListContent> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: "member",
-        backgroundColor: PRIMARY_COLOR,
-        onPressed: () {
-          Navigator.pushNamed(context, "/friend");
-        },
-        child: Icon(Icons.add, color: TEXT_COLOR_W),
       ),
     );
   }
