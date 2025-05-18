@@ -3,13 +3,13 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:packup/model/chat/ChatRoomModel.dart';
+import 'package:packup/model/chat/chat_room_model.dart';
 import 'package:path/path.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 
 import 'package:packup/common/util.dart';
 import 'package:packup/const/const.dart';
-import 'package:packup/model/chat/ChatMessageModel.dart';
+import 'package:packup/model/chat/chat_message_model.dart';
 import 'package:packup/provider/chat/chat_message_provider.dart';
 import 'package:packup/provider/chat/chat_room_provider.dart';
 

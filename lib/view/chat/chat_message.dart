@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:packup/provider/chat/chat_message_provider.dart';
 import 'package:packup/widget/chat/bubble_message.dart';
 import 'package:packup/const/color.dart';
-import 'package:packup/model/chat/ChatMessageModel.dart';
+import 'package:packup/model/chat/chat_message_model.dart';
 import 'package:provider/provider.dart';
 
 import 'package:packup/model/common/file_model.dart';

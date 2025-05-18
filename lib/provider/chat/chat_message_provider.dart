@@ -1,5 +1,5 @@
 import 'package:image_picker/image_picker.dart';
-import 'package:packup/model/chat/ChatMessageModel.dart';
+import 'package:packup/model/chat/chat_message_model.dart';
 import 'package:packup/model/common/file_model.dart';
 import 'package:packup/service/chat/chat_service.dart';
 
