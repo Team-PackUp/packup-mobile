@@ -25,7 +25,14 @@ class LoginService {
   }
 
   Future<ResultModel> logout() async {
-    return await DioService().deleteRequest('/auth/logout');
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+
+    return await DioService().deleteRequest(
+      '/auth/logout',
+      {
+        'fcmToken': fcmToken,
+      },
+    );
   }
 
   Future<ResultModel> getUserInfo(Map<String, dynamic> data) async {
