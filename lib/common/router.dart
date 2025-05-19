@@ -5,6 +5,7 @@ import 'package:packup/view/home/home.dart';
 import 'package:get/get.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
+import 'package:packup/view/notice/notice_list.dart';
 import 'package:packup/view/notice/notice_view.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
 import 'package:packup/view/user/preference/preference.dart';
@@ -69,13 +70,14 @@ final router = GoRouter(
       builder: (context, state) => const TossResultScreen(),
     ),
     GoRoute(
-      path: '/notice_list'
+      path: '/notice_list',
+      builder: (context, state) => const NoticeList(),
     ),
     GoRoute(
         path: '/notice_view/:noticeSeq',
-      builder: (context, state) {
+        builder: (context, state) {
         final noticeSeq = int.parse(state.pathParameters['noticeSeq']!);
-        return NoticeView(noticeSeq: noticeSeq,);
+        return NoticeView(noticeSeq: noticeSeq);
       }
     ),
   ],

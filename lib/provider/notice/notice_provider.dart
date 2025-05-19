@@ -9,7 +9,7 @@ class NoticeProvider extends LoadingProvider {
 
   final noticeService = NoticeService();
 
-  late NoticeModel notice;
+  NoticeModel noticeModel = NoticeModel.empty();
   List<NoticeModel> _noticeList = [];
   int _totalPage = 1;
   int _curPage = 0;
@@ -19,7 +19,7 @@ class NoticeProvider extends LoadingProvider {
   int get curPage => _curPage;
 
   // 공지 리스트
-  Future<void> getNoticeList(int page) async {
+  Future<void> getNoticeList() async {
     if (_totalPage < _curPage) return;
 
     await LoadingService.run(() async {
@@ -40,8 +40,9 @@ class NoticeProvider extends LoadingProvider {
   }
 
   Future<void> getNoticeView(int noticeSeq) async {
-    notice = await LoadingService.run(() async {
-      final response = await noticeService.getNoticeList(_curPage);
+
+    noticeModel = await LoadingService.run(() async {
+      final response = await noticeService.getNoticeView(noticeSeq);
 
       return NoticeModel.fromJson(response.response);
     });

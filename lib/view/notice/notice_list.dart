@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/provider/notice/noticet.dart';
+import 'package:packup/provider/notice/notice_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/search_bar/custom_search_bar.dart';
 
@@ -29,7 +29,6 @@ class _NoticeListContentState extends State<NoticeListContent> {
 
   late ScrollController _scrollController;
   late NoticeProvider noticeProvider;
-  int page = 0;
 
   @override
   void initState() {
@@ -39,7 +38,7 @@ class _NoticeListContentState extends State<NoticeListContent> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       noticeProvider = context.read<NoticeProvider>();
-      await noticeProvider.getNoticeList(page);
+      await noticeProvider.getNoticeList();
     });
   }
 
@@ -51,13 +50,12 @@ class _NoticeListContentState extends State<NoticeListContent> {
 
   void _scrollListener() {
     if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
-      getNoticeListMore(page);
-      page++;
+      getNoticeListMore();
     }
   }
 
-  getNoticeListMore(int page) async {
-    noticeProvider.getNoticeList(page);
+  getNoticeListMore() async {
+    noticeProvider.getNoticeList();
   }
 
   @override
@@ -86,7 +84,8 @@ class _NoticeListContentState extends State<NoticeListContent> {
 
                 return InkWell(
                   onTap: () async {
-                    context.push('/notice_view/${notice.seq}');
+                    print(notice.seq);
+                    context.push('/notice_view/${notice.seq!}');
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(

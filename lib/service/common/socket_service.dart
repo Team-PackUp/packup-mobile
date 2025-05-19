@@ -115,7 +115,7 @@ class SocketService {
     reSubscribe();
 
     // 연결 유지용 ping
-    Timer.periodic(const Duration(seconds: 10), (_) {
+    Timer.periodic(const Duration(seconds: 100), (_) {
       try {
         if (stompClient != null && stompClient!.isActive) {
           stompClient!.send(

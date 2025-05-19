@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:packup/provider/notice/noticet.dart';
+import 'package:packup/provider/notice/notice_provider.dart';
 import 'package:provider/provider.dart';
 
 class NoticeView extends StatelessWidget {
@@ -16,7 +16,7 @@ class NoticeView extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => NoticeProvider()),
       ],
-      child: NoticeView(noticeSeq: noticeSeq,),
+      child: NoticeViewContent(noticeSeq: noticeSeq),
     );
   }
 }
@@ -39,11 +39,8 @@ class NoticeViewContentState extends State<NoticeViewContent> {
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      noticeProvider = context.read<NoticeProvider>();
-      await noticeProvider.getNoticeView(widget.noticeSeq);
-    });
+    noticeProvider = context.read<NoticeProvider>();
+    noticeProvider.getNoticeView(widget.noticeSeq);
   }
 
   @override
@@ -56,7 +53,7 @@ class NoticeViewContentState extends State<NoticeViewContent> {
 
     noticeProvider = context.watch<NoticeProvider>();
 
-    final notice = noticeProvider.notice;
+    final notice = noticeProvider.noticeModel;
 
     return Scaffold(
       appBar: AppBar(

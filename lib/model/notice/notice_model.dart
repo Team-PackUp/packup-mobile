@@ -28,4 +28,8 @@ class NoticeModel {
       createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
     );
   }
+
+  factory NoticeModel.empty() {
+    return NoticeModel(title: "", content: "");
+  }
 }

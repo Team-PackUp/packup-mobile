@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:packup/provider/search_bar/custom_search_bar_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -33,17 +34,6 @@ class Home extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),
                 child: CustomSearchBar(),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const TossHomeScreen(),
-                    ),
-                  );
-                },
-                child: const Text('예시코드-TossHomeScreen'),
               ),
               const SizedBox(height: 20),
               // ElevatedButton(
@@ -93,6 +83,25 @@ class Home extends StatelessWidget {
               //   },
               //   child: const Text('예시코드'),
               // ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const WidgetHome(),
+                    ),
+                  );
+                },
+                child: const Text('예시코드-WidgetHome'),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  context.push('/notice_list');
+                },
+                child: const Text('공지사항'),
+              ),
             ],
           ),
         ),

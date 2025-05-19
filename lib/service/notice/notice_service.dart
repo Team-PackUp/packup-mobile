@@ -8,4 +8,8 @@ class NoticeService {
     return await DioService().getRequest('/notice/list', data);
   }
 
+  Future<ResultModel> getNoticeView(int noticeSeq) async {
+    print("service call");
+    return await DioService().getRequest('/notice/view/$noticeSeq');
+  }
 }

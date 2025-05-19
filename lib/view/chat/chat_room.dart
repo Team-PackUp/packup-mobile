@@ -37,7 +37,6 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
 
   late ScrollController _scrollController;
   late ChatRoomProvider chatRoomProvider;
-  int page = 0;
 
   @override
   void initState() {
@@ -47,7 +46,7 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       chatRoomProvider = context.read<ChatRoomProvider>();
-      await chatRoomProvider.getRoom(page);
+      await chatRoomProvider.getRoom();
       socketService.setRoomProvider(chatRoomProvider);
 
       socketService.subscribeChatRoom();
@@ -64,14 +63,13 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
 
   void _scrollListener() {
     if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
-      getChatRoomMore(page);
-      page++;
+      getChatRoomMore();
     }
   }
 
-  getChatRoomMore(int page) async {
+  getChatRoomMore() async {
     print("채팅방 더! 조회 합니다");
-    chatRoomProvider.getRoom(page);
+    chatRoomProvider.getRoom();
   }
 
   @override

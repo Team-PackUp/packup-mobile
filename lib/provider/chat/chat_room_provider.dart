@@ -19,7 +19,7 @@ class ChatRoomProvider extends LoadingProvider {
   int get curPage => _curPage;
 
   // 채팅방 리스트
-  getRoom(int page) async {
+  getRoom() async {
     if(_totalPage < _curPage) return;
 
     await LoadingService.run(() async {
