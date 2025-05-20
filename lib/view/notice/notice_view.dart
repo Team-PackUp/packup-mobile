@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:flutter_quill/quill_delta.dart';
 import 'package:packup/provider/notice/notice_provider.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
+
+import '../../service/common/quill_view_service.dart';
 
 class NoticeView extends StatelessWidget {
   final int noticeSeq;
@@ -35,44 +40,41 @@ class NoticeViewContent extends StatefulWidget {
 
 class NoticeViewContentState extends State<NoticeViewContent> {
   late NoticeProvider noticeProvider;
+  QuillController? _quillController;
 
   @override
   void initState() {
     super.initState();
     noticeProvider = context.read<NoticeProvider>();
-    noticeProvider.getNoticeView(widget.noticeSeq);
+    noticeProvider.getNoticeView(widget.noticeSeq).then((_) {
+      final notice = noticeProvider.noticeModel;
+
+      if (notice.content != null) {
+        QuillViewService().quillInitiate(notice.content!);
+        _quillController = QuillViewService().quillController;
+      }
+
+    });
   }
 
   @override
-  Future<void> dispose() async {
+  void dispose() {
+    _quillController!.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-
     noticeProvider = context.watch<NoticeProvider>();
-
     final notice = noticeProvider.noticeModel;
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 10,
+        title: Text(notice.title!),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Text(
-                notice.title!
-            ),
-          ),
-          Expanded(
-            child: Text(
-                notice.content!
-            ),
-          ),
-        ],
-      ),
+      body: QuillEditor.basic(
+          controller: _quillController!,
+        ),
     );
   }
 }
