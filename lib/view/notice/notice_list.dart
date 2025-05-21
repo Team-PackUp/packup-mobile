@@ -46,6 +46,7 @@ class _NoticeListContentState extends State<NoticeListContent> {
   Future<void> dispose() async {
     super.dispose();
     _scrollController.dispose();
+    // noticeProvider.dispose();
   }
 
   void _scrollListener() {

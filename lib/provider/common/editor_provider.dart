@@ -1,21 +1,30 @@
-
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 
-class QuillViewService {
-  static final QuillViewService _instance = QuillViewService._internal();
+class EditorProvider extends ChangeNotifier {
+  late QuillController _quillController;
+  QuillController get quillController => _quillController;
 
-  factory QuillViewService() => _instance;
+  String _content = '';
+  String get content => _content;
 
-  QuillViewService._internal();
+  EditorProvider(String data) {
+    _content = data;
 
-  QuillController? _quillController;
-  QuillController? get quillController => _quillController;
+    if (_content.trim().isNotEmpty) {
+      setQuillDelta(_content);
+    } else {
+      empty();
+    }
 
-  Future<void> empty() async {
+    _quillController.readOnly = true;
+
+    notifyListeners();
+  }
+
+  void empty() {
     _quillController = QuillController(
       document: Document(),
       selection: const TextSelection.collapsed(offset: 0),
@@ -31,5 +40,4 @@ class QuillViewService {
       selection: const TextSelection.collapsed(offset: 0),
     );
   }
-
 }

@@ -118,7 +118,7 @@ class _IndexState extends State<Index> {
       case 3:
         return const Profile();
       default:
-        return Editor();
+        return Profile();
     }
   }
 }

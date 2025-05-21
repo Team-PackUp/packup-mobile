@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:packup/provider/notice/notice_provider.dart';
+import 'package:packup/widget/editor/editor.dart';
 import 'package:provider/provider.dart';
-
-import 'package:packup/service/common/quill_view_service.dart';
 
 class NoticeView extends StatelessWidget {
   final int noticeSeq;
@@ -53,8 +51,7 @@ class NoticeViewContentState extends State<NoticeViewContent> {
   void dispose() {
     super.dispose();
 
-    noticeProvider.dispose();
-    QuillViewService().quillController!.dispose();
+    // noticeProvider.dispose();
   }
 
   @override
@@ -62,13 +59,15 @@ class NoticeViewContentState extends State<NoticeViewContent> {
     noticeProvider = context.watch<NoticeProvider>();
     final notice = noticeProvider.noticeModel;
 
+    if (notice.title == null || notice.content == null || notice.content!.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(notice.title!),
       ),
-      body: QuillEditor.basic(
-          controller: noticeProvider.quillController,
-        ),
+      body: Editor(content: notice.content!),
     );
   }
 }

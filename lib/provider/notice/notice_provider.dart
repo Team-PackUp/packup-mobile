@@ -1,21 +1,18 @@
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:packup/model/common/page_model.dart';
 import 'package:packup/provider/common/loading_provider.dart';
 import 'package:packup/service/common/loading_service.dart';
 import 'package:packup/service/notice/notice_service.dart';
 
 import 'package:packup/model/notice/notice_model.dart';
-import 'package:packup/service/common/quill_view_service.dart';
 
 class NoticeProvider extends LoadingProvider {
 
   final noticeService = NoticeService();
-  final quillViewService = QuillViewService();
+
   late NoticeModel noticeModel;
   late List<NoticeModel> _noticeList;
 
   NoticeProvider() {
-    quillViewService.empty();
     noticeModel = NoticeModel.empty();
     _noticeList = [];
   }
@@ -26,9 +23,6 @@ class NoticeProvider extends LoadingProvider {
   List<NoticeModel> get noticeList => _noticeList;
   int get totalPage => _totalPage;
   int get curPage => _curPage;
-
-  QuillController get quillController => quillViewService.quillController!;
-
 
   // 공지 리스트
   getNoticeList() async {
@@ -54,13 +48,11 @@ class NoticeProvider extends LoadingProvider {
   // 공지 상세 보기
   getNoticeView(int noticeSeq) async {
 
-    await LoadingService.run(() async {
+    // await LoadingService.run(() async {
 
       final response = await noticeService.getNoticeView(noticeSeq);
       noticeModel =  NoticeModel.fromJson(response.response);
-
-      QuillViewService().setQuillDelta(noticeModel.content!);
-    });
+    // });
 
     notifyListeners();
   }

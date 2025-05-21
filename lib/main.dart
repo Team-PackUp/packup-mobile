@@ -15,7 +15,6 @@ import 'package:packup/provider/common/loading_provider.dart';
 import 'package:packup/service/common/app_state_service.dart';
 
 import 'package:packup/service/common/loading_service.dart';
-import 'package:packup/service/common/quill_view_service.dart';
 import 'package:packup/service/common/socket_service.dart';
 import 'package:packup/widget/common/loading_progress.dart';
 import 'package:provider/provider.dart';
