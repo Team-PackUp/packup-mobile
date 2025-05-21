@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' hide Text;
-import 'package:flutter_quill/quill_delta.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:packup/provider/notice/notice_provider.dart';
 import 'package:provider/provider.dart';
-import 'dart:convert';
 
-import '../../service/common/quill_view_service.dart';
+import 'package:packup/service/common/quill_view_service.dart';
 
 class NoticeView extends StatelessWidget {
   final int noticeSeq;
@@ -40,27 +38,23 @@ class NoticeViewContent extends StatefulWidget {
 
 class NoticeViewContentState extends State<NoticeViewContent> {
   late NoticeProvider noticeProvider;
-  QuillController? _quillController;
 
   @override
   void initState() {
     super.initState();
-    noticeProvider = context.read<NoticeProvider>();
-    noticeProvider.getNoticeView(widget.noticeSeq).then((_) {
-      final notice = noticeProvider.noticeModel;
 
-      if (notice.content != null) {
-        QuillViewService().quillInitiate(notice.content!);
-        _quillController = QuillViewService().quillController;
-      }
-
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      noticeProvider = context.read<NoticeProvider>();
+      await noticeProvider.getNoticeView(widget.noticeSeq);
     });
   }
 
   @override
   void dispose() {
-    _quillController!.dispose();
     super.dispose();
+
+    noticeProvider.dispose();
+    QuillViewService().quillController!.dispose();
   }
 
   @override
@@ -73,7 +67,7 @@ class NoticeViewContentState extends State<NoticeViewContent> {
         title: Text(notice.title!),
       ),
       body: QuillEditor.basic(
-          controller: _quillController!,
+          controller: noticeProvider.quillController,
         ),
     );
   }

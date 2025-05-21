@@ -15,8 +15,14 @@ class QuillViewService {
   QuillController? _quillController;
   QuillController? get quillController => _quillController;
 
+  Future<void> empty() async {
+    _quillController = QuillController(
+      document: Document(),
+      selection: const TextSelection.collapsed(offset: 0),
+    );
+  }
 
-  void quillInitiate(String jsonContent) async {
+  void setQuillDelta(String jsonContent) {
     final contentJson = jsonDecode(jsonContent);
     final delta = Delta.fromJson(contentJson['ops']);
 

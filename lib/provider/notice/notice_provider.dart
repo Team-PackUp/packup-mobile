@@ -4,15 +4,22 @@ import 'package:packup/provider/common/loading_provider.dart';
 import 'package:packup/service/common/loading_service.dart';
 import 'package:packup/service/notice/notice_service.dart';
 
-import '../../model/notice/notice_model.dart';
-import '../../service/common/quill_view_service.dart';
+import 'package:packup/model/notice/notice_model.dart';
+import 'package:packup/service/common/quill_view_service.dart';
 
 class NoticeProvider extends LoadingProvider {
 
   final noticeService = NoticeService();
+  final quillViewService = QuillViewService();
+  late NoticeModel noticeModel;
+  late List<NoticeModel> _noticeList;
 
-  NoticeModel noticeModel = NoticeModel.empty();
-  List<NoticeModel> _noticeList = [];
+  NoticeProvider() {
+    quillViewService.empty();
+    noticeModel = NoticeModel.empty();
+    _noticeList = [];
+  }
+
   int _totalPage = 1;
   int _curPage = 0;
 
@@ -20,11 +27,11 @@ class NoticeProvider extends LoadingProvider {
   int get totalPage => _totalPage;
   int get curPage => _curPage;
 
-  late QuillController _quillController;
-  QuillController get quillController => _quillController;
+  QuillController get quillController => quillViewService.quillController!;
+
 
   // 공지 리스트
-  Future<void> getNoticeList() async {
+  getNoticeList() async {
     if (_totalPage < _curPage) return;
 
     await LoadingService.run(() async {
@@ -44,16 +51,16 @@ class NoticeProvider extends LoadingProvider {
     });
   }
 
-  Future<void> getNoticeView(int noticeSeq) async {
+  // 공지 상세 보기
+  getNoticeView(int noticeSeq) async {
+
     await LoadingService.run(() async {
 
       final response = await noticeService.getNoticeView(noticeSeq);
       noticeModel =  NoticeModel.fromJson(response.response);
 
-      QuillViewService().quillInitiate(noticeModel.content!);
-      _quillController = QuillViewService().quillController!;
+      QuillViewService().setQuillDelta(noticeModel.content!);
     });
-
 
     notifyListeners();
   }
