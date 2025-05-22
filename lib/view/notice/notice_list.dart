@@ -4,6 +4,8 @@ import 'package:packup/provider/notice/notice_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/search_bar/custom_search_bar.dart';
 
+import '../../common/util.dart';
+
 class NoticeList extends StatelessWidget {
   const NoticeList({super.key});
 
@@ -46,7 +48,6 @@ class _NoticeListContentState extends State<NoticeListContent> {
   Future<void> dispose() async {
     super.dispose();
     _scrollController.dispose();
-    // noticeProvider.dispose();
   }
 
   void _scrollListener() {
@@ -72,10 +73,6 @@ class _NoticeListContentState extends State<NoticeListContent> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: const CustomSearchBar(),
-          ),
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
@@ -85,7 +82,6 @@ class _NoticeListContentState extends State<NoticeListContent> {
 
                 return InkWell(
                   onTap: () async {
-                    print(notice.seq);
                     context.push('/notice_view/${notice.seq!}');
                   },
                   child: Padding(
@@ -94,9 +90,9 @@ class _NoticeListContentState extends State<NoticeListContent> {
                       left: 8.0,
                       right: 8.0,
                     ),
-                    child: _buildCard(
+                    child: listWithDate(
                       title: notice.title!,
-                      content: 1,
+                      date: notice.createdAt!,
                     ),
                   ),
                 );
@@ -108,9 +104,9 @@ class _NoticeListContentState extends State<NoticeListContent> {
     );
   }
 
-  Widget _buildCard({
+  Widget listWithDate({
     required String title,
-    int? content,
+    DateTime? date,
   }) {
     return Card(
       shape: RoundedRectangleBorder(
@@ -124,6 +120,13 @@ class _NoticeListContentState extends State<NoticeListContent> {
           children: [
             Text(
               title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Text(
+              convertToYmd(date!),
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,

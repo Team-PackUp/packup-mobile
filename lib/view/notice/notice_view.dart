@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:packup/common/util.dart';
 import 'package:packup/provider/notice/notice_provider.dart';
 import 'package:packup/widget/editor/editor.dart';
 import 'package:provider/provider.dart';
+
+import '../../provider/common/editor_provider.dart';
 
 class NoticeView extends StatelessWidget {
   final int noticeSeq;
@@ -50,8 +53,6 @@ class NoticeViewContentState extends State<NoticeViewContent> {
   @override
   void dispose() {
     super.dispose();
-
-    // noticeProvider.dispose();
   }
 
   @override
@@ -59,15 +60,30 @@ class NoticeViewContentState extends State<NoticeViewContent> {
     noticeProvider = context.watch<NoticeProvider>();
     final notice = noticeProvider.noticeModel;
 
-    if (notice.title == null || notice.content == null || notice.content!.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
+    // editor에 값이 세팅 되는데 딜레이가 있는 것으로 보임
+    if (notice.title!.isEmpty || notice.content!.isEmpty) {
+      return SizedBox.shrink();
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(notice.title!),
       ),
-      body: Editor(content: notice.content!),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(convertToYmd(notice.createdAt!)),
+          ),
+          Expanded(
+            child: Editor(
+              content: notice.content!,
+              type: EditorType.view,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -48,13 +48,12 @@ class NoticeProvider extends LoadingProvider {
   // 공지 상세 보기
   getNoticeView(int noticeSeq) async {
 
-    // await LoadingService.run(() async {
+    await LoadingService.run(() async {
 
       final response = await noticeService.getNoticeView(noticeSeq);
       noticeModel =  NoticeModel.fromJson(response.response);
-    // });
+    });
 
     notifyListeners();
   }
-
 }

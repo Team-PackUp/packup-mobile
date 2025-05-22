@@ -3,14 +3,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 
+enum EditorType { view, write }
+
 class EditorProvider extends ChangeNotifier {
   late QuillController _quillController;
   QuillController get quillController => _quillController;
 
+  EditorType _editMode = EditorType.view;
+  EditorType get editMode => _editMode;
+
   String _content = '';
   String get content => _content;
 
-  EditorProvider(String data) {
+  EditorProvider(String data, EditorType type) {
     _content = data;
 
     if (_content.trim().isNotEmpty) {
@@ -19,7 +24,11 @@ class EditorProvider extends ChangeNotifier {
       empty();
     }
 
-    _quillController.readOnly = true;
+    _editMode = type;
+
+    type == EditorType.view ?
+    _quillController.readOnly = true :
+    _quillController.readOnly = false;
 
     notifyListeners();
   }
