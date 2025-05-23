@@ -6,8 +6,10 @@ import 'package:get/get.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
 import 'package:packup/view/notice/notice_list.dart';
+import 'package:packup/view/notice/notice_view.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
 import 'package:packup/view/user/preference/preference.dart';
+import 'package:path/path.dart';
 
 /// 라우트 사용
 /// push => 라우트를 쌓아올려서 뒤로가기 하면 이전 스크린으로 이동
@@ -70,6 +72,13 @@ final router = GoRouter(
     GoRoute(
       path: '/notice_list',
       builder: (context, state) => const NoticeList(),
-    )
+    ),
+    GoRoute(
+        path: '/notice_view/:noticeSeq',
+        builder: (context, state) {
+        final noticeSeq = int.parse(state.pathParameters['noticeSeq']!);
+        return NoticeView(noticeSeq: noticeSeq);
+      }
+    ),
   ],
 );

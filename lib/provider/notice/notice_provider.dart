@@ -3,14 +3,20 @@ import 'package:packup/provider/common/loading_provider.dart';
 import 'package:packup/service/common/loading_service.dart';
 import 'package:packup/service/notice/notice_service.dart';
 
-import '../../model/notice/notice_model.dart';
+import 'package:packup/model/notice/notice_model.dart';
 
-class NoticeListProvider extends LoadingProvider {
+class NoticeProvider extends LoadingProvider {
 
   final noticeService = NoticeService();
 
-  late NoticeModel noticeListModel;
-  List<NoticeModel> _noticeList = [];
+  late NoticeModel noticeModel;
+  late List<NoticeModel> _noticeList;
+
+  NoticeProvider() {
+    noticeModel = NoticeModel.empty();
+    _noticeList = [];
+  }
+
   int _totalPage = 1;
   int _curPage = 0;
 
@@ -19,7 +25,7 @@ class NoticeListProvider extends LoadingProvider {
   int get curPage => _curPage;
 
   // 공지 리스트
-  Future<void> getNoticeList() async {
+  getNoticeList() async {
     if (_totalPage < _curPage) return;
 
     await LoadingService.run(() async {
@@ -37,5 +43,17 @@ class NoticeListProvider extends LoadingProvider {
 
       notifyListeners();
     });
+  }
+
+  // 공지 상세 보기
+  getNoticeView(int noticeSeq) async {
+
+    await LoadingService.run(() async {
+
+      final response = await noticeService.getNoticeView(noticeSeq);
+      noticeModel =  NoticeModel.fromJson(response.response);
+    });
+
+    notifyListeners();
   }
 }

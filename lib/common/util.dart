@@ -59,7 +59,6 @@ Future<int> decodeTokenInfo() async {
 
 
 /// ################### DATE ################### ///
-
 DateTime getToday() {
 
   // 오늘 날짜
@@ -71,6 +70,10 @@ DateTime getToday() {
 
   String formattedNowDate = DateFormat("yyyy-MM-dd HH:mm:ss").format(nowDate);
   return nowDate;
+}
+
+String convertToYmd(DateTime date, [String format = 'yyyy-MM-dd']) {
+  return DateFormat('yyyy-MM-dd').format(date);
 }
 
 /// ################### FILE ################### ///

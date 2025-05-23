@@ -11,9 +11,9 @@ import 'package:packup/service/common/loading_service.dart';
 
 class ChatMessageProvider extends LoadingProvider {
 
-  final ChatService chatService = ChatService();
+  final ChatService _chatService = ChatService();
 
-  late ChatMessageModel chatMessageModel;
+  // late ChatMessageModel chatMessageModel;
   List<ChatMessageModel> _chatMessage = [];
   int _totalPage = 1;
   int _curPage = 0;
@@ -27,7 +27,7 @@ class ChatMessageProvider extends LoadingProvider {
     if (_totalPage < _curPage) return;
 
     await LoadingService.run(() async {
-      final response = await chatService.getMessage(chatRoomSeq, _curPage);
+      final response = await _chatService.getMessage(chatRoomSeq, _curPage);
       PageModel pageModel = PageModel.fromJson(response.response);
 
       List<ChatMessageModel> messageList = pageModel.objectList
@@ -57,7 +57,7 @@ class ChatMessageProvider extends LoadingProvider {
   Future<FileModel> sendFile(XFile file) async {
 
     return await LoadingService.run(() async {
-      final response = await chatService.sendFile(file);
+      final response = await _chatService.sendFile(file);
       return FileModel.fromJson(response.response);
 
     });

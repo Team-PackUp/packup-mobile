@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/provider/chat/chat_room_provider.dart';
-import 'package:packup/provider/search_bar/custom_search_bar_provider.dart';
+import 'package:packup/provider/notice/notice_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:packup/widget/search_bar/custom_search_bar.dart';
-import 'package:packup/const/color.dart';
 
 import 'package:packup/common/util.dart';
 
@@ -13,11 +10,8 @@ class NoticeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ChatRoomProvider()),
-        ChangeNotifierProvider(create: (_) => SearchBarProvider()),
-      ],
+    return ChangeNotifierProvider(
+      create: (_) => NoticeProvider(),
       child: const NoticeListContent(),
     );
   }
@@ -33,8 +27,7 @@ class NoticeListContent extends StatefulWidget {
 class _NoticeListContentState extends State<NoticeListContent> {
 
   late ScrollController _scrollController;
-  late ChatRoomProvider chatRoomProvider;
-  int page = 0;
+  late NoticeProvider _noticeProvider;
 
   @override
   void initState() {
@@ -43,8 +36,8 @@ class _NoticeListContentState extends State<NoticeListContent> {
     _scrollController.addListener(_scrollListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      chatRoomProvider = context.read<ChatRoomProvider>();
-      await chatRoomProvider.getRoom(page);
+      _noticeProvider = context.read<NoticeProvider>();
+      await _noticeProvider.getNoticeList();
     });
   }
 
@@ -56,30 +49,20 @@ class _NoticeListContentState extends State<NoticeListContent> {
 
   void _scrollListener() {
     if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
-      getChatRoomMore(page);
-      page++;
+      getNoticeListMore();
     }
   }
 
-  getChatRoomMore(int page) async {
-    print("채팅방 더! 조회 합니다");
-    chatRoomProvider.getRoom(page);
+  getNoticeListMore() async {
+    _noticeProvider.getNoticeList();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    chatRoomProvider = context.watch<ChatRoomProvider>();
-    final searchProvider = context.watch<SearchBarProvider>();
+    _noticeProvider = context.watch<NoticeProvider>();
 
-    var filteredChatRooms = chatRoomProvider.chatRoom;
-
-    // 검색 필터
-    if (searchProvider.searchText.isNotEmpty) {
-      filteredChatRooms = filteredChatRooms.where((room) {
-        return room.seq.toString().contains(searchProvider.searchText);
-      }).toList();
-    }
+    var filteredNoticeList = _noticeProvider.noticeList;
 
     return Scaffold(
       appBar: AppBar(
@@ -87,22 +70,16 @@ class _NoticeListContentState extends State<NoticeListContent> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: const CustomSearchBar(),
-          ),
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              itemCount: filteredChatRooms.length,
+              itemCount: filteredNoticeList.length,
               itemBuilder: (context, index) {
-                final room = filteredChatRooms[index];
+                final notice = filteredNoticeList[index];
 
                 return InkWell(
                   onTap: () async {
-
-                    int userSeq = await decodeTokenInfo();
-                    context.push('/chat_message/${room.seq}/$userSeq');
+                    context.push('/notice_view/${notice.seq!}');
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -110,9 +87,9 @@ class _NoticeListContentState extends State<NoticeListContent> {
                       left: 8.0,
                       right: 8.0,
                     ),
-                    child: _buildCard(
-                      title: room.seq.toString(),
-                      content: 1,
+                    child: listWithDate(
+                      title: notice.title!,
+                      date: notice.createdAt!,
                     ),
                   ),
                 );
@@ -121,20 +98,12 @@ class _NoticeListContentState extends State<NoticeListContent> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: "member",
-        backgroundColor: PRIMARY_COLOR,
-        onPressed: () {
-          Navigator.pushNamed(context, "/friend");
-        },
-        child: Icon(Icons.add, color: TEXT_COLOR_W),
-      ),
     );
   }
 
-  Widget _buildCard({
+  Widget listWithDate({
     required String title,
-    int? content,
+    DateTime? date,
   }) {
     return Card(
       shape: RoundedRectangleBorder(
@@ -148,6 +117,13 @@ class _NoticeListContentState extends State<NoticeListContent> {
           children: [
             Text(
               title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Text(
+              convertToYmd(date!),
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,

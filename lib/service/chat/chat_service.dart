@@ -17,8 +17,6 @@ class ChatService {
     return _instance;
   }
 
-  final String httpPrefix = dotenv.env['HTTP_URL']!;
-
   /// HTTP header
   Future<Map<String, String>> get header async => {
     'Content-Type': 'application/json',

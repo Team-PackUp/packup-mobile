@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/quill_delta.dart';
+
 class NoticeModel {
   final int? seq;
   final String? title;
-  final int? content;
+  final String? content;
   final DateTime? createdAt;
 
   NoticeModel({
@@ -24,8 +27,25 @@ class NoticeModel {
     return NoticeModel(
       seq: json['seq'],
       title: json['title'],
-      content: json['content'],
+      content: json['content'].toString(),
       createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
     );
+  }
+
+  factory NoticeModel.empty() {
+    return NoticeModel(title: "", content: "", createdAt: null);
+  }
+
+  Document get quillDocument {
+    if (content == null || content!.isEmpty) {
+      return Document();
+    }
+    try {
+      final deltaJson = jsonDecode(content!);
+      final delta = Delta.fromJson(deltaJson);
+      return Document.fromDelta(delta);
+    } catch (e) {
+      return Document();
+    }
   }
 }
