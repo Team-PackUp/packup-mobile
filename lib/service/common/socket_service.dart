@@ -116,7 +116,7 @@ class SocketService {
     reSubscribe();
 
     // 연결 유지용 ping
-    Timer.periodic(const Duration(seconds: 100), (_) {
+    Timer.periodic(const Duration(seconds: 50), (_) {
       try {
         if (stompClient != null && stompClient!.isActive) {
           stompClient!.send(
@@ -239,13 +239,15 @@ class SocketService {
 
   void reSubscribe() {
     if(chatMessageSubscription != null && stompClient != null) {
-      print("채팅을 재구독." + chatRoomSeq.toString());
       subscribeChatMessage(chatRoomSeq);
+
+      chatMessageProvider.getMessage(chatRoomSeq);
     }
 
     if(chatRoomSubscription != null && stompClient != null) {
-      print("채팅방 리스트를 재구독.");
       subscribeChatRoom();
+
+      chatRoomProvider.getRoom();
     }
   }
 }
