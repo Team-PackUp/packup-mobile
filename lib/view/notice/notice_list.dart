@@ -2,19 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/provider/notice/notice_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:packup/widget/search_bar/custom_search_bar.dart';
 
-import '../../common/util.dart';
+import 'package:packup/common/util.dart';
 
 class NoticeList extends StatelessWidget {
   const NoticeList({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => NoticeProvider()),
-      ],
+    return ChangeNotifierProvider(
+      create: (_) => NoticeProvider(),
       child: const NoticeListContent(),
     );
   }
@@ -30,7 +27,7 @@ class NoticeListContent extends StatefulWidget {
 class _NoticeListContentState extends State<NoticeListContent> {
 
   late ScrollController _scrollController;
-  late NoticeProvider noticeProvider;
+  late NoticeProvider _noticeProvider;
 
   @override
   void initState() {
@@ -39,8 +36,8 @@ class _NoticeListContentState extends State<NoticeListContent> {
     _scrollController.addListener(_scrollListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      noticeProvider = context.read<NoticeProvider>();
-      await noticeProvider.getNoticeList();
+      _noticeProvider = context.read<NoticeProvider>();
+      await _noticeProvider.getNoticeList();
     });
   }
 
@@ -57,15 +54,15 @@ class _NoticeListContentState extends State<NoticeListContent> {
   }
 
   getNoticeListMore() async {
-    noticeProvider.getNoticeList();
+    _noticeProvider.getNoticeList();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    noticeProvider = context.watch<NoticeProvider>();
+    _noticeProvider = context.watch<NoticeProvider>();
 
-    var filteredNoticeList = noticeProvider.noticeList;
+    var filteredNoticeList = _noticeProvider.noticeList;
 
     return Scaffold(
       appBar: AppBar(

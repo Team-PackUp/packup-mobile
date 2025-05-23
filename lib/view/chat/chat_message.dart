@@ -22,16 +22,15 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ChatMessageProvider()),
-      ],
+    return ChangeNotifierProvider(
+      create: (_) => ChatMessageProvider(),
       child: ChatMessageContent(
         chatRoomSeq: chatRoomSeq,
         userSeq: userSeq,
       ),
     );
   }
+
 }
 
 
@@ -50,10 +49,10 @@ class ChatMessageContent extends StatefulWidget {
 }
 
 class _ChatMessageContentState extends State<ChatMessageContent> {
-  SocketService socketService = SocketService();
+  final SocketService _socketService = SocketService();
   late final TextEditingController _controller;
   late final ScrollController _scrollController;
-  late ChatMessageProvider chatMessageProvider;
+  late ChatMessageProvider _chatMessageProvider;
   final ImagePicker _picker = ImagePicker();
 
   @override
@@ -65,24 +64,24 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     _controller = TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      chatMessageProvider = context.read<ChatMessageProvider>();
-      await chatMessageProvider.getMessage(widget.chatRoomSeq);
+      _chatMessageProvider = context.read<ChatMessageProvider>();
+      await _chatMessageProvider.getMessage(widget.chatRoomSeq);
 
-      socketService.setMessageProvider(chatMessageProvider);
-      socketService.subscribeChatMessage(widget.chatRoomSeq);
+      _socketService.setMessageProvider(_chatMessageProvider);
+      _socketService.subscribeChatMessage(widget.chatRoomSeq);
     });
   }
 
   _scrollListener() {
     if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
-      if (chatMessageProvider.isLoading) return;
+      if (_chatMessageProvider.isLoading) return;
       getChatMessageMore();
     }
   }
 
   getChatMessageMore() async {
     print("채팅 메시지 더! 조회 합니다");
-    chatMessageProvider.getMessage(widget.chatRoomSeq);
+    _chatMessageProvider.getMessage(widget.chatRoomSeq);
   }
 
   @override
@@ -91,12 +90,12 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     _controller.dispose();
     _scrollController.dispose();
 
-    socketService.unsubscribeChatMessage();
+    _socketService.unsubscribeChatMessage();
   }
 
   @override
   Widget build(BuildContext context) {
-    chatMessageProvider = context.watch<ChatMessageProvider>();
+    _chatMessageProvider = context.watch<ChatMessageProvider>();
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -122,14 +121,14 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
                   reverse: true,
                   itemBuilder: (context, index) {
                     return BubbleMessage(
-                      message: chatMessageProvider.chatMessage[index].message!,
+                      message: _chatMessageProvider.chatMessage[index].message!,
                       userSeq: widget.userSeq,
-                      sender: chatMessageProvider.chatMessage[index].userSeq!,
-                      fileFlag: chatMessageProvider.chatMessage[index].fileFlag!,
+                      sender: _chatMessageProvider.chatMessage[index].userSeq!,
+                      fileFlag: _chatMessageProvider.chatMessage[index].fileFlag!,
                     );
                   },
                   separatorBuilder: (_, __) => SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                  itemCount: chatMessageProvider.chatMessage.length,
+                  itemCount: _chatMessageProvider.chatMessage.length,
                 ),
               ),
             ),
@@ -190,7 +189,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   );
 
   void _sendHandler(chat) {
-    socketService.sendMessage(chat);
+    _socketService.sendMessage(chat);
     _controller.clear();
     scrollBottom();
   }
@@ -208,7 +207,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   }
 
   void _sendFile(XFile imageFile) async {
-    FileModel fileModel = await chatMessageProvider.sendFile(imageFile);
+    FileModel fileModel = await _chatMessageProvider.sendFile(imageFile);
     if (fileModel.path != null) {
       final chat = ChatMessageModel(
           message: "${fileModel.path}/${fileModel.encodedName}",

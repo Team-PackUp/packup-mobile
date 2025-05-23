@@ -18,10 +18,8 @@ class Editor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => EditorProvider(content, type)),
-      ],
+    return ChangeNotifierProvider(
+      create: (_) => EditorProvider(content, type),
       child: EditorContent(),
     );
   }
@@ -41,29 +39,29 @@ class EditorContentState extends State<EditorContent> {
   final FocusNode _editorFocusNode = FocusNode();
   final ScrollController _editorScrollController = ScrollController();
 
-  late EditorProvider editorProvider;
+  late EditorProvider _editorProvider;
 
   @override
   void initState() {
     super.initState();
-    editorProvider = context.read<EditorProvider>();
+    _editorProvider = context.read<EditorProvider>();
   }
 
   @override
   Widget build(BuildContext context) {
-    editorProvider = context.watch<EditorProvider>();
+    _editorProvider = context.watch<EditorProvider>();
 
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
             EditorToolbar().editorToolBar(
-                editorProvider.quillController,
-                editorProvider.editMode
+                _editorProvider.quillController,
+                _editorProvider.editMode
             ),
             Expanded(
               child: QuillEditor.basic(
-                controller: editorProvider.quillController,
+                controller: _editorProvider.quillController,
                 focusNode: _editorFocusNode,
                 scrollController: _editorScrollController,
                 config: EditorConfig().editorConfig(),

@@ -4,7 +4,7 @@ import 'package:packup/provider/notice/notice_provider.dart';
 import 'package:packup/widget/editor/editor.dart';
 import 'package:provider/provider.dart';
 
-import '../../provider/common/editor_provider.dart';
+import 'package:packup/provider/common/editor_provider.dart';
 
 class NoticeView extends StatelessWidget {
   final int noticeSeq;
@@ -16,10 +16,8 @@ class NoticeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => NoticeProvider()),
-      ],
+    return ChangeNotifierProvider(
+      create: (_) => NoticeProvider(),
       child: NoticeViewContent(noticeSeq: noticeSeq),
     );
   }
@@ -38,15 +36,15 @@ class NoticeViewContent extends StatefulWidget {
 }
 
 class NoticeViewContentState extends State<NoticeViewContent> {
-  late NoticeProvider noticeProvider;
+  late NoticeProvider _noticeProvider;
 
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      noticeProvider = context.read<NoticeProvider>();
-      await noticeProvider.getNoticeView(widget.noticeSeq);
+      _noticeProvider = context.read<NoticeProvider>();
+      await _noticeProvider.getNoticeView(widget.noticeSeq);
     });
   }
 
@@ -57,8 +55,8 @@ class NoticeViewContentState extends State<NoticeViewContent> {
 
   @override
   Widget build(BuildContext context) {
-    noticeProvider = context.watch<NoticeProvider>();
-    final notice = noticeProvider.noticeModel;
+    _noticeProvider = context.watch<NoticeProvider>();
+    final notice = _noticeProvider.noticeModel;
 
     // editor에 값이 세팅 되는데 딜레이가 있는 것으로 보임
     if (notice.title!.isEmpty || notice.content!.isEmpty) {

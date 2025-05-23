@@ -8,7 +8,7 @@ import 'package:packup/service/common/loading_service.dart';
 
 class ChatRoomProvider extends LoadingProvider {
 
-  final ChatService chatService = ChatService();
+  final ChatService _chatService = ChatService();
 
   List<ChatRoomModel> _chatRoom = [];
   int _totalPage = 0;
@@ -23,7 +23,7 @@ class ChatRoomProvider extends LoadingProvider {
     if(_totalPage < _curPage) return;
 
     await LoadingService.run(() async {
-      final response = await chatService.getRoom(_curPage);
+      final response = await _chatService.getRoom(_curPage);
       PageModel pageModel = PageModel.fromJson(response.response);
 
       final responseList = pageModel.objectList;
