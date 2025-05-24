@@ -6,9 +6,12 @@ import 'package:packup/provider/common/loading_provider.dart';
 
 import 'package:packup/service/common/loading_service.dart';
 
+import 'package:packup/service/common/socket_service.dart';
+
 class ChatRoomProvider extends LoadingProvider {
 
   final ChatService _chatService = ChatService();
+  final SocketService _socketService = SocketService();
 
   List<ChatRoomModel> _chatRoom = [];
   int _totalPage = 0;
@@ -55,4 +58,21 @@ class ChatRoomProvider extends LoadingProvider {
     notifyListeners();
   }
 
+  void subscribeChatRoom() {
+    const destination = '/user/queue/chatroom-refresh';
+
+    _socketService.registerCallback(destination, (data) {});
+
+    _socketService.subscribe(destination, (data) {
+      final newFirstChatRoom = ChatRoomModel.fromJson(data);
+      updateFirstChatRoom(newFirstChatRoom);
+    });
+  }
+
+  void unSubscribeChatRoom() {
+    final destination = '/user/queue/chatroom-refresh';
+
+    _socketService.unsubscribe(destination);
+    _socketService.unregisterCallback(destination);
+  }
 }

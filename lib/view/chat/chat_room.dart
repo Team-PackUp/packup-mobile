@@ -33,6 +33,7 @@ class ChatRoomContent extends StatefulWidget {
 class _ChatRoomContentState extends State<ChatRoomContent> {
   final _socketService = SocketService();
   final ScrollController _scrollController = ScrollController();
+  late ChatRoomProvider _chatRoomProvider;
 
   @override
   void initState() {
@@ -41,19 +42,17 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
     _scrollController.addListener(_onScroll);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final chatRoomProvider = context.read<ChatRoomProvider>();
-      await chatRoomProvider.getRoom();
+      _chatRoomProvider = context.read<ChatRoomProvider>();
+      await _chatRoomProvider.getRoom();
 
-      _socketService
-        ..setRoomProvider(chatRoomProvider)
-        ..subscribeChatRoom();
+      _chatRoomProvider.subscribeChatRoom();
     });
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
-    _socketService.unsubscribeChatRoom();
+    _chatRoomProvider.unSubscribeChatRoom();
     super.dispose();
   }
 

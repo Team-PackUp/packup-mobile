@@ -9,11 +9,13 @@ import 'package:packup/provider/common/loading_provider.dart';
 
 import 'package:packup/service/common/loading_service.dart';
 
+import 'package:packup/service/common/socket_service.dart';
+
 class ChatMessageProvider extends LoadingProvider {
 
   final ChatService _chatService = ChatService();
+  final SocketService _socketService = SocketService();
 
-  // late ChatMessageModel chatMessageModel;
   List<ChatMessageModel> _chatMessage = [];
   int _totalPage = 1;
   int _curPage = 0;
@@ -59,7 +61,29 @@ class ChatMessageProvider extends LoadingProvider {
     return await LoadingService.run(() async {
       final response = await _chatService.sendFile(file);
       return FileModel.fromJson(response.response);
-
     });
+  }
+
+  void subscribeChatMessage(int chatRoomSeq) {
+    final destination = '/topic/chat/room/$chatRoomSeq';
+
+    _socketService.registerCallback(destination, (data) {});
+
+    _socketService.subscribe(destination, (data) {
+      final newChatMessage = ChatMessageModel.fromJson(data);
+      addMessage(newChatMessage);
+    });
+  }
+
+
+  void unSubscribeChatMessage(int chatRoomSeq) {
+    final destination = '/topic/chat/room/$chatRoomSeq';
+
+    _socketService.unsubscribe(destination);
+    _socketService.unregisterCallback(destination);
+  }
+
+  void sendChatMessage(ChatMessageModel newChatMessage) {
+    _socketService.sendMessage('/send.message', newChatMessage);
   }
 }

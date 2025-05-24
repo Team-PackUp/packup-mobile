@@ -49,7 +49,6 @@ class ChatMessageContent extends StatefulWidget {
 }
 
 class _ChatMessageContentState extends State<ChatMessageContent> {
-  final SocketService _socketService = SocketService();
   late final TextEditingController _controller;
   late final ScrollController _scrollController;
   late ChatMessageProvider _chatMessageProvider;
@@ -67,8 +66,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
       _chatMessageProvider = context.read<ChatMessageProvider>();
       await _chatMessageProvider.getMessage(widget.chatRoomSeq);
 
-      _socketService.setMessageProvider(_chatMessageProvider);
-      _socketService.subscribeChatMessage(widget.chatRoomSeq);
+      _chatMessageProvider.subscribeChatMessage(widget.chatRoomSeq);
     });
   }
 
@@ -90,7 +88,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     _controller.dispose();
     _scrollController.dispose();
 
-    _socketService.unsubscribeChatMessage();
+    _chatMessageProvider.unSubscribeChatMessage(widget.chatRoomSeq);
   }
 
   @override
@@ -188,23 +186,26 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     ),
   );
 
-  void _sendHandler(chat) {
-    _socketService.sendMessage(chat);
+  void _handleAfterSendChatMessage(chat) {
     _controller.clear();
     scrollBottom();
   }
 
-  void _sendMessage() {
-    if (_controller.text.isNotEmpty) {
-      final chat = ChatMessageModel(
-          message: _controller.text,
-          chatRoomSeq: widget.chatRoomSeq,
-          fileFlag: false
-      );
+  void _sendMessage([ChatMessageModel? chat]) {
+    if (chat == null) {
+      if (_controller.text.isEmpty) return;
 
-      _sendHandler(chat);
+      chat = ChatMessageModel(
+        message: _controller.text,
+        chatRoomSeq: widget.chatRoomSeq,
+        fileFlag: false,
+      );
     }
+
+    _chatMessageProvider.sendChatMessage(chat);
+    _handleAfterSendChatMessage(chat);
   }
+
 
   void _sendFile(XFile imageFile) async {
     FileModel fileModel = await _chatMessageProvider.sendFile(imageFile);
@@ -215,7 +216,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
           fileFlag: true
       );
 
-      _sendHandler(chat);
+      _sendMessage(chat);
     }
   }
 
