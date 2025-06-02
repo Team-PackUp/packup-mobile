@@ -94,7 +94,10 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
                       final userSeq = await decodeTokenInfo();
                       context.push('/chat_message/${room.seq}/$userSeq');
                     },
-                    child: ChatRoomCard(title: room.seq.toString()),
+                    child: ChatRoomCard(
+                        title: room.seq.toString(),
+                      unReadCount: room.unReadCount.toString(),
+                    ),
                   ),
                 );
               },
@@ -114,21 +117,53 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
 
 class ChatRoomCard extends StatelessWidget {
   final String title;
+  final String unReadCount;
 
-  const ChatRoomCard({super.key, required this.title});
+  const ChatRoomCard({
+    super.key,
+    required this.title,
+    required this.unReadCount,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Text(
-          title,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-        ),
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            ),
+          ),
+
+          // 뱃지 추가
+          if (unReadCount != "0")
+            Positioned(
+              top: 8,
+              right: 8,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  unReadCount,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
 }
+

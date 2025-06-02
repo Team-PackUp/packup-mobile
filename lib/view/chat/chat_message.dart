@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:packup/model/chat/chat_read_model.dart';
 import 'package:packup/provider/chat/chat_message_provider.dart';
 import 'package:packup/widget/chat/bubble_message.dart';
 import 'package:packup/const/color.dart';
@@ -8,7 +9,7 @@ import 'package:packup/model/chat/chat_message_model.dart';
 import 'package:provider/provider.dart';
 
 import 'package:packup/model/common/file_model.dart';
-import 'package:packup/service/common/socket_service.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class ChatMessage extends StatelessWidget {
   final int chatRoomSeq;
@@ -118,13 +119,41 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
                   controller: _scrollController,
                   reverse: true,
                   itemBuilder: (context, index) {
+                    final message = _chatMessageProvider.chatMessage[index];
+                    final isLatestMessage = index == 0;
+
+                    if (isLatestMessage) {
+                      print(_chatMessageProvider.lastReadMessageSeq);
+                      print(message.seq);
+                      return VisibilityDetector(
+                        key: Key('last-message-${message.seq}'),
+                        onVisibilityChanged: (info) {
+                          bool readChatMessage = _chatMessageProvider.lastReadMessageSeq! > message.seq! || _chatMessageProvider.lastReadMessageSeq! == 0;
+                          if (info.visibleFraction > 0.8 && readChatMessage) {
+                            ChatReadModel chatReadModel = ChatReadModel(
+                              chatRoomSeq: widget.chatRoomSeq,
+                              lastReadMessageSeq: message.seq!,
+                            );
+                            _chatMessageProvider.readChatMessage(chatReadModel);
+                          }
+                        },
+                        child: BubbleMessage(
+                          message: message.message!,
+                          userSeq: widget.userSeq,
+                          sender: message.userSeq!,
+                          fileFlag: message.fileFlag!,
+                        ),
+                      );
+                    }
+
                     return BubbleMessage(
-                      message: _chatMessageProvider.chatMessage[index].message!,
+                      message: message.message!,
                       userSeq: widget.userSeq,
-                      sender: _chatMessageProvider.chatMessage[index].userSeq!,
-                      fileFlag: _chatMessageProvider.chatMessage[index].fileFlag!,
+                      sender: message.userSeq!,
+                      fileFlag: message.fileFlag!,
                     );
                   },
+
                   separatorBuilder: (_, __) => SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                   itemCount: _chatMessageProvider.chatMessage.length,
                 ),

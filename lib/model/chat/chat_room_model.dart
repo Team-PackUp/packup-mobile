@@ -2,6 +2,8 @@ class ChatRoomModel {
   final int? seq;
   final List<int>? partUserSeq;
   final int? userSeq;
+  final String? nickNames;
+  final int? unReadCount;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -10,6 +12,8 @@ class ChatRoomModel {
     this.seq,
     this.partUserSeq,
     this.userSeq,
+    this.nickNames,
+    this.unReadCount,
     this.createdAt,
     this.updatedAt,
   });
@@ -25,8 +29,10 @@ class ChatRoomModel {
               seq: json['seq'],
       partUserSeq: List<int>.from(json['partUserSeq']),
           userSeq: json['userSeq'],
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+        nickNames: json['nickNames'],
+      unReadCount: json['unReadCount'],
+        createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+        updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
     );
   }
 }

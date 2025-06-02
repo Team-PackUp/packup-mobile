@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:image_picker/image_picker.dart';
 import 'package:packup/model/common/result_model.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:packup/http/dio_service.dart';
 

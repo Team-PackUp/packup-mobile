@@ -1,5 +1,6 @@
 import 'package:image_picker/image_picker.dart';
 import 'package:packup/model/chat/chat_message_model.dart';
+import 'package:packup/model/chat/chat_read_model.dart';
 import 'package:packup/model/common/file_model.dart';
 import 'package:packup/service/chat/chat_service.dart';
 
@@ -23,6 +24,9 @@ class ChatMessageProvider extends LoadingProvider {
   List<ChatMessageModel> get chatMessage => _chatMessage;
   int get totalPage => _totalPage;
   int get curPage => _curPage;
+
+  int _lastReadMessageSeq = 0;
+  int? get lastReadMessageSeq => _lastReadMessageSeq;
 
   // 메시지 로딩
   Future<void> getMessage(int chatRoomSeq) async {
@@ -85,5 +89,14 @@ class ChatMessageProvider extends LoadingProvider {
 
   void sendChatMessage(ChatMessageModel newChatMessage) {
     _socketService.sendMessage('/send.message', newChatMessage);
+  }
+
+
+  void readChatMessage(ChatReadModel chatReadModel) {
+    _socketService.sendMessage('/read.message', chatReadModel);
+
+    _lastReadMessageSeq = chatReadModel.lastReadMessageSeq!;
+    print(_lastReadMessageSeq);
+    notifyListeners();
   }
 }
