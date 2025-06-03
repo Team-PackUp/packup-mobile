@@ -11,6 +11,9 @@ import 'package:provider/provider.dart';
 import 'package:packup/model/common/file_model.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
+import 'package:packup/provider/chat/chat_room_provider.dart';
+import 'package:packup/widget/common/custom_appbar.dart';
+
 class ChatMessage extends StatelessWidget {
   final int chatRoomSeq;
   final int userSeq;
@@ -53,6 +56,8 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   late final TextEditingController _controller;
   late final ScrollController _scrollController;
   late ChatMessageProvider _chatMessageProvider;
+  late ChatRoomProvider _chatRoomProvider;
+
   final ImagePicker _picker = ImagePicker();
 
   @override
@@ -65,9 +70,12 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _chatMessageProvider = context.read<ChatMessageProvider>();
-      await _chatMessageProvider.getMessage(widget.chatRoomSeq);
+      _chatRoomProvider = context.read<ChatRoomProvider>();
 
+      await _chatMessageProvider.getMessage(widget.chatRoomSeq);
       _chatMessageProvider.subscribeChatMessage(widget.chatRoomSeq);
+
+
     });
   }
 
@@ -98,11 +106,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        title: Text('채팅', style: TextStyle(color: TEXT_COLOR_W)),
-        backgroundColor: PRIMARY_COLOR,
-        iconTheme: IconThemeData(color: TEXT_COLOR_W),
-      ),
+      appBar: CustomAppbar(title: "채팅",),
       body: Column(
         children: [
           Expanded(
@@ -128,13 +132,14 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
                       return VisibilityDetector(
                         key: Key('last-message-${message.seq}'),
                         onVisibilityChanged: (info) {
-                          bool readChatMessage = _chatMessageProvider.lastReadMessageSeq! > message.seq! || _chatMessageProvider.lastReadMessageSeq! == 0;
+                          bool readChatMessage = _chatMessageProvider.lastReadMessageSeq! < message.seq! || _chatMessageProvider.lastReadMessageSeq! == 0;
                           if (info.visibleFraction > 0.8 && readChatMessage) {
                             ChatReadModel chatReadModel = ChatReadModel(
                               chatRoomSeq: widget.chatRoomSeq,
                               lastReadMessageSeq: message.seq!,
                             );
                             _chatMessageProvider.readChatMessage(chatReadModel);
+                            _chatRoomProvider.readMessageThisRoom(widget.chatRoomSeq);
                           }
                         },
                         child: BubbleMessage(

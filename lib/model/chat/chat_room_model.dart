@@ -3,7 +3,7 @@ class ChatRoomModel {
   final List<int>? partUserSeq;
   final int? userSeq;
   final String? nickNames;
-  final int? unReadCount;
+  int? unReadCount;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 

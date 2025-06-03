@@ -75,4 +75,14 @@ class ChatRoomProvider extends LoadingProvider {
     _socketService.unsubscribe(destination);
     _socketService.unregisterCallback(destination);
   }
+
+  // 채팅 방 진입시 읽음 처리 > 상태만 바꿀 함수
+  void readMessageThisRoom(int chatRoomSeq) {
+    final index = _chatRoom.indexWhere((room) => room.seq == chatRoomSeq);
+    if (index != -1 && _chatRoom[index].unReadCount! > 0) {
+      _chatRoom[index].unReadCount = 0;
+
+      notifyListeners();
+    } 
+  }
 }

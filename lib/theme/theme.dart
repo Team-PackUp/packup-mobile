@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:packup/common/util.dart';
+import 'package:packup/const/color.dart';
 
 import 'package:packup/main.dart';
 
@@ -13,14 +14,14 @@ ThemeData lightTheme = ThemeData(
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.white,
+      backgroundColor: BACK_GROUND_COLOR_W,
+      foregroundColor: BACK_GROUND_COLOR_W,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     ),
   ),
-  appBarTheme: const AppBarTheme(
-    backgroundColor: Colors.white,
-    foregroundColor: Colors.white,
+  appBarTheme: AppBarTheme(
+    backgroundColor: BACK_GROUND_COLOR_W,
+    foregroundColor: BACK_GROUND_COLOR_W,
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: Colors.blueAccent,

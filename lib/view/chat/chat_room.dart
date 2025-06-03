@@ -1,25 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/provider/chat/chat_room_provider.dart';
-import 'package:packup/provider/search_bar/custom_search_bar_provider.dart';
-import 'package:packup/widget/search_bar/custom_search_bar.dart';
-import 'package:packup/const/color.dart';
 import 'package:packup/common/util.dart';
-import 'package:packup/service/common/socket_service.dart';
 import 'package:provider/provider.dart';
+
+import '../../widget/common/custom_appbar.dart';
 
 class ChatRoom extends StatelessWidget {
   const ChatRoom({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ChatRoomProvider()),
-        ChangeNotifierProvider(create: (_) => SearchBarProvider()),
-      ],
-      child: const ChatRoomContent(),
-    );
+    return const ChatRoomContent();
   }
 }
 
@@ -31,7 +23,6 @@ class ChatRoomContent extends StatefulWidget {
 }
 
 class _ChatRoomContentState extends State<ChatRoomContent> {
-  final _socketService = SocketService();
   final ScrollController _scrollController = ScrollController();
   late ChatRoomProvider _chatRoomProvider;
 
@@ -64,22 +55,14 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
 
   @override
   Widget build(BuildContext context) {
-    final chatRoomProvider = context.watch<ChatRoomProvider>();
-    final searchProvider = context.watch<SearchBarProvider>();
+    _chatRoomProvider = context.watch<ChatRoomProvider>();
 
-    final chatRooms = chatRoomProvider.chatRoom.where((room) {
-      final search = searchProvider.searchText;
-      return search.isEmpty || room.seq.toString().contains(search);
-    }).toList();
+    final chatRooms = _chatRoomProvider.chatRoom.toList();
 
     return Scaffold(
-      appBar: AppBar(toolbarHeight: 10),
+      appBar: CustomAppbar(title: "채팅 목록",),
       body: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: CustomSearchBar(),
-          ),
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
@@ -93,6 +76,7 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
                     onTap: () async {
                       final userSeq = await decodeTokenInfo();
                       context.push('/chat_message/${room.seq}/$userSeq');
+                      _chatRoomProvider.readMessageThisRoom(room.seq!);
                     },
                     child: ChatRoomCard(
                         title: room.seq.toString(),
@@ -104,12 +88,6 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: "member",
-        backgroundColor: PRIMARY_COLOR,
-        onPressed: () => Navigator.pushNamed(context, "/friend"),
-        child: Icon(Icons.add, color: TEXT_COLOR_W),
       ),
     );
   }

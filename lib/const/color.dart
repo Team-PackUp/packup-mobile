@@ -8,5 +8,5 @@ Color TEXT_FIELD_FILL_COLOR = Color(0xFFD9D9D9);
 Color TEXT_COLOR_B = Colors.black87;
 Color TEXT_COLOR_B2 = Colors.black54;
 Color TEXT_COLOR_W = Colors.white70;
-Color BACK_GROUND_COLOR_R = Colors.redAccent;
+Color BACK_GROUND_COLOR_W = Colors.white;
 Color BACK_GROUND_COLOR_B = Colors.indigoAccent;

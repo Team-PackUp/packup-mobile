@@ -96,7 +96,7 @@ class ChatMessageProvider extends LoadingProvider {
     _socketService.sendMessage('/read.message', chatReadModel);
 
     _lastReadMessageSeq = chatReadModel.lastReadMessageSeq!;
-    print(_lastReadMessageSeq);
+
     notifyListeners();
   }
 }

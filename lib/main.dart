@@ -8,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:packup/Common/util.dart';
+import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/provider/payment/toss/toss_payment_provider.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:packup/common/router.dart';
@@ -79,6 +80,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => TossPaymentProvider()),
+        ChangeNotifierProvider(create: (_) => ChatRoomProvider()),
         ChangeNotifierProvider<LoadingProvider>(
           create: (_) {
             final notifier = LoadingProvider();
