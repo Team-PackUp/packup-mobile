@@ -70,11 +70,11 @@ class _IndexState extends State<Index> {
   }
 
   final List<Map<String, dynamic>> bottomNavItems = [
-    {'icon': Icons.card_travel, 'label': '투어'},
-    {'icon': Icons.chat_bubble, 'label': '채팅'},
+    {'icon': Icons.card_travel, 'label': 'AI추천'},
+    {'icon': Icons.chat_bubble, 'label': '예약'},
     {'icon': Icons.home, 'label': '홈'},
-    {'icon': Icons.airline_seat_recline_normal, 'label': '위시리스트'},
-    {'icon': Icons.supervised_user_circle, 'label': '마이페이지'},
+    {'icon': Icons.airline_seat_recline_normal, 'label': '메시지'},
+    {'icon': Icons.supervised_user_circle, 'label': 'MY'},
   ];
 
   @override
@@ -85,7 +85,10 @@ class _IndexState extends State<Index> {
         appBar: AppBar(
           toolbarHeight: 10,
         ),
-        body: _buildCurrentWidget(),
+        body: IndexedStack(
+            index: _currentIndex,
+            children: _pages
+        ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: _onTabTapped,
@@ -106,19 +109,28 @@ class _IndexState extends State<Index> {
     );
   }
 
-  Widget _buildCurrentWidget() {
-    switch (_currentIndex) {
-      case 0:
-        return const Schedule();
-      case 1:
-        return const ChatRoom();
-        // return const SizedBox();
-      case 2:
-      return const Home();
-      case 3:
-        return const Profile();
-      default:
-        return Profile();
-    }
-  }
+  final List<Widget> _pages = [
+    const Schedule(),
+    const Home(),
+    const Profile(),
+    const ChatRoom(),
+    const Profile(),
+  ];
+
+
+  // Widget _buildCurrentWidget() {
+  //   switch (_currentIndex) {
+  //     case 0:
+  //       return const Schedule();
+  //     case 1:
+  //       return const ChatRoom();
+  //       // return const SizedBox();
+  //     case 2:
+  //     return const Home();
+  //     case 3:
+  //       return const Profile();
+  //     default:
+  //       return Profile();
+  //   }
+  // }
 }

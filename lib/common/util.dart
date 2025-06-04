@@ -76,6 +76,10 @@ String convertToYmd(DateTime date, [String format = 'yyyy-MM-dd']) {
   return DateFormat('yyyy-MM-dd').format(date);
 }
 
+String convertToHm(DateTime date, [String format = 'HH:mm']) {
+  return DateFormat(format).format(date);
+}
+
 /// ################### FILE ################### ///
 String fullFileUrl(String path) {
   return '$httpPrefix$path';

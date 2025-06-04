@@ -127,8 +127,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
                     final isLatestMessage = index == 0;
 
                     if (isLatestMessage) {
-                      print(_chatMessageProvider.lastReadMessageSeq);
-                      print(message.seq);
                       return VisibilityDetector(
                         key: Key('last-message-${message.seq}'),
                         onVisibilityChanged: (info) {

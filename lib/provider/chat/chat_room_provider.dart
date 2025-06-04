@@ -21,6 +21,9 @@ class ChatRoomProvider extends LoadingProvider {
   int get totalPage => _totalPage;
   int get curPage => _curPage;
 
+  String _lastMessage = '';
+  String get lastMessage => _lastMessage;
+
   // 채팅방 리스트
   getRoom() async {
     if(_totalPage < _curPage) return;

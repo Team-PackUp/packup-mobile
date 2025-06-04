@@ -61,33 +61,42 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
 
     return Scaffold(
       appBar: CustomAppbar(title: "채팅 목록",),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: chatRooms.length,
-              itemBuilder: (context, index) {
-                final room = chatRooms[index];
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await _chatRoomProvider.getRoom();
+        },
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                controller: _scrollController,
+                physics: const AlwaysScrollableScrollPhysics(),// 데이터 별로 없을때 테스트할 때 추가
+                itemCount: chatRooms.length,
+                itemBuilder: (context, index) {
+                  final room = chatRooms[index];
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  child: InkWell(
-                    onTap: () async {
-                      final userSeq = await decodeTokenInfo();
-                      context.push('/chat_message/${room.seq}/$userSeq');
-                      _chatRoomProvider.readMessageThisRoom(room.seq!);
-                    },
-                    child: ChatRoomCard(
-                        title: room.seq.toString(),
-                      unReadCount: room.unReadCount.toString(),
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: InkWell(
+                      onTap: () async {
+                        _chatRoomProvider.readMessageThisRoom(room.seq!);
+
+                        final userSeq = await decodeTokenInfo();
+                        context.push('/chat_message/${room.seq}/$userSeq');
+                      },
+                      child: ChatRoomCard(
+                          title: room.seq.toString(),
+                    unReadCount: room.unReadCount.toString(),
+                    lastMessage: room.lastMessage,
+                    lastMessageDate: room.lastMessageDate,
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -96,15 +105,20 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
 class ChatRoomCard extends StatelessWidget {
   final String title;
   final String unReadCount;
+  final String? lastMessage;
+  final DateTime? lastMessageDate;
 
   const ChatRoomCard({
     super.key,
     required this.title,
     required this.unReadCount,
+    this.lastMessage,
+    this.lastMessageDate
   });
 
   @override
   Widget build(BuildContext context) {
+    print(lastMessage);
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
@@ -112,13 +126,44 @@ class ChatRoomCard extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(16),
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 8),
+
+                // 마지막 메시지
+                if (lastMessage != null && lastMessage!.trim().isNotEmpty)
+                  Text(
+                    lastMessage!,
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+              ],
             ),
           ),
 
-          // 뱃지 추가
+          // 날짜(오늘 날짜면 시분 or 해당 날짜)
+          if (lastMessageDate != null)
+            Positioned(
+              top: 8,
+              right: 8,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                child: Text(
+                  convertToHm(lastMessageDate!),
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+
+          // 뱃지
           if (unReadCount != "0")
             Positioned(
               top: 8,
