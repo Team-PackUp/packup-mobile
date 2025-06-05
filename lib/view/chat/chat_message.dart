@@ -106,7 +106,13 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: CustomAppbar(title: "채팅",),
+      appBar: CustomAppbar(
+        title: '채팅',
+        trailing: CircleAvatar(
+          radius: 50,
+          // backgroundImage: NetworkImage('https://example.com/avatar.png'),
+        ),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -230,7 +236,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
       chat = ChatMessageModel(
         message: _controller.text,
         chatRoomSeq: widget.chatRoomSeq,
-        fileFlag: false,
+        fileFlag: 'N',
       );
     }
 
@@ -245,7 +251,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
       final chat = ChatMessageModel(
           message: "${fileModel.path}/${fileModel.encodedName}",
           chatRoomSeq: widget.chatRoomSeq,
-          fileFlag: true
+          fileFlag: 'Y'
       );
 
       _sendMessage(chat);

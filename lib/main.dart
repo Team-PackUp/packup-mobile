@@ -116,30 +116,24 @@ class PackUp extends StatelessWidget {
       builder: (context, value, child) {
         return MaterialApp.router(
           title: 'PackUP Demo',
-          theme: ThemeData.light(),
-          darkTheme: ThemeData.dark(),
+          theme: lightTheme,
+          darkTheme: darkTheme,
           themeMode: value,
           routerConfig: router,
           supportedLocales: const [
-            Locale('en', ''), // 영어
-            Locale('ko', ''), // 한국어
-            Locale('ja', ''), // 일본어
+            Locale('en', ''),
+            Locale('ko', ''),
+            Locale('ja', ''),
           ],
           localeResolutionCallback: (locale, supportedLocales) {
-            if (locale == null) {
-              return const Locale('en');
-            }
-
-            for (var supportedLocale in supportedLocales) {
-              if (supportedLocale.languageCode == locale.languageCode) {
-                return supportedLocale;
-              }
-            }
-
-            return const Locale('en');
+            if (locale == null) return const Locale('en');
+            return supportedLocales.firstWhere(
+                  (l) => l.languageCode == locale.languageCode,
+              orElse: () => const Locale('en'),
+            );
           },
           localizationsDelegates: const [
-            AppLocalizations.delegate, // 코드 추가
+            AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,

@@ -7,7 +7,7 @@ class BubbleMessage extends StatelessWidget {
   final String message;
   final int sender;
   final int userSeq;
-  final bool fileFlag;
+  final String fileFlag;
   final String? profileImagePath;
 
   const BubbleMessage({
@@ -25,12 +25,33 @@ class BubbleMessage extends StatelessWidget {
     final imagePath = profileImagePath ?? 'assets/icons/schedule/biceps_icon.png';
 
     // 파일 메시지
-    if (fileFlag) {
+    if (fileFlag == 'Y') {
       return Row(
         mainAxisAlignment:
         isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
+        children: isMine ?
+        [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Image.network(
+              fullFileUrl(message),
+              width: MediaQuery.of(context).size.width * 0.4,
+              height: MediaQuery.of(context).size.height * 0.4,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) =>
+                  Text('이미지 로드 실패 >> $message'),
+            ),
+          ),
+          CircleAvatar(
+            radius: MediaQuery.of(context).size.width * 0.05,
+          ),
+        ] : [
+          CircleAvatar(
+            radius: MediaQuery.of(context).size.width * 0.05,
+          ),
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
@@ -50,27 +71,61 @@ class BubbleMessage extends StatelessWidget {
 
     // 텍스트 메시지
     return Row(
-      mainAxisAlignment: isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
-      children: [
+      mainAxisAlignment:
+      isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: isMine
+          ? [
+        // 내 메시지
         Padding(
           padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
           child: ChatBubble(
-            clipper: ChatBubbleClipper4(
-              type: isMine ? BubbleType.sendBubble : BubbleType.receiverBubble,
-            ),
-            alignment: isMine ? Alignment.topRight : Alignment.topLeft,
+            clipper: ChatBubbleClipper4(type: BubbleType.sendBubble),
+            alignment: Alignment.topRight,
             margin: EdgeInsets.only(
               top: MediaQuery.of(context).size.height * 0.01,
             ),
-            backGroundColor: isMine ? Colors.grey[200]! : Colors.blue[400]!,
+            backGroundColor: Colors.grey[200]!,
             child: Container(
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.7,
               ),
               child: Text(
                 message,
-                style: TextStyle(
-                  color: isMine ? Colors.black : Colors.white,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+          ),
+        ),
+        CircleAvatar(
+          radius: MediaQuery.of(context).size.width * 0.05,
+        ),
+      ]
+          : [
+        // 상대 메시지
+        CircleAvatar(
+          radius: MediaQuery.of(context).size.width * 0.05,
+        ),
+        Padding(
+          padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
+          child: ChatBubble(
+            clipper: ChatBubbleClipper4(type: BubbleType.receiverBubble),
+            alignment: Alignment.topLeft,
+            margin: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * 0.01,
+            ),
+            backGroundColor: Colors.blue[400]!,
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.7,
+              ),
+              child: Text(
+                message,
+                style: const TextStyle(
+                  color: Colors.white,
                   fontSize: 15,
                 ),
               ),

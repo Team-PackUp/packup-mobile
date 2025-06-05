@@ -80,6 +80,24 @@ String convertToHm(DateTime date, [String format = 'HH:mm']) {
   return DateFormat(format).format(date);
 }
 
+// 어제 이전, 어제, 오늘 체크
+enum DateType { today, yesterday, before }
+
+DateType getDateType(DateTime target) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final yesterday = today.subtract(const Duration(days: 1));
+  final targetDate = DateTime(target.year, target.month, target.day);
+
+  if (targetDate == today) {
+    return DateType.today;
+  } else if (targetDate == yesterday) {
+    return DateType.yesterday;
+  } else {
+    return DateType.before;
+  }
+}
+
 /// ################### FILE ################### ///
 String fullFileUrl(String path) {
   return '$httpPrefix$path';

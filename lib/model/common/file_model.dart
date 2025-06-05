@@ -25,7 +25,7 @@ class FileModel {
       encodedName : json['encodedName'],
       realName    : json['realName'],
       type        : json['type'],
-      createdAt   : json['createdAt'],
+      createdAt   : DateTime.parse(json['createdAt']),
     );
   }
 

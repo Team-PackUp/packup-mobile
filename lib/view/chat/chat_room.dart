@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/common/util.dart';
+import 'package:packup/widget/chat/chat_room_card.dart';
 import 'package:provider/provider.dart';
 
 import '../../widget/common/custom_appbar.dart';
@@ -85,10 +86,11 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
                         context.push('/chat_message/${room.seq}/$userSeq');
                       },
                       child: ChatRoomCard(
-                          title: room.seq.toString(),
+                          title: room.title.toString(),
                     unReadCount: room.unReadCount.toString(),
                     lastMessage: room.lastMessage,
                     lastMessageDate: room.lastMessageDate,
+                        fileFlag: room.fileFlag!,
                       ),
                     ),
                   );
@@ -97,93 +99,6 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class ChatRoomCard extends StatelessWidget {
-  final String title;
-  final String unReadCount;
-  final String? lastMessage;
-  final DateTime? lastMessageDate;
-
-  const ChatRoomCard({
-    super.key,
-    required this.title,
-    required this.unReadCount,
-    this.lastMessage,
-    this.lastMessageDate
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    print(lastMessage);
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 4,
-      child: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 8),
-
-                // 마지막 메시지
-                if (lastMessage != null && lastMessage!.trim().isNotEmpty)
-                  Text(
-                    lastMessage!,
-                    style: const TextStyle(fontSize: 14, color: Colors.grey),
-                  ),
-              ],
-            ),
-          ),
-
-          // 날짜 조건에 따라 포맷 변경 필요
-          Positioned(
-            top: 8,
-            right: 8,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (lastMessageDate != null)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4),
-                    child: Text(
-                      convertToHm(lastMessageDate!),
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                if (unReadCount != "0")
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      unReadCount,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

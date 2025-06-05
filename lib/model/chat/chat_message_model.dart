@@ -6,7 +6,7 @@ class ChatMessageModel {
   final int? userSeq;
   final int? chatRoomSeq;
   final DateTime? createdAt;
-  final bool? fileFlag;
+  final String? fileFlag;
 
   ChatMessageModel({
     this.seq,
