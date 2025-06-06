@@ -9,4 +9,4 @@ Color TEXT_COLOR_B = Colors.black87;
 Color TEXT_COLOR_B2 = Colors.black54;
 Color TEXT_COLOR_W = Colors.white70;
 Color BACK_GROUND_COLOR_W = Colors.white;
-Color BACK_GROUND_COLOR_B = Colors.indigoAccent;
+Color BACK_GROUND_COLOR_B = Colors.black;

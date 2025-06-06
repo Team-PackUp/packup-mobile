@@ -61,7 +61,7 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
     final chatRooms = _chatRoomProvider.chatRoom.toList();
 
     return Scaffold(
-      appBar: CustomAppbar(title: "채팅 목록",),
+      appBar: CustomAppbar(arrowFlag: false, title: "채팅 목록",),
       body: RefreshIndicator(
         onRefresh: () async {
           await _chatRoomProvider.getRoom();

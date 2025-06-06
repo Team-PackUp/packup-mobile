@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/Const/color.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final bool? arrowFlag;
   final Widget? trailing;
 
   const CustomAppbar({
     super.key,
     required this.title,
+    this.arrowFlag,
     this.trailing,
   });
 
@@ -23,22 +26,21 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
         alignment: Alignment.center,
         children: [
           // ⬅ Left: 뒤로가기 버튼
-          Align(
-            alignment: Alignment.centerLeft,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                context.pop();
-              },
+          if(arrowFlag == null || arrowFlag == true)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  context.pop();
+                },
+              ),
             ),
-          ),
 
-          // ⬆ Center: 타이틀
-          Center(
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
+          // ⬆ Center: 타이틀 > theme 공통 처리
+          Text(
+            title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
 
           // ➡ Right: trailing 위젯 (옵셔널)
@@ -46,7 +48,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
-                padding: const EdgeInsets.only(right: 12.0),
+                padding: const EdgeInsets.only(right: 12.0, bottom: 4),
                 child: trailing!,
               ),
             ),

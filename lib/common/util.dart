@@ -98,6 +98,29 @@ DateType getDateType(DateTime target) {
   }
 }
 
+// 며칠전 등록 글인지, 금일이면 몇 분 전인지
+String getTimeAgo(DateTime dateTime) {
+  final now = DateTime.now();
+  final diff = now.difference(dateTime);
+
+  if (now.year == dateTime.year &&
+      now.month == dateTime.month &&
+      now.day == dateTime.day) {
+    // 오늘
+    if (diff.inMinutes < 1) {
+      return '방금 전';
+    } else if (diff.inMinutes < 60) {
+      return '${diff.inMinutes}분 전';
+    } else {
+      return '${diff.inHours}시간 전';
+    }
+  } else {
+    // 오늘 이전
+    return '${diff.inDays}일 전';
+  }
+}
+
+
 /// ################### FILE ################### ///
 String fullFileUrl(String path) {
   return '$httpPrefix$path';

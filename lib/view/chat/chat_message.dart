@@ -105,11 +105,11 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     _chatMessageProvider = context.watch<ChatMessageProvider>();
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      // resizeToAvoidBottomInset: true,
       appBar: CustomAppbar(
         title: '채팅',
         trailing: CircleAvatar(
-          radius: 50,
+          radius: MediaQuery.of(context).size.width * 0.06,
           // backgroundImage: NetworkImage('https://example.com/avatar.png'),
         ),
       ),

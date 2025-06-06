@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/provider/notice/notice_provider.dart';
+import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:provider/provider.dart';
 
-import 'package:packup/common/util.dart';
+
+import '../../widget/notice/notice_list_card.dart';
 
 class NoticeList extends StatelessWidget {
   const NoticeList({super.key});
@@ -65,9 +67,7 @@ class _NoticeListContentState extends State<NoticeListContent> {
     var filteredNoticeList = _noticeProvider.noticeList;
 
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 10,
-      ),
+      appBar: CustomAppbar(title: "공지사항"),
       body: Column(
         children: [
           Expanded(
@@ -82,56 +82,30 @@ class _NoticeListContentState extends State<NoticeListContent> {
                     context.push('/notice_view/${notice.seq!}');
                   },
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 8.0,
-                      left: 8.0,
-                      right: 8.0,
-                    ),
-                    child: listWithDate(
-                      title: notice.title!,
-                      date: notice.createdAt!,
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            child: NoticeCard(
+                              index: index,
+                              title: notice.title!,
+                              createdAt: notice.createdAt!,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+
                 );
               },
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget listWithDate({
-    required String title,
-    DateTime? date,
-  }) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      elevation: 4.0,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Text(
-              convertToYmd(date!),
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-          ],
-        ),
       ),
     );
   }

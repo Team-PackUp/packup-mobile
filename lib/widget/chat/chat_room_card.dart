@@ -37,7 +37,7 @@ class ChatRoomCard extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 // 마지막 메시지
-                if (lastMessage != null && lastMessage!.trim().isNotEmpty)
+                if (lastMessage != null && lastMessage!.trim().isNotEmpty )
                   fileFlag == 'Y' ?
                   Text(
                     '사진',
@@ -67,7 +67,7 @@ class ChatRoomCard extends StatelessWidget {
                         color: Colors.grey,
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                      ),
+                       ),
                     ),
                   ),
                 if (unReadCount != "0")
