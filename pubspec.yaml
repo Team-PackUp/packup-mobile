@@ -96,6 +96,7 @@ flutter:
   assets:
     - assets/image/
     - assets/image/login/
+    - assets/image/splash/
     - .env.prod
     - .env.ios
     - .env.android
