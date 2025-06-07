@@ -43,6 +43,13 @@ GoRouter createRouter(UserProvider userProvider) {
         return '/';
       }
 
+      print('프린트할게요');
+      print('userAge: ${userProvider.userModel?.userAge}');
+      print('userNation: ${userProvider.userModel?.userNation}');
+      print('userGender: ${userProvider.userModel?.userGender}');
+      print('nickname: ${userProvider.userModel?.nickname}');
+      print('isDetailRegistered: ${userProvider.hasDetailInfo}');
+
       if (hasToken && !hasDetail && currentLoc != '/register-detail') {
         return '/register-detail';
       }
@@ -54,7 +61,7 @@ GoRouter createRouter(UserProvider userProvider) {
       return null;
     },
     routes: [
-      GoRoute(path: '/', builder: (context, state) => const RegisterDetail()),
+      GoRoute(path: '/', builder: (context, state) => const Login()),
       GoRoute(path: '/index', builder: (context, state) => const Index()),
       GoRoute(path: '/home', builder: (context, state) => const Home()),
       GoRoute(
