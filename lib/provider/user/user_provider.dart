@@ -31,6 +31,7 @@ class UserProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get socialAccessToken => _socialAccessToken;
   bool get isResult => _isResult;
+  bool get hasDetailInfo => _userModel?.isDetailRegistered ?? false;
 
   // 로그인 시도 (Enum 타입을 직접 사용)
   Future<void> checkLogin(SocialLoginType type) async {
@@ -69,6 +70,8 @@ class UserProvider with ChangeNotifier {
         }
 
         await _httpService.registerFcmToken();
+
+        await getMyInfo();
       }
     } catch (e) {
       logger(e.toString(), 'DEBUG');
@@ -81,15 +84,18 @@ class UserProvider with ChangeNotifier {
       final token = await getToken(ACCESS_TOKEN);
       print(token);
       print('aaaaaaaaaaaaaaaaaaaa');
-      // 디버깅
     }
   }
 
   Future<void> initLoginStatus() async {
     accessToken = await getToken(ACCESS_TOKEN);
     refreshToken = await getToken(REFRESH_TOKEN);
+
+    if (accessToken != null && accessToken!.isNotEmpty) {
+      await getMyInfo();
+    }
+
     isInitialized = true;
-    print('✅ 1ㅂㅂㅂㅂㅂㅂㅂaccessToken: $accessToken'); // 디버깅용
     notifyListeners();
   }
 
