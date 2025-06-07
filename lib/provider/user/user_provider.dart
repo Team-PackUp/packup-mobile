@@ -119,6 +119,12 @@ class UserProvider with ChangeNotifier {
   Future<void> logout() async {
     await socialLogin.logout();
     await deleteToken(ACCESS_TOKEN);
+    await deleteToken(REFRESH_TOKEN);
+    _userModel = null;
+    accessToken = null;
+    refreshToken = null;
+    isInitialized = false;
+    notifyListeners();
     _httpService.logout();
   }
 
