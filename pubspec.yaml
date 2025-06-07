@@ -96,6 +96,7 @@ flutter:
   assets:
     - assets/image/
     - assets/image/logo/
+    - assets/image/preference/
     - assets/image/login/
     - assets/icon/
     - assets/splash/logo.png
