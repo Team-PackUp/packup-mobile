@@ -96,6 +96,7 @@ flutter:
   assets:
     - assets/image/
     - assets/image/login/
+    - assets/icon/
     - assets/splash/logo.png
     - .env.prod
     - .env.ios

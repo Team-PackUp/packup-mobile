@@ -5,35 +5,69 @@ import 'package:packup/const/image.dart';
 enum SocialLoginType { kakao, google }
 
 class SocialLoginButton extends StatelessWidget {
-
   final SocialLoginType type;
   final VoidCallback onPressed;
 
-  const SocialLoginButton(
-      {Key? key, required this.type, required this.onPressed}
-      ) : super(key: key);
+  const SocialLoginButton({
+    Key? key,
+    required this.type,
+    required this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     switch (type) {
-      // 카카오 로그인 버튼 UI
       case SocialLoginType.kakao:
-        return Center(
-          child: GestureDetector(
-            onTap: onPressed,
-            child: Image.asset(
-              KAKAO_LOGIN_BTN,
-              width: 220,
+        return SizedBox(
+          width: 260,
+          height: 45,
+          child: ElevatedButton(
+            onPressed: onPressed,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFEE500),
+              foregroundColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              elevation: 0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset(
+                  'assets/icon/kakao_logo.png',
+                  width: 24,
+                  height: 24,
+                ),
+                const SizedBox(width: 12),
+                const Text('카카오 로그인', style: TextStyle(fontSize: 16)),
+              ],
             ),
           ),
         );
-    // 구글 로그인 버튼 UI
+
       case SocialLoginType.google:
-        return Center(
-          child: SignInButton(
-            Buttons.Google,
-            text: "Google로 로그인",
+        return SizedBox(
+          width: 260,
+          height: 45,
+          child: ElevatedButton.icon(
             onPressed: onPressed,
+            icon: Image.asset(
+              'assets/icon/google_logo.png',
+              width: 24,
+              height: 24,
+            ),
+            label: const Text('Google로 로그인', style: TextStyle(fontSize: 16)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              side: const BorderSide(color: Colors.grey),
+              elevation: 0,
+            ),
           ),
         );
     }

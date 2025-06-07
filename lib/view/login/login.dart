@@ -33,8 +33,8 @@ class _LoginState extends State<Login> {
         automaticallyImplyLeading: false,
         backgroundColor: PRIMARY_COLOR,
         title: Text(
-            AppLocalizations.of(context)!.login,
-            style: TextStyle(color: TEXT_COLOR_W)
+          AppLocalizations.of(context)!.login,
+          style: TextStyle(color: TEXT_COLOR_W),
         ),
       ),
       body: Consumer<UserProvider>(
@@ -44,7 +44,7 @@ class _LoginState extends State<Login> {
           // }
           return Padding(
             padding: EdgeInsets.only(
-              top:  MediaQuery.of(context).size.height * 0.05,
+              top: MediaQuery.of(context).size.height * 0.05,
               left: MediaQuery.of(context).size.width * 0.05,
               right: MediaQuery.of(context).size.width * 0.05,
             ),
@@ -99,9 +99,16 @@ class _LoginState extends State<Login> {
                 SizedBox(height: MediaQuery.of(context).size.width * 0.1),
                 ElevatedButton(
                   onPressed: () {
-                    login(_userIdController.text, _passwordController.text, context, viewModel);
+                    login(
+                      _userIdController.text,
+                      _passwordController.text,
+                      context,
+                      viewModel,
+                    );
                   },
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(PRIMARY_COLOR)),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(PRIMARY_COLOR),
+                  ),
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.5,
                     child: Text(
@@ -117,7 +124,9 @@ class _LoginState extends State<Login> {
                   onPressed: () {
                     context.go('/index');
                   },
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(PRIMARY_COLOR)),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(PRIMARY_COLOR),
+                  ),
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.5,
                     child: Text(
@@ -128,13 +137,15 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.width * 0.02),
-                
-                // 디버깅용 
+
+                // 디버깅용
                 ElevatedButton(
                   onPressed: () {
                     getMyInfo(viewModel);
                   },
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(PRIMARY_COLOR)),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(PRIMARY_COLOR),
+                  ),
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.5,
                     child: Text(
@@ -169,45 +180,53 @@ class _LoginState extends State<Login> {
       // 정상 응답이면 유저 정보 Alert 띄우기
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('내 정보'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('이메일: ${viewModel.userModel?.email ?? "알 수 없음"}'),
-              Text('닉네임: ${viewModel.userModel?.nickname ?? "알 수 없음"}'),
-              Text('선호도: ${viewModel.userModel?.preferCategorySeqJson ?? "없음"}'),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('확인'),
+        builder:
+            (context) => AlertDialog(
+              title: const Text('내 정보'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('이메일: ${viewModel.userModel?.email ?? "알 수 없음"}'),
+                  Text('닉네임: ${viewModel.userModel?.nickname ?? "알 수 없음"}'),
+                  Text(
+                    '선호도: ${viewModel.userModel?.preferCategorySeqJson ?? "없음"}',
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('확인'),
+                ),
+              ],
             ),
-          ],
-        ),
       );
     } else {
       // 실패했을 때
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('에러'),
-          content: const Text('내 정보 불러오기 실패했습니다.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('확인'),
+        builder:
+            (context) => AlertDialog(
+              title: const Text('에러'),
+              content: const Text('내 정보 불러오기 실패했습니다.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('확인'),
+                ),
+              ],
             ),
-          ],
-        ),
       );
     }
   }
 
-
-  login(String userId, String password, BuildContext context, UserProvider viewModel) async {
+  login(
+    String userId,
+    String password,
+    BuildContext context,
+    UserProvider viewModel,
+  ) async {
     // validation(userId, password);
     await viewModel.getUserInfo(2);
 
@@ -230,7 +249,10 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Future<void> handleSocialLogin(SocialLoginType type, UserProvider viewModel) async {
+  Future<void> handleSocialLogin(
+    SocialLoginType type,
+    UserProvider viewModel,
+  ) async {
     await viewModel.checkLogin(type);
 
     if (!context.mounted) return;
@@ -238,15 +260,14 @@ class _LoginState extends State<Login> {
     if (viewModel.accessToken == '' && viewModel.isLoading == false) {
       showDialog(
         context: context,
-        builder: (context) => const CustomDialog(
-          type: DialogType.modal,
-          message: '로그인에 실패하였습니다.',
-        ),
+        builder:
+            (context) => const CustomDialog(
+              type: DialogType.modal,
+              message: '로그인에 실패하였습니다.',
+            ),
       );
     }
   }
-
-
 
   Future<void> handleKakaoLogin(UserProvider viewModel) async {
     await handleSocialLogin(SocialLoginType.kakao, viewModel);
@@ -258,8 +279,10 @@ class _LoginState extends State<Login> {
 
   validation(String userId, String password) {
     setState(() {
-      _userIdErrorText = userId.isEmpty ? AppLocalizations.of(context)!.empty_id : '';
-      _userPasswordErrorText = password.isEmpty ? AppLocalizations.of(context)!.empty_password : '';
+      _userIdErrorText =
+          userId.isEmpty ? AppLocalizations.of(context)!.empty_id : '';
+      _userPasswordErrorText =
+          password.isEmpty ? AppLocalizations.of(context)!.empty_password : '';
     });
   }
 }
