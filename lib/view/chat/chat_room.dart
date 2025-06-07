@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/common/util.dart';
-import 'package:packup/widget/chat/chat_room_card.dart';
+import 'package:packup/widget/chat/chat_room_divider.dart';
 import 'package:provider/provider.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../widget/common/custom_appbar.dart';
 
 class ChatRoom extends StatelessWidget {
@@ -61,13 +62,17 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
     final chatRooms = _chatRoomProvider.chatRoom.toList();
 
     return Scaffold(
-      appBar: CustomAppbar(arrowFlag: false, title: "채팅 목록",),
+      appBar: CustomAppbar(
+          arrowFlag: false,
+          title: AppLocalizations.of(context)!.chat,
+      ),
       body: RefreshIndicator(
         onRefresh: () async {
           await _chatRoomProvider.getRoom();
         },
         child: Column(
           children: [
+            const Divider(height: 1, thickness: 0.5),
             Expanded(
               child: ListView.builder(
                 controller: _scrollController,
@@ -76,6 +81,12 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
                 itemBuilder: (context, index) {
                   final room = chatRooms[index];
 
+                  String unReadCount;
+                  if(room.unReadCount! > 9) {
+                    unReadCount = "9+";
+                  } else {
+                    unReadCount = room.unReadCount.toString();
+                  }
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     child: InkWell(
@@ -85,9 +96,9 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
                         final userSeq = await decodeTokenInfo();
                         context.push('/chat_message/${room.seq}/$userSeq');
                       },
-                      child: ChatRoomCard(
+                      child: ChatRoomDivider(
                           title: room.title.toString(),
-                    unReadCount: room.unReadCount.toString(),
+                    unReadCount: unReadCount,
                     lastMessage: room.lastMessage,
                     lastMessageDate: room.lastMessageDate,
                         fileFlag: room.fileFlag!,

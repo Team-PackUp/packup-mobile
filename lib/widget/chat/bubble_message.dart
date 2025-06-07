@@ -29,38 +29,37 @@ class BubbleMessage extends StatelessWidget {
       return Row(
         mainAxisAlignment:
         isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: isMine ?
-        [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-            ),
+        crossAxisAlignment: CrossAxisAlignment.start, // ✅ TOP 정렬
+        children: isMine
+            ? [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
             child: Image.network(
               fullFileUrl(message),
               width: MediaQuery.of(context).size.width * 0.4,
               height: MediaQuery.of(context).size.height * 0.4,
-              fit: BoxFit.contain,
+              fit: BoxFit.fill,
               errorBuilder: (context, error, stackTrace) =>
                   Text('이미지 로드 실패 >> $message'),
             ),
           ),
+          const SizedBox(width: 8),
           CircleAvatar(
-            radius: MediaQuery.of(context).size.width * 0.05,
+            radius: MediaQuery.of(context).size.height * 0.03,
           ),
-        ] : [
+        ]
+            : [
           CircleAvatar(
-            radius: MediaQuery.of(context).size.width * 0.05,
+            radius: MediaQuery.of(context).size.height * 0.03,
           ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-            ),
+          const SizedBox(width: 8),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
             child: Image.network(
               fullFileUrl(message),
               width: MediaQuery.of(context).size.width * 0.4,
               height: MediaQuery.of(context).size.height * 0.4,
-              fit: BoxFit.contain,
+              fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) =>
                   Text('이미지 로드 실패 >> $message'),
             ),
@@ -68,6 +67,7 @@ class BubbleMessage extends StatelessWidget {
         ],
       );
     }
+
 
     // 텍스트 메시지
     return Row(
@@ -101,13 +101,13 @@ class BubbleMessage extends StatelessWidget {
           ),
         ),
         CircleAvatar(
-          radius: MediaQuery.of(context).size.width * 0.05,
+          radius: MediaQuery.of(context).size.height * 0.03,
         ),
       ]
           : [
         // 상대 메시지
         CircleAvatar(
-          radius: MediaQuery.of(context).size.width * 0.05,
+          radius: MediaQuery.of(context).size.height * 0.03,
         ),
         Padding(
           padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),

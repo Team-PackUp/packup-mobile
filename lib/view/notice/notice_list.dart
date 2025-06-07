@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 
 import '../../widget/notice/notice_list_card.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class NoticeList extends StatelessWidget {
   const NoticeList({super.key});
 
@@ -67,7 +69,7 @@ class _NoticeListContentState extends State<NoticeListContent> {
     var filteredNoticeList = _noticeProvider.noticeList;
 
     return Scaffold(
-      appBar: CustomAppbar(title: "공지사항"),
+      appBar: CustomAppbar(title: AppLocalizations.of(context)!.notice),
       body: Column(
         children: [
           Expanded(

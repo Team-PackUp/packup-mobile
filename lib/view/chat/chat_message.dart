@@ -14,6 +14,8 @@ import 'package:visibility_detector/visibility_detector.dart';
 import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class ChatMessage extends StatelessWidget {
   final int chatRoomSeq;
   final int userSeq;
@@ -107,9 +109,9 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     return Scaffold(
       // resizeToAvoidBottomInset: true,
       appBar: CustomAppbar(
-        title: '채팅',
+        title: AppLocalizations.of(context)!.chat_room,
         trailing: CircleAvatar(
-          radius: MediaQuery.of(context).size.width * 0.06,
+          radius: MediaQuery.of(context).size.height * 0.02,
           // backgroundImage: NetworkImage('https://example.com/avatar.png'),
         ),
       ),
@@ -202,20 +204,10 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
                 color: PRIMARY_COLOR,
                 iconSize: 25,
               ),
-              hintText: "",
+              hintText: "메시지 입력...",
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 8.0,
                 vertical: 10,
-              ),
-              fillColor: Colors.white,
-              filled: true,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: const BorderSide(color: Colors.grey, width: 0.2),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: const BorderSide(color: Colors.grey, width: 0.2),
               ),
             ),
           ),

@@ -8,10 +8,29 @@ import 'package:packup/main.dart';
 ThemeData lightTheme = ThemeData(
   scaffoldBackgroundColor: BACK_GROUND_COLOR_W,
   brightness: Brightness.light,
-  primarySwatch: Colors.brown,
-  textTheme: const TextTheme(
-    headlineLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
-    bodyLarge: TextStyle(fontSize: 16, color: Colors.black87),
+  textTheme: TextTheme(
+    bodyLarge: TextStyle(color: TEXT_COLOR_B),
+  ),
+  inputDecorationTheme: InputDecorationTheme(
+    hintStyle: TextStyle(color: Colors.grey),
+    filled: true,
+    fillColor: LIGHT_GREY_COLOR,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(30)),
+      borderSide: BorderSide.none,
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(30.0),
+      borderSide: const BorderSide(color: Colors.grey, width: 0.2),
+    ),
+
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(30.0),
+      borderSide: const BorderSide(color: Colors.grey, width: 0.2),
+    ),
+    labelStyle: TextStyle(
+      color: TEXT_COLOR_B,
+    ),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
@@ -34,8 +53,8 @@ ThemeData lightTheme = ThemeData(
   ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: BACK_GROUND_COLOR_W,
-    selectedItemColor: Colors.black,
-    unselectedItemColor: Colors.black45,
+    selectedItemColor: SELECTED,
+    unselectedItemColor: LIGHT_MODE_UNSELECTED,
     selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
     unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
     type: BottomNavigationBarType.fixed,
@@ -51,9 +70,29 @@ ThemeData lightTheme = ThemeData(
 ThemeData darkTheme = ThemeData(
   scaffoldBackgroundColor: BACK_GROUND_COLOR_B,
   brightness: Brightness.dark,
-  textTheme: const TextTheme(
-    headlineLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
-    bodyLarge: TextStyle(fontSize: 16, color: Colors.white70),
+  textTheme: TextTheme(
+    bodyLarge: TextStyle(color: TEXT_COLOR_W),
+  ),
+  inputDecorationTheme: InputDecorationTheme(
+    hintStyle: TextStyle(color: Colors.grey),
+    filled: true,
+    fillColor: DARK_GREY_COLOR,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(30)),
+      borderSide: BorderSide.none,
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(30.0),
+      borderSide: const BorderSide(color: Colors.grey, width: 0.2),
+    ),
+
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(30.0),
+      borderSide: const BorderSide(color: Colors.grey, width: 0.2),
+    ),
+    labelStyle: TextStyle(
+      color: TEXT_COLOR_W,
+    ),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
@@ -76,8 +115,8 @@ ThemeData darkTheme = ThemeData(
   ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: BACK_GROUND_COLOR_B,
-    selectedItemColor: Colors.white,
-    unselectedItemColor: Colors.white60,
+    selectedItemColor: SELECTED,
+    unselectedItemColor: DARK_MODE_UNSELECTED,
     selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
     unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
     type: BottomNavigationBarType.fixed,

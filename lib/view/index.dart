@@ -93,7 +93,6 @@ class _IndexState extends State<Index> {
           currentIndex: _currentIndex,
           onTap: _onTabTapped,
           type: BottomNavigationBarType.fixed,
-          selectedItemColor: PRIMARY_COLOR,
           items: List.generate(
             bottomNavItems.length,
                 (index) => BottomNavigationBarItem(
