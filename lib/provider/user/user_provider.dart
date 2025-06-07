@@ -13,25 +13,24 @@ import 'package:packup/service/login/social_login.dart';
 
 /// UserModel 구독
 class UserProvider with ChangeNotifier {
-
   late SocialLogin socialLogin;
   UserModel? _userModel;
   ResultModel? _resultModel;
   late bool _isLoading;
   String? _socialAccessToken = '';
   late bool _isResult;
+  bool isInitialized = false;
 
   String? accessToken = '';
   String? refreshToken = '';
 
-  final LoginService _httpService = LoginService();  
+  final LoginService _httpService = LoginService();
 
-  UserModel? get userModel      => _userModel;
-  ResultModel? get resultModel  => _resultModel;
-  bool get isLoading            => _isLoading;
-  String? get socialAccessToken       => _socialAccessToken;
-  bool get isResult             => _isResult;
-
+  UserModel? get userModel => _userModel;
+  ResultModel? get resultModel => _resultModel;
+  bool get isLoading => _isLoading;
+  String? get socialAccessToken => _socialAccessToken;
+  bool get isResult => _isResult;
 
   // 로그인 시도 (Enum 타입을 직접 사용)
   Future<void> checkLogin(SocialLoginType type) async {
@@ -68,11 +67,9 @@ class UserProvider with ChangeNotifier {
         if (refreshToken != null) {
           await saveToken(REFRESH_TOKEN, refreshToken!);
         }
-        
+
         await _httpService.registerFcmToken();
-
       }
-
     } catch (e) {
       logger(e.toString(), 'DEBUG');
     } finally {
@@ -85,10 +82,16 @@ class UserProvider with ChangeNotifier {
       print(token);
       print('aaaaaaaaaaaaaaaaaaaa');
       // 디버깅
-
     }
   }
 
+  Future<void> initLoginStatus() async {
+    accessToken = await getToken(ACCESS_TOKEN);
+    refreshToken = await getToken(REFRESH_TOKEN);
+    isInitialized = true;
+    print('✅ 1ㅂㅂㅂㅂㅂㅂㅂaccessToken: $accessToken'); // 디버깅용
+    notifyListeners();
+  }
 
   // 회원정보 조회
   Future<void> getUserInfo(int seq) async {
@@ -105,7 +108,6 @@ class UserProvider with ChangeNotifier {
       } else {
         _userModel = _resultModel?.response;
       }
-
     } catch (e) {
       logger(e.toString(), 'DEBUG');
     } finally {
@@ -116,7 +118,7 @@ class UserProvider with ChangeNotifier {
 
   Future<void> logout() async {
     await socialLogin.logout();
-    await deleteToken(ACCESS_TOKEN); 
+    await deleteToken(ACCESS_TOKEN);
     _httpService.logout();
   }
 
@@ -127,7 +129,5 @@ class UserProvider with ChangeNotifier {
       _userModel = UserModel.fromJson(_resultModel?.response);
       notifyListeners();
     }
-
   }
-
 }

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:go_router/go_router.dart';
 import 'package:packup/Common/util.dart';
 import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/provider/payment/toss/toss_payment_provider.dart';
@@ -75,10 +76,13 @@ void main() async {
   await FirebaseService().initConnect();
   // ▲ firebase
 
+  final userProvider = UserProvider();
+  await userProvider.initLoginStatus();
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => userProvider),
         ChangeNotifierProvider(create: (_) => TossPaymentProvider()),
         ChangeNotifierProvider(create: (_) => ChatRoomProvider()),
         ChangeNotifierProvider<LoadingProvider>(
@@ -89,7 +93,7 @@ void main() async {
           },
         ),
       ],
-      child: const PackUp(),
+      child: PackUp(router: createRouter(userProvider)),
     ),
   );
 
@@ -98,9 +102,9 @@ void main() async {
   // ▲ 앱 상태 변경 감지
 }
 
-
 class PackUp extends StatelessWidget {
-  const PackUp({Key? key}) : super(key: key);
+  final GoRouter router;
+  const PackUp({Key? key, required this.router}) : super(key: key);
 
   static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(
     ThemeMode.light,
@@ -128,7 +132,7 @@ class PackUp extends StatelessWidget {
           localeResolutionCallback: (locale, supportedLocales) {
             if (locale == null) return const Locale('en');
             return supportedLocales.firstWhere(
-                  (l) => l.languageCode == locale.languageCode,
+              (l) => l.languageCode == locale.languageCode,
               orElse: () => const Locale('en'),
             );
           },
