@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 Color PRIMARY_COLOR = Colors.deepOrangeAccent;
+Color SECONDARY_COLOR = Color(0xFF6467F0);
 Color LIGHT_GREY_COLOR = Color(0xFFE0E0E0);
 Color DARK_GREY_COLOR = Color(0xFF757575);
 Color TEXT_FIELD_FILL_COLOR = Color(0xFFD9D9D9);
