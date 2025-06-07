@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:packup/const/image.dart';
 
 enum SocialLoginType { kakao, google }
 
@@ -16,60 +14,47 @@ class SocialLoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch (type) {
-      case SocialLoginType.kakao:
-        return SizedBox(
-          width: 260,
-          height: 45,
-          child: ElevatedButton(
-            onPressed: onPressed,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFFEE500),
-              foregroundColor: Colors.black,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              elevation: 0,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Image.asset(
-                  'assets/icon/kakao_logo.png',
-                  width: 24,
-                  height: 24,
-                ),
-                const SizedBox(width: 12),
-                const Text('카카오 로그인', style: TextStyle(fontSize: 16)),
-              ],
-            ),
-          ),
-        );
+    final Color backgroundColor =
+        type == SocialLoginType.kakao ? const Color(0xFFFEE500) : Colors.white;
+    final Color textColor = Colors.black;
+    final BorderSide? borderSide =
+        type == SocialLoginType.google
+            // ? const BorderSide(color: Colors.grey)
+            ? null
+            : null;
+    final String label =
+        type == SocialLoginType.kakao ? 'Kakao로 계속하기' : 'Google로 계속하기';
+    final String iconPath =
+        type == SocialLoginType.kakao
+            ? 'assets/icon/kakao_logo.png'
+            : 'assets/icon/google_logo.png';
 
-      case SocialLoginType.google:
-        return SizedBox(
-          width: 260,
-          height: 45,
-          child: ElevatedButton.icon(
-            onPressed: onPressed,
-            icon: Image.asset(
-              'assets/icon/google_logo.png',
-              width: 24,
-              height: 24,
-            ),
-            label: const Text('Google로 로그인', style: TextStyle(fontSize: 16)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              side: const BorderSide(color: Colors.grey),
-              elevation: 0,
-            ),
+    return SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          foregroundColor: textColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28),
           ),
-        );
-    }
+          side: borderSide,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Image.asset(iconPath, width: 24, height: 24),
+            ),
+            Center(child: Text(label, style: const TextStyle(fontSize: 16))),
+          ],
+        ),
+      ),
+    );
   }
 }
