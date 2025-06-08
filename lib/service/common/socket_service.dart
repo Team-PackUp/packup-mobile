@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:get/get.dart';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:packup/common/util.dart';
 import 'package:packup/const/const.dart';
@@ -21,8 +23,8 @@ class SocketService {
   StompClient? stompClient;
 
   bool isConnecting = true;
-  bool isReconnecting = false;  // 재연결 시도 상태 여부
-  bool forceDisconnect = false;  // 강제로 소켓 해제
+  bool isReconnecting = false; // 재연결 시도 상태 여부
+  bool forceDisconnect = false; // 강제로 소켓 해제
 
   Future<void> initConnect() async {
     if (stompClient != null) {
@@ -58,8 +60,11 @@ class SocketService {
           final newAccessToken = res.data['response']['accessToken'];
           await saveToken(ACCESS_TOKEN, newAccessToken);
           token = newAccessToken;
-        } catch (e) {
-          print("소켓 연결 전 access token refresh 실패");
+        } on DioException catch (e) {
+          await deleteToken(ACCESS_TOKEN);
+          await deleteToken(REFRESH_TOKEN);
+
+          Get.key.currentContext?.go('/login');
           return;
         }
       }
@@ -89,7 +94,7 @@ class SocketService {
 
   void onConnect(StompFrame frame) {
     print("소켓 연결 완료.");
-    forceDisconnect = false;  // 연결 성공 시 강제 종료 해제
+    forceDisconnect = false; // 연결 성공 시 강제 종료 해제
 
     // 재구독
     reSubscribe();
@@ -134,7 +139,6 @@ class SocketService {
     forceDisconnect = true;
   }
 
-
   void onDisconnect(StompFrame frame) {
     print("소켓 연결 해제됨.");
 
@@ -172,8 +176,6 @@ class SocketService {
     });
   }
 
-
-
   void reSubscribe() {
     if (stompClient == null || !stompClient!.isActive) return;
 
@@ -185,8 +187,10 @@ class SocketService {
     });
   }
 
-
-  void registerCallback(String destination, void Function(dynamic data) callback) {
+  void registerCallback(
+    String destination,
+    void Function(dynamic data) callback,
+  ) {
     _subscriptions[destination] = callback;
   }
 
@@ -197,7 +201,6 @@ class SocketService {
   // 클래스 멤버
   final Map<String, void Function(dynamic data)> _subscriptions = {};
   final Map<String, StompUnsubscribe> _unsubscribeMap = {};
-
 
   void subscribe(String destination, void Function(dynamic data) callback) {
     // 1. stompClient 연결 상태 확인
@@ -233,7 +236,6 @@ class SocketService {
 
     print("[$destination] 구독 완료");
   }
-
 
   void unsubscribe(String destination) {
     _unsubscribeMap[destination]?.call();

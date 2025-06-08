@@ -2,6 +2,7 @@ class UserModel {
   final String userId;
   final String userAge;
   final String userNation;
+  final String userGender;
 
   final String? email;
   final String? nickname;
@@ -11,6 +12,7 @@ class UserModel {
     required this.userId,
     required this.userAge,
     required this.userNation,
+    required this.userGender,
 
     this.email,
     this.nickname,
@@ -30,12 +32,27 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      userId: json['userNumber'] ?? '',
-      userAge: json['userAge'] ?? '',
-      userNation: json['userNation'] ?? '',
+      userId: json['userId'] ?? '',
+      userAge: json['age']?.toString() ?? '',
+      userNation: json['nation'] ?? '',
+      userGender: json['gender'] ?? '',
       email: json['email'],
       nickname: json['nickname'],
       preferCategorySeqJson: json['preferCategorySeqJson'],
     );
+  }
+}
+
+extension UserModelExtension on UserModel {
+  bool get isDetailRegistered {
+    return userAge.isNotEmpty &&
+        userNation.isNotEmpty &&
+        userGender.isNotEmpty &&
+        nickname != null &&
+        nickname!.isNotEmpty;
+  }
+
+  bool get hasPreferenceSet {
+    return preferCategorySeqJson != null && preferCategorySeqJson!.isNotEmpty;
   }
 }
