@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:packup/const/color.dart';
 import 'package:go_router/go_router.dart';
+import 'package:packup/model/user/preference/user_preference_model.dart';
+import 'package:packup/service/user/preference_service.dart';
 
 class Preference extends StatefulWidget {
   const Preference({super.key});
@@ -135,7 +137,7 @@ class _PreferenceState extends State<Preference> {
                   children: [
                     TextButton(
                       onPressed: () {
-                        context.go('/index'); // 건너뛰기 → 인덱스
+                        context.go('/index');
                       },
                       child: const Text(
                         '건너뛰기',
@@ -143,9 +145,31 @@ class _PreferenceState extends State<Preference> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         print('선택된 항목: $selected');
-                        // TODO: 서버 전송 필요 시 여기에 추가
+
+                        final model = UserPreferenceModel(
+                          preferCategories: selected.toList(),
+                        );
+                        final service = PreferenceService();
+
+                        try {
+                          final result = await service.updateUserPrefer(model);
+
+                          if (result.resultFlag == true) {
+                            context.go('/index');
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(result.message ?? '저장에 실패했습니다.'),
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('오류 발생: ${e.toString()}')),
+                          );
+                        }
                         context.go('/index');
                       },
                       style: ElevatedButton.styleFrom(
