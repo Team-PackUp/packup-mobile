@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:packup/widget/common/custom_network_image_ratio.dart';
 
 import '../../common/util.dart';
 
@@ -26,23 +27,20 @@ class BubbleMessage extends StatelessWidget {
 
     // 파일 메시지
     if (fileFlag == 'Y') {
+      final imageWidget = SizedBox(
+        width: MediaQuery.of(context).size.width * 0.4,
+        child: CustomNetworkImageRatio(
+          imageUrl: fullFileUrl(message),
+        ),
+      );
+
       return Row(
         mainAxisAlignment:
         isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start, // ✅ TOP 정렬
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: isMine
             ? [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              fullFileUrl(message),
-              width: MediaQuery.of(context).size.width * 0.4,
-              height: MediaQuery.of(context).size.height * 0.4,
-              fit: BoxFit.fill,
-              errorBuilder: (context, error, stackTrace) =>
-                  Text('이미지 로드 실패 >> $message'),
-            ),
-          ),
+          imageWidget,
           const SizedBox(width: 8),
           CircleAvatar(
             radius: MediaQuery.of(context).size.height * 0.03,
@@ -53,20 +51,12 @@ class BubbleMessage extends StatelessWidget {
             radius: MediaQuery.of(context).size.height * 0.03,
           ),
           const SizedBox(width: 8),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              fullFileUrl(message),
-              width: MediaQuery.of(context).size.width * 0.4,
-              height: MediaQuery.of(context).size.height * 0.4,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  Text('이미지 로드 실패 >> $message'),
-            ),
-          ),
+          imageWidget,
         ],
       );
     }
+
+
 
 
     // 텍스트 메시지
@@ -136,3 +126,4 @@ class BubbleMessage extends StatelessWidget {
     );
   }
 }
+

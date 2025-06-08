@@ -72,7 +72,7 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
         },
         child: Column(
           children: [
-            const Divider(height: 1, thickness: 0.5),
+            const Divider(height: 1, thickness: 1),
             Expanded(
               child: ListView.builder(
                 controller: _scrollController,

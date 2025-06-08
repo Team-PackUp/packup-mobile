@@ -21,7 +21,6 @@ class ChatRoomDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
         Padding(
@@ -31,7 +30,6 @@ class ChatRoomDivider extends StatelessWidget {
               const CircleAvatar(
                 radius: 24,
                 backgroundColor: Colors.grey,
-                // backgroundImage: NetworkImage(...),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -50,8 +48,8 @@ class ChatRoomDivider extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
+                        if (lastMessageDate != null) const SizedBox(width: 20),
                         if (lastMessageDate != null)
-                          const SizedBox(width: 20),
                           Text(
                             convertToChatRoomDate(lastMessageDate!),
                             style: const TextStyle(
@@ -63,8 +61,7 @@ class ChatRoomDivider extends StatelessWidget {
                         if (unReadCount != "0") ...[
                           const SizedBox(width: 20),
                           Container(
-                            padding:
-                            const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
                             decoration: BoxDecoration(
                               color: SELECTED,
                               borderRadius: BorderRadius.circular(20),
@@ -85,9 +82,7 @@ class ChatRoomDivider extends StatelessWidget {
                     Text(
                       fileFlag == 'Y'
                           ? '사진'
-                          : (lastMessage?.trim().isNotEmpty ?? false
-                          ? lastMessage!
-                          : ''),
+                          : (lastMessage?.trim().isNotEmpty ?? false ? lastMessage! : ''),
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 14,
@@ -100,10 +95,11 @@ class ChatRoomDivider extends StatelessWidget {
             ],
           ),
         ),
-        const Divider(height: 1, thickness: 0.5),
+        const Divider(height: 1, thickness: 1),
       ],
     );
   }
+
 
   String convertToChatRoomDate(DateTime date) {
     final type = getDateType(date);
