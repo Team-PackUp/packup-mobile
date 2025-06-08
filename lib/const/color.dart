@@ -20,4 +20,8 @@ Color SELECTED = Color(0xFFE8618C);    // 아이콘 선택
 Color LIGHT_MODE_UNSELECTED = Color(0xFF565E6C); // 아이콘 선택 해제
 Color DARK_MODE_UNSELECTED = Color(0xFF757575); // 아이콘 선택 해제
 
+/// 채팅
+Color MY_MESSAGE_BACKGROUND = Color(0xFF636AE8);
+Color YOUR_MESSAGE_BACKGROUND = Color(0xFFF7F7F7);
+
 

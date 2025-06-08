@@ -94,7 +94,7 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
                         _chatRoomProvider.readMessageThisRoom(room.seq!);
 
                         final userSeq = await decodeTokenInfo();
-                        context.push('/chat_message/${room.seq}/$userSeq');
+                        context.push('/chat_message/${room.seq}/${room.title}/$userSeq');
                       },
                       child: ChatRoomDivider(
                           title: room.title.toString(),

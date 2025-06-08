@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:packup/model/chat/chat_read_model.dart';
 import 'package:packup/provider/chat/chat_message_provider.dart';
-import 'package:packup/widget/chat/bubble_message.dart';
+import 'package:packup/widget/chat/message_box.dart';
 import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/chat_message_model.dart';
 import 'package:provider/provider.dart';
@@ -16,13 +17,18 @@ import 'package:packup/widget/common/custom_appbar.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../Common/util.dart';
+import '../../widget/chat/date_separator.dart';
+
 class ChatMessage extends StatelessWidget {
   final int chatRoomSeq;
+  final String title;
   final int userSeq;
 
   const ChatMessage({
     super.key,
     required this.chatRoomSeq,
+    required this.title,
     required this.userSeq,
   });
 
@@ -32,21 +38,23 @@ class ChatMessage extends StatelessWidget {
       create: (_) => ChatMessageProvider(),
       child: ChatMessageContent(
         chatRoomSeq: chatRoomSeq,
+        title: title,
         userSeq: userSeq,
       ),
     );
   }
-
 }
 
 
 class ChatMessageContent extends StatefulWidget {
   final int chatRoomSeq;
+  final String title;
   final int userSeq;
 
   const ChatMessageContent({
     super.key,
     required this.chatRoomSeq,
+    required this.title,
     required this.userSeq,
   });
 
@@ -76,9 +84,8 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
 
       await _chatMessageProvider.getMessage(widget.chatRoomSeq);
       _chatMessageProvider.subscribeChatMessage(widget.chatRoomSeq);
-
-
     });
+
   }
 
   _scrollListener() {
@@ -89,7 +96,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   }
 
   getChatMessageMore() async {
-    print("채팅 메시지 더! 조회 합니다");
     _chatMessageProvider.getMessage(widget.chatRoomSeq);
   }
 
@@ -106,13 +112,13 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   Widget build(BuildContext context) {
     _chatMessageProvider = context.watch<ChatMessageProvider>();
 
+    final messageList = _buildMessageListWithDateSeparators(_chatMessageProvider.chatMessage);
+
     return Scaffold(
-      // resizeToAvoidBottomInset: true,
       appBar: CustomAppbar(
-        title: AppLocalizations.of(context)!.chat_room,
+        title: widget.title,
         trailing: CircleAvatar(
           radius: MediaQuery.of(context).size.height * 0.02,
-          // backgroundImage: NetworkImage('https://example.com/avatar.png'),
         ),
       ),
       body: Column(
@@ -122,23 +128,39 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
               onTap: () => FocusScope.of(context).unfocus(),
               child: Align(
                 alignment: Alignment.topCenter,
-                child: ListView.separated(
+                child: ListView.builder(
                   padding: EdgeInsets.only(
-                      left: MediaQuery.of(context).size.width * 0.02,
-                      right: MediaQuery.of(context).size.width * 0.02,
-                      bottom: MediaQuery.of(context).size.height * 0.02
+                    left: MediaQuery.of(context).size.width * 0.02,
+                    right: MediaQuery.of(context).size.width * 0.02,
+                    bottom: MediaQuery.of(context).size.height * 0.02,
                   ),
                   controller: _scrollController,
                   reverse: true,
+                  itemCount: messageList.length,
                   itemBuilder: (context, index) {
-                    final message = _chatMessageProvider.chatMessage[index];
+                    final item = messageList[index];
+
+                    if (item is DateTime) {
+                      return DateSeparator(dateText: convertToYmd(item));
+                    }
+
+                    final ChatMessageModel message = item;
                     final isLatestMessage = index == 0;
 
+                    Widget messageWidget = MessageBox(
+                      message: message.message!,
+                      createTime: convertToHm(message.createdAt!),
+                      userSeq: widget.userSeq,
+                      sender: message.userSeq!,
+                      fileFlag: message.fileFlag!,
+                    );
+
                     if (isLatestMessage) {
-                      return VisibilityDetector(
+                      messageWidget = VisibilityDetector(
                         key: Key('last-message-${message.seq}'),
                         onVisibilityChanged: (info) {
-                          bool readChatMessage = _chatMessageProvider.lastReadMessageSeq! < message.seq! || _chatMessageProvider.lastReadMessageSeq! == 0;
+                          bool readChatMessage = _chatMessageProvider.lastReadMessageSeq! < message.seq! ||
+                              _chatMessageProvider.lastReadMessageSeq! == 0;
                           if (info.visibleFraction > 0.8 && readChatMessage) {
                             ChatReadModel chatReadModel = ChatReadModel(
                               chatRoomSeq: widget.chatRoomSeq,
@@ -148,25 +170,12 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
                             _chatRoomProvider.readMessageThisRoom(widget.chatRoomSeq);
                           }
                         },
-                        child: BubbleMessage(
-                          message: message.message!,
-                          userSeq: widget.userSeq,
-                          sender: message.userSeq!,
-                          fileFlag: message.fileFlag!,
-                        ),
+                        child: messageWidget,
                       );
                     }
 
-                    return BubbleMessage(
-                      message: message.message!,
-                      userSeq: widget.userSeq,
-                      sender: message.userSeq!,
-                      fileFlag: message.fileFlag!,
-                    );
+                    return messageWidget;
                   },
-
-                  separatorBuilder: (_, __) => SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                  itemCount: _chatMessageProvider.chatMessage.length,
                 ),
               ),
             ),
@@ -189,7 +198,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
         IconButton(
           onPressed: _pickImage,
           icon: const Icon(Icons.camera_alt),
-          color: PRIMARY_COLOR,
+          color: SELECTED,
           iconSize: 25,
         ),
         Expanded(
@@ -201,7 +210,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
               suffixIcon: IconButton(
                 onPressed: _sendMessage,
                 icon: const Icon(Icons.send),
-                color: PRIMARY_COLOR,
+                color: SELECTED,
                 iconSize: 25,
               ),
               hintText: "메시지 입력...",
@@ -216,9 +225,30 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     ),
   );
 
+  bool isSameDate(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  List<dynamic> _buildMessageListWithDateSeparators(List<ChatMessageModel> messages) {
+    final List<dynamic> result = [];
+    DateTime? lastDate;
+
+    for (var message in messages) {
+      final currentDate = message.createdAt!;
+      if (lastDate == null || !isSameDate(lastDate, currentDate)) {
+        result.add(currentDate);
+        lastDate = currentDate;
+      }
+      result.add(message);
+    }
+
+    return result;
+  }
+
+
   void _handleAfterSendChatMessage(chat) {
     _controller.clear();
-    scrollBottom();
+    _scrollBottom();
   }
 
   void _sendMessage([ChatMessageModel? chat]) {
@@ -250,7 +280,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     }
   }
 
-  void scrollBottom() {
+  void _scrollBottom() {
     // 스크롤 가장 아래로
     Future.delayed(Duration(milliseconds: 100), () {
       _scrollController.animateTo(
