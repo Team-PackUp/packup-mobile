@@ -4,7 +4,7 @@ import 'package:packup/service/user/preference_service.dart';
 
 class UserPreferenceProvider extends ChangeNotifier {
   final Set<String> _selected = {};
-  final UserService _userService = UserService();
+  final PreferenceService _preferenceService = PreferenceService();
 
   Set<String> get selected => _selected;
 
@@ -19,6 +19,6 @@ class UserPreferenceProvider extends ChangeNotifier {
 
   Future<void> submitPreferences() async {
     final model = UserPreferenceModel(preferCategories: _selected.toList());
-    await _userService.updateUserPrefer(model);
+    await _preferenceService.updateUserPrefer(model);
   }
 }
