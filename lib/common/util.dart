@@ -120,7 +120,6 @@ String getTimeAgo(DateTime dateTime) {
   }
 }
 
-
 /// ################### FILE ################### ///
 String fullFileUrl(String path) {
   return '$httpPrefix$path';

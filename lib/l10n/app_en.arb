@@ -36,5 +36,17 @@
   "invalid_credentials": "Wrong ID or password",
   "@invalid_credentials_description": {
     "description": "잘못된 아이디 혹은 비밀번호 입력"
+  },
+  "chat": "chat",
+  "@chat": {
+    "description": "채팅"
+  },
+  "chat_room": "chat room",
+  "@chat_room": {
+    "description": "채팅방"
+  },
+  "notice": "notice",
+  "@notice": {
+    "description": "공지사항"
   }
 }
