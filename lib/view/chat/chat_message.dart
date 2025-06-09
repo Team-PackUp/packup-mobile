@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker/image_picker.dart';
@@ -197,7 +198,10 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
       children: [
         IconButton(
           onPressed: _pickImage,
-          icon: const Icon(Icons.camera_alt),
+          icon: Transform.rotate(
+            angle: math.pi / 4,
+            child: const Icon(Icons.attach_file_rounded),
+          ),
           color: SELECTED,
           iconSize: 25,
         ),
@@ -236,7 +240,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     for (var message in messages) {
       final currentDate = message.createdAt!;
       if (lastDate == null || !isSameDate(lastDate, currentDate)) {
-        result.add(currentDate);
+        // result.add(currentDate);
         lastDate = currentDate;
       }
       result.add(message);

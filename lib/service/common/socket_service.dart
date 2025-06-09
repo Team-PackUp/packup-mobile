@@ -41,7 +41,11 @@ class SocketService {
 
     print("소켓을 연결합니다.");
     await initStompClient();
-    stompClient!.activate();
+    if (stompClient != null) {
+      stompClient!.activate();
+    } else {
+      print("stompClient 초기화 실패");
+    }
   }
 
   Future<void> initStompClient() async {

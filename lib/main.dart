@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:packup/common/router.dart';
 import 'package:packup/provider/chat/chat_room_provider.dart';
@@ -67,6 +68,9 @@ void main() async {
   await FirebaseService().initConnect();
   // ▲ firebase
 
+  final userProvider = UserProvider();
+  await userProvider.initLoginStatus();
+
   runApp(
     MultiProvider(
       providers: [
@@ -81,7 +85,7 @@ void main() async {
           },
         ),
       ],
-      child: const PackUp(),
+      child: PackUp(router: createRouter(userProvider)),
     ),
   );
 
@@ -92,7 +96,8 @@ void main() async {
 
 
 class PackUp extends StatelessWidget {
-  const PackUp({Key? key}) : super(key: key);
+  final GoRouter router;
+  const PackUp({Key? key, required this.router}) : super(key: key);
 
   static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(
     ThemeMode.light,

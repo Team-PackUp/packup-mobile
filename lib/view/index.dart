@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:packup/Const/color.dart';
+import 'package:packup/const/packup_icons.dart';
+import 'package:packup/main.dart';
 import 'package:packup/view/chat/chat_room.dart';
 
 import 'package:packup/view/home/home.dart';
@@ -70,12 +72,13 @@ class _IndexState extends State<Index> {
   }
 
   final List<Map<String, dynamic>> bottomNavItems = [
-    {'icon': Icons.card_travel, 'label': 'AI추천'},
-    {'icon': Icons.chat_bubble, 'label': '예약'},
-    {'icon': Icons.home, 'label': '홈'},
-    {'icon': Icons.airline_seat_recline_normal, 'label': '메시지'},
-    {'icon': Icons.supervised_user_circle, 'label': 'MY'},
+    {'icon': Icons.search_rounded, 'label': 'AI추천'},
+    {'icon': PackupIcons.favorite, 'label': '예약'},
+    {'icon': PackupIcons.group_1, 'label': '홈'},
+    {'icon': PackupIcons.group, 'label': '메시지'},
+    {'icon': Icons.account_circle_outlined, 'label': 'MY'},
   ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +100,7 @@ class _IndexState extends State<Index> {
             bottomNavItems.length,
                 (index) => BottomNavigationBarItem(
               icon: SizedBox(
-                height: 10,
+                height: MediaQuery.of(context).size.height * 0.02,
                 child: Icon(bottomNavItems[index]['icon']),
               ),
               label: bottomNavItems[index]['label'],
