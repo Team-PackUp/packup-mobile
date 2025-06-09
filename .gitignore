@@ -93,3 +93,8 @@ app.*.map.json
 # Web (임시 빌드 디렉토리)
 /web/build/
 /web/.dart_tool/
+
+
+**/generated_plugins.cmake
+**/GeneratedPluginRegistrant.swift
+**/google-services.json

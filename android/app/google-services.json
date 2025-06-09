@@ -38,6 +38,14 @@
           }
         },
         {
+          "client_id": "413154186328-t44dt31lskh1rqcf8uuefgu6v0ljfltj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.packup.mobile",
+            "certificate_hash": "3c5f235dcb19ad04633758ebb91def00017bdbd1"
+          }
+        },
+        {
           "client_id": "413154186328-m8vcjk6jego987f1dcohtks9soq4shno.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -55,10 +63,10 @@
               "client_type": 3
             },
             {
-              "client_id": "413154186328-vgu30o62g4iq90oiivhd541msavb0175.apps.googleusercontent.com",
+              "client_id": "413154186328-nano1ri0n83pud0nmpcmsuq5amf00ru7.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "packup.com.mobile"
+                "bundle_id": "com.packup.mobile"
               }
             }
           ]

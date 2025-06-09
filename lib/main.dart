@@ -1,32 +1,24 @@
-import 'dart:io';
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:packup/Common/util.dart';
-import 'package:packup/provider/chat/chat_room_provider.dart';
-import 'package:packup/provider/payment/toss/toss_payment_provider.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:packup/common/router.dart';
+import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/provider/common/loading_provider.dart';
+import 'package:packup/provider/payment/toss/toss_payment_provider.dart';
+import 'package:packup/provider/user/user_provider.dart';
 import 'package:packup/service/common/app_state_service.dart';
-
+import 'package:packup/service/common/firebase_service.dart';
 import 'package:packup/service/common/loading_service.dart';
 import 'package:packup/service/common/socket_service.dart';
+import 'package:packup/theme/colors/app_colors_dark.dart';
+import 'package:packup/theme/colors/app_colors_light.dart';
+import 'package:packup/theme/theme.dart';
 import 'package:packup/widget/common/loading_progress.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:packup/theme/theme.dart';
-
-import 'package:packup/provider/user/user_provider.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
-import 'package:packup/service/common/firebase_service.dart';
-import 'common/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -116,8 +108,8 @@ class PackUp extends StatelessWidget {
       builder: (context, value, child) {
         return MaterialApp.router(
           title: 'PackUP Demo',
-          theme: lightTheme,
-          darkTheme: darkTheme,
+          theme: buildTheme(lightColors),
+          darkTheme: buildTheme(darkColors),
           themeMode: value,
           routerConfig: router,
           supportedLocales: const [
