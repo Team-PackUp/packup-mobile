@@ -25,7 +25,7 @@ class MessageBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMine = sender == userSeq;
-    final imagePath = profileImagePath ?? 'assets/icons/schedule/biceps_icon.png';
+    final imagePath = profileImagePath ?? 'assets/image/logo/logo.png';
 
     if (fileFlag == 'Y') {
       final imageWidget = SizedBox(

@@ -7,6 +7,7 @@ class ChatMessageModel {
   final int? chatRoomSeq;
   final DateTime? createdAt;
   final String? fileFlag;
+  final String? deapLink;
 
   ChatMessageModel({
     this.seq,
@@ -15,6 +16,7 @@ class ChatMessageModel {
     this.userSeq,
     this.chatRoomSeq,
     this.fileFlag,
+    this.deapLink,
   });
 
   String toJson() {
@@ -23,6 +25,7 @@ class ChatMessageModel {
       'userSeq': userSeq,
       'chatRoomSeq': chatRoomSeq,
       'fileFlag': fileFlag,
+      'deapLink': deapLink,
     });
   }
 
