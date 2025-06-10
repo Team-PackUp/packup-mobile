@@ -74,7 +74,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => userProvider),
         ChangeNotifierProvider(create: (_) => TossPaymentProvider()),
         ChangeNotifierProvider(create: (_) => ChatRoomProvider()),
         ChangeNotifierProvider<LoadingProvider>(
@@ -93,7 +93,6 @@ void main() async {
   AppStateService();
   // ▲ 앱 상태 변경 감지
 }
-
 
 class PackUp extends StatelessWidget {
   final GoRouter router;
@@ -125,7 +124,7 @@ class PackUp extends StatelessWidget {
           localeResolutionCallback: (locale, supportedLocales) {
             if (locale == null) return const Locale('en');
             return supportedLocales.firstWhere(
-                  (l) => l.languageCode == locale.languageCode,
+              (l) => l.languageCode == locale.languageCode,
               orElse: () => const Locale('en'),
             );
           },
