@@ -260,7 +260,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
         message: _controller.text,
         chatRoomSeq: widget.chatRoomSeq,
         fileFlag: 'N',
-        deapLink: urlGenerator("/chat/message/list/${widget.chatRoomSeq}")
       );
     }
 
@@ -276,7 +275,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
           message: "${fileModel.path}/${fileModel.encodedName}",
           chatRoomSeq: widget.chatRoomSeq,
           fileFlag: 'Y',
-          deapLink: urlGenerator("/chat/message/list/${widget.chatRoomSeq}")
       );
 
       _sendMessage(chat);

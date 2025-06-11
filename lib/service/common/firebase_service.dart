@@ -9,6 +9,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:packup/common/util.dart';
 import 'package:packup/common/firebase_options.dart';
 
+import '../../common/deep_link/handler/handler.dart';
+
 @pragma('vm:entry-point')
 class FirebaseService {
 
@@ -52,6 +54,7 @@ class FirebaseService {
         message.data['title'],
         message.data['body'],
         notificationDetails,
+        payload: message.data['deepLink']
       );
     }
   }
@@ -107,6 +110,20 @@ class FirebaseService {
       fcmForegroundHandler(
           message, localNotification, androidNotificationChannel);
     });
+
+    await localNotification.initialize(
+      const InitializationSettings(
+        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      ),
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        final payload = response.payload;
+        if (payload != null) {
+          logger('알림 클릭됨: $payload');
+          handleDeepLink(payload);
+        }
+      },
+    );
+
   }
 
   Future<void> setOsSetting() async {
