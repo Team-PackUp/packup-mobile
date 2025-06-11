@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -21,8 +22,16 @@ import 'package:packup/theme/theme.dart';
 import 'package:packup/widget/common/loading_progress.dart';
 import 'package:provider/provider.dart';
 
+late final GoRouter globalRouter;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 가로모드 방지
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   String envFile = ".env"; // 기본 파일
 
@@ -71,6 +80,9 @@ void main() async {
   final userProvider = UserProvider();
   await userProvider.initLoginStatus();
 
+  // 전역변수로 선언하여 context 상태가 없는 함수에서도.. push 할 수 있도록;;
+  globalRouter = createRouter(userProvider);
+
   runApp(
     MultiProvider(
       providers: [
@@ -85,7 +97,7 @@ void main() async {
           },
         ),
       ],
-      child: PackUp(router: createRouter(userProvider)),
+      child: PackUp(),
     ),
   );
 
@@ -95,8 +107,8 @@ void main() async {
 }
 
 class PackUp extends StatelessWidget {
-  final GoRouter router;
-  const PackUp({Key? key, required this.router}) : super(key: key);
+
+  const PackUp({Key? key}) : super(key: key);
 
   static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(
     ThemeMode.light,
@@ -115,7 +127,7 @@ class PackUp extends StatelessWidget {
           theme: buildTheme(lightColors),
           darkTheme: buildTheme(darkColors),
           themeMode: value,
-          routerConfig: router,
+          routerConfig: globalRouter,
           supportedLocales: const [
             Locale('en', ''),
             Locale('ko', ''),

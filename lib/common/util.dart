@@ -166,3 +166,8 @@ bool tokenExpired(String token) {
     return true;
   }
 }
+
+String urlGenerator(String url) {
+
+  return httpPrefix + url;
+}

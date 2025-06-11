@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:packup/model/chat/chat_read_model.dart';
 import 'package:packup/provider/chat/chat_message_provider.dart';
@@ -16,10 +15,8 @@ import 'package:visibility_detector/visibility_detector.dart';
 import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../../Common/util.dart';
-import '../../widget/chat/date_separator.dart';
+import 'package:packup/common/util.dart';
+import 'package:packup/widget/chat/date_separator.dart';
 
 class ChatMessage extends StatelessWidget {
   final int chatRoomSeq;
@@ -277,7 +274,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
       final chat = ChatMessageModel(
           message: "${fileModel.path}/${fileModel.encodedName}",
           chatRoomSeq: widget.chatRoomSeq,
-          fileFlag: 'Y'
+          fileFlag: 'Y',
       );
 
       _sendMessage(chat);

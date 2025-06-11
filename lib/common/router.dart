@@ -11,7 +11,6 @@ import 'package:packup/view/notice/notice_view.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
 import 'package:packup/view/user/preference/preference.dart';
 import 'package:packup/view/user/register_detail/register_detail.dart';
-import 'package:path/path.dart';
 
 GoRouter createRouter(UserProvider userProvider) {
   return GoRouter(

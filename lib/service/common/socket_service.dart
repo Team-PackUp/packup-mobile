@@ -137,7 +137,7 @@ class SocketService {
       unsubscribe();
     }
     _unsubscribeMap.clear();
-    _subscriptions.clear();
+    // _subscriptions.clear();
 
     stompClient?.deactivate();
     forceDisconnect = true;
