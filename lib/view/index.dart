@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:packup/Const/color.dart';
 import 'package:packup/const/packup_icons.dart';
-import 'package:packup/main.dart';
 import 'package:packup/view/chat/chat_room.dart';
-
 import 'package:packup/view/home/home.dart';
 import 'package:packup/view/profile/profile.dart';
 import 'package:packup/view/schedule/schedule.dart';
-
-import '../widget/editor/editor.dart';
+import 'package:packup/view/tour/tour.dart';
 
 class Index extends StatefulWidget {
   final int? index;
@@ -22,11 +18,10 @@ class Index extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _IndexState();
+  State<Index> createState() => _IndexState();
 }
 
 class _IndexState extends State<Index> {
-
   int _currentIndex = 0;
   late int _myPageIndex;
   List<int> _history = [0];
@@ -79,6 +74,22 @@ class _IndexState extends State<Index> {
     {'icon': Icons.account_circle_outlined, 'label': 'MY'},
   ];
 
+  Widget buildPage(int index) {
+    switch (index) {
+      case 0:
+        return const Schedule(); // AI추천
+      case 1:
+        return const Home(); // 예약
+      case 2:
+        return Tour(); // 홈
+      case 3:
+        return const ChatRoom(); // 메시지
+      case 4:
+        return const Profile(); // MY
+      default:
+        return const SizedBox();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,10 +99,7 @@ class _IndexState extends State<Index> {
         appBar: AppBar(
           toolbarHeight: 10,
         ),
-        body: IndexedStack(
-            index: _currentIndex,
-            children: _pages
-        ),
+        body: buildPage(_currentIndex), // ✅ 동적 위젯 생성
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: _onTabTapped,
@@ -110,29 +118,4 @@ class _IndexState extends State<Index> {
       ),
     );
   }
-
-  final List<Widget> _pages = [
-    const Schedule(),
-    const Home(),
-    const Profile(),
-    const ChatRoom(),
-    const Profile(),
-  ];
-
-
-  // Widget _buildCurrentWidget() {
-  //   switch (_currentIndex) {
-  //     case 0:
-  //       return const Schedule();
-  //     case 1:
-  //       return const ChatRoom();
-  //       // return const SizedBox();
-  //     case 2:
-  //     return const Home();
-  //     case 3:
-  //       return const Profile();
-  //     default:
-  //       return Profile();
-  //   }
-  // }
 }
