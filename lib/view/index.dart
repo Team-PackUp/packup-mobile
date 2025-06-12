@@ -83,7 +83,7 @@ class _IndexState extends State<Index> {
       case 2:
         return Tour(); // 홈
       case 3:
-        return const ChatRoom(); // 메시지
+        return const ChatRoom(deepLinkFlag: false,); // 메시지
       case 4:
         return const Profile(); // MY
       default:

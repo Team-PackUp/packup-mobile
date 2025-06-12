@@ -9,16 +9,24 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../widget/common/custom_appbar.dart';
 
 class ChatRoom extends StatelessWidget {
-  const ChatRoom({super.key});
+
+  final bool deepLinkFlag;
+
+  const ChatRoom({
+    super.key,
+    required this.deepLinkFlag,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const ChatRoomContent();
+    return ChatRoomContent(deepLinkFlag: deepLinkFlag,);
   }
 }
 
 class ChatRoomContent extends StatefulWidget {
-  const ChatRoomContent({super.key});
+  final bool deepLinkFlag;
+
+  const ChatRoomContent({super.key, required this.deepLinkFlag});
 
   @override
   State<ChatRoomContent> createState() => _ChatRoomContentState();
@@ -32,15 +40,28 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
   void initState() {
     super.initState();
 
-    _scrollController.addListener(_onScroll);
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _chatRoomProvider = context.read<ChatRoomProvider>();
       await _chatRoomProvider.getRoom();
+      await _chatRoomProvider.subscribeChatRoom();
 
-      _chatRoomProvider.subscribeChatRoom();
+      if (!mounted) return;
+
+      if (widget.deepLinkFlag) {
+        final userSeq = await decodeTokenInfo();
+        final room = _chatRoomProvider.chatRoom.firstOrNull;
+
+        if (room != null) {
+          Future.microtask(() {
+            if (mounted) {
+              context.push('/chat_message/${room.seq}/${room.title}/$userSeq');
+            }
+          });
+        }
+      }
     });
   }
+
 
   @override
   void dispose() {
@@ -50,7 +71,8 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
       context.read<ChatRoomProvider>().getRoom();
     }
   }
@@ -63,55 +85,54 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
 
     return Scaffold(
       appBar: CustomAppbar(
-          arrowFlag: false,
-          title: AppLocalizations.of(context)!.chat,
+        arrowFlag: false,
+        title: AppLocalizations.of(context)!.chat,
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await _chatRoomProvider.getRoom();
-        },
-        child: Column(
-          children: [
-            const Divider(height: 1, thickness: 1),
-            Expanded(
-              child: ListView.builder(
-                controller: _scrollController,
-                physics: const AlwaysScrollableScrollPhysics(),// 데이터 별로 없을때 테스트할 때 추가
-                itemCount: chatRooms.length,
-                itemBuilder: (context, index) {
-                  final room = chatRooms[index];
+      body: Column(
+        children: [
+          const Divider(height: 1, thickness: 1),
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              // physics: const AlwaysScrollableScrollPhysics(),// 데이터 별로 없을때 테스트할 때 추가
+              itemCount: chatRooms.length,
+              itemBuilder: (context, index) {
+                final room = chatRooms[index];
 
-                  String unReadCount;
-                  if(room.unReadCount! > 9) {
-                    unReadCount = "9+";
-                  } else {
-                    unReadCount = room.unReadCount.toString();
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: InkWell(
-                      onTap: () async {
-                        _chatRoomProvider.readMessageThisRoom(room.seq!);
+                String unReadCount;
+                if (room.unReadCount! > 9) {
+                  unReadCount = "9+";
+                } else {
+                  unReadCount = room.unReadCount.toString();
+                }
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  child: InkWell(
+                    onTap: () async {
+                      _chatRoomProvider.readMessageThisRoom(room.seq!);
 
-                        final userSeq = await decodeTokenInfo();
-                        context.push('/chat_message/${room.seq}/${room.title}/$userSeq');
-                      },
-                      child: ChatRoomDivider(
-                          title: room.title.toString(),
-                    unReadCount: unReadCount,
-                    lastMessage: room.lastMessage,
-                    lastMessageDate: room.lastMessageDate,
-                        fileFlag: room.fileFlag!,
-                      ),
+                      final userSeq = await decodeTokenInfo();
+                      context.push(
+                        '/chat_message/${room.seq}/${room.title}/$userSeq',
+                      );
+                    },
+                    child: ChatRoomDivider(
+                      title: room.title.toString(),
+                      unReadCount: unReadCount,
+                      lastMessage: room.lastMessage,
+                      lastMessageDate: room.lastMessageDate,
+                      fileFlag: room.fileFlag!,
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
-

@@ -18,6 +18,6 @@ void handleChatMessageRoute(Uri uri) async {
   if (roomSeq == null) return;
   String fullUrl = '/$prefix/$roomSeq/$title/$userSeq';
 
-  globalRouter.go(fullUrl);
+  globalRouter.go('/chat_room', extra: true);
 }
 

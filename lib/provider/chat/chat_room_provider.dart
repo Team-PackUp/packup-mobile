@@ -61,7 +61,7 @@ class ChatRoomProvider extends LoadingProvider {
     notifyListeners();
   }
 
-  void subscribeChatRoom() {
+  subscribeChatRoom() async {
     const destination = '/user/queue/chatroom-refresh';
 
     _socketService.registerCallback(destination, (data) {});
