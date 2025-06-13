@@ -7,6 +7,8 @@ import 'package:packup/view/profile/profile.dart';
 import 'package:packup/view/schedule/schedule.dart';
 import 'package:packup/view/tour/tour.dart';
 
+import '../common/deep_link/handle_router.dart';
+
 class Index extends StatefulWidget {
   final int? index;
   final int? myPageIndex;
@@ -26,6 +28,8 @@ class _IndexState extends State<Index> {
   late int _myPageIndex;
   List<int> _history = [0];
 
+  final Map<int, Map<String, dynamic>?> _tabPayloads = {};
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +39,13 @@ class _IndexState extends State<Index> {
     if (widget.myPageIndex != null) {
       _myPageIndex = widget.myPageIndex!;
     }
+
+    DeepLinkRouter.registerNavigator((int index, {payload}) {
+      setState(() {
+        _currentIndex = index;
+        _tabPayloads[index] = payload;
+      });
+    });
   }
 
   Future<bool> _onWillPop() async {
@@ -75,21 +86,28 @@ class _IndexState extends State<Index> {
   ];
 
   Widget buildPage(int index) {
+    final payload = _tabPayloads[index];
+
     switch (index) {
       case 0:
-        return const Schedule(); // AI추천
+        return const Schedule();
       case 1:
-        return const Home(); // 예약
+        return const Home();
       case 2:
-        return Tour(); // 홈
+        return Tour();
       case 3:
-        return const ChatRoom(deepLinkFlag: false,); // 메시지
+        final chatRoomId = payload?['chatRoomId'];
+        return ChatRoom(
+          deepLinkFlag: payload != null,
+          chatRoomId: chatRoomId,
+        );
       case 4:
-        return const Profile(); // MY
+        return const Profile();
       default:
         return const SizedBox();
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +117,7 @@ class _IndexState extends State<Index> {
         appBar: AppBar(
           toolbarHeight: 10,
         ),
-        body: buildPage(_currentIndex), // ✅ 동적 위젯 생성
+        body: buildPage(_currentIndex),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: _onTabTapped,

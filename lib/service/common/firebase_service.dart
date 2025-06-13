@@ -1,4 +1,5 @@
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -8,7 +9,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:packup/common/util.dart';
 import 'package:packup/common/firebase_options.dart';
-import 'deep_link_service.dart';
+import '../../common/deep_link/deep_link_handler.dart';
 
 @pragma('vm:entry-point')
 class FirebaseService {
@@ -53,7 +54,7 @@ class FirebaseService {
         message.data['title'],
         message.data['body'],
         notificationDetails,
-        payload: message.data['deepLink']
+        payload: message.data['deepLink'],
       );
     }
   }
@@ -114,13 +115,18 @@ class FirebaseService {
       const InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
       ),
-      onDidReceiveNotificationResponse: (NotificationResponse response) {
-        final payload = response.payload;
-        if (payload != null) {
-          logger('알림 클릭됨: $payload');
-          DeepLinkService().handleDeepLink(payload);
+        onDidReceiveNotificationResponse: (NotificationResponse response) {
+          final payload = response.payload;
+          if (payload != null) {
+            try {
+              final deepLinkMap = jsonDecode(payload);
+              DeepLinkHandler().handle(deepLinkMap);
+            } catch (e) {
+              logger('딥링크 파싱 실패: $e');
+            }
+          }
         }
-      },
+
     );
 
   }

@@ -11,22 +11,32 @@ import '../../widget/common/custom_appbar.dart';
 class ChatRoom extends StatelessWidget {
 
   final bool deepLinkFlag;
+  final int? chatRoomId;
 
   const ChatRoom({
     super.key,
     required this.deepLinkFlag,
+    this.chatRoomId,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ChatRoomContent(deepLinkFlag: deepLinkFlag,);
+    return ChatRoomContent(
+      deepLinkFlag: deepLinkFlag,
+      chatRoomId: chatRoomId,
+    );
   }
 }
 
 class ChatRoomContent extends StatefulWidget {
   final bool deepLinkFlag;
+  final int? chatRoomId;
 
-  const ChatRoomContent({super.key, required this.deepLinkFlag});
+  const ChatRoomContent({
+    super.key,
+    required this.deepLinkFlag,
+    this.chatRoomId,
+  });
 
   @override
   State<ChatRoomContent> createState() => _ChatRoomContentState();
@@ -38,6 +48,9 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
 
   @override
   void initState() {
+    logger("채팅방 초기화", 'INFO');
+    logger(widget.deepLinkFlag, 'INFO');
+    logger(widget.chatRoomId, 'INFO');
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -47,17 +60,21 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
 
       if (!mounted) return;
 
-      if (widget.deepLinkFlag) {
+      if (widget.deepLinkFlag && widget.chatRoomId != null) {
+        logger("채팅내역으로 바로 이동합니다.", 'INFO');
         final userSeq = await decodeTokenInfo();
-        final room = _chatRoomProvider.chatRoom.firstOrNull;
 
-        if (room != null) {
-          Future.microtask(() {
-            if (mounted) {
-              context.push('/chat_message/${room.seq}/${room.title}/$userSeq');
-            }
-          });
-        }
+        final room = _chatRoomProvider.chatRoom.firstWhere(
+              (e) => e.seq == widget.chatRoomId,
+        );
+
+        final title = Uri.encodeComponent(room.title!);
+
+        if (!mounted) return;
+
+        context.push(
+          '/chat_message/${room.seq}/$title/$userSeq',
+        );
       }
     });
   }

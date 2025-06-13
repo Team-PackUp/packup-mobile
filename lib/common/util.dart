@@ -126,7 +126,7 @@ String fullFileUrl(String path) {
 }
 
 /// ################### LOGGER ################### ///
-logger(String message, [String type = "TRACE"]) {
+logger(dynamic message, [String type = "TRACE"]) {
   final logger = Logger();
 
   switch(type) {
