@@ -43,15 +43,15 @@ class ChatRoomContent extends StatefulWidget {
 }
 
 class _ChatRoomContentState extends State<ChatRoomContent> {
-  final ScrollController _scrollController = ScrollController();
+  late final ScrollController _scrollController;
   late ChatRoomProvider _chatRoomProvider;
 
   @override
   void initState() {
-    logger("채팅방 초기화", 'INFO');
-    logger(widget.deepLinkFlag, 'INFO');
-    logger(widget.chatRoomId, 'INFO');
     super.initState();
+
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _chatRoomProvider = context.read<ChatRoomProvider>();
@@ -82,16 +82,22 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
-    _chatRoomProvider.unSubscribeChatRoom();
     super.dispose();
+    _scrollController.dispose();
+    _scrollController.dispose();
+
+    _chatRoomProvider.unSubscribeChatRoom();
   }
 
-  void _onScroll() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      context.read<ChatRoomProvider>().getRoom();
+  _scrollListener() {
+    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
+      if (_chatRoomProvider.isLoading) return;
+      getChatRoomMode();
     }
+  }
+
+  getChatRoomMode() async {
+    _chatRoomProvider.getRoom();
   }
 
   @override

@@ -23,9 +23,9 @@ class DeepLinkHandler {
 
 
   void _handleChatDeepLink(dynamic parameters) {
-    if (parameters is! List || parameters.isEmpty) return;
+    if (parameters.isEmpty) return;
 
-    final chatRoomId = parameters[0];
+    final chatRoomId = parameters['chatRoomSeq'];
 
     DeepLinkRouter.navigateToTab(3, payload: {
       'chatRoomId': chatRoomId,
