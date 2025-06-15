@@ -66,8 +66,7 @@ GoRouter createRouter(UserProvider userProvider) {
       GoRoute(
         path: '/chat_room',
         builder: (context, state) {
-          final isDeepLink = state.extra as bool? ?? false;
-          return ChatRoom(deepLinkFlag: isDeepLink);
+          return ChatRoom();
         },
       ),
 

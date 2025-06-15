@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'package:get/get.dart';
 
 import 'package:dio/dio.dart';
@@ -25,6 +26,7 @@ class SocketService {
   bool isConnecting = true;
   bool isReconnecting = false; // 재연결 시도 상태 여부
   bool forceDisconnect = false; // 강제로 소켓 해제
+  final List<void Function()> _pendingSubscriptions = [];
 
   Future<void> initConnect() async {
     if (stompClient != null) {
@@ -102,6 +104,12 @@ class SocketService {
 
     // 재구독
     reSubscribe();
+
+    // 대기 중이던 구독 실행
+    for (final subscribeFunc in _pendingSubscriptions) {
+      subscribeFunc();
+    }
+    _pendingSubscriptions.clear();
 
     // 연결 유지용 ping
     Timer.periodic(const Duration(seconds: 50), (_) {
@@ -207,20 +215,24 @@ class SocketService {
   final Map<String, StompUnsubscribe> _unsubscribeMap = {};
 
   void subscribe(String destination, void Function(dynamic data) callback) {
-    // 1. stompClient 연결 상태 확인
     if (stompClient == null || !stompClient!.isActive) {
-      print("소켓이 연결되지 않았습니다. 구독 실패: $destination");
-      reSubscribe();
+      print("소켓 미연결 상태, 구독 예약: $destination");
+
+      _subscriptions[destination] = callback;
+
+      // 큐에 재등록 함수 추가
+      _pendingSubscriptions.add(() {
+        logger("이 경로는 현재 미구독 처리 되어, 추후 구독 예정 $destination", "INFO");
+        subscribe(destination, callback);
+      });
+
       return;
     }
 
-    // 2. 기존에 구독된게 있으면 해제
+    // 이미 연결되어 있으면 정상 구독
     _unsubscribeMap[destination]?.call();
-
-    // 3. 구독 리스트 저장
     _subscriptions[destination] = callback;
 
-    // 4. 새 구독 등록
     final unsub = stompClient!.subscribe(
       destination: destination,
       callback: (frame) {
@@ -235,11 +247,10 @@ class SocketService {
       },
     );
 
-    // 5. 구독 해제 리스트 저장
     _unsubscribeMap[destination] = unsub;
-
     print("[$destination] 구독 완료");
   }
+
 
   void unsubscribe(String destination) {
     _unsubscribeMap[destination]?.call();

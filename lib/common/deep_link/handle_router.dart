@@ -12,4 +12,8 @@ class DeepLinkRouter {
   static void navigateToTab(int index, {Map<String, dynamic>? payload}) {
     _navigator?.call(index, payload: payload);
   }
+
+  static void clearPayload(int index) {
+    _navigator!(index, payload: null);
+  }
 }

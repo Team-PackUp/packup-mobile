@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:packup/Common/util.dart';
 import 'package:packup/const/packup_icons.dart';
 import 'package:packup/view/chat/chat_room.dart';
 import 'package:packup/view/home/home.dart';
@@ -98,7 +99,6 @@ class _IndexState extends State<Index> {
       case 3:
         final chatRoomId = payload?['chatRoomId'];
         return ChatRoom(
-          deepLinkFlag: payload != null,
           chatRoomId: chatRoomId,
         );
       case 4:

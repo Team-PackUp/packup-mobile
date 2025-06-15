@@ -6,35 +6,31 @@ import 'package:packup/widget/chat/chat_room_divider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../common/deep_link/handle_router.dart';
 import '../../widget/common/custom_appbar.dart';
 
 class ChatRoom extends StatelessWidget {
 
-  final bool deepLinkFlag;
   final int? chatRoomId;
 
   const ChatRoom({
     super.key,
-    required this.deepLinkFlag,
     this.chatRoomId,
   });
 
   @override
   Widget build(BuildContext context) {
     return ChatRoomContent(
-      deepLinkFlag: deepLinkFlag,
       chatRoomId: chatRoomId,
     );
   }
 }
 
 class ChatRoomContent extends StatefulWidget {
-  final bool deepLinkFlag;
   final int? chatRoomId;
 
   const ChatRoomContent({
     super.key,
-    required this.deepLinkFlag,
     this.chatRoomId,
   });
 
@@ -42,13 +38,14 @@ class ChatRoomContent extends StatefulWidget {
   State<ChatRoomContent> createState() => _ChatRoomContentState();
 }
 
-class _ChatRoomContentState extends State<ChatRoomContent> {
+class _ChatRoomContentState extends State<ChatRoomContent> with WidgetsBindingObserver {
   late final ScrollController _scrollController;
   late ChatRoomProvider _chatRoomProvider;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
@@ -60,34 +57,46 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
 
       if (!mounted) return;
 
-      if (widget.deepLinkFlag && widget.chatRoomId != null) {
-        logger("채팅내역으로 바로 이동합니다.", 'INFO');
-        final userSeq = await decodeTokenInfo();
-
-        final room = _chatRoomProvider.chatRoom.firstWhere(
-              (e) => e.seq == widget.chatRoomId,
-        );
-
-        final title = Uri.encodeComponent(room.title!);
-
-        if (!mounted) return;
-
-        context.push(
-          '/chat_message/${room.seq}/$title/$userSeq',
-        );
+      if (widget.chatRoomId != null) {
+        _navigateToChatDetail(); // 재사용
       }
     });
   }
 
+  Future<void> _navigateToChatDetail() async {
+
+    logger("채팅내역으로 바로 이동합니다.", 'INFO');
+
+    final userSeq = await decodeTokenInfo();
+    final room = _chatRoomProvider.chatRoom.firstWhere(
+          (e) => e.seq == widget.chatRoomId,
+    );
+
+    final title = Uri.encodeComponent(room.title!);
+
+    if (!mounted) return;
+
+    DeepLinkRouter.clearPayload(3);
+    context.push('/chat_message/${room.seq}/$title/$userSeq');
+  }
 
   @override
   void dispose() {
-    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     _scrollController.dispose();
-    _scrollController.dispose();
-
     _chatRoomProvider.unSubscribeChatRoom();
+    super.dispose();
   }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      if (widget.chatRoomId != null) {
+        _navigateToChatDetail();
+      }
+    }
+  }
+
 
   _scrollListener() {
     if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
@@ -138,8 +147,10 @@ class _ChatRoomContentState extends State<ChatRoomContent> {
                       _chatRoomProvider.readMessageThisRoom(room.seq!);
 
                       final userSeq = await decodeTokenInfo();
+                      final encodedTitle = Uri.encodeComponent(room.title!);
+
                       context.push(
-                        '/chat_message/${room.seq}/${room.title}/$userSeq',
+                        '/chat_message/${room.seq}/$encodedTitle/$userSeq',
                       );
                     },
                     child: ChatRoomDivider(
