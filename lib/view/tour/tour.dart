@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 
+import 'guide/edit/edit.dart';
+
 class Tour extends StatelessWidget {
   const Tour({super.key});
 
@@ -58,6 +60,20 @@ class _TourBodyState extends State<TourBody> {
             final tour = provider.tourList[index];
             return ListTile(
               title: Text('${tour.seq} - ${tour.tourTitle ?? '제목 없음'}'),
+              onTap: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => TourEditPage(tour: tour),
+                  ),
+                );
+
+                if (result == true) {
+                  // 예: Provider 또는 상태 갱신을 통한 새로고침
+                  await provider.getTourList(refresh: true); // Provider 사용 중이라면
+                  // setState(() {}); // 필요하면 이것도 추가
+                }
+              },
             );
           } else {
             return Visibility(
