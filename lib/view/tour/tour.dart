@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 
+import 'package:packup/model/tour/tour_model.dart';
 import 'guide/edit/edit.dart';
 
 class Tour extends StatelessWidget {
@@ -31,7 +32,8 @@ class _TourBodyState extends State<TourBody> {
     super.initState();
 
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100) {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 100) {
         final provider = context.read<TourProvider>();
         if (provider.hasNextPage && !provider.isLoading) {
           provider.getTourList();
@@ -52,42 +54,69 @@ class _TourBodyState extends State<TourBody> {
 
     return Scaffold(
       appBar: AppBar(title: const Text("투어 목록")),
-      body: ListView.builder(
-        controller: _scrollController,
-        itemCount: provider.tourList.length + 1, // 로딩 인디케이터를 위해 +1
-        itemBuilder: (context, index) {
-          if (index < provider.tourList.length) {
-            final tour = provider.tourList[index];
-            return ListTile(
-              title: Text('${tour.seq} - ${tour.tourTitle ?? '제목 없음'}'),
-              onTap: () async {
+      body: Stack(
+        children: [
+          ListView.builder(
+            controller: _scrollController,
+            itemCount: provider.tourList.length + 1, // 로딩 인디케이터를 위해 +1
+            itemBuilder: (context, index) {
+              if (index < provider.tourList.length) {
+                final tour = provider.tourList[index];
+                return ListTile(
+                  title: Text('${tour.seq} - ${tour.tourTitle ?? '제목 없음'}'),
+                  onTap: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => TourEditPage(tour: tour),
+                      ),
+                    );
+
+                    if (result == true) {
+                      // 예: Provider 또는 상태 갱신을 통한 새로고침
+                      await provider.getTourList(
+                        refresh: true,
+                      ); // Provider 사용 중이라면
+                      // setState(() {}); // 필요하면 이것도 추가
+                    }
+                  },
+                );
+              } else {
+                return Visibility(
+                  visible: provider.isLoading,
+                  child: const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                );
+              }
+            },
+          ),
+          Positioned(
+            top: 16,
+            right: 16,
+            child: ElevatedButton(
+              onPressed: () async {
                 final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => TourEditPage(tour: tour),
+                    builder: (_) => TourEditPage(tour: TourModel.empty()),
                   ),
                 );
 
                 if (result == true) {
                   // 예: Provider 또는 상태 갱신을 통한 새로고침
-                  await provider.getTourList(refresh: true); // Provider 사용 중이라면
+                  await provider.getTourList(
+                    refresh: true,
+                  ); // Provider 사용 중이라면
                   // setState(() {}); // 필요하면 이것도 추가
                 }
               },
-            );
-          } else {
-            return Visibility(
-              visible: provider.isLoading,
-              child: const Padding(
-                padding: EdgeInsets.all(16),
-                child: Center(child: CircularProgressIndicator()),
-              ),
-            );
-          }
-        },
+              child: const Text('추가'),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
-
-

@@ -55,14 +55,4 @@ class TourProvider extends LoadingProvider {
       }
     });
   }
-
-  void selectTour(TourModel tour) {
-    _selectedTour = tour;
-    notifyListeners();
-  }
-
-  void clearSelection() {
-    _selectedTour = null;
-    notifyListeners();
-  }
 }

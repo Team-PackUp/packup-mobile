@@ -20,4 +20,9 @@ class TourService {
     final url = '/tour/$seq';
     await DioService().putRequest(url, body);
   }
+
+  Future<void> createTour(Map<String, dynamic> body) async {
+    final url = '/tour';
+    await DioService().postRequest(url, body);
+  }
 }

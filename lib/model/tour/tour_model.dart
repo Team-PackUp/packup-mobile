@@ -83,8 +83,8 @@ class TourModel {
     return TourModel(
       seq: null,
       guideSeq: null,
-      minPeople: null,
-      maxPeople: null,
+      minPeople: 1,
+      maxPeople: 1,
       applyStartDate: null,
       applyEndDate: null,
       tourStartDate: null,
