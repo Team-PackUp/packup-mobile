@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:packup/provider/notice/notice_provider.dart';
 import 'package:packup/provider/reply/reply_provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:packup/widget/reply/reply_list_card.dart';
 import 'package:provider/provider.dart';
-
-
-import '../../widget/notice/notice_list_card.dart';
+import '../../model/reply/reply_model.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -17,7 +13,10 @@ class ReplyList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ReplyProvider(),
+      create: (_) => ReplyProvider.create(
+          targetSeq: 1,
+          targetType: TargetType.replyTour
+      ),
       child: const ReplyListContent(),
     );
   }
@@ -96,9 +95,9 @@ class _ReplyListContentState extends State<ReplyListContent> {
                             width: double.infinity,
                             child: ReplyCard(
                               index: index,
-                              content: reply.content!,
-                              targetType: reply.targetType!,
-                              createdAt: reply.createdAt!,
+                              content: reply.content,
+                              targetType: reply.targetType,
+                              createdAt: reply.createdAt,
                             ),
                           ),
                         ],
