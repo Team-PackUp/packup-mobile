@@ -41,18 +41,25 @@ class ReplyProvider extends LoadingProvider {
     if (_totalPage <= _curPage) return;
 
     await LoadingService.run(() async {
+
+      // function 함수로 옮겨야 됨
+      final reply = ReplyModel(
+          targetSeq: targetSeq!,
+          targetType: targetType!,
+      );
+
       final response = await _service.getReplyList(
         _curPage,
-        targetSeq: targetSeq!,
-        targetType: targetType!.code,
+        replyModel: reply,
       );
 
       final page = PageModel.fromJson(response.response);
-      final fetched = page.objectList
+      print(page.objectList);
+      final replList = page.objectList
           .map((e) => ReplyModel.fromJson(e))
           .toList();
 
-      _replyList.addAll(fetched);
+      _replyList.addAll(replList);
       _curPage++;
       _totalPage = page.totalPage;
 

@@ -1,13 +1,18 @@
+import 'package:packup/model/reply/reply_model.dart';
+
 import '../../http/dio_service.dart';
 import '../../model/common/result_model.dart';
 
 class ReplyService {
 
   Future<ResultModel> getReplyList(int page, {
-    required int targetSeq,
-    required String targetType,
+    required ReplyModel replyModel,
   }) async {
-    final data = {'page' : page};
+    final data = {
+      'page' : page,
+      ...replyModel.toMap()
+    };
+
     return await DioService().getRequest('/reply/list', data);
   }
 

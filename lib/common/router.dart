@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:packup/model/reply/reply_model.dart';
 import 'package:packup/provider/user/user_provider.dart';
 import 'package:packup/view/chat/chat_message.dart';
 import 'package:packup/view/chat/chat_room.dart';
@@ -9,8 +10,11 @@ import 'package:packup/view/index.dart';
 import 'package:packup/view/notice/notice_list.dart';
 import 'package:packup/view/notice/notice_view.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
+import 'package:packup/view/reply/reply_write.dart';
 import 'package:packup/view/user/preference/preference.dart';
 import 'package:packup/view/user/register_detail/register_detail.dart';
+
+import '../view/reply/reply_list.dart';
 
 GoRouter createRouter(UserProvider userProvider) {
   return GoRouter(
@@ -106,6 +110,33 @@ GoRouter createRouter(UserProvider userProvider) {
       GoRoute(
         path: '/register-detail',
         builder: (context, state) => const RegisterDetail(),
+      ),
+      GoRoute(
+        path: '/reply_list/:targetSeq/:targetType',
+        builder: (context, state) {
+          final targetSeq = int.parse(state.pathParameters['targetSeq']!);
+          final String param = state.pathParameters['targetType']!;
+          final TargetType targetType = TargetType.values
+              .firstWhere((e) => e.code == param);
+
+          return ReplyList(
+            targetSeq: targetSeq,
+            targetType: targetType,
+          );
+      }),
+      GoRoute(
+        path: '/reply_write/:targetSeq/:targetType',
+        builder: (context, state) {
+          final targetSeq = int.parse(state.pathParameters['targetSeq']!);
+          final String param = state.pathParameters['targetType']!;
+          final TargetType targetType = TargetType.values
+              .firstWhere((e) => e.code == param);
+
+          return ReplyWrite(
+              targetSeq: targetSeq,
+              targetType: targetType,
+          );
+        },
       ),
     ],
   );

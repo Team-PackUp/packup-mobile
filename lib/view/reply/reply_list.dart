@@ -8,13 +8,23 @@ import '../../model/reply/reply_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ReplyList extends StatelessWidget {
-  const ReplyList({super.key});
+
+  final int targetSeq;
+  final TargetType targetType;
+
+  const ReplyList(
+      {
+        super.key,
+        required this.targetSeq,
+        required this.targetType,
+      }
+      );
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => ReplyProvider.create(
-          targetSeq: 1,
+          targetSeq: targetSeq,
           targetType: TargetType.replyTour
       ),
       child: const ReplyListContent(),
@@ -70,7 +80,7 @@ class _ReplyListContentState extends State<ReplyListContent> {
     var filteredReplyList = _replyProvider.replyList;
 
     return Scaffold(
-      appBar: CustomAppbar(title: AppLocalizations.of(context)!.notice),
+      appBar: CustomAppbar(title: 'AppLocalizations.of(context)!.reply'),
       body: Column(
         children: [
           Expanded(
@@ -95,9 +105,9 @@ class _ReplyListContentState extends State<ReplyListContent> {
                             width: double.infinity,
                             child: ReplyCard(
                               index: index,
-                              content: reply.content,
-                              targetType: reply.targetType,
-                              createdAt: reply.createdAt,
+                              content: reply.content!,
+                              targetType: reply.targetType!,
+                              createdAt: reply.createdAt!,
                             ),
                           ),
                         ],

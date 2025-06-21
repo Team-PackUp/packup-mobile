@@ -3,11 +3,17 @@ import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
 
 enum TargetType {
-  @JsonValue('REPLY_TOUR')
-  replyTour,
+  replyTour(seq: '040001', code: 'REPLY_TOUR', label: '관광'),
+  replyGuide(seq: '040002', code: 'REPLY_GUIDE', label: '가이드');
 
-  @JsonValue('REPLY_GUIDE')
-  replyGuide,
+  final String seq;
+  final String code;
+  final String label;
+
+  const TargetType({required this.seq, required this.code, required this.label});
+
+  static TargetType fromSeq(String seq) =>
+      TargetType.values.firstWhere((e) => e.seq == seq);
 }
 
 extension TargetTypeX on TargetType {
@@ -22,38 +28,47 @@ extension TargetTypeX on TargetType {
   };
 }
 
+extension ReplyMap on ReplyModel {
+  Map<String, dynamic> toMap() => {
+    'seq'        : seq,
+    'targetSeq' : targetSeq,
+    'targetType': targetType?.code,
+  };
+}
+
 class ReplyModel {
   final int? seq;
   final int? userSeq;
-  final int targetSeq;
-  final TargetType targetType;
-  final String content;
-  final DateTime createdAt;
+  final int? targetSeq;
+  final TargetType? targetType;
+  final String? content;
+  final DateTime? createdAt;
 
   ReplyModel({
     this.seq,
     this.userSeq,
-    required this.targetSeq,
-    required this.targetType,
-    required this.content,
-    required this.createdAt,
+    this.targetSeq,
+    this.targetType,
+    this.content,
+    this.createdAt,
   });
 
-  String toJson() => jsonEncode({
-    'seq'        : seq,
-    'userSeq'    : userSeq,
-    'target_seq' : targetSeq,
-    'target_type': targetType.code,
-    'content'    : content,
-    'createdAt'  : createdAt.toIso8601String(),
-  });
+  // String toJson() => jsonEncode({
+  //   'seq'        : seq,
+  //   'userSeq'    : userSeq,
+  //   'target_seq' : targetSeq,
+  //   'target_type': targetType?.code,
+  //   'content'    : content,
+  //   'createdAt'  : createdAt?.toIso8601String(),
+  // });
 
   factory ReplyModel.fromJson(Map<String, dynamic> json) => ReplyModel(
     seq       : json['seq'],
     userSeq   : json['userSeq'],
-    targetSeq : json['target_seq'],
-    targetType: TargetType.values
-        .firstWhere((e) => e.code == json['target_type']),
+    targetSeq : json['targetSeq'],
+    targetType: json['targetType'] != null
+        ? TargetType.fromSeq(json['targetType'])
+        : null,
     content   : json['content'] ?? '',
     createdAt : json['createdAt'] != null
         ? DateTime.parse(json['createdAt'])
