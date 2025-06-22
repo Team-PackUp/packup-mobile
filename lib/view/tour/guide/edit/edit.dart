@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:packup/model/tour/tour_model.dart';
 import 'package:packup/service/common/loading_service.dart';
 import 'package:packup/service/tour/tour_service.dart';
+import 'package:packup/const/tour/tour_status_code.dart';
 
-import '../../../../const/tour/tour_status_code.dart';
-
+/// 투어 정보를 수정하거나 새로 생성하는 페이지입니다.
+/// 기존 `TourModel` 인스턴스를 받아와 수정하거나,
+/// `seq`가 null인 경우 신규 투어로 간주합니다.
 class TourEditPage extends StatefulWidget {
   final TourModel tour;
 
@@ -25,32 +27,27 @@ class _TourEditPageState extends State<TourEditPage> {
   late TextEditingController maxPeopleController;
   late TextEditingController locationController;
   late TextEditingController titleImagePathController;
+
+  // 선택된 투어 상태
   late TourStatusCode selectedStatus;
 
+  /// 상태 초기화 및 컨트롤러 초기값 설정
   @override
   void initState() {
     super.initState();
     titleController = TextEditingController(text: widget.tour.tourTitle);
-    introduceController = TextEditingController(
-      text: widget.tour.tourIntroduce,
-    );
-    minPeopleController = TextEditingController(
-      text: widget.tour.minPeople.toString(),
-    );
-    maxPeopleController = TextEditingController(
-      text: widget.tour.maxPeople.toString(),
-    );
+    introduceController = TextEditingController(text: widget.tour.tourIntroduce);
+    minPeopleController = TextEditingController(text: widget.tour.minPeople.toString());
+    maxPeopleController = TextEditingController(text: widget.tour.maxPeople.toString());
     locationController = TextEditingController(text: widget.tour.tourLocation);
-    titleImagePathController = TextEditingController(
-      text: widget.tour.titleImagePath ?? '',
-    );
+    titleImagePathController = TextEditingController(text: widget.tour.titleImagePath ?? '');
 
     selectedStatus = widget.tour.seq == null
         ? TourStatusCode.temp
-        : TourStatusCodeExtension.fromEnumName(widget.tour.tourStatusCode ?? '');
-
+        : TourStatusCodeExtension.fromCode(widget.tour.tourStatusCode ?? '');
   }
 
+  /// 컨트롤러 해제
   @override
   void dispose() {
     titleController.dispose();
@@ -62,6 +59,7 @@ class _TourEditPageState extends State<TourEditPage> {
     super.dispose();
   }
 
+  /// 폼 제출 처리 함수
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -79,7 +77,7 @@ class _TourEditPageState extends State<TourEditPage> {
       "titleImagePath": titleImagePathController.text,
     };
 
-
+    // 로딩 처리와 함께 API 호출 실행
     await LoadingService.run(() async {
       if (widget.tour.seq == null) {
         // 신규 생성
@@ -89,7 +87,7 @@ class _TourEditPageState extends State<TourEditPage> {
         await _tourService.updateTour(widget.tour.seq!, body);
       }
 
-      if (mounted) Navigator.pop(context, true);
+      if (mounted) Navigator.pop(context, true); // 완료 후 이전 화면으로
     });
   }
 
@@ -103,15 +101,20 @@ class _TourEditPageState extends State<TourEditPage> {
           key: _formKey,
           child: ListView(
             children: [
+              /// 투어 제목 입력 필드
               TextFormField(
                 controller: titleController,
                 decoration: const InputDecoration(labelText: '투어 제목'),
                 validator: (val) => val!.isEmpty ? '필수 입력' : null,
               ),
+
+              /// 투어 소개 입력 필드
               TextFormField(
                 controller: introduceController,
                 decoration: const InputDecoration(labelText: '투어 소개'),
               ),
+
+              /// 최소/최대 인원 수 입력 필드
               Row(
                 children: [
                   Expanded(
@@ -131,35 +134,45 @@ class _TourEditPageState extends State<TourEditPage> {
                   ),
                 ],
               ),
+
+              /// 위치 입력 필드
               TextFormField(
                 controller: locationController,
                 decoration: const InputDecoration(labelText: '투어 위치'),
               ),
+
+              /// 대표 이미지 경로 입력 필드
               TextFormField(
                 controller: titleImagePathController,
                 decoration: const InputDecoration(labelText: '대표 이미지 경로'),
               ),
+
               const SizedBox(height: 20),
+
+              /// 상태 드롭다운 (기존 투어만 수정 가능)
               DropdownButtonFormField<TourStatusCode>(
                 value: selectedStatus,
-                onChanged:
-                    widget.tour.seq == null
-                        ? null // new이면 비활성화
-                        : (val) {
-                          if (val != null) {
-                            setState(() => selectedStatus = val);
-                          }
-                        },
+                onChanged: widget.tour.seq == null
+                    ? null // 신규 투어는 상태 고정
+                    : (val) {
+                  if (val != null) {
+                    setState(() => selectedStatus = val);
+                  }
+                },
                 decoration: const InputDecoration(labelText: '투어 상태'),
-                items:
-                    TourStatusCode.values.map((status) {
-                      return DropdownMenuItem(
-                        value: status,
-                        child: Text(status.label),
-                      );
-                    }).toList(),
+                items: TourStatusCode.values.map((status) {
+                  return DropdownMenuItem(
+                    value: status,
+                    child: Text(status.label),
+                  );
+                }).toList(),
               ),
-              ElevatedButton(onPressed: _submitForm, child: const Text('저장')),
+
+              /// 저장 버튼
+              ElevatedButton(
+                onPressed: _submitForm,
+                child: const Text('저장'),
+              ),
             ],
           ),
         ),

@@ -49,4 +49,11 @@ extension TourStatusCodeExtension on TourStatusCode {
     );
   }
 
+  static TourStatusCode fromCode(String code) {
+    return TourStatusCode.values.firstWhere(
+          (e) => e.code == code,
+      orElse: () => throw ArgumentError('Unknown code: $code'),
+    );
+  }
+
 }
