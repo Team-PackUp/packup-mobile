@@ -125,16 +125,25 @@ GoRouter createRouter(UserProvider userProvider) {
           );
       }),
       GoRoute(
-        path: '/reply_write/:targetSeq/:targetType',
-        builder: (context, state) {
-          final targetSeq = int.parse(state.pathParameters['targetSeq']!);
-          final String param = state.pathParameters['targetType']!;
-          final TargetType targetType = TargetType.values
-              .firstWhere((e) => e.code == param);
+          path: '/reply_write/:targetSeq/:targetType',
+          builder: (context, state) {
+            final targetSeq = int.parse(state.pathParameters['targetSeq']!);
+            final String param = state.pathParameters['targetType']!;
+            final TargetType targetType = TargetType.values
+                .firstWhere((e) => e.code == param);
 
-          return ReplyWrite(
+            return ReplyWrite(
               targetSeq: targetSeq,
               targetType: targetType,
+            );
+          }),
+      GoRoute( // 댓글 수정
+        path: '/reply_write/:seq',
+        builder: (context, state) {
+          final seq = int.parse(state.pathParameters['seq']!);
+
+          return ReplyWrite(
+            seq: seq,
           );
         },
       ),

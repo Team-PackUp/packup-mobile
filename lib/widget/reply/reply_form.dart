@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:packup/model/reply/reply_model.dart';
 
+import 'package:packup/provider/reply/reply_provider.dart';
+
 class ReplyForm extends StatefulWidget {
-  final ReplyModel? initialReply;
-  final Future<void> Function(String content) onSubmit;
+  final ReplyProvider replyProvider;
 
   const ReplyForm({
     super.key,
-    this.initialReply,
-    required this.onSubmit,
+    required this.replyProvider,
   });
 
   @override
@@ -18,14 +17,31 @@ class ReplyForm extends StatefulWidget {
 }
 
 class _ReplyFormState extends State<ReplyForm> {
+
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _contentController;
-  bool _isSubmitting = false;
+  late ReplyProvider _replyProvider;
+
+  final bool _isSubmitting = false;
 
   @override
   void initState() {
     super.initState();
-    _contentController = TextEditingController(text: widget.initialReply?.content ?? '');
+    _replyProvider = widget.replyProvider;
+
+    if(_replyProvider.replyModel?.seq != null) {
+      _contentController = TextEditingController(text: _replyProvider.replyModel?.content);
+    } else {
+      _contentController = TextEditingController(text: '');
+    }
+
+    _syncWithProvider();
+    _replyProvider.addListener(_syncWithProvider);
+  }
+
+  void _syncWithProvider() {
+    final text = _replyProvider.replyModel?.content ?? '';
+    if (_contentController.text != text) _contentController.text = text;
   }
 
   @override
@@ -34,19 +50,9 @@ class _ReplyFormState extends State<ReplyForm> {
     super.dispose();
   }
 
-  Future<void> _handleSubmit() async {
-    if (!_formKey.currentState!.validate()) return;
-    setState(() => _isSubmitting = true);
-    try {
-      await widget.onSubmit(_contentController.text.trim());
-    } finally {
-      if (mounted) setState(() => _isSubmitting = false);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final location = AppLocalizations.of(context)!;
+    final isEdit = _replyProvider.seq != null;   // ← 수정 모드 여부
 
     return Form(
       key: _formKey,
@@ -55,33 +61,78 @@ class _ReplyFormState extends State<ReplyForm> {
         children: [
           TextFormField(
             controller: _contentController,
-            decoration: InputDecoration(
-              labelText: 'location.login',
-              border: const OutlineInputBorder(),
-            ),
             minLines: 5,
             maxLines: 10,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'location.contentRequired';
-              }
-              return null;
-            },
+            decoration: const InputDecoration(
+              hintText: 'reply...',
+              border: OutlineInputBorder(),
+            ),
+            validator: (v) =>
+            (v == null || v.trim().isEmpty) ? 'reply required..' : null,
           ),
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: _isSubmitting ? null : _handleSubmit,
-            icon: _isSubmitting
-                ? const SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            )
-                : const Icon(Icons.send),
-            label: Text(widget.initialReply == null ? 'location.register' : 'location.update'),
+          const SizedBox(height: 12),
+
+          /// 전송 & 삭제(수정모드) 버튼
+          Row(
+            children: [
+              // 전송
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: _isSubmitting ? null : _upsertReply,
+                  icon: _isSubmitting
+                      ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                      : const Icon(Icons.send),
+                  label: Text(isEdit ? 'update reply' : 'new reply'),
+                ),
+              ),
+
+              // 삭제 (수정 모드일 때만)
+              if (isEdit) ...[
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                  ),
+                  onPressed: _isSubmitting ? null : _deleteReply,
+                  icon: const Icon(Icons.delete_forever),
+                  label: const Text('delete'),
+                ),
+              ],
+            ],
           ),
         ],
       ),
     );
   }
+
+
+  Future<void> _upsertReply() async {
+    print("여기");
+
+    _replyProvider.upsertReply(_contentController.text);
+  }
+
+  Future<void> _deleteReply() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Delete Reply'),
+        content: const Text('정말 삭제하시겠습니까?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('취소')),
+          TextButton(onPressed: () => Navigator.pop(context, true),  child: const Text('삭제')),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
+    await _replyProvider.deleteReply();
+    if (mounted) Navigator.pop(context, true);
+  }
+
 }

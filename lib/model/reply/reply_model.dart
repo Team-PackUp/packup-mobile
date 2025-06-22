@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:json_annotation/json_annotation.dart';
 
 enum TargetType {
   replyTour(seq: '040001', code: 'REPLY_TOUR', label: '관광'),
@@ -30,9 +29,10 @@ extension TargetTypeX on TargetType {
 
 extension ReplyMap on ReplyModel {
   Map<String, dynamic> toMap() => {
-    'seq'        : seq,
-    'targetSeq' : targetSeq,
-    'targetType': targetType?.code,
+    'seq'         : seq,
+    'targetSeq'   : targetSeq,
+    'content'     : content,
+    'targetType'  : targetType?.code,
   };
 }
 
@@ -53,14 +53,14 @@ class ReplyModel {
     this.createdAt,
   });
 
-  // String toJson() => jsonEncode({
-  //   'seq'        : seq,
-  //   'userSeq'    : userSeq,
-  //   'target_seq' : targetSeq,
-  //   'target_type': targetType?.code,
-  //   'content'    : content,
-  //   'createdAt'  : createdAt?.toIso8601String(),
-  // });
+  String toJson() => jsonEncode({
+    'seq'        : seq,
+    'userSeq'    : userSeq,
+    'target_seq' : targetSeq,
+    'target_type': targetType?.code,
+    'content'    : content,
+    'createdAt'  : createdAt?.toIso8601String(),
+  });
 
   factory ReplyModel.fromJson(Map<String, dynamic> json) => ReplyModel(
     seq       : json['seq'],

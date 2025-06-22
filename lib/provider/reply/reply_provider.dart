@@ -10,7 +10,7 @@ class ReplyProvider extends LoadingProvider {
   final int? targetSeq;
   final TargetType? targetType;
 
-  final int? replySeq;
+  final int? seq;
 
   late List<ReplyModel> _replyList;
 
@@ -18,21 +18,21 @@ class ReplyProvider extends LoadingProvider {
   ReplyProvider.create({
     required this.targetSeq,
     required this.targetType,
-  }) : replySeq = null, _replyList = [];
+  }) : seq = null, _replyList = [];
 
   // 수정 페이지
   ReplyProvider.update({
-    required this.replySeq,
+    required this.seq,
   })  : targetSeq = null,
         targetType = null;
 
-  ReplyModel? _currentReply;
+  ReplyModel? replyModel;
 
   int _totalPage = 1;
   int _curPage = 0;
 
   List<ReplyModel> get replyList => _replyList;
-  ReplyModel? get currentReply   => _currentReply;
+  ReplyModel? get currentReply   => replyModel;
   int get totalPage              => _totalPage;
   int get curPage                => _curPage;
 
@@ -54,7 +54,6 @@ class ReplyProvider extends LoadingProvider {
       );
 
       final page = PageModel.fromJson(response.response);
-      print(page.objectList);
       final replList = page.objectList
           .map((e) => ReplyModel.fromJson(e))
           .toList();
@@ -69,31 +68,37 @@ class ReplyProvider extends LoadingProvider {
 
   Future<void> getReply(int seq) async {
     await LoadingService.run(() async {
-      final res = await _service.getReply(seq);
-      _currentReply = ReplyModel.fromJson(res.response);
+      final response = await _service.getReply(seq: seq);
+      replyModel = ReplyModel.fromJson(response.response);
+
       notifyListeners();
     });
   }
 
   Future<void> upsertReply(String content) async {
     await LoadingService.run(() async {
-      if (replySeq != null) {
+      if (seq != null) {
         // 수정
-        await _service.updateReply(seq: replySeq!, content: content);
+        final reply = ReplyModel(
+            content: content
+        );
+        await _service.updateReply(seq: seq!, replyModel: reply);
       } else {
         // 작성
-        await _service.saveReply(
-          targetSeq : targetSeq!,
-          targetType: targetType!.code,
-          content   : content,
+        final reply = ReplyModel(
+            targetSeq: targetSeq,
+            targetType: targetType,
+            content   : content,
         );
+
+        await _service.saveReply(replyModel: reply);
       }
     });
   }
 
   Future<void> deleteReply() async {
     await LoadingService.run(() async {
-      await _service.deleteReply(replySeq!);
+      await _service.deleteReply(seq: seq!);
     });
   }
 }

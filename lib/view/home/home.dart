@@ -109,6 +109,20 @@ class Home extends StatelessWidget {
                 },
                 child: const Text('댓글 리스트'),
               ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  context.push('/reply_write/1');
+                },
+                child: const Text('댓글 수정'),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  context.push('/reply_write/4/REPLY_TOUR');
+                },
+                child: const Text('댓글 신규 작성'),
+              ),
             ],
           ),
         ),

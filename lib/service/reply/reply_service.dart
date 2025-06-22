@@ -16,36 +16,30 @@ class ReplyService {
     return await DioService().getRequest('/reply/list', data);
   }
 
-  Future<ResultModel> getReply(int replySeq) async {
-    return await DioService().getRequest('/reply/view/$replySeq');
+  Future<ResultModel> getReply({
+    required int seq
+  }) async {
+    return await DioService().getRequest('/reply/view/$seq');
   }
 
   Future<ResultModel> saveReply({
-    required int targetSeq,
-    required String targetType,
-    required String content,
+    required ReplyModel replyModel,
   }) async {
-    final data = {
-      'target_seq'  : targetSeq,
-      'target_type' : targetType,
-      'content'     : content,
-    };
-    return DioService().postRequest('/reply/save', data);
+
+    return DioService().postRequest('/reply/save', replyModel.toMap());
   }
 
   Future<ResultModel> updateReply({
     required int seq,
-    required String content,
+    required ReplyModel replyModel,
   }) async {
-    final data = {
-      'seq'     : seq,
-      'content' : content,
-    };
-    return DioService().putRequest('/reply/update', data);
+
+    return DioService().putRequest('/reply/update/$seq', replyModel.toMap());
   }
 
-  Future<ResultModel> deleteReply(int seq) async {
-    final data = { 'seq': seq };
-    return DioService().deleteRequest('/reply/delete', data);
+  Future<ResultModel> deleteReply({
+    required int seq,
+  }) async {
+    return DioService().deleteRequest('/reply/delete/$seq');
   }
 }

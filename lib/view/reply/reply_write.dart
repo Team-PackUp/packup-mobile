@@ -11,12 +11,12 @@ import '../../model/reply/reply_model.dart';
 class ReplyWrite extends StatelessWidget {
   const ReplyWrite({
     super.key,
-    this.replySeq,
+    this.seq,
     this.targetSeq,
     this.targetType,
   });
 
-  final int? replySeq;
+  final int? seq;
 
   // 작성 모드
   final int? targetSeq;
@@ -26,8 +26,8 @@ class ReplyWrite extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) {
-        if (replySeq != null) {
-          return ReplyProvider.update(replySeq: replySeq!)..getReply(replySeq!);
+        if (seq != null) {
+          return ReplyProvider.update(seq: seq!);
         }
         return ReplyProvider.create(
           targetSeq : targetSeq!,
@@ -48,26 +48,34 @@ class ReplyWriteContent extends StatefulWidget {
 }
 
 class _ReplyWriteContentState extends State<ReplyWriteContent> {
-  late ReplyProvider _replyProvider;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final prov = context.read<ReplyProvider>();
+      if (prov.seq != null) prov.getReply(prov.seq!);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    _replyProvider = context.watch<ReplyProvider>();
+    final replyProvider = context.watch<ReplyProvider>();
 
-    final reply = _replyProvider.currentReply;
+    final bool waiting =
+        replyProvider.isLoading || (replyProvider.seq != null && replyProvider.replyModel == null);
+
+    if (waiting) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
 
     return Scaffold(
-      appBar: CustomAppbar(
-        title: 'AppLocalizations.of(context)!.editReply',
-      ),
+      appBar: CustomAppbar(title: 'Edit Reply'),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: ReplyForm(
-          initialReply: reply,
-          onSubmit: (content) async {
-            await _replyProvider.upsertReply(content);
-            if (mounted) Navigator.pop(context, true);
-          },
+          replyProvider: replyProvider,
         ),
       ),
     );
