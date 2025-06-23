@@ -17,12 +17,12 @@ class TourService {
   }
 
   Future<void> updateTour(int seq, Map<String, dynamic> body) async {
-    final url = '/tour/$seq';
+    final url = '/tour/guide/$seq';
     await DioService().putRequest(url, body);
   }
 
   Future<void> createTour(Map<String, dynamic> body) async {
-    final url = '/tour';
+    final url = '/tour/guide';
     await DioService().postRequest(url, body);
   }
 }
