@@ -16,7 +16,13 @@ class TourService {
     return await DioService().getRequest('/tour', query);
   }
 
-  // Future<ResultModel> getNoticeView(int noticeSeq) async {
-  //   return await DioService().getRequest('/notice/view/$noticeSeq');
-  // }
+  Future<void> updateTour(int seq, Map<String, dynamic> body) async {
+    final url = '/tour/$seq';
+    await DioService().putRequest(url, body);
+  }
+
+  Future<void> createTour(Map<String, dynamic> body) async {
+    final url = '/tour';
+    await DioService().postRequest(url, body);
+  }
 }
