@@ -110,9 +110,11 @@ class _ReplyFormState extends State<ReplyForm> {
 
 
   Future<void> _upsertReply() async {
-    print("여기");
+    if(_formKey.currentState!.validate()) {
+      await _replyProvider.upsertReply(_contentController.text);
 
-    _replyProvider.upsertReply(_contentController.text);
+      if (mounted) Navigator.pop(context, true);
+    }
   }
 
   Future<void> _deleteReply() async {

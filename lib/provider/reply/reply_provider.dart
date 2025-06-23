@@ -37,15 +37,18 @@ class ReplyProvider extends LoadingProvider {
   int get curPage                => _curPage;
 
   Future<void> getReplyList({bool reset = false}) async {
+    if (reset) {
+      _replyList.clear();
+      _curPage   = 0;
+      _totalPage = 1;
+    }
 
     if (_totalPage <= _curPage) return;
 
     await LoadingService.run(() async {
-
-      // function 함수로 옮겨야 됨
       final reply = ReplyModel(
-          targetSeq: targetSeq!,
-          targetType: targetType!,
+        targetSeq: targetSeq!,
+        targetType: targetType!,
       );
 
       final response = await _service.getReplyList(
@@ -65,6 +68,7 @@ class ReplyProvider extends LoadingProvider {
       notifyListeners();
     });
   }
+
 
   Future<void> getReply(int seq) async {
     await LoadingService.run(() async {

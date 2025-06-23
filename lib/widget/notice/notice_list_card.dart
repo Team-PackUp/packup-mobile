@@ -68,12 +68,6 @@ class NoticeCard extends StatelessWidget {
                       ),
                     ],
                   ),
-
-                  const SizedBox(height: 4),
-                  const Text(
-                    '여기에 어떤 내용이 들어가는지 확인 필요',
-                    style: TextStyle(fontSize: 13, color: Colors.grey),
-                  ),
                 ],
               ),
             ),
