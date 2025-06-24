@@ -73,6 +73,10 @@ class _ReplyListContentState extends State<ReplyListContent> {
     _replyProvider.getReplyList();
   }
 
+  Future<void> refreshReplyList() {
+    return _replyProvider.getReplyList(reset: true);
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -85,41 +89,44 @@ class _ReplyListContentState extends State<ReplyListContent> {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-                controller: _scrollController,
-                itemCount: filteredReplyList.length,
-                itemBuilder: (context, index) {
-                  final reply = filteredReplyList[index];
+            child: RefreshIndicator(
+              onRefresh: refreshReplyList,
+              child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: filteredReplyList.length,
+                  itemBuilder: (context, index) {
+                    final reply = filteredReplyList[index];
 
-                  return InkWell(
-                      onTap: () async {
-                        final moved = await context.push<bool>('/reply_write/${reply.seq}');
+                    return InkWell(
+                        onTap: () async {
+                          final moved = await context.push<bool>('/reply_write/${reply.seq}');
 
-                        if (moved == true) refreshReply();
-                      },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            SizedBox(
-                              width: double.infinity,
-                              child: ReplyCard(
-                                index: index,
-                                content: reply.content!,
-                                targetType: reply.targetType!,
-                                createdAt: reply.createdAt!,
+                          if (moved == true) refreshReply();
+                        },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: ReplyCard(
+                                  author: '美梨',
+                                  content: reply.content!,
+                                  // targetType: reply.targetType!,
+                                  createdAt: reply.createdAt!,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                ),
+            ),
             ),
         ],
       ),

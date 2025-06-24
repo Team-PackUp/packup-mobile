@@ -4,7 +4,7 @@ import 'package:packup/widget/common/custom_network_image_ratio.dart';
 import '../../common/util.dart';
 import '../../const/color.dart';
 
-class MessageBox extends StatelessWidget {
+class MessageCard extends StatelessWidget {
   final String message;
   final String createTime;
   final int sender;
@@ -12,7 +12,7 @@ class MessageBox extends StatelessWidget {
   final String fileFlag;
   final String? profileImagePath;
 
-  const MessageBox({
+  const MessageCard({
     super.key,
     required this.message,
     required this.createTime,
@@ -104,7 +104,10 @@ class MessageBox extends StatelessWidget {
 
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * 0.03,
+          vertical: MediaQuery.of(context).size.height * 0.01,
+      ),
       child: Row(
         mainAxisAlignment: isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,

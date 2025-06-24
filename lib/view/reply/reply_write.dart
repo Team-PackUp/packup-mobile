@@ -61,15 +61,6 @@ class _ReplyWriteContentState extends State<ReplyWriteContent> {
   Widget build(BuildContext context) {
     final replyProvider = context.watch<ReplyProvider>();
 
-    final bool waiting =
-        replyProvider.isLoading || (replyProvider.seq != null && replyProvider.replyModel == null);
-
-    if (waiting) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
     return Scaffold(
       appBar: CustomAppbar(title: 'Edit Reply'),
       body: Padding(

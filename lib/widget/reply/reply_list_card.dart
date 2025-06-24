@@ -1,68 +1,78 @@
 import 'package:flutter/material.dart';
-import 'package:packup/model/reply/reply_model.dart';
-
-import '../../common/util.dart';
+import 'package:packup/common/util.dart';
 
 class ReplyCard extends StatelessWidget {
-  final int index;
+  final String author;
+  final String? avatarUrl;
   final String content;
-  final TargetType targetType;
   final DateTime createdAt;
 
   const ReplyCard({
     super.key,
-    required this.index,
+    required this.author,
     required this.content,
-    required this.targetType,
     required this.createdAt,
+    this.avatarUrl,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      elevation: 2.0,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          content,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          maxLines: 5,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        getTimeAgo(createdAt),
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
 
-                  const SizedBox(height: 4),
-                ],
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: MediaQuery.of(context).size.height * 0.03,
+                backgroundImage:
+                avatarUrl != null ? NetworkImage(avatarUrl!) : null,
+                child: avatarUrl == null
+                    ? Text(
+                  author.characters.first.toUpperCase(),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                )
+                    : null,
               ),
+              SizedBox(width: MediaQuery.of(context).size.height * 0.02),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      author,
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.02,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.height * 0.02, height: MediaQuery.of(context).size.height * 0.007),
+                    Text(
+                      getMonthYear(createdAt),
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.height * 0.02,
+                          color: Colors.grey
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+          Text(
+            content,
+            style: TextStyle(
+                fontSize: MediaQuery.of(context).size.height * 0.017,
+                height: MediaQuery.of(context).size.height * 0.0015,
+                fontWeight:
+                FontWeight.bold
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

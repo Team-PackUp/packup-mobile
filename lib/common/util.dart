@@ -120,6 +120,11 @@ String getTimeAgo(DateTime dateTime) {
   }
 }
 
+String getMonthYear(DateTime dateTime) {
+  final formatter = DateFormat('MMMM yyyy', 'en_US');
+  return formatter.format(dateTime);
+}
+
 /// ################### FILE ################### ///
 String fullFileUrl(String path) {
   return '$httpPrefix$path';

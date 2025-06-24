@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:packup/model/chat/chat_read_model.dart';
 import 'package:packup/provider/chat/chat_message_provider.dart';
-import 'package:packup/widget/chat/message_box.dart';
+import 'package:packup/widget/chat/message_card.dart';
 import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/chat_message_model.dart';
 import 'package:provider/provider.dart';
@@ -145,7 +145,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
                     final ChatMessageModel message = item;
                     final isLatestMessage = index == 0;
 
-                    Widget messageWidget = MessageBox(
+                    Widget messageWidget = MessageCard(
                       message: message.message!,
                       createTime: convertToHm(message.createdAt!),
                       userSeq: widget.userSeq,
