@@ -13,7 +13,7 @@ class TourService {
       'size': size,
     };
 
-    return await DioService().getRequest('/tour', query);
+    return await DioService().getRequest('/tour/user', query);
   }
 
   Future<void> updateTour(int seq, Map<String, dynamic> body) async {
