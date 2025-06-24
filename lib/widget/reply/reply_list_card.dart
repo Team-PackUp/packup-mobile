@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:packup/common/util.dart';
 
 class ReplyCard extends StatelessWidget {
-  final String author;
+  final String nickName;
   final String? avatarUrl;
   final String content;
   final DateTime createdAt;
 
   const ReplyCard({
     super.key,
-    required this.author,
+    required this.nickName,
     required this.content,
     required this.createdAt,
     this.avatarUrl,
@@ -32,7 +32,7 @@ class ReplyCard extends StatelessWidget {
                 avatarUrl != null ? NetworkImage(avatarUrl!) : null,
                 child: avatarUrl == null
                     ? Text(
-                  author.characters.first.toUpperCase(),
+                  nickName.characters.first.toUpperCase(),
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )
                     : null,
@@ -43,7 +43,7 @@ class ReplyCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      author,
+                      nickName,
                       style: TextStyle(
                         fontSize: MediaQuery.of(context).size.height * 0.02,
                         fontWeight: FontWeight.w600,

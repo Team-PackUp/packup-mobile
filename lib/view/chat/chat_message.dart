@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:packup/model/chat/chat_read_model.dart';
+import 'package:packup/model/common/user_model.dart';
 import 'package:packup/provider/chat/chat_message_provider.dart';
 import 'package:packup/widget/chat/message_card.dart';
 import 'package:packup/const/color.dart';
@@ -17,6 +18,8 @@ import 'package:packup/widget/common/custom_appbar.dart';
 
 import 'package:packup/common/util.dart';
 import 'package:packup/widget/chat/date_separator.dart';
+
+import '../../provider/user/user_provider.dart';
 
 class ChatMessage extends StatelessWidget {
   final int chatRoomSeq;
@@ -111,11 +114,16 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     _chatMessageProvider = context.watch<ChatMessageProvider>();
 
     final messageList = _buildMessageListWithDateSeparators(_chatMessageProvider.chatMessage);
+    final userProvider = context.watch<UserProvider>();
+    final profileUrl = userProvider.userModel?.profileImagePath;
 
     return Scaffold(
       appBar: CustomAppbar(
         title: widget.title,
         trailing: CircleAvatar(
+          backgroundImage: profileUrl != null && profileUrl.isNotEmpty
+              ? NetworkImage(profileUrl)
+              : null,
           radius: MediaQuery.of(context).size.height * 0.02,
         ),
       ),
@@ -144,12 +152,12 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
 
                     final ChatMessageModel message = item;
                     final isLatestMessage = index == 0;
-
                     Widget messageWidget = MessageCard(
                       message: message.message!,
                       createTime: convertToHm(message.createdAt!),
                       userSeq: widget.userSeq,
                       sender: message.userSeq!,
+                      profileImagePath: message.profileImagePath,
                       fileFlag: message.fileFlag!,
                     );
 

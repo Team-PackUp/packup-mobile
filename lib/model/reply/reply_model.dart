@@ -42,6 +42,8 @@ class ReplyModel {
   final int? targetSeq;
   final TargetType? targetType;
   final String? content;
+  final String? nickName;
+  final String? profileImagePath;
   final DateTime? createdAt;
 
   ReplyModel({
@@ -50,6 +52,8 @@ class ReplyModel {
     this.targetSeq,
     this.targetType,
     this.content,
+    this.nickName,
+    this.profileImagePath,
     this.createdAt,
   });
 
@@ -70,6 +74,8 @@ class ReplyModel {
         ? TargetType.fromSeq(json['targetType'])
         : null,
     content   : json['content'] ?? '',
+    nickName   : json['nickName'] ?? '',
+    profileImagePath   : json['profileImagePath'] ?? '',
     createdAt : json['createdAt'] != null
         ? DateTime.parse(json['createdAt'])
         : DateTime.now(),

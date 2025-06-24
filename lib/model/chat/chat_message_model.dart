@@ -5,6 +5,7 @@ class ChatMessageModel {
   final String? message;
   final int? userSeq;
   final int? chatRoomSeq;
+  final String? profileImagePath;
   final DateTime? createdAt;
   final String? fileFlag;
 
@@ -14,6 +15,7 @@ class ChatMessageModel {
     this.message,
     this.userSeq,
     this.chatRoomSeq,
+    this.profileImagePath,
     this.fileFlag,
   });
 
@@ -32,6 +34,7 @@ class ChatMessageModel {
           message: json['message'],
           userSeq: json['userSeq'],
       chatRoomSeq: json['chatRoomSeq'],
+ profileImagePath: json['profileImagePath'],
         createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
            fileFlag: json['fileFlag'],
     );

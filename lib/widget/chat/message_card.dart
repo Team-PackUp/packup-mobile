@@ -35,26 +35,30 @@ class MessageCard extends StatelessWidget {
         ),
       );
 
-      return Row(
+      final row = Row(
         mainAxisAlignment: isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: isMine
             ? [
           imageWidget,
-          const SizedBox(width: 8),
-          CircleAvatar(
-            radius: MediaQuery.of(context).size.height * 0.03,
-          ),
+          SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+          _avatar(context, imagePath),
         ]
             : [
-          CircleAvatar(
-            radius: MediaQuery.of(context).size.height * 0.03,
-          ),
-          const SizedBox(width: 8),
+          _avatar(context, imagePath),
+          SizedBox(width: MediaQuery.of(context).size.width * 0.03),
           imageWidget,
         ],
       );
+      return Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * 0.03,
+          vertical: MediaQuery.of(context).size.height * 0.01,
+        ),
+        child: row,
+      );
     }
+
 
     final bubble = IntrinsicWidth(
       child: ConstrainedBox(
@@ -62,7 +66,10 @@ class MessageCard extends StatelessWidget {
           maxWidth: MediaQuery.of(context).size.width * 0.75,
         ),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.03,
+              vertical: MediaQuery.of(context).size.height * 0.01
+          ),
           decoration: BoxDecoration(
             color: isMine ? MY_MESSAGE_BACKGROUND : YOUR_MESSAGE_BACKGROUND,
             borderRadius: BorderRadius.circular(12),
@@ -81,7 +88,7 @@ class MessageCard extends StatelessWidget {
                 softWrap: true,
                 overflow: TextOverflow.visible,
               ),
-              const SizedBox(height: 4),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.03),
               Align(
                 alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
                 child: Text(
@@ -114,25 +121,26 @@ class MessageCard extends StatelessWidget {
         children: isMine
             ? [
           bubble,
-          const SizedBox(width: 6),
-          CircleAvatar(
-            radius: MediaQuery.of(context).size.height * 0.03,
-            backgroundImage: profileImagePath != null
-                ? NetworkImage(profileImagePath!)
-                : AssetImage(imagePath) as ImageProvider,
-          ),
+          SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+          _avatar(context, imagePath),
         ]
             : [
-          CircleAvatar(
-            radius: MediaQuery.of(context).size.height * 0.03,
-            backgroundImage: profileImagePath != null
-                ? NetworkImage(profileImagePath!)
-                : AssetImage(imagePath) as ImageProvider,
-          ),
-          const SizedBox(width: 6),
+          _avatar(context, imagePath),
+          SizedBox(width: MediaQuery.of(context).size.width * 0.03),
           bubble,
         ],
       ),
+    );
+  }
+
+  Widget _avatar(
+      BuildContext context,
+      String? profileUrl,
+      ) {
+    return CircleAvatar(
+      radius: MediaQuery.of(context).size.height * 0.03,
+      backgroundImage: profileUrl != null && profileUrl.isNotEmpty
+          ? NetworkImage(profileUrl) : null,
     );
   }
 }

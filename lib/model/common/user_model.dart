@@ -6,6 +6,7 @@ class UserModel {
 
   final String? email;
   final String? nickname;
+  final String? profileImagePath;
   final Map<String, dynamic>? preferCategorySeqJson;
 
   UserModel({
@@ -16,6 +17,7 @@ class UserModel {
 
     this.email,
     this.nickname,
+    this.profileImagePath,
     this.preferCategorySeqJson,
   });
 
@@ -38,6 +40,7 @@ class UserModel {
       userGender: json['gender'] ?? '',
       email: json['email'],
       nickname: json['nickname'],
+      profileImagePath: json['profileImagePath'],
       preferCategorySeqJson: json['preferCategorySeqJson'],
     );
   }

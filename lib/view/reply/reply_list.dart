@@ -113,7 +113,8 @@ class _ReplyListContentState extends State<ReplyListContent> {
                               SizedBox(
                                 width: double.infinity,
                                 child: ReplyCard(
-                                  author: '美梨',
+                                  nickName: reply.nickName!,
+                                  avatarUrl: reply.profileImagePath,
                                   content: reply.content!,
                                   // targetType: reply.targetType!,
                                   createdAt: reply.createdAt!,
