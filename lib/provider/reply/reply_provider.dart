@@ -81,12 +81,13 @@ class ReplyProvider extends LoadingProvider {
     });
   }
 
-  Future<void> upsertReply(String content) async {
+  Future<void> upsertReply(String content, int point) async {
     await LoadingService.run(() async {
       if (seq != null) {
         // 수정
         final reply = ReplyModel(
-            content: content
+            content: content,
+            point: point,
         );
         await _service.updateReply(seq: seq!, replyModel: reply);
       } else {
@@ -95,6 +96,7 @@ class ReplyProvider extends LoadingProvider {
             targetSeq: targetSeq,
             targetType: targetType,
             content   : content,
+            point   : point,
         );
 
         await _service.saveReply(replyModel: reply);

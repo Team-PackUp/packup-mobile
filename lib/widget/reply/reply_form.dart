@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:packup/provider/reply/reply_provider.dart';
+import 'package:packup/widget/common/custom_point_input.dart';
 
 class ReplyForm extends StatefulWidget {
   final ReplyProvider replyProvider;
@@ -22,25 +23,27 @@ class _ReplyFormState extends State<ReplyForm> {
   late ReplyProvider _replyProvider;
 
   final bool _isSubmitting = false;
+  int _point = 0;
 
   @override
   void initState() {
     super.initState();
     _replyProvider = widget.replyProvider;
 
-    if(_replyProvider.replyModel?.seq != null) {
-      _contentController = TextEditingController(text: _replyProvider.replyModel?.content);
-    } else {
-      _contentController = TextEditingController(text: '');
-    }
+    _contentController = TextEditingController(text: '');
 
-    _syncWithProvider();
-    _replyProvider.addListener(_syncWithProvider);
+    _initData();
+    _replyProvider.addListener(_initData);
   }
 
-  void _syncWithProvider() {
-    final text = _replyProvider.replyModel?.content ?? '';
-    if (_contentController.text != text) _contentController.text = text;
+  void _initData() {
+    final model = _replyProvider.replyModel;
+    if (model == null) return;
+
+    _contentController.text = model.content ?? '';
+    _point = model.point ?? 0;
+
+    setState(() {});
   }
 
   @override
@@ -51,7 +54,7 @@ class _ReplyFormState extends State<ReplyForm> {
 
   @override
   Widget build(BuildContext context) {
-    final isEdit = _replyProvider.seq != null;   // ← 수정 모드 여부
+    final isEdit = _replyProvider.seq != null;
 
     return Form(
       key: _formKey,
@@ -74,6 +77,11 @@ class _ReplyFormState extends State<ReplyForm> {
           /// 전송 & 삭제(수정모드) 버튼
           Row(
             children: [
+              CustomPointInput(
+                onPointChanged: handlePoint,
+                mode: PointMode.edit,
+                initialPoint: _point,
+              ),
               // 전송
               Expanded(
                 child: ElevatedButton.icon(
@@ -108,10 +116,16 @@ class _ReplyFormState extends State<ReplyForm> {
     );
   }
 
+  void handlePoint(int? point) {
+    setState(() {
+      _point = point!;
+    });
+  }
+
 
   Future<void> _upsertReply() async {
     if(_formKey.currentState!.validate()) {
-      await _replyProvider.upsertReply(_contentController.text);
+      await _replyProvider.upsertReply(_contentController.text, _point);
 
       if (mounted) Navigator.pop(context, true);
     }

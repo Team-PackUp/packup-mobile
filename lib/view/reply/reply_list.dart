@@ -116,6 +116,7 @@ class _ReplyListContentState extends State<ReplyListContent> {
                                   nickName: reply.nickName!,
                                   avatarUrl: reply.profileImagePath,
                                   content: reply.content!,
+                                  point: reply.point!,
                                   // targetType: reply.targetType!,
                                   createdAt: reply.createdAt!,
                                 ),

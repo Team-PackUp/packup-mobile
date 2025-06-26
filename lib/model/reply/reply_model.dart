@@ -32,6 +32,7 @@ extension ReplyMap on ReplyModel {
     'seq'         : seq,
     'targetSeq'   : targetSeq,
     'content'     : content,
+    'point'     : point,
     'targetType'  : targetType?.code,
   };
 }
@@ -42,6 +43,7 @@ class ReplyModel {
   final int? targetSeq;
   final TargetType? targetType;
   final String? content;
+  final int? point;
   final String? nickName;
   final String? profileImagePath;
   final DateTime? createdAt;
@@ -52,6 +54,7 @@ class ReplyModel {
     this.targetSeq,
     this.targetType,
     this.content,
+    this.point,
     this.nickName,
     this.profileImagePath,
     this.createdAt,
@@ -74,6 +77,7 @@ class ReplyModel {
         ? TargetType.fromSeq(json['targetType'])
         : null,
     content   : json['content'] ?? '',
+    point   : json['point'] ?? 0,
     nickName   : json['nickName'] ?? '',
     profileImagePath   : json['profileImagePath'] ?? '',
     createdAt : json['createdAt'] != null
