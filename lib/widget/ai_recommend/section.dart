@@ -2,7 +2,6 @@
 // ----------------------------------------------------
 import 'package:flutter/material.dart';
 
-/// 공통 섹션 헤더 (🔥/🔍/⭐ ... + "더보기")
 class SectionHeader extends StatelessWidget {
   final String icon;        // 이모지 또는 아이콘 텍스트
   final String title;       // 섹션 제목
