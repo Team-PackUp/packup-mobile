@@ -117,7 +117,7 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
 
 class _TourList extends StatelessWidget {
   final List<RecommendTourModel> tours;
-  final ValueChanged<RecommendTourModel> onTap;   // 🔹 클릭 이벤트
+  final ValueChanged<RecommendTourModel> onTap;
 
   const _TourList({
     super.key,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:packup/widget/common/custom_image_viewer.dart';
 import 'package:packup/widget/common/custom_network_image_ratio.dart';
 
 import '../../common/util.dart';
@@ -28,12 +29,31 @@ class MessageCard extends StatelessWidget {
     final imagePath = profileImagePath ?? 'assets/image/logo/logo.png';
 
     if (fileFlag == 'Y') {
-      final imageWidget = SizedBox(
-        width: MediaQuery.of(context).size.width * 0.4,
-        child: CustomNetworkImageRatio(
-          imageUrl: fullFileUrl(message),
+      final imageUrl = fullFileUrl(message);
+      final String heroTag = createTime + message;   // 고유 태그
+
+      final imageWidget = InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              opaque: false,
+              transitionDuration: const Duration(milliseconds: 250),
+              reverseTransitionDuration: const Duration(milliseconds: 200),
+              pageBuilder: (_, __, ___) =>
+                  CustomImageViewer(imageUrl: imageUrl),
+            ),
+          );
+        },
+        child: Hero(
+          tag: heroTag,                               // 동일 태그
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.4,
+            child: CustomNetworkImageRatio(imageUrl: imageUrl),
+          ),
         ),
       );
+
 
       final row = Row(
         mainAxisAlignment: isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
