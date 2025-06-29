@@ -20,16 +20,21 @@ class AIRecommendProvider extends LoadingProvider {
 
   Future<void> init() async {
     await LoadingService.run(() async {
-      // 추천 투어
+
       final response = await aiRecommendService.getRecommendList(5);
 
-      tourList = (response.response as List)
-          .map((e) => RecommendTourModel.fromJson(
-        (e as Map<String, dynamic>)['tour'] as Map<String, dynamic>,
-      )).toList();
+      final data = response.response as Map<String, dynamic>;
 
-      // 상태 변경 통지
+      tourList = (data['tour'] as List? ?? [])
+          .map((e) => RecommendTourModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+      popular = (data['popular'] as List? ?? [])
+          .map((e) => RecommendTourModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+
       notifyListeners();
     });
   }
+
 }

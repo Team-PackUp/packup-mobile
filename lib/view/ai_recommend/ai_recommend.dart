@@ -54,6 +54,7 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
         backgroundColor: Colors.grey.shade200,
         appBar: CustomAppbar(
             title: 'AI 추천',
+            arrowFlag: false,
             trailing: CircleAvatar(
               backgroundImage: profileUrl != null && profileUrl.isNotEmpty
               ? NetworkImage(profileUrl)
