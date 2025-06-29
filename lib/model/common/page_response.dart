@@ -1,37 +1,39 @@
 class PageResponse<T> {
   final List<T> content;
+  final int page;               // 사용자에게 보여줄 1-based 페이지 번호
+  final int number;             // 내부에서 사용하는 0-based 번호
+  final int size;
   final int totalElements;
   final int totalPages;
-  final int number; // 현재 페이지 번호
   final bool last;
   final bool first;
-  final int size;
-  final int numberOfElements;
   final bool empty;
 
   PageResponse({
     required this.content,
+    required this.page,
+    required this.number,
+    required this.size,
     required this.totalElements,
     required this.totalPages,
-    required this.number,
     required this.last,
     required this.first,
-    required this.size,
-    required this.numberOfElements,
     required this.empty,
   });
 
   factory PageResponse.fromJson(
-      Map<String, dynamic> json, T Function(dynamic) fromJsonT) {
+      Map<String, dynamic> json,
+      T Function(dynamic) fromJsonT,
+      ) {
     return PageResponse<T>(
       content: (json['content'] as List).map(fromJsonT).toList(),
+      page: json['page'],                   // 1-based
+      number: json['number'],               // 0-based
+      size: json['size'],
       totalElements: json['totalElements'],
       totalPages: json['totalPages'],
-      number: json['number'],
       last: json['last'],
       first: json['first'],
-      size: json['size'],
-      numberOfElements: json['numberOfElements'],
       empty: json['empty'],
     );
   }
