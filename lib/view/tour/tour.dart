@@ -68,48 +68,38 @@ class _TourBodyState extends State<TourBody> {
       body: Stack(
         children: [
           /// 투어 리스트 렌더링
-          ListView.builder(
+          GridView.builder(
             controller: _scrollController,
-            itemCount: provider.tourList.length + 1, // 마지막에 로딩 인디케이터 추가
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // 2열 구성
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 0.54, // 카드의 가로:세로 비율 조정 (필요 시 튜닝)
+            ),
+            itemCount: provider.tourList.length + (provider.isLoading ? 1 : 0),
             itemBuilder: (context, index) {
               if (index < provider.tourList.length) {
                 final tour = provider.tourList[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: TourCard(
-                    imageUrl: 'https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp', // 이미지 URL
-                    badgeText: '마감 1일전', // 상태 배지
-                    title: tour.tourTitle ?? '제목 없음',
-                    location: tour.tourLocation ?? '',
-                    price: '₩100,000,000', // 혹은 다른 필드 사용
-                    hostName: '솔빙이',
-                    hostImageUrl: 'https://img.daisyui.com/images/profile/demo/yellingwoman@192.webp',
-                    isFavorite: false, // 필요 시 즐겨찾기 상태 연결
-                    onTap: () async {
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => TourEditPage(tour: tour),
-                        ),
-                      );
-                      if (result == true) {
-                        await provider.getTourList(refresh: true);
-                      }
-                    },
-                    onFavoriteToggle: () {
-                      // 즐겨찾기 로직 필요시 여기에 작성
-                    },
-                  ),
+                return TourCard(
+                  tour: tour,
+                  isFavorite: false,
+                  onTap: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => TourEditPage(tour: tour),
+                      ),
+                    );
+                    if (result == true) {
+                      await provider.getTourList(refresh: true);
+                    }
+                  },
+                  onFavoriteToggle: () {},
                 );
               } else {
-                // 하단 로딩 인디케이터
-                return Visibility(
-                  visible: provider.isLoading,
-                  child: const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                );
+                // 하단 로딩 인디케이터 (GridView에도 대응)
+                return const Center(child: CircularProgressIndicator());
               }
             },
           ),

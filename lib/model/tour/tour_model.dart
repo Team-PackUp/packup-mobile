@@ -1,6 +1,8 @@
 // lib/model/tour/tour_model.dart
 import 'dart:convert';
 
+import 'package:packup/model/guide/guide_model.dart';
+
 /// 투어 정보를 담는 데이터 모델입니다.
 /// API로부터 받아오거나 서버로 전송하는 데 사용됩니다.
 class TourModel {
@@ -8,7 +10,7 @@ class TourModel {
   final int? seq;
 
   /// 가이드 고유 번호
-  final int? guideSeq;
+  final GuideModel? guide;
 
   /// 최소 인원
   final int? minPeople;
@@ -30,6 +32,9 @@ class TourModel {
 
   /// 투어 제목
   final String? tourTitle;
+
+  /// 투어 제목
+  final int? tourPrice;
 
   /// 투어 소개
   final String? tourIntroduce;
@@ -55,7 +60,7 @@ class TourModel {
   /// 기본 생성자
   TourModel({
     this.seq,
-    this.guideSeq,
+    this.guide,
     this.minPeople,
     this.maxPeople,
     this.applyStartDate,
@@ -63,6 +68,7 @@ class TourModel {
     this.tourStartDate,
     this.tourEndDate,
     this.tourTitle,
+    this.tourPrice,
     this.tourIntroduce,
     this.tourStatusCode,
     this.tourStatusLabel,
@@ -76,7 +82,7 @@ class TourModel {
   factory TourModel.fromJson(Map<String, dynamic> json) {
     return TourModel(
       seq: json['seq'],
-      guideSeq: json['guideSeq'],
+      guide: json['guide'] != null ? GuideModel.fromJson(json['guide']) : null,
       minPeople: json['minPeople'],
       maxPeople: json['maxPeople'],
       applyStartDate: json['applyStartDate'] != null ? DateTime.parse(json['applyStartDate']) : null,
@@ -84,6 +90,7 @@ class TourModel {
       tourStartDate: json['tourStartDate'] != null ? DateTime.parse(json['tourStartDate']) : null,
       tourEndDate: json['tourEndDate'] != null ? DateTime.parse(json['tourEndDate']) : null,
       tourTitle: json['tourTitle'],
+      tourPrice: json['tourPrice'],
       tourIntroduce: json['tourIntroduce'],
       tourStatusCode: json['tourStatusCode'],
       tourStatusLabel: json['tourStatusLabel'],
@@ -98,7 +105,7 @@ class TourModel {
   Map<String, dynamic> toJson() {
     return {
       'seq': seq,
-      'guideSeq': guideSeq,
+      'guide': guide?.toJson(),
       'minPeople': minPeople,
       'maxPeople': maxPeople,
       'applyStartDate': applyStartDate?.toIso8601String(),
@@ -106,6 +113,7 @@ class TourModel {
       'tourStartDate': tourStartDate?.toIso8601String(),
       'tourEndDate': tourEndDate?.toIso8601String(),
       'tourTitle': tourTitle,
+      'tourPrice': tourPrice,
       'tourIntroduce': tourIntroduce,
       'tourStatusCode': tourStatusCode,
       'tourStatusLabel': tourStatusLabel,
@@ -121,7 +129,7 @@ class TourModel {
   factory TourModel.empty() {
     return TourModel(
       seq: null,
-      guideSeq: null,
+      guide: GuideModel.empty(),
       minPeople: 1,
       maxPeople: 1,
       applyStartDate: null,
@@ -129,6 +137,7 @@ class TourModel {
       tourStartDate: null,
       tourEndDate: null,
       tourTitle: '',
+      tourPrice: 0,
       tourIntroduce: '',
       tourStatusCode: '',
       tourStatusLabel: '',
