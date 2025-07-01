@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:packup/widget/tour/tour_card.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 
 import 'package:packup/model/tour/tour_model.dart';
-import 'guide/edit/edit.dart';
+import 'package:packup/view/tour/guide/edit/edit.dart';
 
 /// 투어 목록 화면 (무한 스크롤 및 편집/추가 기능 포함)
-class Tour extends StatelessWidget {
-  const Tour({super.key});
+class GuideTourList extends StatelessWidget {
+  const GuideTourList({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => TourProvider(),
+      create: (_) => TourProvider()..getTourList(), // 화면 진입 시 리스트 초기 호출
       child: const TourBody(),
     );
   }
@@ -34,11 +33,6 @@ class _TourBodyState extends State<TourBody> {
   @override
   void initState() {
     super.initState();
-
-    // 화면이 완전히 그려진 후 초기 투어 목록 요청
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<TourProvider>().getTourList();
-    });
 
     // 스크롤 하단 도달 시 다음 페이지 데이터 요청
     _scrollController.addListener(() {
@@ -68,40 +62,63 @@ class _TourBodyState extends State<TourBody> {
       body: Stack(
         children: [
           /// 투어 리스트 렌더링
-          GridView.builder(
+          ListView.builder(
             controller: _scrollController,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // 2열 구성
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 0.54, // 카드의 가로:세로 비율 조정 (필요 시 튜닝)
-            ),
-            itemCount: provider.tourList.length + (provider.isLoading ? 1 : 0),
+            itemCount: provider.tourList.length + 1, // 마지막에 로딩 인디케이터 추가
             itemBuilder: (context, index) {
               if (index < provider.tourList.length) {
                 final tour = provider.tourList[index];
-                return TourCard(
-                  tour: tour,
-                  isFavorite: false,
+                return ListTile(
+                  title: Text('${tour.seq} - ${tour.tourTitle ?? '제목 없음'}'),
                   onTap: () async {
+                    // 투어 수정 화면으로 이동
                     final result = await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (_) => TourEditPage(tour: tour),
                       ),
                     );
+
+                    // 수정 완료 후 목록 새로고침
                     if (result == true) {
                       await provider.getTourList(refresh: true);
+                      // 필요시 setState()로 강제 리렌더링
                     }
                   },
-                  onFavoriteToggle: () {},
                 );
               } else {
-                // 하단 로딩 인디케이터 (GridView에도 대응)
-                return const Center(child: CircularProgressIndicator());
+                // 하단 로딩 인디케이터
+                return Visibility(
+                  visible: provider.isLoading,
+                  child: const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                );
               }
             },
+          ),
+
+          /// 우측 상단 '추가' 버튼 - 신규 투어 등록용
+          Positioned(
+            top: 16,
+            right: 16,
+            child: ElevatedButton(
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => TourEditPage(tour: TourModel.empty()),
+                  ),
+                );
+
+                // 추가 완료 후 목록 새로고침
+                if (result == true) {
+                  await provider.getTourList(refresh: true);
+                }
+              },
+              child: const Text('추가'),
+            ),
           ),
         ],
       ),

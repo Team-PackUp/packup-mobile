@@ -57,6 +57,10 @@ Future<int> decodeTokenInfo() async {
   return int.parse(payloadMap['sub']);
 }
 
+String formatAmount(int amount) {
+  final format = NumberFormat.decimalPattern(); // ex: 1,000,000
+  return format.format(amount);
+}
 
 /// ################### DATE ################### ///
 DateTime getToday() {
@@ -78,6 +82,14 @@ String convertToYmd(DateTime date, [String format = 'yyyy-MM-dd']) {
 
 String convertToHm(DateTime date, [String format = 'HH:mm']) {
   return DateFormat(format).format(date);
+}
+
+int getDateDiffInDays(DateTime dateTime) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final target = DateTime(dateTime.year, dateTime.month, dateTime.day);
+
+  return today.difference(target).inDays;
 }
 
 // 어제 이전, 어제, 오늘 체크
