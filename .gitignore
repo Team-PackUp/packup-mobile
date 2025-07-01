@@ -75,6 +75,7 @@ app.*.map.json
 /ios/Flutter/Generated.xcconfig
 /ios/Runner.xcworkspace
 /ios/DerivedData/
+GoogleService-Info.plist
 
 # macOS
 /macos/Pods/
