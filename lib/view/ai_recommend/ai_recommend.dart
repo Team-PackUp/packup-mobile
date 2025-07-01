@@ -18,7 +18,6 @@ class AIRecommend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Provider 생성만 하고, API 호출은 Content 의 initState 에서 트리거
     return ChangeNotifierProvider(
       create: (_) => AIRecommendProvider(),
       child: const AIRecommendContent(),

@@ -1,13 +1,6 @@
-// lib/provider/ai_recommend/ai_recommend_provider.dart
-// ----------------------------------------------------
-// Provider + 가상 데이터 (Tour)
-// ----------------------------------------------------
-import 'package:flutter/material.dart';
-import 'package:packup/provider/common/loading_provider.dart';
+
 
 import '../../http/dio_service.dart';
-import '../../model/ai_recommend/recommend_tour_model.dart';
-import '../../model/ai_recommend/category_model.dart';
 import '../../model/common/result_model.dart';
 
 class AIRecommendService {
@@ -25,6 +18,6 @@ class AIRecommendService {
 
     final data = {'count' : count};
 
-    return await DioService().getRequest('/recommend/user', data);
+    return await DioService().getRequest('/tab/recommend', data);
   }
 }
