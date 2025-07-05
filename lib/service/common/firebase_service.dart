@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -13,164 +12,152 @@ import '../../common/deep_link/deep_link_handler.dart';
 
 @pragma('vm:entry-point')
 class FirebaseService {
-
-  static final FirebaseService _instance = FirebaseService._internal();
-
-  factory FirebaseService() => _instance;
   FirebaseService._internal();
+  static final FirebaseService _instance = FirebaseService._internal();
+  factory FirebaseService() => _instance;
 
-  late final fireBaseInstance;
-  final fcmTokenKey = dotenv.env['FCM_TOKEN_KEY']!;
-  AndroidNotificationChannel? androidNotificationChannel;
-  final localNotification = FlutterLocalNotificationsPlugin();
+  late final FirebaseMessaging _messaging;
+  final _fcmTokenKey = dotenv.env['FCM_TOKEN_KEY']!;
+  final _localNoti   = FlutterLocalNotificationsPlugin();
+  AndroidNotificationChannel? _androidChannel;
+
+  // iOS용 초기화 세트
+  static const _iosInit = DarwinInitializationSettings(
+    requestAlertPermission:  false,
+    requestBadgePermission:  false,
+    requestSoundPermission:  false,
+    defaultPresentAlert:     true,
+    defaultPresentBadge:     true,
+    defaultPresentSound:     true,
+  );
 
   @pragma('vm:entry-point')
   static Future<void> fcmBackgroundHandler(RemoteMessage message) async {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    final noti = FlutterLocalNotificationsPlugin();
 
-    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    await noti.initialize(
+      const InitializationSettings(
+        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        iOS: _iosInit,
+      ),
+    );
 
-    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const initSettings = InitializationSettings(android: androidInit);
-    await flutterLocalNotificationsPlugin.initialize(initSettings);
+    if (message.notification == null) return;
 
-    if (message.data.isNotEmpty) {
-      const androidDetails = AndroidNotificationDetails(
-        'packup_notification_push',
-        'Important Notification',
-        channelDescription: 'Used for important notifications',
-        importance: Importance.high,
-        priority: Priority.high,
-      );
+    const androidDetails = AndroidNotificationDetails(
+      'packup_notification_push',
+      'Important Notification',
+      channelDescription: 'Used for important notifications',
+      importance: Importance.high,
+      priority: Priority.high,
+    );
 
-      const notificationDetails = NotificationDetails(android: androidDetails);
-
-      if(message.data['title'].isEmpty || message.data['body'].isEmpty) {
-        return;
-      }
-
-      await flutterLocalNotificationsPlugin.show(
-        0,
-        message.data['title'],
-        message.data['body'],
-        notificationDetails,
-        payload: message.data['deepLink'],
-      );
-    }
-  }
-
-
-  Future<void> fcmForegroundHandler(
-      RemoteMessage message,
-      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
-      AndroidNotificationChannel? channel) async {
-    print('[FCM - Foreground] MESSAGE : ${message.data}');
-
-    // if (message.notification != null) {
-    //   print('Message also contained a notification: ${message.notification}');
-    //   flutterLocalNotificationsPlugin.show(
-    //       message.hashCode,
-    //       message.notification?.title,
-    //       message.notification?.body,
-    //       NotificationDetails(
-    //         android: AndroidNotificationDetails(
-    //           channel!.id,
-    //           channel.name,
-    //           channelDescription: channel.description,
-    //           icon: '@mipmap/ic_launcher',
-    //         ),
-    //         // iOS: const DarwinNotificationDetails(
-    //         //   badgeNumber: 1,
-    //         //   subtitle: 'the subtitle',
-    //         //   sound: 'slow_spring_board.aiff',
-    //         // ),
-    //       ));
-    // }
+    await noti.show(
+      0,
+      message.notification!.title,
+      message.notification!.body,
+      const NotificationDetails(android: androidDetails, iOS: DarwinNotificationDetails()),
+      payload: message.data['deepLink'],
+    );
   }
 
   Future<void> initConnect() async {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    _messaging = FirebaseMessaging.instance;
 
-    fireBaseInstance = FirebaseMessaging.instance;
+    // 알림 권한·채널 설정
+    await _setupPlatform();
 
-    setSettingOption();
-    setFcmToken();
-    setOsSetting();
-
-    //FCM 토큰은 사용자가 앱을 삭제, 재설치 및 데이터 제거 등 토큰 유실 되었을 때 재발급 로직..?
-    fireBaseInstance.onTokenRefresh.listen((nToken) {
-
-    });
-
-    // 백그라운드 핸들러 > 최상위 수준 함수
-    FirebaseMessaging.onBackgroundMessage(fcmBackgroundHandler);
-
-    // 포그라운드 핸들러
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      fcmForegroundHandler(
-          message, localNotification, androidNotificationChannel);
-    });
-
-    await localNotification.initialize(
+    // 로컬 알림 플러그인 초기화 (Android + iOS)
+    await _localNoti.initialize(
       const InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        iOS: _iosInit,
       ),
-        onDidReceiveNotificationResponse: (NotificationResponse response) {
-          final payload = response.payload;
-          if (payload != null) {
-            try {
-              final deepLinkMap = jsonDecode(payload);
-              DeepLinkHandler().handle(deepLinkMap);
-            } catch (e) {
-              logger('딥링크 파싱 실패: $e');
-            }
+      onDidReceiveNotificationResponse: (resp) {
+        final payload = resp.payload;
+        if (payload != null) {
+          try {
+            DeepLinkHandler().handle(jsonDecode(payload));
+          } catch (e) {
+            logger('딥링크 파싱 실패: $e');
           }
         }
-
+      },
     );
 
+    // APNs 토큰 확보 → FCM 토큰 저장
+    await _registerFcmToken();
+
+    // 스트림 리스너
+    FirebaseMessaging.onBackgroundMessage(fcmBackgroundHandler);
+    FirebaseMessaging.onMessage.listen(_fcmForegroundHandler);
   }
 
-  Future<void> setOsSetting() async {
-
+  Future<void> _setupPlatform() async {
     if (Platform.isIOS) {
-      //await reqIOSPermission(fbMsg);
+      await _requestIosPermission();
     } else if (Platform.isAndroid) {
-      //Android 8 (API 26) 이상부터는 채널설정이 필수? 라고 한다...
-      androidNotificationChannel = const AndroidNotificationChannel(
-        'important_channel', // id
-        'Important_Notifications', // name
+      _androidChannel ??= const AndroidNotificationChannel(
+        'important_channel',
+        'Important_Notifications',
         description: '팩업 중요 알림',
-        // description
         importance: Importance.high,
       );
 
-      await localNotification
+      await _localNoti
           .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(androidNotificationChannel!);
+          ?.createNotificationChannel(_androidChannel!);
     }
   }
 
-  Future<void> setFcmToken() async {
-    final fcmToken = await fireBaseInstance.getToken();
-    saveToken(fcmTokenKey, fcmToken!);
-  }
+  Future<void> _requestIosPermission() async {
+    final settings = await _messaging.requestPermission(alert: true, badge: true, sound: true);
+    logger('알림 권한 상태: ${settings.authorizationStatus}');
 
-  Future<void> setSettingOption() async {
-    NotificationSettings settings = await fireBaseInstance.requestPermission(
+    await _messaging.setForegroundNotificationPresentationOptions(
       alert: true,
-      announcement: false,
       badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
       sound: true,
     );
-    /**
-     * authorized > 수신 허용
-     * denied > 수신 거부
-     */
-    print('수신 허용 여부: ${settings.authorizationStatus}');
+  }
+
+  Future<void> _registerFcmToken() async {
+    String? apns = await _messaging.getAPNSToken();
+    if (apns == null) {
+      _messaging.onTokenRefresh.listen(_saveToken);
+      return;
+    }
+    _saveToken(await _messaging.getToken());
+  }
+
+  void _saveToken(String? token) {
+    if (token == null) return;
+    saveToken(_fcmTokenKey, token);
+  }
+
+  void _fcmForegroundHandler(RemoteMessage msg) {
+    if (msg.notification == null) return;
+
+    final details = Platform.isAndroid
+        ? NotificationDetails(
+      android: AndroidNotificationDetails(
+        _androidChannel!.id,
+        _androidChannel!.name,
+        channelDescription: _androidChannel!.description,
+        icon: '@mipmap/ic_launcher',
+      ),
+    )
+        : const NotificationDetails(iOS: DarwinNotificationDetails());
+
+    _localNoti.show(
+      msg.hashCode,
+      msg.notification!.title,
+      msg.notification!.body,
+      details,
+      payload: msg.data['deepLink'],
+    );
   }
 }
