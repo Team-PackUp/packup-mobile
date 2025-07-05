@@ -87,13 +87,13 @@ class _ReplyFormState extends State<ReplyForm> {
                 child: ElevatedButton.icon(
                   onPressed: _isSubmitting ? null : _upsertReply,
                   icon: _isSubmitting
-                      ? const SizedBox(
-                    width: 18,
-                    height: 18,
+                      ? SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.02,
+                    height: MediaQuery.of(context).size.height * 0.02,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                       : const Icon(Icons.send),
-                  label: Text(isEdit ? 'update reply' : 'new reply'),
+                  label: Text(isEdit ? 'update' : 'save'),
                 ),
               ),
 

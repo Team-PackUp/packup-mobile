@@ -64,7 +64,7 @@ class _ReplyWriteContentState extends State<ReplyWriteContent> {
     return Scaffold(
       appBar: CustomAppbar(title: 'Edit Reply'),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
         child: ReplyForm(
           replyProvider: replyProvider,
         ),
