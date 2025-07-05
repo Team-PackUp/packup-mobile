@@ -1,22 +1,18 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
-class LoadingProvider extends ChangeNotifier  {
-  bool _isLoading = false;
+class LoadingProvider extends ChangeNotifier {
+  int _pending = 0;                 // 동시에 진행 중인 작업 수
+  bool get isLoading => _pending > 0;
 
-  bool get isLoading => _isLoading;
-
-  Future<T> handleLoading<T>(Future<T> Function() callBack) async {
-
-    if (_isLoading) return Future.error("이미 로딩 중입니다");
-    _isLoading = true;
-    notifyListeners();
+  Future<T> handleLoading<T>(Future<T> Function() callback) async {
+    _pending++;
+    if (_pending == 1) notifyListeners();
 
     try {
-      return await callBack();
+      return await callback();
     } finally {
-      _isLoading = false;
-
-      notifyListeners();
+      _pending--;
+      if (_pending == 0) notifyListeners();
     }
   }
 }

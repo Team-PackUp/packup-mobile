@@ -33,12 +33,18 @@ class AIRecommendContent extends StatefulWidget {
 }
 
 class _AIRecommendContentState extends State<AIRecommendContent> {
+
+  late final AIRecommendProvider provider;
+
   @override
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      context.read<AIRecommendProvider>().init();
+    provider = context.read<AIRecommendProvider>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      provider.initTour();
+      provider.initPopular();
     });
   }
 
@@ -48,8 +54,7 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
     final userProvider = context.watch<UserProvider>();
     final profileUrl = userProvider.userModel?.profileImagePath;
 
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         backgroundColor: Colors.grey.shade200,
         appBar: CustomAppbar(
             title: 'AI 추천',
@@ -93,7 +98,7 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
               title: '종류별 탐색 진행',
               onSeeMore: () {},
             ),
-            CategoryChips(categories: provider.categories),
+            // CategoryChips(categories: provider.categories),
             SizedBox(height: MediaQuery.of(context).size.height * 0.02),
             // 인기 투어
             SectionHeader(
@@ -110,7 +115,6 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
             SizedBox(height: MediaQuery.of(context).size.height * 0.02),
           ],
         ),
-      ),
     );
   }
 }
