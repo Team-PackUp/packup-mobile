@@ -54,9 +54,13 @@
 				</array>
 			</dict>
 		</array>
+		<!-- Google Sign-In -->
+        <key>GIDClientID</key>
+        <string>413154186328-vgu30o62g4iq90oiivhd541msavb0175.apps.googleusercontent.com</string>
 		<key>LSApplicationQueriesSchemes</key>
 		<array>
 			<string>google</string>
+			<string>comgoogleoauth2</string>
 			<string>com.googleusercontent.apps.413154186328-vgu30o62g4iq90oiivhd541msavb0175</string>
 		</array>
 		<!-- 아래는 개발할때만 사용 -->
