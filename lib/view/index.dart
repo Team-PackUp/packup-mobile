@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:packup/const/packup_icons.dart';
 import 'package:packup/view/chat/chat_room.dart';
 import 'package:packup/view/home/home.dart';
-import 'package:packup/view/profile/profile.dart';
+import 'package:packup/view/profile/profile_index.dart';
 import 'package:packup/view/tour/tour.dart';
 
 import '../common/deep_link/handle_router.dart';
@@ -101,7 +101,7 @@ class _IndexState extends State<Index> {
           chatRoomId: chatRoomId,
         );
       case 4:
-        return const Profile();
+        return const ProfileIndex();
       default:
         return const SizedBox();
     }

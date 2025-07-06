@@ -5,7 +5,7 @@ import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:provider/provider.dart';
 
 
-import '../../widget/notice/notice_list_card.dart';
+import '../../widget/notice/notice_card.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -84,7 +84,10 @@ class _NoticeListContentState extends State<NoticeListContent> {
                     context.push('/notice_view/${notice.seq!}');
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.01,
+                      vertical: MediaQuery.of(context).size.height * 0.002,
+                    ),
                     child: Align(
                       alignment: Alignment.topCenter,
                       child: Stack(

@@ -98,13 +98,6 @@ class Home extends StatelessWidget {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  context.push('/notice_list');
-                },
-                child: const Text('공지사항'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
                   context.push('/reply_list/4/REPLY_TOUR');
                 },
                 child: const Text('댓글 리스트'),

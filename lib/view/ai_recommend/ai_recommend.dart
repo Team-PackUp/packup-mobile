@@ -55,7 +55,7 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
     final profileUrl = userProvider.userModel?.profileImagePath;
 
     return Scaffold(
-        backgroundColor: Colors.grey.shade200,
+        // backgroundColor: Colors.grey.shade200,
         appBar: CustomAppbar(
             title: 'AI 추천',
             arrowFlag: false,
