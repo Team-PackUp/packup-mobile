@@ -7,13 +7,14 @@ import 'package:packup/view/home/home.dart';
 import 'package:get/get.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
-import 'package:packup/view/notice/notice_list.dart';
-import 'package:packup/view/notice/notice_view.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
 import 'package:packup/view/reply/reply_write.dart';
 import 'package:packup/view/user/preference/preference.dart';
 import 'package:packup/view/user/register_detail/register_detail.dart';
 
+import '../view/profile/contact_center/contact_center_index.dart';
+import '../view/profile/notice/notice_list.dart';
+import '../view/profile/notice/notice_view.dart';
 import '../view/reply/reply_list.dart';
 
 GoRouter createRouter(UserProvider userProvider) {
@@ -146,6 +147,10 @@ GoRouter createRouter(UserProvider userProvider) {
             seq: seq,
           );
         },
+      ),
+      GoRoute(
+        path: '/contact_center',
+        builder: (context, state) => ContactCenterIndex(),
       ),
     ],
   );

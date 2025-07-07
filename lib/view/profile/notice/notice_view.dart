@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:packup/common/util.dart';
-import 'package:packup/provider/notice/notice_provider.dart';
 import 'package:packup/widget/editor/editor.dart';
 import 'package:provider/provider.dart';
 
 import 'package:packup/provider/common/editor_provider.dart';
+
+import '../../../provider/profile/notice/notice_provider.dart';
 
 class NoticeView extends StatelessWidget {
   final int noticeSeq;

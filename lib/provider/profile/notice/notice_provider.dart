@@ -1,9 +1,9 @@
 import 'package:packup/model/common/page_model.dart';
 import 'package:packup/provider/common/loading_provider.dart';
 import 'package:packup/service/common/loading_service.dart';
-import 'package:packup/service/notice/notice_service.dart';
 
-import 'package:packup/model/notice/notice_model.dart';
+import '../../../model/profile/notice/notice_model.dart';
+import '../../../service/profile/notice/notice_service.dart';
 
 class NoticeProvider extends LoadingProvider {
 

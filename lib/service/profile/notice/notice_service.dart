@@ -1,5 +1,5 @@
-import '../../http/dio_service.dart';
-import '../../model/common/result_model.dart';
+import '../../../http/dio_service.dart';
+import '../../../model/common/result_model.dart';
 
 class NoticeService {
 

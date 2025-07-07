@@ -20,7 +20,7 @@ final List<ProfileMenuItem> menuItems = [
   ),
   ProfileMenuItem(
       title: '고객센터',
-      route: '/help_center'
+      route: '/contact_center'
   ),
   ProfileMenuItem(
     title: '알림센터',
