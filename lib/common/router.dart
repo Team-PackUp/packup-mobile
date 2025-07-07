@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
+import 'package:packup/view/profile/alert_center/alert_center_list.dart';
 import 'package:packup/view/reply/reply_write.dart';
 import 'package:packup/view/user/preference/preference.dart';
 import 'package:packup/view/user/register_detail/register_detail.dart';
@@ -94,17 +95,6 @@ GoRouter createRouter(UserProvider userProvider) {
         builder: (context, state) => const TossResultScreen(),
       ),
       GoRoute(
-        path: '/notice_list',
-        builder: (context, state) => const NoticeList(),
-      ),
-      GoRoute(
-        path: '/notice_view/:noticeSeq',
-        builder: (context, state) {
-          final noticeSeq = int.parse(state.pathParameters['noticeSeq']!);
-          return NoticeView(noticeSeq: noticeSeq);
-        },
-      ),
-      GoRoute(
         path: '/preference',
         builder: (context, state) => const Preference(),
       ),
@@ -147,6 +137,21 @@ GoRouter createRouter(UserProvider userProvider) {
             seq: seq,
           );
         },
+      ),
+      GoRoute(
+        path: '/notice_list',
+        builder: (context, state) => const NoticeList(),
+      ),
+      GoRoute(
+        path: '/notice_view/:noticeSeq',
+        builder: (context, state) {
+          final noticeSeq = int.parse(state.pathParameters['noticeSeq']!);
+          return NoticeView(noticeSeq: noticeSeq);
+        },
+      ),
+      GoRoute(
+        path: '/alert_center',
+        builder: (context, state) => AlertCenterList(),
       ),
       GoRoute(
         path: '/contact_center',

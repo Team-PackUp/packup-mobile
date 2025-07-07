@@ -24,7 +24,7 @@ final List<ProfileMenuItem> menuItems = [
   ),
   ProfileMenuItem(
     title: '알림센터',
-    route: '/alarm_center'
+    route: '/alert_center'
   ),
 ];
 
