@@ -134,11 +134,11 @@ class _TourList extends StatelessWidget {
     if (tours.isEmpty) return const SizedBox.shrink();
 
     return SizedBox(
-      height: 230,
+      height: MediaQuery.of(context).size.height * .3,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: tours.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        separatorBuilder: (_, __) => SizedBox(width: MediaQuery.of(context).size.width * .001),
         itemBuilder: (context, index) {
           final tour = tours[index];
           return InkWell(

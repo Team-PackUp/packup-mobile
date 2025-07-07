@@ -1,83 +1,128 @@
-// lib/pages/ai_recommend/widgets/tour_card.dart
-// ----------------------------------------------------
 import 'package:flutter/material.dart';
-import 'package:packup/Common/util.dart';
-
+import 'package:packup/Const/color.dart';
 import '../../../model/ai_recommend/recommend_tour_model.dart';
+import '../../common/util.dart';
 
 class TourCard extends StatelessWidget {
-  final RecommendTourModel tour;
-
   const TourCard({super.key, required this.tour});
+  final RecommendTourModel tour;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 160,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-            child: Image.network(
-              fullFileUrl(tour.titleImagePath!) ?? '',
-              height: MediaQuery.of(context).size.height * 0.1,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    final screenW = MediaQuery.of(context).size.width;
+    final cardWidth   = screenW * 0.4;
+    final imageHeight = cardWidth * 0.65;
+
+    return SizedBox(
+      width: cardWidth,
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        clipBehavior: Clip.hardEdge,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
               children: [
-                Text(
-                  tour.tourTitle ?? '',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                SizedBox(
+                  height: imageHeight,
+                  width: double.infinity,
+                  child: Image.network(
+                    fullFileUrl(tour.titleImagePath ?? ''),
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) =>
+                        Image.asset('assets/image/logo/logo.png',
+                            fit: BoxFit.cover),
+                  ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  tour.tourIntroduce ?? '',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-                const SizedBox(height: 6),
-                // Row(
-                //   children: [
-                //     const Icon(Icons.star, size: 14, color: Colors.amber),
-                //     const SizedBox(width: 2),
-                //     Text(
-                //       tour.title,
-                //       style: const TextStyle(fontSize: 12),
-                //     ),
-                //     const SizedBox(width: 4),
-                //     Text(
-                //       '(${tour.title} 리뷰)',
-                //       style: const TextStyle(fontSize: 12, color: Colors.grey),
-                //     ),
-                //   ],
-                // ),
-                const SizedBox(height: 6),
-                // Text(
-                //   tour.title,
-                //   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                // ),
+                if (tour.remainPeople <= 3)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: PRIMARY_COLOR,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '마감 임박! (${tour.remainPeople}자리 남음)',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
-          ),
-        ],
+
+            Padding(
+              padding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    tour.tourTitle ?? '',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.place, size: 12, color: Colors.grey),
+                      const SizedBox(width: 2),
+                      Expanded(
+                        child: Text(
+                          tour.tourLocation ?? '',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontSize: 11, color: Colors.grey),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '₩${tour.tourPrice?.toStringAsFixed(0) ?? ''}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 10,
+                        backgroundImage: NetworkImage(
+                          fullFileUrl(tour.guideModel?.guideAvatarPath ?? ''),
+                        ),
+                        onBackgroundImageError: (_, __) {},
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          tour.guideModel?.guideName ?? '',
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontSize: 11, color: Colors.grey),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
