@@ -1,52 +1,63 @@
 {
+  "@@locale": "en",
+
   "login": "LOGIN",
-  "@login": {
-    "description": "로그인"
-  },
+  "@login": { "description": "로그인" },
+
   "id": "id",
-  "@id": {
-    "description": "아이디"
-  },
+  "@id": { "description": "아이디" },
+
   "password": "password",
-  "@password": {
-    "description": "비밀번호"
-  },
+  "@password": { "description": "비밀번호" },
+
   "join": "JOIN",
-  "@join": {
-    "description": "회원가입"
-  },
+  "@join": { "description": "회원가입" },
+
   "profile": "Profile of {name}",
-  "@my_info": {
+  "@profile": {
     "description": "개인 페이지",
-    "placeholders": {
-      "name": {
-        "description": "User's name",
-        "example": "Alice"
-      }
-    }
+    "placeholders": { "name": {} }
   },
+
   "empty_id": "Empty ID",
-  "@empty_id": {
-    "description": "아이디 미입력"
-  },
+  "@empty_id": { "description": "아이디 미입력" },
+
   "empty_password": "Empty password",
-  "@empty_password": {
-    "description": "비밀번호 미입력"
-  },
+  "@empty_password": { "description": "비밀번호 미입력" },
+
   "invalid_credentials": "Wrong ID or password",
-  "@invalid_credentials_description": {
-    "description": "잘못된 아이디 혹은 비밀번호 입력"
-  },
+  "@invalid_credentials": { "description": "잘못된 아이디 혹은 비밀번호 입력" },
+
   "chat": "chat",
-  "@chat": {
-    "description": "채팅"
-  },
+  "@chat": { "description": "채팅" },
+
   "chat_room": "chat room",
-  "@chat_room": {
-    "description": "채팅방"
-  },
+  "@chat_room": { "description": "채팅방" },
+
   "notice": "notice",
-  "@notice": {
-    "description": "공지사항"
-  }
+  "@notice": { "description": "공지사항" },
+
+  "reservation_complete": "Reservation for {item} completed",
+  "@reservation_complete": {
+    "description": "예약 완료",
+    "placeholders": { "item": {} }
+  },
+
+  "reservation_modified": "Reservation for {item} modified",
+  "@reservation_modified": {
+    "description": "예약 변경",
+    "placeholders": { "item": {} }
+  },
+
+  "reservation_cancel": "Reservation for {item} canceled",
+  "@reservation_cancel": {
+    "description": "예약 취소",
+    "placeholders": { "item": {} }
+  },
+
+  "advertise": "Check out our new promotion!",
+  "@advertise": { "description": "광고/프로모션 안내" },
+
+  "new_notification": "You have a new notification",
+  "@new_notification": { "description": "단순 새 알림" }
 }

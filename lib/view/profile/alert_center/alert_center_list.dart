@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:packup/provider/profile/alert_center/alert_center_provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:provider/provider.dart';
-import '../../../widget/profile/notice/notice_card.dart';
+import '../../../widget/profile/alert_center/list_card.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -88,10 +88,11 @@ class _AlertCenterListContentState extends State<AlertCenterListContent> {
                         children: [
                           SizedBox(
                             width: double.infinity,
-                            child: NoticeCard(
+                            child: ListCard(
                               index: index,
-                              title: alert.title,
+                              alertType: alert.alertType,
                               createdAt: alert.createdAt,
+                              payload: alert.payload,
                             ),
                           ),
                         ],

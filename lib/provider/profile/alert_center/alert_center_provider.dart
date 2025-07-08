@@ -9,16 +9,21 @@ import '../../../service/profile/alert_center/alert_center_service.dart';
 class AlertCenterProvider extends LoadingProvider {
   final alertService = AlertCenterService();
 
-  int _totalPage = 1;
-  int _curPage = 0;
-
   late List<AlertCenterModel> _alertList;
+
+  AlertCenterProvider() {
+    _alertList = [];
+  }
+
+  int _totalPage = 0;
+  int _curPage = 0;
 
   List<AlertCenterModel> get alertList => _alertList;
   int get totalPage => _totalPage;
   int get curPage => _curPage;
 
   Future<void> getAlertList() async {
+    if(_totalPage < _curPage) return;
 
     await LoadingService.run(() async {
       final response = await alertService.getAlertList(_curPage);
