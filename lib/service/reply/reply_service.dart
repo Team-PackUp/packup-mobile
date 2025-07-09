@@ -1,3 +1,4 @@
+import 'package:packup/model/common/fcm_model.dart';
 import 'package:packup/model/reply/reply_model.dart';
 
 import '../../http/dio_service.dart';
@@ -22,11 +23,24 @@ class ReplyService {
     return await DioService().getRequest('/reply/view/$seq');
   }
 
+  // Future<ResultModel> saveReply({
+  //   required ReplyModel replyModel
+  // }) async {
+  //
+  //   return DioService().postRequest('/reply/save', replyModel.toMap());
+  // }
+
   Future<ResultModel> saveReply({
     required ReplyModel replyModel,
+    required FcmModel  fcmModel,
   }) async {
 
-    return DioService().postRequest('/reply/save', replyModel.toMap());
+    final payload = {
+      ...replyModel.toMap(),
+      'fcmPushRequest': fcmModel.toMap(),
+    };
+
+    return DioService().postRequest('/reply/save', payload);
   }
 
   Future<ResultModel> updateReply({

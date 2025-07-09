@@ -16,20 +16,24 @@ import '../../widget/common/alert_bell.dart';
 
 class AIRecommend extends StatelessWidget {
   static const routeName = 'ai_recommend';
+  final String? redirect;
 
-  const AIRecommend({super.key});
+  const AIRecommend({super.key, this.redirect});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => AIRecommendProvider(),
-      child: const AIRecommendContent(),
+      child: AIRecommendContent(redirect: redirect),
     );
   }
 }
 
+
 class AIRecommendContent extends StatefulWidget {
-  const AIRecommendContent({super.key});
+  final String? redirect;
+
+  const AIRecommendContent({super.key, this.redirect});
 
   @override
   State<AIRecommendContent> createState() => _AIRecommendContentState();
@@ -37,6 +41,7 @@ class AIRecommendContent extends StatefulWidget {
 
 class _AIRecommendContentState extends State<AIRecommendContent> {
   late final AIRecommendProvider provider;
+  bool _redirectHandled = false;
 
   @override
   void initState() {
@@ -45,9 +50,20 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
     provider = context.read<AIRecommendProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _maybeRedirect();
       provider.initTour();
       provider.initPopular();
     });
+  }
+
+  void _maybeRedirect() {
+    if (_redirectHandled) return;
+
+    final redirectPath = widget.redirect;
+    if (redirectPath != null && redirectPath.isNotEmpty) {
+      _redirectHandled = true;
+      context.push(redirectPath);
+    }
   }
 
   @override

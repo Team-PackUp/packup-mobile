@@ -3,6 +3,10 @@ import 'package:packup/model/reply/reply_model.dart';
 import 'package:packup/provider/common/loading_provider.dart';
 import 'package:packup/service/common/loading_service.dart';
 import 'package:packup/service/reply/reply_service.dart';
+import 'package:path/path.dart';
+
+import '../../model/common/fcm_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ReplyProvider extends LoadingProvider {
   final ReplyService _service = ReplyService();
@@ -81,7 +85,7 @@ class ReplyProvider extends LoadingProvider {
     });
   }
 
-  Future<void> upsertReply(String content, int point) async {
+  Future<void> upsertReply(String content, int point, String title, String body) async {
     await LoadingService.run(() async {
       if (seq != null) {
         // 수정
@@ -99,7 +103,13 @@ class ReplyProvider extends LoadingProvider {
             point   : point,
         );
 
-        await _service.saveReply(replyModel: reply);
+        // 테스트
+        final fcm = FcmModel(
+          body: title,
+          title: body
+        );
+
+        await _service.saveReply(replyModel: reply, fcmModel: fcm);
       }
     });
   }

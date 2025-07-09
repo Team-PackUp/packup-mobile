@@ -125,7 +125,11 @@ class _ReplyFormState extends State<ReplyForm> {
 
   Future<void> _upsertReply() async {
     if(_formKey.currentState!.validate()) {
-      await _replyProvider.upsertReply(_contentController.text, _point);
+      await _replyProvider.upsertReply(
+          _contentController.text, _point,
+          AppLocalizations.of(context)!.notice,
+          AppLocalizations.of(context)!.advertise
+      );
 
       if (mounted) Navigator.pop(context, true);
     }
