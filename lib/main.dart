@@ -11,6 +11,7 @@ import 'package:packup/common/router.dart';
 import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/provider/common/loading_provider.dart';
 import 'package:packup/provider/payment/toss/toss_payment_provider.dart';
+import 'package:packup/provider/profile/alert_center/alert_center_provider.dart';
 import 'package:packup/provider/user/user_provider.dart';
 import 'package:packup/service/common/app_state_service.dart';
 import 'package:packup/service/common/firebase_service.dart';
@@ -77,8 +78,14 @@ void main() async {
   await FirebaseService().initConnect();
   // ▲ firebase
 
+  final loadingNotifier = LoadingProvider();
+  LoadingService.notifier = loadingNotifier;
+
   final userProvider = UserProvider();
   await userProvider.initLoginStatus();
+
+  final alertProvider = AlertCenterProvider();
+  await alertProvider.initProvider();
 
   // 전역변수로 선언하여 context 상태가 없는 함수에서도.. push 할 수 있도록;;
   globalRouter = createRouter(userProvider);
@@ -89,13 +96,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => userProvider),
         ChangeNotifierProvider(create: (_) => TossPaymentProvider()),
         ChangeNotifierProvider(create: (_) => ChatRoomProvider()),
-        ChangeNotifierProvider<LoadingProvider>(
-          create: (_) {
-            final notifier = LoadingProvider();
-            LoadingService.notifier = notifier;
-            return notifier;
-          },
-        ),
+        ChangeNotifierProvider(create: (_) => alertProvider),
+        ChangeNotifierProvider.value(value: loadingNotifier),
       ],
       child: PackUp(),
     ),

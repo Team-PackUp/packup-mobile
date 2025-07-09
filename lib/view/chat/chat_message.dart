@@ -120,7 +120,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     return Scaffold(
       appBar: CustomAppbar(
         title: widget.title,
-        trailing: CircleAvatar(
+        profile: CircleAvatar(
           backgroundImage: profileUrl != null && profileUrl.isNotEmpty
               ? NetworkImage(profileUrl)
               : null,

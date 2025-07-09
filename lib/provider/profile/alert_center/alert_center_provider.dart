@@ -10,15 +10,23 @@ class AlertCenterProvider extends LoadingProvider {
   final alertService = AlertCenterService();
 
   late List<AlertCenterModel> _alertList;
+  late int _alertCount;
 
   AlertCenterProvider() {
     _alertList = [];
+    _alertCount = 0;
   }
 
   int _totalPage = 0;
   int _curPage = 0;
 
+  initProvider() async {
+    await getAlertList();
+    _alertCount = _alertList.length;
+  }
+
   List<AlertCenterModel> get alertList => _alertList;
+  int get alertCount => _alertCount;
   int get totalPage => _totalPage;
   int get curPage => _curPage;
 

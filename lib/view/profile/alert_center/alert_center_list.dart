@@ -6,18 +6,9 @@ import '../../../widget/profile/alert_center/list_card.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class AlertCenterList extends StatelessWidget {
-  const AlertCenterList({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AlertCenterProvider(),
-      child: const AlertCenterListContent(),
-    );
-  }
-}
-
+/**
+ * 알림 센터를 클릭했을 때 알림에 맞는 view 페이지로 이동하는 것 실패
+ */
 class AlertCenterListContent extends StatefulWidget {
   const AlertCenterListContent({super.key});
 

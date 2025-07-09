@@ -151,7 +151,7 @@ GoRouter createRouter(UserProvider userProvider) {
       ),
       GoRoute(
         path: '/alert_center',
-        builder: (context, state) => AlertCenterList(),
+        builder: (context, state) => AlertCenterListContent(),
       ),
       GoRoute(
         path: '/contact_center',
