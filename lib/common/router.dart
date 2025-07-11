@@ -13,6 +13,7 @@ import 'package:packup/view/reply/reply_write.dart';
 import 'package:packup/view/user/preference/preference.dart';
 import 'package:packup/view/user/register_detail/register_detail.dart';
 
+import '../view/ai_recommend/ai_recommend_detail.dart';
 import '../view/profile/contact_center/contact_center_index.dart';
 import '../view/profile/notice/notice_list.dart';
 import '../view/profile/notice/notice_view.dart';
@@ -156,6 +157,10 @@ GoRouter createRouter(UserProvider userProvider) {
       GoRoute(
         path: '/contact_center',
         builder: (context, state) => ContactCenterIndex(),
+      ),
+      GoRoute(
+        path: '/ai_recommend_detail',
+        builder: (context, state) => AiRecommendDetail(),
       ),
     ],
   );

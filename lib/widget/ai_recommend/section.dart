@@ -1,17 +1,17 @@
-// lib/pages/ai_recommend/widgets/section_header.dart
-// ----------------------------------------------------
 import 'package:flutter/material.dart';
 
 class SectionHeader extends StatelessWidget {
-  final String icon;        // 이모지 또는 아이콘 텍스트
-  final String title;       // 섹션 제목
-  final VoidCallback onSeeMore; // "더보기" 탭 콜백
+  final String icon;
+  final String title;
+  final String? callBackText;
+  final VoidCallback? onSeeMore;
 
   const SectionHeader({
     super.key,
     required this.icon,
     required this.title,
-    required this.onSeeMore,
+    this.callBackText,
+    this.onSeeMore,
   });
 
   @override
@@ -29,16 +29,17 @@ class SectionHeader extends StatelessWidget {
             ),
           ),
         ),
-        GestureDetector(
-          onTap: onSeeMore,
-          child: const Text(
-            '더보기',
-            style: TextStyle(
-              color: Colors.blueAccent,
-              fontWeight: FontWeight.w500,
+        if(onSeeMore != null && callBackText != null)
+          GestureDetector(
+            onTap: onSeeMore,
+            child: Text(
+              callBackText!,
+              style: TextStyle(
+                color: Colors.blueAccent,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
-        ),
       ],
     );
   }
