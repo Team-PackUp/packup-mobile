@@ -14,9 +14,12 @@ class AlertCenterService {
     return _instance;
   }
 
-  Future<ResultModel> getAlertList(int page) async {
-    final data = {'page' : page};
-    return await DioService().getRequest('/alert/list', data);
+  Future<ResultModel> getAlertCount() async {
+    return await DioService().getRequest('/alert/count');
+  }
+
+  Future<ResultModel> getAlertList() async {
+    return await DioService().getRequest('/alert/list');
   }
 
   Future<ResultModel> markRead(AlertCenterModel n) async {

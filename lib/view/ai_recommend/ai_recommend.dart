@@ -41,6 +41,7 @@ class AIRecommendContent extends StatefulWidget {
 
 class _AIRecommendContentState extends State<AIRecommendContent> {
   late final AIRecommendProvider provider;
+  late final AlertCenterProvider _alertCenterProvider;
   bool _redirectHandled = false;
 
   @override
@@ -49,10 +50,12 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
 
     provider = context.read<AIRecommendProvider>();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       _maybeRedirect();
       provider.initTour();
       provider.initPopular();
+      _alertCenterProvider = context.read<AlertCenterProvider>();
+      await _alertCenterProvider.initProvider();
     });
   }
 
@@ -69,7 +72,7 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<AIRecommendProvider>();
-    final alertCenterProvider = context.watch<AlertCenterProvider>();
+    int alertCount = context.watch<AlertCenterProvider>().alertCount;
     final userProvider = context.watch<UserProvider>();
     final profileUrl = userProvider.userModel?.profileImagePath;
 
@@ -78,8 +81,8 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
         title: 'AI 추천',
         arrowFlag: false,
         alert: AlertBell(
-          count: alertCenterProvider.alertCount,
-          onTap: () {
+          count: alertCount,
+          onTap: () async {
             context.push('/alert_center');
           },
         ),

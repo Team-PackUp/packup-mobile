@@ -17,24 +17,29 @@ class AlertCenterProvider extends LoadingProvider {
     _alertCount = 0;
   }
 
-  int _totalPage = 0;
-  int _curPage = 0;
-
   initProvider() async {
-    await getAlertList();
-    _alertCount = _alertList.length;
+    await getAlertCount();
   }
 
   List<AlertCenterModel> get alertList => _alertList;
   int get alertCount => _alertCount;
-  int get totalPage => _totalPage;
-  int get curPage => _curPage;
 
-  Future<void> getAlertList() async {
-    if(_totalPage < _curPage) return;
+  Future<void> getAlertCount() async {
+    await LoadingService.run(() async {
+      final response = await alertService.getAlertCount();
+      _alertCount  = response.response;
+      notifyListeners();
+    });
+  }
+
+  Future<void> getAlertList({bool reset = false}) async {
+    if (reset) {
+      _alertList.clear();
+      _alertCount = 0;
+    }
 
     await LoadingService.run(() async {
-      final response = await alertService.getAlertList(_curPage);
+      final response = await alertService.getAlertList();
       PageModel pageModel = PageModel.fromJson(response.response);
 
       List<AlertCenterModel> list = pageModel.objectList
@@ -42,21 +47,10 @@ class AlertCenterProvider extends LoadingProvider {
           .toList();
 
       _alertList.addAll(list);
-      _totalPage = pageModel.totalPage;
-
-      _curPage++;
 
       notifyListeners();
     });
 
-    notifyListeners();
-  }
-
-  Future<void> markRead(AlertCenterModel alertCenterModel) async {
-    await LoadingService.run(() async {
-      await alertService.markRead(alertCenterModel);
-
-      notifyListeners();
-    });
+    getAlertCount();
   }
 }

@@ -85,19 +85,19 @@ void main() async {
   await userProvider.initLoginStatus();
 
   final alertProvider = AlertCenterProvider();
-  await alertProvider.initProvider();
 
-  // 전역변수로 선언하여 context 상태가 없는 함수에서도.. push 할 수 있도록;;
   globalRouter = createRouter(userProvider);
 
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => userProvider),
+        // ChangeNotifierProvider(create: (_) => userProvider),
         ChangeNotifierProvider(create: (_) => TossPaymentProvider()),
         ChangeNotifierProvider(create: (_) => ChatRoomProvider()),
-        ChangeNotifierProvider(create: (_) => alertProvider),
+        ChangeNotifierProvider.value(value: userProvider),
         ChangeNotifierProvider.value(value: loadingNotifier),
+        ChangeNotifierProvider.value(value: loadingNotifier),
+        ChangeNotifierProvider.value(value: alertProvider),
       ],
       child: PackUp(),
     ),

@@ -15,7 +15,6 @@ class AlertBell extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        // 종 아이콘
         IconButton(
           onPressed: onTap,
           icon: Icon(
