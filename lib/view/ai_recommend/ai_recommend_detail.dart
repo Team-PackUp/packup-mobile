@@ -120,27 +120,26 @@ class _TourList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (tours.isEmpty) return const SizedBox.shrink();
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        const gap     = 8.0;
-
-        return SizedBox(
-          height: MediaQuery.of(context).size.height * .3,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: tours.length,
-            separatorBuilder: (_, __) => const SizedBox(width: gap),
-            itemBuilder: (context, i) {
-              final tour = tours[i];
-              return InkWell(
-                onTap: () => onTap(tour),
-                child: TourCard(tour: tour),
-              );
-            },
-          ),
+    return GridView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: tours.length,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 250,
+        mainAxisSpacing: 8.0,
+        crossAxisSpacing: 8.0,
+        childAspectRatio: 0.7,
+      ),
+      itemBuilder: (context, index) {
+        final tour = tours[index];
+        return InkWell(
+          onTap: () => onTap(tour),
+          child: TourCard(tour: tour),
         );
       },
     );
   }
 }
+
 

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:packup/Const/color.dart';
 import '../../../model/ai_recommend/recommend_tour_model.dart';
 import '../../common/util.dart';
+import 'package:marquee/marquee.dart';
+
+import '../common/slide_text.dart';
 
 class TourCard extends StatelessWidget {
   const TourCard({super.key, required this.tour});
@@ -65,12 +68,8 @@ class TourCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    tour.tourTitle ?? '',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.bold),
+                  SlideText(
+                    title: tour.tourTitle ?? '',
                   ),
                   const SizedBox(height: 4),
                   Row(
