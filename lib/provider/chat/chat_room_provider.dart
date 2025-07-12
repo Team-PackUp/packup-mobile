@@ -21,7 +21,7 @@ class ChatRoomProvider extends LoadingProvider {
   int get totalPage => _totalPage;
   int get curPage => _curPage;
 
-  String _lastMessage = '';
+  final String _lastMessage = '';
   String get lastMessage => _lastMessage;
 
   // 채팅방 리스트
@@ -30,16 +30,11 @@ class ChatRoomProvider extends LoadingProvider {
 
     await LoadingService.run(() async {
       final response = await _chatService.getRoom(_curPage);
-      PageModel pageModel = PageModel.fromJson(response.response);
+      final page = PageModel<ChatRoomModel>.fromJson(response.response,
+            (e) => ChatRoomModel.fromJson(e),
+      );
 
-      final responseList = pageModel.objectList;
-      int totalPage  = pageModel.totalPage;
-
-      List<ChatRoomModel> chatRoomList = responseList
-          .map((data) => ChatRoomModel.fromJson(data))
-          .toList();
-
-      _chatRoom.addAll(chatRoomList);
+      _chatRoom.addAll(page.objectList);
       _totalPage = totalPage;
 
       _curPage++;
@@ -49,6 +44,7 @@ class ChatRoomProvider extends LoadingProvider {
   }
 
   void updateFirstChatRoom(ChatRoomModel chatRoomModel) {
+    print("여기????");
     // 이미 있는 채팅방인지 확인
     int existingIndex = _chatRoom.indexWhere((room) => room.seq == chatRoomModel.seq);
 
@@ -62,11 +58,13 @@ class ChatRoomProvider extends LoadingProvider {
   }
 
   subscribeChatRoom() async {
+    print("여기는?");
     const destination = '/user/queue/chatroom-refresh';
 
     _socketService.registerCallback(destination, (data) {});
 
     _socketService.subscribe(destination, (data) {
+      print("좀 와랴ㅏ");
       final newFirstChatRoom = ChatRoomModel.fromJson(data);
       updateFirstChatRoom(newFirstChatRoom);
     });

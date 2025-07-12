@@ -34,14 +34,12 @@ class ChatMessageProvider extends LoadingProvider {
 
     await LoadingService.run(() async {
       final response = await _chatService.getMessage(chatRoomSeq, _curPage);
-      PageModel pageModel = PageModel.fromJson(response.response);
+      final page = PageModel<ChatMessageModel>.fromJson(response.response,
+            (e) => ChatMessageModel.fromJson(e),
+      );
 
-      List<ChatMessageModel> messageList = pageModel.objectList
-          .map((data) => ChatMessageModel.fromJson(data))
-          .toList();
-
-      _chatMessage.addAll(messageList);
-      _totalPage = pageModel.totalPage;
+      _chatMessage.addAll(page.objectList);
+      _totalPage = page.totalPage;
 
       _curPage++;
 

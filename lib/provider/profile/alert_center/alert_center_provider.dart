@@ -40,13 +40,11 @@ class AlertCenterProvider extends LoadingProvider {
 
     await LoadingService.run(() async {
       final response = await alertService.getAlertList();
-      PageModel pageModel = PageModel.fromJson(response.response);
+      final page = PageModel<AlertCenterModel>.fromJson(response.response,
+            (e) => AlertCenterModel.fromJson(e),
+      );
 
-      List<AlertCenterModel> list = pageModel.objectList
-          .map((data) => AlertCenterModel.fromJson(data))
-          .toList();
-
-      _alertList.addAll(list);
+      _alertList.addAll(page.objectList);
 
       notifyListeners();
     });

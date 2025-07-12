@@ -15,17 +15,17 @@ class AIRecommendService {
   }
 
   // 투어 리스트에서 랜덤하게 추출
-  Future<ResultModel> getRecommendPopular(int count) async {
+  Future<ResultModel> getRecommendPopular({required int page, required int count}) async {
 
-    final data = {'count' : count};
+    final data = {'count' : count, 'page' : page};
 
     return await DioService().getRequest('/tour/recommend', data);
   }
 
   // 코사인 알고리즘
-  Future<ResultModel> getRecommendTour(int count) async {
+  Future<ResultModel> getRecommendTour({required int page, required count}) async {
 
-    final data = {'count' : count};
+    final data = {'count' : count, 'page' : page};
 
     return await DioService().getRequest('/recommend', data);
   }

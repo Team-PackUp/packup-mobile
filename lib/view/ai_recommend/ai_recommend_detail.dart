@@ -46,7 +46,7 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
     provider = context.read<AIRecommendProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      provider.initTour();
+      provider.initTour(20);
       _alertCenterProvider = context.read<AlertCenterProvider>();
       await _alertCenterProvider.initProvider();
     });

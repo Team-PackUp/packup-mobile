@@ -32,16 +32,23 @@ class ChatRoomModel {
 
   factory ChatRoomModel.fromJson(Map<String, dynamic> json) {
     return ChatRoomModel(
-              seq: json['seq'],
-      partUserSeq: List<int>.from(json['partUserSeq']),
-          userSeq: json['userSeq'],
-            title: json['title'],
-      unReadCount: json['unReadCount'],
-      lastMessage: json['lastMessage'],
-  lastMessageDate: DateTime.parse(json['lastMessageDate']),
-         fileFlag: json['fileFlag'],
-        createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-        updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      seq           : (json['seq'] as num).toInt(),
+      partUserSeq   : (json['partUserSeq'] as List? ?? [])
+          .map((e) => (e as num).toInt())
+          .toList(),
+      userSeq       : (json['userSeq'] as num?)?.toInt(),
+      title         : json['title'] as String? ?? '',
+      unReadCount   : (json['unReadCount'] as num?)?.toInt() ?? 0,
+      lastMessage   : json['lastMessage'] as String?,
+      lastMessageDate : json['lastMessageDate'] != null && json['lastMessageDate'] != ''
+          ? DateTime.parse(json['lastMessageDate'])
+          : null,
+      fileFlag      : json['fileFlag'] as String? ?? 'N',
+      createdAt     : DateTime.parse(json['createdAt']),
+      updatedAt     : json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'])
+          : DateTime.now(),             // 또는 null
     );
   }
+
 }

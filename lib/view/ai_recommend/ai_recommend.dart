@@ -52,8 +52,8 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _maybeRedirect();
-      provider.initTour();
-      provider.initPopular();
+      provider.initTour(5);
+      provider.initPopular(5);
       _alertCenterProvider = context.read<AlertCenterProvider>();
       await _alertCenterProvider.initProvider();
     });

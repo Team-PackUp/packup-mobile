@@ -62,12 +62,11 @@ class ReplyProvider extends LoadingProvider {
         replyModel: reply,
       );
 
-      final page = PageModel.fromJson(response.response);
-      final replList = page.objectList
-          .map((e) => ReplyModel.fromJson(e))
-          .toList();
+      final page = PageModel<ReplyModel>.fromJson(response.response,
+            (e) => ReplyModel.fromJson(e),
+      );
 
-      _replyList.addAll(replList);
+      _replyList.addAll(page.objectList);
       _curPage++;
       _totalPage = page.totalPage;
 

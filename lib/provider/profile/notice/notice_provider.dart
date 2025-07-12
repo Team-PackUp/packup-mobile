@@ -30,14 +30,12 @@ class NoticeProvider extends LoadingProvider {
 
     await LoadingService.run(() async {
       final response = await noticeService.getNoticeList(_curPage);
-      PageModel pageModel = PageModel.fromJson(response.response);
+      final page = PageModel<NoticeModel>.fromJson(response.response,
+            (e) => NoticeModel.fromJson(e),
+      );
 
-      List<NoticeModel> noticeList = pageModel.objectList
-          .map((data) => NoticeModel.fromJson(data))
-          .toList();
-
-      _noticeList.addAll(noticeList);
-      _totalPage = pageModel.totalPage;
+      _noticeList.addAll(page.objectList);
+      _totalPage = page.totalPage;
 
       _curPage++;
 
