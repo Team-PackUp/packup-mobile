@@ -44,7 +44,6 @@ class ChatRoomProvider extends LoadingProvider {
   }
 
   void updateFirstChatRoom(ChatRoomModel chatRoomModel) {
-    print("여기????");
     // 이미 있는 채팅방인지 확인
     int existingIndex = _chatRoom.indexWhere((room) => room.seq == chatRoomModel.seq);
 
@@ -58,13 +57,11 @@ class ChatRoomProvider extends LoadingProvider {
   }
 
   subscribeChatRoom() async {
-    print("여기는?");
     const destination = '/user/queue/chatroom-refresh';
 
     _socketService.registerCallback(destination, (data) {});
 
     _socketService.subscribe(destination, (data) {
-      print("좀 와랴ㅏ");
       final newFirstChatRoom = ChatRoomModel.fromJson(data);
       updateFirstChatRoom(newFirstChatRoom);
     });
