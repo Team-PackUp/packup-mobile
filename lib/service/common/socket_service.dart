@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 import 'package:get/get.dart';
 
 import 'package:dio/dio.dart';
@@ -129,7 +128,6 @@ class SocketService {
 
   /// 메시지 전송
   void sendMessage(destination, dynamic model) {
-    print(model.toJson());
     stompClient!.send(
       destination: '/pub/$destination',
       body: model.toJson(),
