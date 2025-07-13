@@ -12,6 +12,7 @@ import '../../widget/ai_recommend/section.dart';
 import '../../widget/ai_recommend/tour_card.dart';
 import '../../model/ai_recommend/recommend_tour_model.dart';
 import '../../widget/common/alert_bell.dart';
+import '../search/search.dart';
 
 class AiRecommendDetail extends StatelessWidget {
 
@@ -84,7 +85,14 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
           vertical: MediaQuery.of(context).size.height * 0.01,
         ),
         children: [
-          const CustomSearchBar(),
+          CustomSearchBar(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const Search()),
+              );
+            },
+          ),
           const SizedBox(height: 16),
           // AI 추천 투어
           SectionHeader(

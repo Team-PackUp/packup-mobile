@@ -13,6 +13,7 @@ import '../../widget/ai_recommend/section.dart';
 import '../../widget/ai_recommend/tour_card.dart';
 import '../../model/ai_recommend/recommend_tour_model.dart';
 import '../../widget/common/alert_bell.dart';
+import '../search/search.dart';
 
 class AIRecommend extends StatelessWidget {
   static const routeName = 'ai_recommend';
@@ -87,48 +88,59 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
           },
         ),
         profile: CircleAvatar(
-          backgroundImage:
-              (profileUrl != null && profileUrl.isNotEmpty)
-                  ? NetworkImage(profileUrl)
-                  : null,
+          backgroundImage: (profileUrl != null && profileUrl.isNotEmpty)
+              ? NetworkImage(profileUrl)
+              : null,
           radius: MediaQuery.of(context).size.height * 0.02,
         ),
       ),
-
-      body: ListView(
-        padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * 0.03,
-          vertical: MediaQuery.of(context).size.height * 0.01,
-        ),
+      body: Column(
         children: [
-          const CustomSearchBar(),
-          // AI 추천 투어
-          SectionHeader(
-              icon: '🔥', title: 'AI가 추천하는 여행입니다!',
-              callBackText: '더보기',
-              onSeeMore: () {
-                print("AI 추천 더보기");
-                context.push('/ai_recommend_detail');
-              }),
-          _TourList(
-            tours: provider.tourList,
-            onTap: (tour) {
-              print("AI 추천 여행 클릭!!");
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (_) => TourDetail(tourSeq: tour.seq),
-              //   ),
-              // );
+          CustomSearchBar(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const Search()),
+              );
             },
           ),
-          SectionHeader(icon: '🔍', title: '종류별 탐색 진행', callBackText: '더보기', onSeeMore: () {}),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-          _TourList(
-            tours: provider.popular,
-            onTap: (popular) {
-              print("인기 투어 모아보기 클릭!!");
-            },
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.03,
+                vertical: MediaQuery.of(context).size.height * 0.01,
+              ),
+              children: [
+                SectionHeader(
+                  icon: '🔥',
+                  title: 'AI가 추천하는 여행입니다!',
+                  callBackText: '더보기',
+                  onSeeMore: () {
+                    print("AI 추천 더보기");
+                    context.push('/ai_recommend_detail');
+                  },
+                ),
+                _TourList(
+                  tours: provider.tourList,
+                  onTap: (tour) {
+                    print("AI 추천 여행 클릭!!");
+                  },
+                ),
+                SectionHeader(
+                  icon: '🔍',
+                  title: '종류별 탐색 진행',
+                  callBackText: '더보기',
+                  onSeeMore: () {},
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                _TourList(
+                  tours: provider.popular,
+                  onTap: (popular) {
+                    print("인기 투어 모아보기 클릭!!");
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),
