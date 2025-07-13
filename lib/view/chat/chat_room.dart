@@ -41,6 +41,7 @@ class ChatRoomContent extends StatefulWidget {
 class _ChatRoomContentState extends State<ChatRoomContent> with WidgetsBindingObserver {
   late final ScrollController _scrollController;
   late ChatRoomProvider _chatRoomProvider;
+  late int userSeq = 0;
 
   @override
   void initState() {
@@ -51,6 +52,7 @@ class _ChatRoomContentState extends State<ChatRoomContent> with WidgetsBindingOb
     _scrollController.addListener(_scrollListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      userSeq = await decodeTokenInfo();
       _chatRoomProvider = context.read<ChatRoomProvider>();
       await _chatRoomProvider.getRoom();
       await _chatRoomProvider.subscribeChatRoom();
@@ -146,9 +148,7 @@ class _ChatRoomContentState extends State<ChatRoomContent> with WidgetsBindingOb
                     onTap: () async {
                       _chatRoomProvider.readMessageThisRoom(room.seq!);
 
-                      final userSeq = await decodeTokenInfo();
                       final encodedTitle = Uri.encodeComponent(room.title!);
-
                       context.push(
                         '/chat_message/${room.seq}/$encodedTitle/$userSeq',
                       );
