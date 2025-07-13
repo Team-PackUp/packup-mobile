@@ -41,7 +41,6 @@ class _ScheduleState extends State<Schedule> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 10, right: 10),
-                  child: CustomSearchBar(),
                 ),
                 Calendar(),
               ],

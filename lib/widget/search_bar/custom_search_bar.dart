@@ -1,56 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:packup/provider/search_bar/custom_search_bar_provider.dart';
 
-class CustomSearchBar extends StatefulWidget {
-  const CustomSearchBar({super.key});
+class CustomSearchBar extends StatelessWidget {
+  final VoidCallback onTap;
 
-  @override
-  State<CustomSearchBar> createState() => _CustomSearchBarState();
-}
-
-class _CustomSearchBarState extends State<CustomSearchBar> {
-  late TextEditingController searchController;
-
-  @override
-  void initState() {
-    super.initState();
-    searchController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
+  const CustomSearchBar({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      title: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                labelText: "검색어를 입력해주세요",
+      title: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+          ),
+          child: Row(
+            children: const [
+              Icon(Icons.search, color: Colors.grey),
+              SizedBox(width: 8),
+              Text(
+                '같이 여름휴가 갈 사람 구함@@',
+                style: TextStyle(color: Colors.grey, fontSize: 15,),
               ),
-              onChanged: (value) {
-                context.read<SearchBarProvider>().setSearchText(value);
-              },
-            ),
+            ],
           ),
-          IconButton(
-            icon: Icon(
-              Icons.search,
-              size: 30,
-            ),
-            onPressed: () {
-              context.read<SearchBarProvider>().fetchResults();
-            },
-          ),
-        ],
+        ),
       ),
     );
   }

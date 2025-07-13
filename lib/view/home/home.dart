@@ -33,7 +33,6 @@ class Home extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),
-                child: CustomSearchBar(),
               ),
               const SizedBox(height: 20),
               // ElevatedButton(
