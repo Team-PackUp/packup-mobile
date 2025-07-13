@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class CustomSearchBar extends StatelessWidget {
+class CustomSearch extends StatelessWidget {
   final VoidCallback onTap;
 
-  const CustomSearchBar({super.key, required this.onTap});
+  const CustomSearch({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

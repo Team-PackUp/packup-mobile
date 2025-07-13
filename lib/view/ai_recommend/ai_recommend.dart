@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:packup/provider/profile/alert_center/alert_center_provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:provider/provider.dart';
-import 'package:packup/widget/search_bar/custom_search_bar.dart';
+import 'package:packup/widget/search/search.dart';
 
 import '../../provider/ai_recommend/ai_recommend_provider.dart';
 import '../../provider/user/user_provider.dart';
@@ -49,13 +49,12 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
   void initState() {
     super.initState();
 
-    provider = context.read<AIRecommendProvider>();
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      provider = context.read<AIRecommendProvider>();
+      _alertCenterProvider = context.read<AlertCenterProvider>();
       _maybeRedirect();
       provider.initTour(5);
       provider.initPopular(5);
-      _alertCenterProvider = context.read<AlertCenterProvider>();
       await _alertCenterProvider.initProvider();
     });
   }
@@ -96,7 +95,7 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
       ),
       body: Column(
         children: [
-          CustomSearchBar(
+          CustomSearch(
             onTap: () {
               Navigator.push(
                 context,

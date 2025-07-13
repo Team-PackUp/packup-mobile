@@ -1,20 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:packup/provider/search/search_provider.dart';
 import 'package:packup/widget/common/custom_empty_list.dart';
+import 'package:provider/provider.dart';
 
-class Search extends StatefulWidget {
+class Search extends StatelessWidget {
   const Search({super.key});
 
   @override
-  State<Search> createState() => _SearchState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => SearchProvider(),
+      child: SearchContent(),
+    );
+  }
 }
 
-class _SearchState extends State<Search> {
+class SearchContent extends StatefulWidget {
+
+  const SearchContent({super.key});
+
+  @override
+  State<SearchContent> createState() => _SearchContentState();
+}
+
+class _SearchContentState extends State<SearchContent> {
+  late final SearchProvider provider;
   late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      provider = context.read<SearchProvider>()..initContent();
+    });
   }
 
   @override
@@ -23,8 +43,9 @@ class _SearchState extends State<Search> {
     super.dispose();
   }
 
-  void _onSearchChanged(String text) {
-    print('검색어: $text');
+  void _onSearchChanged(String searchText) {
+
+    provider.searchContent(searchText);
   }
 
   @override
