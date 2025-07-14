@@ -7,7 +7,7 @@ class UserModel {
   final String? email;
   final String? nickname;
   final String? profileImagePath;
-  final Map<String, dynamic>? preferCategorySeqJson;
+  final List<String>? preferCategorySeqJson;
 
   UserModel({
     required this.userId,
@@ -41,7 +41,10 @@ class UserModel {
       email: json['email'],
       nickname: json['nickname'],
       profileImagePath: json['profileImagePath'],
-      preferCategorySeqJson: json['preferCategorySeqJson'],
+      preferCategorySeqJson:
+          (json['preferCategorySeqJson'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList(),
     );
   }
 }
