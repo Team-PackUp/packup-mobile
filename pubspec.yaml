@@ -70,7 +70,6 @@ dependencies:
   photo_view: ^0.15.0
   marquee: ^2.3.0
 
-
 dev_dependencies:
   flutter_native_splash: ^2.3.10
   build_runner: ^2.4.6
@@ -102,6 +101,7 @@ flutter:
     - assets/image/logo/
     - assets/image/preference/
     - assets/image/login/
+    - assets/image/background/
     - assets/icon/
     - assets/splash/logo.png
     - .env.prod
