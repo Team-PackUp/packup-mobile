@@ -13,11 +13,7 @@ class Index extends StatefulWidget {
   final int? index;
   final int? myPageIndex;
 
-  const Index({
-    super.key,
-    this.index,
-    this.myPageIndex,
-  });
+  const Index({super.key, this.index, this.myPageIndex});
 
   @override
   State<Index> createState() => _IndexState();
@@ -94,12 +90,10 @@ class _IndexState extends State<Index> {
       case 1:
         return const Home();
       case 2:
-        return Tour();
+        return const Tour(); // 나중에 이름 Home 으로 바꾸는게 직관적
       case 3:
         final chatRoomId = payload?['chatRoomId'];
-        return ChatRoom(
-          chatRoomId: chatRoomId,
-        );
+        return ChatRoom(chatRoomId: chatRoomId);
       case 4:
         return const ProfileIndex();
       default:
@@ -107,15 +101,12 @@ class _IndexState extends State<Index> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 10,
-        ),
+        appBar: AppBar(toolbarHeight: 10),
         body: buildPage(_currentIndex),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
@@ -123,7 +114,7 @@ class _IndexState extends State<Index> {
           type: BottomNavigationBarType.fixed,
           items: List.generate(
             bottomNavItems.length,
-                (index) => BottomNavigationBarItem(
+            (index) => BottomNavigationBarItem(
               icon: SizedBox(
                 height: MediaQuery.of(context).size.height * 0.02,
                 child: Icon(bottomNavItems[index]['icon']),
