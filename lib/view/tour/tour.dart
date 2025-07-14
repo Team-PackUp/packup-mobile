@@ -3,8 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:packup/provider/alert_center/alert_center_provider.dart';
 import 'package:packup/provider/user/user_provider.dart';
 import 'package:packup/view/search/search.dart';
+import 'package:packup/widget/banner/home_banner.dart';
+import 'package:packup/widget/banner/home_banner_carousel.dart';
 import 'package:packup/widget/common/alert_bell.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
+import 'package:packup/widget/search/category_filter.dart';
 import 'package:packup/widget/search/search.dart';
 import 'package:packup/widget/tour/tour_card.dart';
 import 'package:provider/provider.dart';
@@ -74,7 +77,6 @@ class _TourBodyState extends State<TourBody> {
     final profileUrl = userProvider.userModel?.profileImagePath;
 
     return Scaffold(
-      // appBar: AppBar(title: const Text("투어 목록")),
       appBar: CustomAppbar(
         title: 'PACKUP Explorer',
         arrowFlag: false,
@@ -102,6 +104,36 @@ class _TourBodyState extends State<TourBody> {
               );
             },
           ),
+
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: HomeBannerCarousel(
+              onTapBanner: (index) {
+                context.push('/banner/$index');
+              },
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: CategoryFilter(
+              onSelectionChanged: (selectedList) {
+                print('선택된 카테고리: $selectedList');
+              },
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // /// 홈 배너
+          // HomeBanner(
+          //   onTap: () {
+          //     context.push('/nearby');
+          //   },
+          // ),
+          // const SizedBox(height: 12),
           Expanded(
             child:
             /// 투어 리스트 렌더링
