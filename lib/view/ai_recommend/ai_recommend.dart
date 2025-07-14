@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/provider/profile/alert_center/alert_center_provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/search/search.dart';
 
 import '../../provider/ai_recommend/ai_recommend_provider.dart';
+import '../../provider/alert_center/alert_center_provider.dart';
 import '../../provider/user/user_provider.dart';
 
 import '../../widget/ai_recommend/category_chip.dart';

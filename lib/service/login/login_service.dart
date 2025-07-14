@@ -42,6 +42,9 @@ class LoginService {
     
     String? fcmToken = await FirebaseMessaging.instance.getToken();
 
+    print('fcmToken');
+    print(fcmToken);
+
     if (fcmToken != null) {
       await saveToken(fcmTokenKey, fcmToken);
       await DioService().postRequest('/fcm/register', {
@@ -49,7 +52,6 @@ class LoginService {
         'osType': osType
       });
     }
-
   }
 
 }
