@@ -4,12 +4,14 @@ import 'package:packup/widget/common/custom_empty_list.dart';
 import 'package:provider/provider.dart';
 
 class Search extends StatelessWidget {
-  const Search({super.key});
+  final SearchType searchType;
+
+  const Search({super.key, required this.searchType});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => SearchProvider(),
+      create: (_) => SearchProvider(searchType),
       child: SearchContent(),
     );
   }

@@ -9,9 +9,11 @@ import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
 import 'package:packup/view/reply/reply_write.dart';
+import 'package:packup/view/search/search.dart';
 import 'package:packup/view/user/preference/preference.dart';
 import 'package:packup/view/user/register_detail/register_detail.dart';
 
+import '../provider/search/search_provider.dart';
 import '../view/ai_recommend/ai_recommend_detail.dart';
 import '../view/alert_center/alert_center_list.dart';
 import '../view/profile/contact_center/contact_center_index.dart';
@@ -161,6 +163,17 @@ GoRouter createRouter(UserProvider userProvider) {
       GoRoute(
         path: '/ai_recommend_detail',
         builder: (context, state) => AiRecommendDetail(),
+      ),
+      GoRoute(
+        path: '/search/:searchType',
+        builder: (context, state) {
+          final typeString = state.pathParameters['searchType']!;
+          final searchType = SearchType.values.firstWhere(
+                (e) => e.name == typeString,
+            orElse: () => SearchType.all,
+          );
+          return Search(searchType: searchType);
+        },
       ),
     ],
   );

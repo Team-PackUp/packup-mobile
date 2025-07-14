@@ -97,10 +97,7 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
         children: [
           CustomSearch(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const Search()),
-              );
+              context.push("/search/all");
             },
           ),
           Expanded(

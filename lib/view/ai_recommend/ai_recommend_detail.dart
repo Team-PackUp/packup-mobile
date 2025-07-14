@@ -87,10 +87,7 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
         children: [
           CustomSearch(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const Search()),
-              );
+              context.push("/search/ai");
             },
           ),
           const SizedBox(height: 16),
