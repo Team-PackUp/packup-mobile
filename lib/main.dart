@@ -8,10 +8,10 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:packup/common/router.dart';
+import 'package:packup/provider/alert_center/alert_center_provider.dart';
 import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/provider/common/loading_provider.dart';
 import 'package:packup/provider/payment/toss/toss_payment_provider.dart';
-import 'package:packup/provider/profile/alert_center/alert_center_provider.dart';
 import 'package:packup/provider/user/user_provider.dart';
 import 'package:packup/service/common/app_state_service.dart';
 import 'package:packup/service/common/firebase_service.dart';
@@ -83,8 +83,6 @@ void main() async {
 
   final userProvider = UserProvider();
   await userProvider.initLoginStatus();
-
-  final alertProvider = AlertCenterProvider();
 
   globalRouter = createRouter(userProvider);
 

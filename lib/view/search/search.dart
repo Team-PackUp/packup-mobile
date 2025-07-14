@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:packup/Const/color.dart';
 import 'package:packup/provider/search/search_provider.dart';
 import 'package:packup/widget/common/custom_empty_list.dart';
 import 'package:provider/provider.dart';
@@ -51,25 +52,51 @@ class _SearchContentState extends State<SearchContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: TextField(
-          autofocus: true,
-          controller: _controller,
-          decoration: const InputDecoration(
-            hintText: '검색어를 입력해주세요',
-            border: InputBorder.none,
+      body: Column(
+        children: [
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        autofocus: true,
+                        controller: _controller,
+                        decoration: const InputDecoration(
+                          hintText: '검색어를 입력해주세요',
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                        ),
+                        onChanged: _onSearchChanged,
+                      ),
+                    ),
+                    Icon(Icons.search, color: PRIMARY_COLOR),
+                  ],
+                ),
+              ),
+            ),
           ),
-          onChanged: _onSearchChanged,
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: CustomEmptyList(
-        message: '검색 결과가 존재 하지 않습니다요',
-        icon: Icons.flight,
+          Expanded(
+            child: CustomEmptyList(
+              message: '검색 결과가 존재 하지 않습니다요',
+              icon: Icons.flight,
+            ),
+          ),
+        ],
       ),
     );
   }
+
 }

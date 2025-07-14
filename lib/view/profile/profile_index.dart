@@ -22,10 +22,6 @@ final List<ProfileMenuItem> menuItems = [
       title: '고객센터',
       route: '/contact_center'
   ),
-  ProfileMenuItem(
-    title: '알림센터',
-    route: '/alert_center'
-  ),
 ];
 
 class ProfileIndex extends StatefulWidget {
