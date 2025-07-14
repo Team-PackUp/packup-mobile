@@ -28,6 +28,14 @@ late final GoRouter globalRouter;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ),
+  );
+
   // 가로모드 방지
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
