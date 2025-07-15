@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:packup/model/profile/contact_center/faq_category_model.dart';
 
-class InquiryWrap extends StatefulWidget {
+class FaqCategory extends StatefulWidget {
   final List<FaqCategoryModel> categories;
-  const InquiryWrap({
+  const FaqCategory({
     super.key,
     required this.categories,
   });
 
   @override
-  State<InquiryWrap> createState() => _InquiryWrapState();
+  State<FaqCategory> createState() => _FaqCategoryState();
 }
 
-class _InquiryWrapState extends State<InquiryWrap> {
+class _FaqCategoryState extends State<FaqCategory> {
   int _selectedIdx = 0;
 
   @override

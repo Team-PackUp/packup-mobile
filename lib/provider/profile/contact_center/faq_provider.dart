@@ -10,7 +10,7 @@ class FaqProvider extends LoadingProvider {
 
   final service = FaqService();
 
-  late List<FaqModel> _faqModel;
+  List<FaqModel> _faqModel = [];
   List<FaqCategoryModel> _faqCategory = [];
 
   List<FaqModel> get faqModel => _faqModel;
@@ -23,7 +23,6 @@ class FaqProvider extends LoadingProvider {
           .map((e) => FaqCategoryModel.fromJson(e))
           .toList();
 
-      print(list.length);
       _faqCategory.addAll(list);
 
       notifyListeners();
@@ -35,9 +34,10 @@ class FaqProvider extends LoadingProvider {
 
     await LoadingService.run(() async {
       final response = await service.getFaqList();
-      final list = (response.response as List).map((e) => FaqModel.fromJson(e)).toList();
+      List<FaqModel> list = (response.response as List).map((e) => FaqModel.fromJson(e)).toList();
 
-      print(list);
+      print(list.length);
+      _faqModel.addAll(list);
 
       notifyListeners();
     });
