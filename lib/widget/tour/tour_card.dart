@@ -41,7 +41,6 @@ class TourCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── 이미지 + 배지 + 즐겨찾기 버튼
             Stack(
               children: [
                 ClipRRect(
@@ -86,7 +85,6 @@ class TourCard extends StatelessWidget {
                             ),
                           ),
                 ),
-                // 날짜 뱃지
                 if (true)
                   Positioned(
                     top: 12,

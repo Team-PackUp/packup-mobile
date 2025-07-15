@@ -127,44 +127,64 @@ class _TourBodyState extends State<TourBody> {
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 24),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: SizedBox(
-                height: 350,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount:
-                      provider.tourList.length + (provider.isLoading ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index < provider.tourList.length) {
-                      final tour = provider.tourList[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 16), // 카드 사이 간격
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 4,
-                          ), // 상하 그림자 여백
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              maxWidth:
-                                  MediaQuery.of(context).size.width * 0.45,
-                            ),
-                            child: TourCard(
-                              tour: tour,
-                              isFavorite: false,
-                              onTap: () {},
-                              onFavoriteToggle: () {},
-                            ),
-                          ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    children: [
+                      Text('🔥', style: TextStyle(fontSize: 18)),
+                      SizedBox(width: 6),
+                      Text(
+                        '인기 급상승 투어',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
-                      );
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  },
-                ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    height: 350,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount:
+                          provider.tourList.length +
+                          (provider.isLoading ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (index < provider.tourList.length) {
+                          final tour = provider.tourList[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 16),
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(vertical: 4),
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width * 0.45,
+                                ),
+                                child: TourCard(
+                                  tour: tour,
+                                  isFavorite: false,
+                                  onTap: () {},
+                                  onFavoriteToggle: () {},
+                                ),
+                              ),
+                            ),
+                          );
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
 
