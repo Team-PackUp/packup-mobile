@@ -24,9 +24,10 @@ class TourCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = PackUp.themeNotifier.value == ThemeMode.light
-        ? lightColors
-        : darkColors;
+    final colors =
+        PackUp.themeNotifier.value == ThemeMode.light
+            ? lightColors
+            : darkColors;
 
     return GestureDetector(
       onTap: onTap,
@@ -35,7 +36,7 @@ class TourCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: colors.surface,
           borderRadius: AppShapes.xlRadius,
-          boxShadow: AppShapes.shadowMd,
+          boxShadow: AppShapes.shadowSm,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,34 +45,46 @@ class TourCard extends StatelessWidget {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                  child: (tour.titleImagePath?.isNotEmpty ?? false)
-                      ? Image.network(
-                    tour.titleImagePath!,
-                    width: double.infinity,
-                    height: 160,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      width: double.infinity,
-                      height: 160,
-                      color: colors.surfaceTint.withAlpha((0.1 * 255).round()),
-                      alignment: Alignment.center,
-                      child: Text(
-                        '이미지를 불러올 수 없습니다',
-                        style: AppTypographies.caption.copyWith(color: colors.onSurface),
-                      ),
-                    ),
-                  )
-                      : Container(
-                    width: double.infinity,
-                    height: 160,
-                    color: colors.surfaceTint.withAlpha((0.1 * 255).round()),
-                    alignment: Alignment.center,
-                    child: Text(
-                      '이미지가 없습니다',
-                      style: AppTypographies.caption.copyWith(color: colors.onSurface),
-                    ),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(16),
                   ),
+                  child:
+                      (tour.titleImagePath?.isNotEmpty ?? false)
+                          ? Image.network(
+                            tour.titleImagePath!,
+                            width: double.infinity,
+                            height: 160,
+                            fit: BoxFit.cover,
+                            errorBuilder:
+                                (context, error, stackTrace) => Container(
+                                  width: double.infinity,
+                                  height: 160,
+                                  color: colors.surfaceTint.withAlpha(
+                                    (0.1 * 255).round(),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    '이미지를 불러올 수 없습니다',
+                                    style: AppTypographies.caption.copyWith(
+                                      color: colors.onSurface,
+                                    ),
+                                  ),
+                                ),
+                          )
+                          : Container(
+                            width: double.infinity,
+                            height: 160,
+                            color: colors.surfaceTint.withAlpha(
+                              (0.1 * 255).round(),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              '이미지가 없습니다',
+                              style: AppTypographies.caption.copyWith(
+                                color: colors.onSurface,
+                              ),
+                            ),
+                          ),
                 ),
                 // 날짜 뱃지
                 if (true)
@@ -79,7 +92,10 @@ class TourCard extends StatelessWidget {
                     top: 12,
                     right: 12,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: colors.primary,
                         borderRadius: BorderRadius.circular(999),
@@ -104,8 +120,11 @@ class TourCard extends StatelessWidget {
                       radius: 16,
                       backgroundColor: colors.surface,
                       child: Icon(
-                        isFavorite == true ? Icons.favorite : Icons.favorite_border,
-                        color: isFavorite == true ? colors.error : colors.outline,
+                        isFavorite == true
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color:
+                            isFavorite == true ? colors.error : colors.outline,
                         size: 18,
                       ),
                     ),
@@ -137,9 +156,16 @@ class TourCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.location_on, size: 16, color: AppTypographies.textBaseTertiary),
+                      const Icon(
+                        Icons.location_on,
+                        size: 16,
+                        color: AppTypographies.textBaseTertiary,
+                      ),
                       const SizedBox(width: 4),
-                      Text(tour.tourLocation ?? '위치 정보 없음', style: AppTypographies.caption),
+                      Text(
+                        tour.tourLocation ?? '위치 정보 없음',
+                        style: AppTypographies.caption,
+                      ),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -157,23 +183,30 @@ class TourCard extends StatelessWidget {
                       if (tour.guide?.guideAvatarPath?.isNotEmpty == true)
                         CircleAvatar(
                           radius: 14,
-                          backgroundImage: NetworkImage(tour.guide!.guideAvatarPath!),
+                          backgroundImage: NetworkImage(
+                            tour.guide!.guideAvatarPath!,
+                          ),
                           onBackgroundImageError: (_, __) {},
                         )
                       else
                         CircleAvatar(
                           radius: 14,
                           backgroundColor: colors.error,
-                          child: Icon(Icons.person, size: 16, color: Colors.white),
+                          child: Icon(
+                            Icons.person,
+                            size: 16,
+                            color: Colors.white,
+                          ),
                         ),
                       const SizedBox(width: 8),
                       Text(
-                        tour.guide?.guideName?.isNotEmpty == true ? tour.guide!.guideName! : '가이드 이름 없음',
+                        tour.guide?.guideName?.isNotEmpty == true
+                            ? tour.guide!.guideName!
+                            : '가이드 이름 없음',
                         style: AppTypographies.caption,
                       ),
                     ],
                   ),
-
                 ],
               ),
             ),

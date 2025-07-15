@@ -1,4 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:packup/provider/alert_center/alert_center_provider.dart';
+import 'package:packup/provider/user/user_provider.dart';
+import 'package:packup/view/search/search.dart';
+import 'package:packup/widget/banner/home_banner.dart';
+import 'package:packup/widget/banner/home_banner_carousel.dart';
+import 'package:packup/widget/common/alert_bell.dart';
+import 'package:packup/widget/common/custom_appbar.dart';
+import 'package:packup/widget/search/category_filter.dart';
+import 'package:packup/widget/search/search.dart';
 import 'package:packup/widget/tour/tour_card.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
@@ -62,48 +72,110 @@ class _TourBodyState extends State<TourBody> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TourProvider>();
+    int alertCount = context.watch<AlertCenterProvider>().alertCount;
+    final userProvider = context.watch<UserProvider>();
+    final profileUrl = userProvider.userModel?.profileImagePath;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("투어 목록")),
-      body: Stack(
-        children: [
-          /// 투어 리스트 렌더링
-          GridView.builder(
-            controller: _scrollController,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // 2열 구성
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 0.54, // 카드의 가로:세로 비율 조정 (필요 시 튜닝)
+      appBar: CustomAppbar(
+        title: 'PACKUP Explorer',
+        arrowFlag: false,
+        alert: AlertBell(
+          count: alertCount,
+          onTap: () async {
+            context.push('/alert_center');
+          },
+        ),
+        profile: CircleAvatar(
+          backgroundImage:
+              (profileUrl != null && profileUrl.isNotEmpty)
+                  ? NetworkImage(profileUrl)
+                  : null,
+          radius: MediaQuery.of(context).size.height * 0.02,
+        ),
+      ),
+
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomSearch(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const Search()),
+                );
+              },
             ),
-            itemCount: provider.tourList.length + (provider.isLoading ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index < provider.tourList.length) {
-                final tour = provider.tourList[index];
-                return TourCard(
-                  tour: tour,
-                  isFavorite: false,
-                  onTap: () async {
-                    final result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => TourEditPage(tour: tour),
-                      ),
-                    );
-                    if (result == true) {
-                      await provider.getTourList(refresh: true);
+
+            const SizedBox(height: 12),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: HomeBannerCarousel(
+                onTapBanner: (index) {
+                  context.push('/banner/$index');
+                },
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: CategoryFilter(
+                onSelectionChanged: (selectedList) {
+                  print('선택된 카테고리: $selectedList');
+                },
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SizedBox(
+                height: 350,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount:
+                      provider.tourList.length + (provider.isLoading ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index < provider.tourList.length) {
+                      final tour = provider.tourList[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 16), // 카드 사이 간격
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 4,
+                          ), // 상하 그림자 여백
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth:
+                                  MediaQuery.of(context).size.width * 0.45,
+                            ),
+                            child: TourCard(
+                              tour: tour,
+                              isFavorite: false,
+                              onTap: () {},
+                              onFavoriteToggle: () {},
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
                     }
                   },
-                  onFavoriteToggle: () {},
-                );
-              } else {
-                // 하단 로딩 인디케이터 (GridView에도 대응)
-                return const Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
-        ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            Placeholder(fallbackHeight: 100, color: Colors.blueGrey),
+          ],
+        ),
       ),
     );
   }

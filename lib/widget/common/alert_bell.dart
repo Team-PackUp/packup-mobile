@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AlertBell extends StatelessWidget {
-  const AlertBell({
-    super.key,
-    required this.count,
-    required this.onTap,
-  });
+  const AlertBell({super.key, required this.count, required this.onTap});
 
   final int count;
   final VoidCallback onTap;
@@ -19,7 +15,7 @@ class AlertBell extends StatelessWidget {
           onPressed: onTap,
           icon: Icon(
             Icons.notifications_none,
-            size: MediaQuery.of(context).size.width * 0.1,
+            size: MediaQuery.of(context).size.width * 0.07,
           ),
         ),
 

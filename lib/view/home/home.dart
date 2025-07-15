@@ -20,95 +20,77 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: PRIMARY_COLOR,
-          title: Text('Home', style: TextStyle(color: TEXT_COLOR_W)),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: PRIMARY_COLOR,
+        title: Text('Home', style: TextStyle(color: TEXT_COLOR_W)),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(padding: const EdgeInsets.only(left: 10, right: 10)),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TossResultScreen(),
+                  ),
+                );
+              },
+              child: const Text('예시코드-TossResultScreen'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const WidgetHome()),
+                );
+              },
+              child: const Text('예시코드-WidgetHome'),
+            ),
+            // const SizedBox(height: 20),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => const PaymentWidgetExamplePage(),
+            //       ),
+            //     );
+            //   },
+            //   child: const Text('예시코드'),
+            // ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const WidgetHome()),
+                );
+              },
+              child: const Text('예시코드-WidgetHome'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                context.push('/reply_list/4/REPLY_TOUR');
+              },
+              child: const Text('댓글 리스트'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                context.push('/reply_write/4/REPLY_TOUR');
+              },
+              child: const Text('댓글 신규 작성'),
+            ),
+          ],
         ),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-              ),
-              const SizedBox(height: 20),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) => const TossPaymentScreen(),
-              //       ),
-              //     );
-              //   },
-              //   child: const Text('예시코드-TossPaymentScreen'),
-              // ),
-              // const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const TossResultScreen(),
-                    ),
-                  );
-                },
-                child: const Text('예시코드-TossResultScreen'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const WidgetHome(),
-                    ),
-                  );
-                },
-                child: const Text('예시코드-WidgetHome'),
-              ),
-              // const SizedBox(height: 20),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) => const PaymentWidgetExamplePage(),
-              //       ),
-              //     );
-              //   },
-              //   child: const Text('예시코드'),
-              // ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const WidgetHome(),
-                    ),
-                  );
-                },
-                child: const Text('예시코드-WidgetHome'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  context.push('/reply_list/4/REPLY_TOUR');
-                },
-                child: const Text('댓글 리스트'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  context.push('/reply_write/4/REPLY_TOUR');
-                },
-                child: const Text('댓글 신규 작성'),
-              ),
-            ],
-          ),
-        ),
-      );
+      ),
+    );
   }
 }
