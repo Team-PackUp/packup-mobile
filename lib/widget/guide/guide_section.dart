@@ -34,7 +34,7 @@ class GuideSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            '전문 가이드를 만나보세요',
+            '🌟 전문 가이드를 만나보세요',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
