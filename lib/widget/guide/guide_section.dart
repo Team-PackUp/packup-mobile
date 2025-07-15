@@ -39,7 +39,7 @@ class GuideSection extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           SizedBox(
-            height: 260,
+            height: 300,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 4),

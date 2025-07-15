@@ -31,10 +31,9 @@ class GuideCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CircleAvatar(radius: 32, backgroundImage: NetworkImage(imageUrl)),
+          CircleAvatar(radius: 48, backgroundImage: NetworkImage(imageUrl)),
           const SizedBox(height: 12),
 
-          // 이름
           Text(
             name,
             style: AppTypographies.get(
@@ -42,10 +41,7 @@ class GuideCard extends StatelessWidget {
               weight: AppFontWeight.bold,
             ),
           ),
-
           const SizedBox(height: 4),
-
-          // 소개
           Text(
             desc,
             textAlign: TextAlign.center,
