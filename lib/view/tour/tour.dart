@@ -3,13 +3,16 @@ import 'package:go_router/go_router.dart';
 import 'package:packup/provider/alert_center/alert_center_provider.dart';
 import 'package:packup/provider/user/user_provider.dart';
 import 'package:packup/view/search/search.dart';
+import 'package:packup/widget/banner/banner_section.dart';
 import 'package:packup/widget/banner/home_banner.dart';
 import 'package:packup/widget/banner/home_banner_carousel.dart';
 import 'package:packup/widget/common/alert_bell.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:packup/widget/search/category_filter.dart';
+import 'package:packup/widget/search/category_section.dart';
 import 'package:packup/widget/search/search.dart';
 import 'package:packup/widget/tour/tour_card.dart';
+import 'package:packup/widget/tour/hot_tour_section.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 
@@ -104,90 +107,12 @@ class _TourBodyState extends State<TourBody> {
                 context.push("/search/all");
               },
             ),
-
             const SizedBox(height: 12),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: HomeBannerCarousel(
-                onTapBanner: (index) {
-                  context.push('/banner/$index');
-                },
-              ),
-            ),
-
+            const BannerSection(),
             const SizedBox(height: 12),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: CategoryFilter(
-                onSelectionChanged: (selectedList) {
-                  print('선택된 카테고리: $selectedList');
-                },
-              ),
-            ),
-
+            const CategorySection(),
             const SizedBox(height: 24),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Row(
-                    children: [
-                      Text('🔥', style: TextStyle(fontSize: 18)),
-                      SizedBox(width: 6),
-                      Text(
-                        '인기 급상승 투어',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 350,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount:
-                          provider.tourList.length +
-                          (provider.isLoading ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index < provider.tourList.length) {
-                          final tour = provider.tourList[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 16),
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(vertical: 4),
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  maxWidth:
-                                      MediaQuery.of(context).size.width * 0.45,
-                                ),
-                                child: TourCard(
-                                  tour: tour,
-                                  isFavorite: false,
-                                  onTap: () {},
-                                  onFavoriteToggle: () {},
-                                ),
-                              ),
-                            ),
-                          );
-                        } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
+            const HotTourSection(),
             const SizedBox(height: 24),
 
             Placeholder(fallbackHeight: 100, color: Colors.blueGrey),

@@ -1,0 +1,18 @@
+import 'package:flutter/material.dart';
+import 'package:packup/widget/search/category_filter.dart';
+
+class CategorySection extends StatelessWidget {
+  const CategorySection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: CategoryFilter(
+        onSelectionChanged: (selectedList) {
+          print('선택된 카테고리: $selectedList');
+        },
+      ),
+    );
+  }
+}
