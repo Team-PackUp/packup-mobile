@@ -101,10 +101,7 @@ class _TourBodyState extends State<TourBody> {
           children: [
             CustomSearch(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const Search()),
-                );
+                context.push("/search/all");
               },
             ),
 
