@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/widget/common/custom_appbar.dart';
+import 'package:packup/widget/ai_recommend/recommend_list.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/search/search.dart';
 
@@ -9,10 +9,7 @@ import '../../provider/alert_center/alert_center_provider.dart';
 import '../../provider/user/user_provider.dart';
 
 import '../../widget/ai_recommend/section.dart';
-import '../../widget/ai_recommend/tour_card.dart';
-import '../../model/ai_recommend/recommend_tour_model.dart';
 import '../../widget/common/alert_bell.dart';
-import '../search/search.dart';
 
 class AiRecommendDetail extends StatelessWidget {
 
@@ -43,7 +40,6 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
   @override
   void initState() {
     super.initState();
-
     provider = context.read<AIRecommendProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -55,94 +51,63 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<AIRecommendProvider>();
-    int alertCount = context.watch<AlertCenterProvider>().alertCount;
-    final userProvider = context.watch<UserProvider>();
-    final profileUrl = userProvider.userModel?.profileImagePath;
+    final recommendProvider = context.watch<AIRecommendProvider>();
+    final alertCount       = context.watch<AlertCenterProvider>().alertCount;
+    final profileUrl       = context.watch<UserProvider>().userModel?.profileImagePath;
 
     return Scaffold(
-      appBar: CustomAppbar(
-        title: 'AI 추천',
-        arrowFlag: false,
-        alert: AlertBell(
-          count: alertCount,
-          onTap: () async {
-            context.push('/alert_center');
-          },
-        ),
-        profile: CircleAvatar(
-          backgroundImage:
-              (profileUrl != null && profileUrl.isNotEmpty)
-                  ? NetworkImage(profileUrl)
-                  : null,
-          radius: MediaQuery.of(context).size.height * 0.02,
-        ),
-      ),
-
-      body: ListView(
-        padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * 0.03,
-          vertical: MediaQuery.of(context).size.height * 0.01,
-        ),
-        children: [
-          CustomSearch(
-            onTap: () {
-              context.push("/search/ai");
-            },
+      body: SafeArea(
+        child: NestedScrollView(
+          headerSliverBuilder: (context, _) => [
+            SliverAppBar(
+              title: const Text('AI 추천'),
+              automaticallyImplyLeading: false,
+              floating: true,   // 스크롤 올리면 바로 나타남
+              snap: true,       // 살짝 당겨도 스냅
+              actions: [
+                AlertBell(
+                  count: alertCount,
+                  onTap: () => context.push('/alert_center'),
+                ),
+                const SizedBox(width: 8),
+                CircleAvatar(
+                  radius: MediaQuery.of(context).size.height * 0.02,
+                  backgroundImage: (profileUrl != null && profileUrl.isNotEmpty)
+                      ? NetworkImage(profileUrl)
+                      : null,
+                ),
+                const SizedBox(width: 12),
+              ],
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(56),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: CustomSearch(
+                    onTap: () => context.push('/search/ai'),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          body: ListView(
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.03,
+              vertical:   MediaQuery.of(context).size.height * 0.01,
+            ),
+            children: [
+              SectionHeader(
+                icon: '🔥',
+                title: 'AI가 추천하는 여행입니다!',
+                onSeeMore: () {},   // 필요시 더보기 처리
+              ),
+              RecommendList(
+                tours: recommendProvider.tourList,
+                onTap: (_) {},      // 투어 클릭 처리
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          // AI 추천 투어
-          SectionHeader(
-              icon: '🔥', title: 'AI가 추천하는 여행입니다!', 
-              onSeeMore: () {
-                print("AI 추천 더보기");
-              }),
-          _TourList(
-            tours: provider.tourList,
-            onTap: (tour) {
-              print("AI 추천 여행 클릭!!");
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (_) => TourDetail(tourSeq: tour.seq),
-              //   ),
-              // );
-            },
-          ),
-        ],
+        ),
       ),
-    );
-  }
-}
-
-class _TourList extends StatelessWidget {
-  final List<RecommendTourModel> tours;
-  final ValueChanged<RecommendTourModel> onTap;
-
-  const _TourList({required this.tours, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    if (tours.isEmpty) return const SizedBox.shrink();
-
-    return GridView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: tours.length,
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 250,
-        mainAxisSpacing: 8.0,
-        crossAxisSpacing: 8.0,
-        childAspectRatio: 0.7,
-      ),
-      itemBuilder: (context, index) {
-        final tour = tours[index];
-        return InkWell(
-          onTap: () => onTap(tour),
-          child: TourCard(tour: tour),
-        );
-      },
     );
   }
 }
