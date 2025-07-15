@@ -41,7 +41,7 @@ class _CategoryFilterState extends State<CategoryFilter> {
       children: [
         const Row(
           children: [
-            Icon(Icons.search, size: 18),
+            Text('🔎', style: TextStyle(fontSize: 18)),
             SizedBox(width: 6),
             Text(
               '종류별로 탐색하기',
