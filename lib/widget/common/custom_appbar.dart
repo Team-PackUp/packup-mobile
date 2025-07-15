@@ -11,9 +11,9 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   final String title;
-  final bool? arrowFlag;     // null 또는 true → 뒤로가기 표시
-  final Widget? alert;       // 알림 아이콘
-  final Widget? profile;     // 프로필 아바타
+  final bool? arrowFlag; // null 또는 true → 뒤로가기 표시
+  final Widget? alert; // 알림 아이콘
+  final Widget? profile; // 프로필 아바타
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -24,12 +24,13 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.white,
       automaticallyImplyLeading: false,
 
-      leading: (arrowFlag == null || arrowFlag == true)
-          ? IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: context.pop,
-      )
-          : null,
+      leading:
+          (arrowFlag == null || arrowFlag == true)
+              ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: context.pop,
+              )
+              : null,
 
       title: Text(
         title,
@@ -39,15 +40,9 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
 
       actions: [
         if (alert != null)
-          Padding(
-            padding: const EdgeInsets.only(right: 4.0),
-            child: alert!,
-          ),
+          Padding(padding: const EdgeInsets.only(right: 4.0), child: alert!),
         if (profile != null)
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: profile!,
-          ),
+          Padding(padding: const EdgeInsets.only(right: 12.0), child: profile!),
       ],
     );
   }

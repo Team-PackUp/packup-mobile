@@ -42,15 +42,19 @@ class GuideSection extends StatelessWidget {
             height: 260,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 4),
               itemCount: guides.length,
               separatorBuilder: (_, __) => const SizedBox(width: 12),
               itemBuilder: (context, index) {
                 final guide = guides[index];
-                return GuideCard(
-                  name: guide['name'] as String,
-                  desc: guide['desc'] as String,
-                  tourCount: guide['tours'] as int,
-                  imageUrl: guide['image'] as String,
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: GuideCard(
+                    name: guide['name'] as String,
+                    desc: guide['desc'] as String,
+                    tourCount: guide['tours'] as int,
+                    imageUrl: guide['image'] as String,
+                  ),
                 );
               },
             ),
