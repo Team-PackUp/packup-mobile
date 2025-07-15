@@ -2,8 +2,19 @@ import 'package:flutter/material.dart';
 
 /// font-size
 enum AppFontSize {
-  xs(12), sm(14), base(16), lg(18), xl(20),
-  x2l(24), x3l(30), x4l(36), x5l(48), x6l(60), x7l(72), x8l(96), x9l(128);
+  xs(12),
+  sm(14),
+  base(16),
+  lg(18),
+  xl(20),
+  x2l(24),
+  x3l(30),
+  x4l(36),
+  x5l(48),
+  x6l(60),
+  x7l(72),
+  x8l(96),
+  x9l(128);
 
   final double size;
   const AppFontSize(this.size);
@@ -45,7 +56,6 @@ class AppTypographies {
   static const Color textColorB2 = Colors.black54;
   static const Color textColorW = Colors.white70;
   static const Color textFiledFillColor = Color(0xFFD9D9D9);
-
 
   // ───────────── 기본 TextStyle 생성기 ─────────────
   static TextStyle get({

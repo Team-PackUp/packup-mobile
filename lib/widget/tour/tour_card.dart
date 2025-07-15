@@ -102,7 +102,7 @@ class TourCard extends StatelessWidget {
                         '마감 임박!',
                         style: AppTypographies.get(
                           size: AppFontSize.sm,
-                          weight: AppFontWeight.bold,
+                          weight: AppFontWeight.medium,
                           color: colors.onPrimary,
                         ),
                       ),
@@ -146,7 +146,7 @@ class TourCard extends StatelessWidget {
                       softWrap: true,
                       style: AppTypographies.get(
                         size: AppFontSize.lg,
-                        weight: AppFontWeight.bold,
+                        weight: AppFontWeight.semiBold,
                         height: 1.3, // 줄간격
                       ),
                     ),
