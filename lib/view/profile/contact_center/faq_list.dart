@@ -1,30 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:packup/provider/profile/contact_center/faq_provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:packup/widget/profile/contact_center/faq_card.dart';
+import 'package:provider/provider.dart';
 
 import '../../../widget/profile/contact_center/inquiry_wrap.dart';
 import '../../../widget/profile/contact_center/support_card.dart';
 
-class ContactCenterIndex extends StatefulWidget {
-  const ContactCenterIndex({super.key});
+class FaqList extends StatelessWidget {
+  const FaqList({super.key});
 
   @override
-  State<ContactCenterIndex> createState() => _ContactCenterIndexState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => FaqProvider(),
+      child: const FaqListContent(),
+    );
+  }
 }
 
-class _ContactCenterIndexState extends State<ContactCenterIndex> {
+class FaqListContent extends StatefulWidget {
+  const FaqListContent({super.key});
+
+  @override
+  State<FaqListContent> createState() => _FaqListContent();
+}
+
+class _FaqListContent extends State<FaqListContent> {
+
+  late final _faqProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    _faqProvider = context.read<FaqProvider>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _faqProvider
+        ..getFaqCategory()
+        ..getFaqList();
+    });
+  }
+
+  @override
+  Future<void> dispose() async {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
 
-    final categories = [
-      '전체',
-      '예약 관련',
-      '결제 관련',
-      '가이드 문의',
-      '계정/프로필',
-      '기술 지원',
-    ];
+    final provider = context.watch<FaqProvider>();
 
     return Scaffold(
       appBar: CustomAppbar(
@@ -66,7 +92,7 @@ class _ContactCenterIndexState extends State<ContactCenterIndex> {
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             InquiryWrap(
-              categories: categories,
+              categories: provider.faqCategory,
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.03),
             const Text('자주 묻는 질문 (FAQ)',
