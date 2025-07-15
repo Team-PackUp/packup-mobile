@@ -65,7 +65,7 @@ class HomeBanner extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: PRIMARY_COLOR,
+                      backgroundColor: SELECTED,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),

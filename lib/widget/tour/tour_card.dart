@@ -168,7 +168,7 @@ class TourCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'KRW ${formatAmount(tour.tourPrice!)}',
+                    '₩ ${formatAmount(tour.tourPrice!)}',
                     style: AppTypographies.get(
                       size: AppFontSize.lg,
                       weight: AppFontWeight.semiBold,

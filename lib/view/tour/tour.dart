@@ -2,21 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/provider/alert_center/alert_center_provider.dart';
 import 'package:packup/provider/user/user_provider.dart';
-import 'package:packup/view/search/search.dart';
 import 'package:packup/widget/banner/banner_section.dart';
-import 'package:packup/widget/banner/home_banner.dart';
-import 'package:packup/widget/banner/home_banner_carousel.dart';
 import 'package:packup/widget/common/alert_bell.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
-import 'package:packup/widget/search/category_filter.dart';
+import 'package:packup/widget/guide/guide_section.dart';
 import 'package:packup/widget/search/category_section.dart';
 import 'package:packup/widget/search/search.dart';
-import 'package:packup/widget/tour/tour_card.dart';
 import 'package:packup/widget/tour/hot_tour_section.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 
-import 'package:packup/model/tour/tour_model.dart';
 import 'guide/edit/edit.dart';
 
 /// 투어 목록 화면 (무한 스크롤 및 편집/추가 기능 포함)
@@ -114,8 +109,8 @@ class _TourBodyState extends State<TourBody> {
             const SizedBox(height: 24),
             const HotTourSection(),
             const SizedBox(height: 24),
-
-            Placeholder(fallbackHeight: 100, color: Colors.blueGrey),
+            const GuideSection(),
+            const SizedBox(height: 24),
           ],
         ),
       ),
