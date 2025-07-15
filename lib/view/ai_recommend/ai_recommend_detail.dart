@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/widget/ai_recommend/recommend_list.dart';
+import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/search/search.dart';
 
@@ -10,6 +11,7 @@ import '../../provider/user/user_provider.dart';
 
 import '../../widget/ai_recommend/section.dart';
 import '../../widget/common/alert_bell.dart';
+import '../../widget/common/custom_sliver_appbar.dart';
 
 class AiRecommendDetail extends StatelessWidget {
 
@@ -56,57 +58,45 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
     final profileUrl       = context.watch<UserProvider>().userModel?.profileImagePath;
 
     return Scaffold(
-      body: SafeArea(
-        child: NestedScrollView(
-          headerSliverBuilder: (context, _) => [
-            SliverAppBar(
-              title: const Text('AI 추천'),
-              automaticallyImplyLeading: false,
-              floating: true,   // 스크롤 올리면 바로 나타남
-              snap: true,       // 살짝 당겨도 스냅
-              actions: [
-                AlertBell(
-                  count: alertCount,
-                  onTap: () => context.push('/alert_center'),
-                ),
-                const SizedBox(width: 8),
-                CircleAvatar(
-                  radius: MediaQuery.of(context).size.height * 0.02,
-                  backgroundImage: (profileUrl != null && profileUrl.isNotEmpty)
-                      ? NetworkImage(profileUrl)
-                      : null,
-                ),
-                const SizedBox(width: 12),
-              ],
-              bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(56),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: CustomSearch(
-                    onTap: () => context.push('/search/ai'),
-                  ),
-                ),
-              ),
-            ),
-          ],
-          body: ListView(
-            padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.03,
-              vertical:   MediaQuery.of(context).size.height * 0.01,
-            ),
-            children: [
-              SectionHeader(
-                icon: '🔥',
-                title: 'AI가 추천하는 여행입니다!',
-                onSeeMore: () {},   // 필요시 더보기 처리
-              ),
-              RecommendList(
-                tours: recommendProvider.tourList,
-                onTap: (_) {},      // 투어 클릭 처리
-              ),
-            ],
+      backgroundColor: Colors.white,
+      appBar: CustomAppbar(
+        title: 'AI 추천',
+        arrowFlag: false,
+        alert: AlertBell(
+          count: alertCount,
+          onTap: () => context.push('/alert_center'),
+        ),
+        profile: CircleAvatar(
+          radius: MediaQuery.of(context).size.height * 0.02,
+          backgroundImage: (profileUrl != null && profileUrl.isNotEmpty)
+              ? NetworkImage(profileUrl)
+              : null,
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: CustomSearch(onTap: () => context.push('/search/all')),
           ),
         ),
+      ),
+
+      body: ListView(
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * 0.03,
+          vertical:   MediaQuery.of(context).size.height * 0.01,
+        ),
+        children: [
+          SectionHeader(
+            icon: '🔥',
+            title: 'AI가 추천하는 여행입니다!',
+            onSeeMore: () {},
+          ),
+          RecommendList(
+            tours: recommendProvider.tourList,
+            onTap: (_) {},
+          ),
+        ],
       ),
     );
   }

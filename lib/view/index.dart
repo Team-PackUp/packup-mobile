@@ -106,7 +106,6 @@ class _IndexState extends State<Index> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        appBar: AppBar(toolbarHeight: 10),
         body: buildPage(_currentIndex),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
