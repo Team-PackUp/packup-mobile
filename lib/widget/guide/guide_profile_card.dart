@@ -49,7 +49,6 @@ class GuideProfileCard extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          /// 소개글
           const Text(
             "리액트의 신 스프링의 신 얘는 그냥 개발을잘함;; The World Best Development Player jjm just legend. 팩업 투어쪽 설계 언제 끝나나요 빨리 끝나야 실제 데이터 연동 하는데 최대한 빨리 해야돼요 저 팩업 완성시키고 싶어요 파이팅",
             style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.4),
@@ -57,7 +56,6 @@ class GuideProfileCard extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          /// 언어 태그
           const Wrap(
             spacing: 8,
             runSpacing: 8,

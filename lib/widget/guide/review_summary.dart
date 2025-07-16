@@ -52,7 +52,7 @@ class ReviewSummary extends StatelessWidget {
                     star: star,
                     value: value,
                     hasRating: hasRating,
-                    highlight: star == 3,
+                    highlight: star == 5,
                   );
                 }),
               ),
@@ -105,7 +105,7 @@ class _RatingBarRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final barColor = highlight ? Colors.indigo : Colors.black87;
+    final barColor = highlight ? SELECTED : PRIMARY_COLOR;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),

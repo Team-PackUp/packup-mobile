@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:packup/widget/guide/guide_profile_card.dart';
+import 'package:packup/widget/guide/review_summary.dart';
+import 'package:packup/widget/tour/detail/review_list.dart';
 
 class GuideDetailPage extends StatelessWidget {
   final int guideId;
@@ -22,7 +24,10 @@ class GuideDetailPage extends StatelessWidget {
             SizedBox(height: 24),
             // TourHighlightSection(),
             SizedBox(height: 24),
-            // ItinerarySection(),
+            ReviewSummary(),
+            SizedBox(height: 24),
+            ReviewList(),
+            SizedBox(height: 24),
           ],
         ),
       ),
