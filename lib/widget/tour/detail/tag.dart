@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class TourTag extends StatelessWidget {
+class Tag extends StatelessWidget {
   final String label;
 
-  const TourTag({super.key, required this.label});
+  const Tag({super.key, required this.label});
 
   @override
   Widget build(BuildContext context) {
