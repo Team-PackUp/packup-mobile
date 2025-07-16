@@ -3,6 +3,7 @@ import 'package:packup/widget/tour/detail/guide_card.dart';
 import 'package:packup/widget/tour/detail/%08rating.dart';
 import 'package:packup/widget/tour/detail/tour_description.dart';
 import 'package:packup/widget/tour/detail/tour_tag.dart';
+import 'package:packup/widget/tour/detail/tour_include.dart';
 
 class TourDetailPage extends StatelessWidget {
   const TourDetailPage({super.key});
@@ -53,6 +54,8 @@ class TourDetailPage extends StatelessWidget {
                   GuideCard(),
                   SizedBox(height: 24),
                   TourDescription(),
+                  SizedBox(height: 24),
+                  TourInclude(),
                 ],
               ),
             ),
