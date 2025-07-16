@@ -103,26 +103,48 @@ class _IndexState extends State<Index> {
 
   @override
   Widget build(BuildContext context) {
+    final barRadius = 25.0;
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
         body: buildPage(_currentIndex),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: _onTabTapped,
-          type: BottomNavigationBarType.fixed,
-          items: List.generate(
-            bottomNavItems.length,
-            (index) => BottomNavigationBarItem(
-              icon: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.02,
-                child: Icon(bottomNavItems[index]['icon']),
+        bottomNavigationBar: Container(
+          margin: const EdgeInsets.fromLTRB(7, 0, 7, 0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(barRadius),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(.2),
+                blurRadius: 12,
+                offset: const Offset(0, 3),
               ),
-              label: bottomNavItems[index]['label'],
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(barRadius),
+            child: BottomNavigationBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              type: BottomNavigationBarType.fixed,
+              currentIndex: _currentIndex,
+              onTap: _onTabTapped,
+              items: List.generate(
+                bottomNavItems.length,
+                    (index) => BottomNavigationBarItem(
+                  icon: SizedBox(
+                    height: MediaQuery.of(context).size.height * .022,
+                    child: Icon(bottomNavItems[index]['icon']),
+                  ),
+                  label: bottomNavItems[index]['label'],
+                ),
+              ),
             ),
           ),
         ),
       ),
     );
   }
+
 }
