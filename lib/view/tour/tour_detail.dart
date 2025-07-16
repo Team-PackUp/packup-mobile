@@ -4,6 +4,7 @@ import 'package:packup/widget/tour/detail/%08rating.dart';
 import 'package:packup/widget/tour/detail/review_list.dart';
 import 'package:packup/widget/tour/detail/tour_description.dart';
 import 'package:packup/widget/tour/detail/tour_exclude.dart';
+import 'package:packup/widget/tour/detail/tour_footer.dart';
 import 'package:packup/widget/tour/detail/tour_tag.dart';
 import 'package:packup/widget/tour/detail/tour_include.dart';
 
@@ -66,10 +67,11 @@ class TourDetailPage extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 60),
+            // const SizedBox(height: 60),
           ],
         ),
       ),
+      bottomNavigationBar: const TourFooter(),
     );
   }
 }
