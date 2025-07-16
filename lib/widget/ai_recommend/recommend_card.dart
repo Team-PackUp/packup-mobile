@@ -6,8 +6,8 @@ import 'package:marquee/marquee.dart';
 
 import '../common/slide_text.dart';
 
-class TourCard extends StatelessWidget {
-  const TourCard({super.key, required this.tour});
+class RecommendCard extends StatelessWidget {
+  const RecommendCard({super.key, required this.tour});
   final RecommendTourModel tour;
 
   @override
