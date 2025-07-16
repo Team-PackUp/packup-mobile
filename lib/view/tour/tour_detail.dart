@@ -5,7 +5,7 @@ import 'package:packup/widget/tour/detail/review_list.dart';
 import 'package:packup/widget/tour/detail/tour_description.dart';
 import 'package:packup/widget/tour/detail/tour_exclude.dart';
 import 'package:packup/widget/tour/detail/tour_footer.dart';
-import 'package:packup/widget/tour/detail/tour_tag.dart';
+import 'package:packup/widget/tour/detail/%08tag.dart';
 import 'package:packup/widget/tour/detail/tour_include.dart';
 
 class TourDetailPage extends StatelessWidget {
@@ -46,10 +46,10 @@ class TourDetailPage extends StatelessWidget {
                     spacing: 8,
                     runSpacing: 8,
                     children: [
-                      TourTag(label: 'Culture'),
-                      TourTag(label: 'History'),
-                      TourTag(label: 'Walking Tour'),
-                      TourTag(label: 'Seoul'),
+                      Tag(label: 'Culture'),
+                      Tag(label: 'History'),
+                      Tag(label: 'Walking Tour'),
+                      Tag(label: 'Seoul'),
                     ],
                   ),
 
