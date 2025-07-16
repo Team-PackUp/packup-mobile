@@ -4,6 +4,7 @@ import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:packup/widget/profile/contact_center/faq_category.dart';
 import 'package:provider/provider.dart';
 
+import '../../../model/profile/contact_center/faq_category_model.dart';
 import '../../../widget/profile/contact_center/faq_section.dart';
 import '../../../widget/profile/contact_center/support_card.dart';
 
@@ -52,15 +53,6 @@ class _FaqListContent extends State<FaqListContent> {
 
     final provider = context.watch<FaqProvider>();
 
-    final categories = [
-      '전체',
-      '예약 관련',
-      '결제 관련',
-      '가이드 문의',
-      '계정/프로필',
-      '기술 지원',
-    ];
-
     return Scaffold(
       appBar: CustomAppbar(
         title: '고객센터',
@@ -101,14 +93,20 @@ class _FaqListContent extends State<FaqListContent> {
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             FaqCategory(
-              categories: provider.faqCategory,
+              categories: provider.category,
+              onTapCategory: _changeFaqCategory,
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.03),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            FaqSection(faqList: provider.faqModel),
+            FaqSection(faqList: provider.faqList),
           ],
         ),
       ),
     );
+  }
+
+  void _changeFaqCategory(FaqCategoryModel category) {
+
+    _faqProvider.filterByCategory(category);
   }
 }

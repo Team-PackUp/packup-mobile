@@ -1,57 +1,64 @@
-import 'package:packup/model/common/page_model.dart';
-import 'package:packup/provider/common/loading_provider.dart';
-import 'package:packup/service/common/loading_service.dart';
-
 import '../../../model/profile/contact_center/faq_category_model.dart';
 import '../../../model/profile/contact_center/faq_model.dart';
+import '../../../service/common/loading_service.dart';
 import '../../../service/profile/contact_center/faq_service.dart';
+import '../../common/loading_provider.dart';
 
 class FaqProvider extends LoadingProvider {
+  final _service = FaqService();
 
-  final service = FaqService();
+  /// 전체 목록
+  final List<FaqModel> _allFaqs = [];
 
-  List<FaqModel> _faqModel = [];
-  List<FaqCategoryModel> _faqCategory = [];
+  /// 화면에 노출할 목록
+  List<FaqModel> _faqs = [];
 
-  List<FaqModel> get faqModel => _faqModel;
-  List<FaqCategoryModel> get faqCategory => _faqCategory;
+  /// 카테고리 목록
+  final List<FaqCategoryModel> _category = [];
 
-  getFaqCategory() async {
+  List<FaqModel> get faqList        => _faqs;
+  List<FaqCategoryModel> get category => _category;
+
+  Future<void> getFaqCategory() async {
     await LoadingService.run(() async {
-      final response = await service.getFaqCategory();
-      List<FaqCategoryModel> list = (response.response as List)
+      final res = await _service.getFaqCategory();
+      final list = (res.response as List)
           .map((e) => FaqCategoryModel.fromJson(e))
           .toList();
 
-      _faqCategory.addAll(list);
+      _category
+        ..clear()
+        ..addAll(list);
 
       notifyListeners();
     });
   }
 
-  // FAQ 리스트
-  getFaqList() async {
-
+  Future<void> getFaqList() async {
     await LoadingService.run(() async {
-      final response = await service.getFaqList();
-      List<FaqModel> list = (response.response as List).map((e) => FaqModel.fromJson(e)).toList();
+      final res = await _service.getFaqList();
+      final list = (res.response as List)
+          .map((e) => FaqModel.fromJson(e))
+          .toList();
 
-      print(list.length);
-      _faqModel.addAll(list);
+      _allFaqs
+        ..clear()
+        ..addAll(list);
 
+      _faqs = List<FaqModel>.from(_allFaqs);
       notifyListeners();
     });
   }
 
-  getFaqByCategory(String category) async {
+  void filterByCategory(FaqCategoryModel category) {
+    if (category.codeName == '전체') {
+      _faqs = List<FaqModel>.from(_allFaqs);
+    } else {
+      _faqs = _allFaqs
+          .where((e) => e.faqType == category.codeId)
+          .toList();
+    }
 
-    await LoadingService.run(() async {
-      final response = await service.getFaqByCategory(category);
-      final list = FaqModel.fromJson(response.response);
-
-      print(list);
-
-      notifyListeners();
-    });
+    notifyListeners();
   }
 }

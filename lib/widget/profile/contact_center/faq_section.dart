@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:packup/model/profile/contact_center/faq_model.dart';
+import 'package:packup/widget/common/custom_empty_list.dart';
 import 'package:packup/widget/profile/contact_center/faq_card.dart';
 
 class FaqSection extends StatelessWidget {
@@ -23,7 +24,14 @@ class FaqSection extends StatelessWidget {
         ),
         SizedBox(height: height * 0.01),
 
-        ...faqList.map((faq) => FaqCard(question: faq.question!, answer: faq.answer!,)),
+        if(faqList.isEmpty)
+          CustomEmptyList(message: 'FAQ 자료가 없습니다.', icon: Icons.question_mark)
+        else
+          ...faqList.map((faq) => FaqCard(
+            key: UniqueKey(),
+            question: faq.question!,
+            answer:   faq.answer!,
+          )),
 
         SizedBox(height: height * 0.03),
         Center(

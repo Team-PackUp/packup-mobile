@@ -28,8 +28,9 @@ class AlertCenterProvider extends LoadingProvider {
     await LoadingService.run(() async {
       final response = await alertService.getAlertCount();
       _alertCount  = response.response;
-      notifyListeners();
     });
+
+    notifyListeners();
   }
 
   Future<void> getAlertList({bool reset = false}) async {
@@ -46,7 +47,6 @@ class AlertCenterProvider extends LoadingProvider {
 
       _alertList.addAll(page.objectList);
 
-      notifyListeners();
     });
 
     getAlertCount();
