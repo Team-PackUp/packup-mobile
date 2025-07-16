@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../common/util.dart';
-import '../../../model/profile/alert_center/alert_center_model.dart'; // AlertType enum 정의 위치
+import '../../model/alert_center/alert_center_model.dart';
 
 class ListCard extends StatelessWidget {
   const ListCard({

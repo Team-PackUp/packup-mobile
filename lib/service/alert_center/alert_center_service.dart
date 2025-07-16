@@ -1,6 +1,6 @@
 import '../../../http/dio_service.dart';
 import '../../../model/common/result_model.dart';
-import '../../../model/profile/alert_center/alert_center_model.dart';
+import '../../model/alert_center/alert_center_model.dart';
 
 class AlertCenterService {
 

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class FaqCard extends StatefulWidget {
   final String question;
-  const FaqCard({super.key, required this.question});
+  final String answer;
+  const FaqCard({super.key, required this.question, required this.answer});
 
   @override
   State<FaqCard> createState() => _FaqCardState();
@@ -24,11 +25,11 @@ class _FaqCardState extends State<FaqCard> {
         childrenPadding:
         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         onExpansionChanged: (v) => setState(() => _expanded = v),
-        children: const [
+        children: [
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              '안나옵니다',
+              widget.answer,
               style: TextStyle(fontSize: 13),
             ),
           ),

@@ -1,30 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:packup/provider/profile/contact_center/faq_provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
-import 'package:packup/widget/profile/contact_center/faq_card.dart';
+import 'package:packup/widget/profile/contact_center/faq_category.dart';
+import 'package:provider/provider.dart';
 
-import '../../../widget/profile/contact_center/inquiry_wrap.dart';
+import '../../../model/profile/contact_center/faq_category_model.dart';
+import '../../../widget/profile/contact_center/faq_section.dart';
 import '../../../widget/profile/contact_center/support_card.dart';
 
-class ContactCenterIndex extends StatefulWidget {
-  const ContactCenterIndex({super.key});
+class FaqList extends StatelessWidget {
+  const FaqList({super.key});
 
   @override
-  State<ContactCenterIndex> createState() => _ContactCenterIndexState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => FaqProvider(),
+      child: const FaqListContent(),
+    );
+  }
 }
 
-class _ContactCenterIndexState extends State<ContactCenterIndex> {
+class FaqListContent extends StatefulWidget {
+  const FaqListContent({super.key});
+
+  @override
+  State<FaqListContent> createState() => _FaqListContent();
+}
+
+class _FaqListContent extends State<FaqListContent> {
+
+  late final _faqProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    _faqProvider = context.read<FaqProvider>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _faqProvider
+        ..getFaqCategory()
+        ..getFaqList();
+    });
+  }
+
+  @override
+  Future<void> dispose() async {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
 
-    final categories = [
-      '전체',
-      '예약 관련',
-      '결제 관련',
-      '가이드 문의',
-      '계정/프로필',
-      '기술 지원',
-    ];
+    final provider = context.watch<FaqProvider>();
 
     return Scaffold(
       appBar: CustomAppbar(
@@ -65,41 +92,21 @@ class _ContactCenterIndexState extends State<ContactCenterIndex> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            InquiryWrap(
-              categories: categories,
+            FaqCategory(
+              categories: provider.category,
+              onTapCategory: _changeFaqCategory,
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-            const Text('자주 묻는 질문 (FAQ)',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-
-            FaqCard(question: '예약 변경은 어떻게 하나요?'),
-            FaqCard(question: '결제 영수증은 어디서 확인하나요?'),
-            FaqCard(question: '가이드에게 직접 문의할 수 있나요?'),
-            FaqCard(question: '비밀번호를 잊어버렸어요.'),
-
-            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-            Center(
-              child: Column(
-                children: [
-                  const Text('더 궁금한 점이 있으신가요?'),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.005),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Text(
-                      '언제든지 고객센터에 문의해주세요.',
-                      style: TextStyle(
-                        color: Colors.blue.shade600,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            FaqSection(faqList: provider.faqList),
           ],
         ),
       ),
     );
+  }
+
+  void _changeFaqCategory(FaqCategoryModel category) {
+
+    _faqProvider.filterByCategory(category);
   }
 }

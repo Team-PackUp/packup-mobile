@@ -2,8 +2,8 @@
 import 'package:packup/provider/common/loading_provider.dart';
 
 import '../../../model/common/page_model.dart';
-import '../../../model/profile/alert_center/alert_center_model.dart';
 import '../../../service/common/loading_service.dart';
+import '../../model/alert_center/alert_center_model.dart';
 import '../../service/alert_center/alert_center_service.dart';
 
 class AlertCenterProvider extends LoadingProvider {
@@ -28,8 +28,9 @@ class AlertCenterProvider extends LoadingProvider {
     await LoadingService.run(() async {
       final response = await alertService.getAlertCount();
       _alertCount  = response.response;
-      notifyListeners();
     });
+
+    notifyListeners();
   }
 
   Future<void> getAlertList({bool reset = false}) async {
@@ -46,7 +47,6 @@ class AlertCenterProvider extends LoadingProvider {
 
       _alertList.addAll(page.objectList);
 
-      notifyListeners();
     });
 
     getAlertCount();
