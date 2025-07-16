@@ -13,12 +13,17 @@ class RecommendCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
     final cardWidth   = screenW * 0.4;
     final imageHeight = cardWidth * 0.65;
 
     return SizedBox(
       width: cardWidth,
       child: Card(
+        margin: EdgeInsets.symmetric(
+          horizontal: screenW * 0.02,
+          vertical: screenH * 0.01,
+        ),
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         clipBehavior: Clip.hardEdge,
@@ -43,8 +48,10 @@ class RecommendCard extends StatelessWidget {
                     top: 8,
                     right: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 2),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: screenW * 0.02,
+                          vertical: 2
+                      ),
                       decoration: BoxDecoration(
                         color: PRIMARY_COLOR,
                         borderRadius: BorderRadius.circular(20),
@@ -64,18 +71,21 @@ class RecommendCard extends StatelessWidget {
 
             Padding(
               padding:
-              const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              EdgeInsets.symmetric(
+                  horizontal: screenW * 0.03,
+                  vertical: screenH * 0.03,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SlideText(
                     title: tour.tourTitle ?? '',
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: screenH * 0.01),
                   Row(
                     children: [
                       const Icon(Icons.place, size: 12, color: Colors.grey),
-                      const SizedBox(width: 2),
+                      SizedBox(width: screenW * 0.01),
                       Expanded(
                         child: Text(
                           tour.tourLocation ?? '',
@@ -87,7 +97,7 @@ class RecommendCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: screenH * 0.003),
                   Text(
                     '₩${tour.tourPrice?.toStringAsFixed(0) ?? ''}',
                     style: const TextStyle(
@@ -106,7 +116,7 @@ class RecommendCard extends StatelessWidget {
                         ),
                         onBackgroundImageError: (_, __) {},
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: screenW * 0.02),
                       Expanded(
                         child: Text(
                           tour.guideModel?.guideName ?? '',

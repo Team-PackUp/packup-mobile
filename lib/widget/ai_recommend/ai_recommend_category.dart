@@ -1,36 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:packup/Const/color.dart';
-import 'package:packup/model/profile/contact_center/faq_category_model.dart';
 
 import '../../../model/ai_recommend/ai_recommend_category_model.dart';
 
-class FaqCategory extends StatefulWidget {
-  final List<FaqCategoryModel> categories;
-  final void Function(FaqCategoryModel category)? onTapCategory;
-  const FaqCategory({
+class AIRecommendCategory extends StatefulWidget {
+  final List<AIRecommendCategoryModel> categories;
+  final void Function(AIRecommendCategoryModel category)? onTapCategory;
+  const AIRecommendCategory({
     super.key,
     required this.categories,
     this.onTapCategory,
   });
 
   @override
-  State<FaqCategory> createState() => _FaqCategoryState();
+  State<AIRecommendCategory> createState() => _AIRecommendCategory();
 }
 
-class _FaqCategoryState extends State<FaqCategory> {
+class _AIRecommendCategory extends State<AIRecommendCategory> {
   int _selectedIdx = 0;
 
   @override
   Widget build(BuildContext context) {
+    final screenW = MediaQuery.of(context).size.width;
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: List.generate(widget.categories.length, (i) {
           final selected = i == _selectedIdx;
           return Padding(
-            padding: const EdgeInsets.only(right: 8),
+            padding: EdgeInsets.only(right: screenW * 0.02),
             child: ChoiceChip(
-              label: Text(widget.categories[i].codeName!),
+              label: Text(widget.categories[i].name),
               selected: selected,
               onSelected: (bool value) {
                 setState(() => _selectedIdx = i);
