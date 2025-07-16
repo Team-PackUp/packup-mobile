@@ -78,13 +78,6 @@ class _FaqListContent extends State<FaqListContent> {
               subtitle: '상세한 문의는 이메일을 남겨주시면 답변드립니다.',
               onTap: () {},
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            SupportCard(
-              icon: Icons.description_outlined,
-              title: 'FAQ (자주 묻는 질문)',
-              subtitle: '가장 많이 묻는 질문과 답변을 확인해보세요.',
-              onTap: () {},
-            ),
 
             SizedBox(height: MediaQuery.of(context).size.height * 0.03),
             const Text(
