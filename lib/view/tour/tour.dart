@@ -6,6 +6,7 @@ import 'package:packup/widget/banner/banner_section.dart';
 import 'package:packup/widget/common/alert_bell.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:packup/widget/guide/guide_section.dart';
+import 'package:packup/widget/profile/reward/reward_section.dart';
 import 'package:packup/widget/search/category_section.dart';
 import 'package:packup/widget/search/search.dart';
 import 'package:packup/widget/tour/hot_tour_section.dart';
@@ -110,6 +111,8 @@ class _TourBodyState extends State<TourBody> {
             const HotTourSection(),
             const SizedBox(height: 24),
             const GuideSection(),
+            const SizedBox(height: 24),
+            const RewardSection(),
             const SizedBox(height: 24),
           ],
         ),
