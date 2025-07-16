@@ -56,7 +56,6 @@ class GuideCard extends StatelessWidget {
 
           const SizedBox(height: 8),
 
-          // 진행중 뱃지
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
@@ -76,9 +75,7 @@ class GuideCard extends StatelessWidget {
           const Spacer(),
 
           TextButton(
-            onPressed: () {
-              // TODO: 프로필 이동 처리
-            },
+            onPressed: () {},
             child: Text(
               '프로필 보기',
               style: AppTypographies.get(
