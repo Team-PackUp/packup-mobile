@@ -3,6 +3,7 @@ import 'package:packup/model/reply/reply_model.dart';
 import 'package:packup/provider/user/user_provider.dart';
 import 'package:packup/view/chat/chat_message.dart';
 import 'package:packup/view/chat/chat_room.dart';
+import 'package:packup/view/guide/guide_detail.dart';
 import 'package:packup/view/home/home.dart';
 import 'package:get/get.dart';
 import 'package:packup/view/login/login.dart';
@@ -11,6 +12,7 @@ import 'package:packup/view/payment/toss/toss_result_screen.dart';
 import 'package:packup/view/profile/contact_center/faq_list.dart';
 import 'package:packup/view/reply/reply_write.dart';
 import 'package:packup/view/search/search.dart';
+import 'package:packup/view/tour/user/tour_detail.dart';
 import 'package:packup/view/user/preference/preference.dart';
 import 'package:packup/view/user/register_detail/register_detail.dart';
 
@@ -110,35 +112,32 @@ GoRouter createRouter(UserProvider userProvider) {
         builder: (context, state) {
           final targetSeq = int.parse(state.pathParameters['targetSeq']!);
           final String param = state.pathParameters['targetType']!;
-          final TargetType targetType = TargetType.values
-              .firstWhere((e) => e.code == param);
-
-          return ReplyList(
-            targetSeq: targetSeq,
-            targetType: targetType,
+          final TargetType targetType = TargetType.values.firstWhere(
+            (e) => e.code == param,
           );
-      }),
-      GoRoute(
-          path: '/reply_write/:targetSeq/:targetType',
-          builder: (context, state) {
-            final targetSeq = int.parse(state.pathParameters['targetSeq']!);
-            final String param = state.pathParameters['targetType']!;
-            final TargetType targetType = TargetType.values
-                .firstWhere((e) => e.code == param);
 
-            return ReplyWrite(
-              targetSeq: targetSeq,
-              targetType: targetType,
-            );
-          }),
-      GoRoute( // 댓글 수정
+          return ReplyList(targetSeq: targetSeq, targetType: targetType);
+        },
+      ),
+      GoRoute(
+        path: '/reply_write/:targetSeq/:targetType',
+        builder: (context, state) {
+          final targetSeq = int.parse(state.pathParameters['targetSeq']!);
+          final String param = state.pathParameters['targetType']!;
+          final TargetType targetType = TargetType.values.firstWhere(
+            (e) => e.code == param,
+          );
+
+          return ReplyWrite(targetSeq: targetSeq, targetType: targetType);
+        },
+      ),
+      GoRoute(
+        // 댓글 수정
         path: '/reply_write/:seq',
         builder: (context, state) {
           final seq = int.parse(state.pathParameters['seq']!);
 
-          return ReplyWrite(
-            seq: seq,
-          );
+          return ReplyWrite(seq: seq);
         },
       ),
       GoRoute(
@@ -169,10 +168,26 @@ GoRouter createRouter(UserProvider userProvider) {
         builder: (context, state) {
           final typeString = state.pathParameters['searchType']!;
           final searchType = SearchType.values.firstWhere(
-                (e) => e.name == typeString,
+            (e) => e.name == typeString,
             orElse: () => SearchType.all,
           );
           return Search(searchType: searchType);
+        },
+      ),
+      GoRoute(
+        path: '/tour/:id',
+        name: 'tourDetail',
+        builder: (context, state) {
+          final id = state.pathParameters['id'];
+          return const TourDetailPage();
+        },
+      ),
+      GoRoute(
+        path: '/guide/:guideId',
+        name: 'guideDetail',
+        builder: (context, state) {
+          final guideId = int.parse(state.pathParameters['guideId']!);
+          return GuideDetailPage(guideId: guideId);
         },
       ),
     ],

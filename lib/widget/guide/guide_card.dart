@@ -31,10 +31,9 @@ class GuideCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CircleAvatar(radius: 32, backgroundImage: NetworkImage(imageUrl)),
+          CircleAvatar(radius: 48, backgroundImage: NetworkImage(imageUrl)),
           const SizedBox(height: 12),
 
-          // 이름
           Text(
             name,
             style: AppTypographies.get(
@@ -42,10 +41,7 @@ class GuideCard extends StatelessWidget {
               weight: AppFontWeight.bold,
             ),
           ),
-
           const SizedBox(height: 4),
-
-          // 소개
           Text(
             desc,
             textAlign: TextAlign.center,
@@ -60,7 +56,6 @@ class GuideCard extends StatelessWidget {
 
           const SizedBox(height: 8),
 
-          // 진행중 뱃지
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
@@ -80,9 +75,7 @@ class GuideCard extends StatelessWidget {
           const Spacer(),
 
           TextButton(
-            onPressed: () {
-              // TODO: 프로필 이동 처리
-            },
+            onPressed: () {},
             child: Text(
               '프로필 보기',
               style: AppTypographies.get(

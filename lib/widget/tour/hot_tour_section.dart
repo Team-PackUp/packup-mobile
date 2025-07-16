@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 import 'package:packup/widget/tour/tour_card.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +47,9 @@ class HotTourSection extends StatelessWidget {
                         child: TourCard(
                           tour: tour,
                           isFavorite: false,
-                          onTap: () {},
+                          onTap: () {
+                            context.push('/tour/123');
+                          },
                           onFavoriteToggle: () {},
                         ),
                       ),

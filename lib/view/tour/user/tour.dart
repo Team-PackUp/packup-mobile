@@ -6,13 +6,14 @@ import 'package:packup/widget/banner/banner_section.dart';
 import 'package:packup/widget/common/alert_bell.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:packup/widget/guide/guide_section.dart';
+import 'package:packup/widget/profile/reward/reward_section.dart';
 import 'package:packup/widget/search/category_section.dart';
 import 'package:packup/widget/search/search.dart';
 import 'package:packup/widget/tour/hot_tour_section.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 
-import 'guide/edit/edit.dart';
+import '../guide/edit/edit.dart';
 
 /// 투어 목록 화면 (무한 스크롤 및 편집/추가 기능 포함)
 class Tour extends StatelessWidget {
@@ -110,6 +111,8 @@ class _TourBodyState extends State<TourBody> {
             const HotTourSection(),
             const SizedBox(height: 24),
             const GuideSection(),
+            const SizedBox(height: 24),
+            const RewardSection(),
             const SizedBox(height: 24),
           ],
         ),
