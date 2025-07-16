@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:packup/widget/tour/detail/guide_card.dart';
 import 'package:packup/widget/tour/detail/%08rating.dart';
+import 'package:packup/widget/tour/detail/tour_description.dart';
 import 'package:packup/widget/tour/detail/tour_tag.dart';
 
 class TourDetailPage extends StatelessWidget {
@@ -51,6 +52,7 @@ class TourDetailPage extends StatelessWidget {
                   SizedBox(height: 24),
                   GuideCard(),
                   SizedBox(height: 24),
+                  TourDescription(),
                 ],
               ),
             ),

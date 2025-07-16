@@ -30,23 +30,23 @@ class GuideCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Ji-hoon Kim',
+                  'Joonmo Jeong',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 4),
                 Rating(rating: 4.1, reviewCount: 12),
                 const SizedBox(height: 8),
                 const Text(
-                  "Experienced local guide specializing in Seoul's hidden culinary gems and traditional tea houses. Fluent in English and Japanese.",
+                  "Chungnam National University Computer Science and Engineering department, Junior. Interested in robust backend Engineering.",
                   style: TextStyle(fontSize: 13),
                 ),
                 const SizedBox(height: 12),
                 Wrap(
                   spacing: 8,
                   children: const [
-                    TourTag(label: 'English'),
-                    TourTag(label: 'Japanese'),
-                    TourTag(label: 'Korean'),
+                    TourTag(label: 'Java'),
+                    TourTag(label: 'Javascript'),
+                    TourTag(label: 'Python'),
                   ],
                 ),
               ],
