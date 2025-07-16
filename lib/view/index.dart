@@ -103,7 +103,7 @@ class _IndexState extends State<Index> {
 
   @override
   Widget build(BuildContext context) {
-    final barRadius = 25.0;
+    final barRadius = 10.0;
 
     return WillPopScope(
       onWillPop: _onWillPop,
