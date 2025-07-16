@@ -11,7 +11,7 @@ import 'package:packup/view/index.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
 import 'package:packup/view/reply/reply_write.dart';
 import 'package:packup/view/search/search.dart';
-import 'package:packup/view/tour/tour_detail.dart';
+import 'package:packup/view/tour/user/tour_detail.dart';
 import 'package:packup/view/user/preference/preference.dart';
 import 'package:packup/view/user/register_detail/register_detail.dart';
 

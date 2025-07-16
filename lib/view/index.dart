@@ -4,7 +4,7 @@ import 'package:packup/const/packup_icons.dart';
 import 'package:packup/view/chat/chat_room.dart';
 import 'package:packup/view/home/home.dart';
 import 'package:packup/view/profile/profile_index.dart';
-import 'package:packup/view/tour/tour.dart';
+import 'package:packup/view/tour/user/tour.dart';
 
 import '../common/deep_link/handle_router.dart';
 import 'ai_recommend/ai_recommend.dart';

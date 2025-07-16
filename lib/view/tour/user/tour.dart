@@ -13,7 +13,7 @@ import 'package:packup/widget/tour/hot_tour_section.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 
-import 'guide/edit/edit.dart';
+import '../guide/edit/edit.dart';
 
 /// 투어 목록 화면 (무한 스크롤 및 편집/추가 기능 포함)
 class Tour extends StatelessWidget {
