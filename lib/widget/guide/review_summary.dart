@@ -105,7 +105,7 @@ class _RatingBarRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final barColor = highlight ? SELECTED : PRIMARY_COLOR;
+    final barColor = highlight ? Colors.indigo : Colors.black87;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
