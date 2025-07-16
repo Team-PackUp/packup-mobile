@@ -19,21 +19,22 @@ class RecommendList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (tours.isEmpty) return const SizedBox.shrink();
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
         final columns = _crossAxisCount(width);
 
-        const horizontalPadding = 8.0;
-        final cardWidth = (width - (columns - 1) * horizontalPadding) / columns;
+        final cardWidth = (width - (columns - 1) * (screenW / 60)) / columns;
 
         return SizedBox(
-          height: MediaQuery.of(context).size.height * .3,
+          height: screenH * .3,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: tours.length,
-            separatorBuilder: (_, __) => const SizedBox(width: horizontalPadding),
+            separatorBuilder: (_, __) => SizedBox(width: 0),
             itemBuilder: (context, index) {
               final tour = tours[index];
               return SizedBox(
