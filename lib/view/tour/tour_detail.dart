@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:packup/widget/tour/detail/guide_card.dart';
 import 'package:packup/widget/tour/detail/%08rating.dart';
+import 'package:packup/widget/tour/detail/review_list.dart';
 import 'package:packup/widget/tour/detail/tour_description.dart';
 import 'package:packup/widget/tour/detail/tour_exclude.dart';
 import 'package:packup/widget/tour/detail/tour_tag.dart';
@@ -59,6 +60,8 @@ class TourDetailPage extends StatelessWidget {
                   TourInclude(),
                   SizedBox(height: 24),
                   TourExclude(),
+                  SizedBox(height: 24),
+                  ReviewList(),
                 ],
               ),
             ),
