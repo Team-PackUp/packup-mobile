@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:packup/widget/tour/detail/%08rating.dart';
-import 'package:packup/widget/tour/detail/%08tag.dart';
+import 'package:packup/widget/tour/detail/rating.dart';
+import 'package:packup/widget/tour/detail/tag.dart';
 
 class GuideProfileCard extends StatelessWidget {
   const GuideProfileCard({super.key});
