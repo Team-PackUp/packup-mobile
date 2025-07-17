@@ -20,7 +20,7 @@ class AIRecommendCategorySection extends StatelessWidget {
       children: [
         SectionHeader(
           icon: '🔍',
-          title: '종류별 탐색 진행',
+          title: '종류별로 탐색 하기!',
           subTitle: '종류별로 찾아 떠나는 여행',
           callBackText: '더보기',
           onSeeMore: () {},
