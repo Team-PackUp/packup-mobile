@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:packup/Const/color.dart';
 import '../../../model/ai_recommend/recommend_tour_model.dart';
 import '../../common/util.dart';
-import 'package:marquee/marquee.dart';
-
 import '../common/slide_text.dart';
 
-class RecommendCard extends StatelessWidget {
-  const RecommendCard({super.key, required this.tour});
+class ListCard extends StatelessWidget {
+  const ListCard({super.key, required this.tour});
   final RecommendTourModel tour;
 
   @override
@@ -99,14 +98,14 @@ class RecommendCard extends StatelessWidget {
                   ),
                   SizedBox(height: screenH * 0.003),
                   Text(
-                    '₩${tour.tourPrice?.toStringAsFixed(0) ?? ''}',
+                    formatPrice(tour.tourPrice!),
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: Colors.red,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: screenH * 0.003),
                   Row(
                     children: [
                       CircleAvatar(

@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
-import 'package:packup/view/profile/contact_center/faq_list.dart';
 import 'package:packup/view/reply/reply_write.dart';
 import 'package:packup/view/search/search.dart';
 import 'package:packup/view/tour/user/tour_detail.dart';
@@ -17,7 +16,7 @@ import 'package:packup/view/user/preference/preference.dart';
 import 'package:packup/view/user/register_detail/register_detail.dart';
 
 import '../provider/search/search_provider.dart';
-import '../view/ai_recommend/ai_recommend_detail.dart';
+import '../view/ai_recommend/detail/ai_recommend_detail.dart';
 import '../view/alert_center/alert_center_list.dart';
 import '../view/profile/notice/notice_list.dart';
 import '../view/profile/notice/notice_view.dart';
@@ -154,10 +153,6 @@ GoRouter createRouter(UserProvider userProvider) {
       GoRoute(
         path: '/alert_center',
         builder: (context, state) => AlertCenterListContent(),
-      ),
-      GoRoute(
-        path: '/contact_center',
-        builder: (context, state) => FaqList(),
       ),
       GoRoute(
         path: '/ai_recommend_detail',

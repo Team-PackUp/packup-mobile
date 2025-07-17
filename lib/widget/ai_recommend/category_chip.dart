@@ -3,20 +3,20 @@ import 'package:packup/Const/color.dart';
 
 import '../../../model/ai_recommend/ai_recommend_category_model.dart';
 
-class AIRecommendCategory extends StatefulWidget {
+class CategoryChip extends StatefulWidget {
   final List<AIRecommendCategoryModel> categories;
   final void Function(AIRecommendCategoryModel category)? onTapCategory;
-  const AIRecommendCategory({
+  const CategoryChip({
     super.key,
     required this.categories,
     this.onTapCategory,
   });
 
   @override
-  State<AIRecommendCategory> createState() => _AIRecommendCategory();
+  State<CategoryChip> createState() => _CategoryChip();
 }
 
-class _AIRecommendCategory extends State<AIRecommendCategory> {
+class _CategoryChip extends State<CategoryChip> {
   int _selectedIdx = 0;
 
   @override

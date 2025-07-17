@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:packup/widget/ai_recommend/recommend_card.dart';
+import 'package:packup/widget/ai_recommend/list_card.dart';
 
 import '../../model/ai_recommend/recommend_tour_model.dart';
 
@@ -30,7 +30,7 @@ class RecommendList extends StatelessWidget {
         final cardWidth = (width - (columns - 1) * (screenW / 60)) / columns;
 
         return SizedBox(
-          height: screenH * .3,
+          height: screenH * .32,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: tours.length,
@@ -41,7 +41,7 @@ class RecommendList extends StatelessWidget {
                 width: cardWidth,
                 child: InkWell(
                   onTap: () => onTap(tour),
-                  child: RecommendCard(tour: tour),
+                  child: ListCard(tour: tour),
                 ),
               );
             },
