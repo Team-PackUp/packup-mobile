@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:packup/widget/ai_recommend/recommend_card.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -11,7 +12,6 @@ import '../../../widget/common/alert_bell.dart';
 import '../../../widget/common/custom_appbar.dart';
 import '../../../widget/search/search.dart';
 import '../../../widget/ai_recommend/section.dart';
-import '../../../widget/ai_recommend/list_card.dart';
 
 class AiRecommendDetail extends StatelessWidget {
   const AiRecommendDetail({super.key});
@@ -104,7 +104,7 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
               delegate: SliverChildBuilderDelegate(
                     (context, index) {
                   final tour = recommendProvider.tourList[index];
-                  return ListCard(tour: tour);
+                  return RecommendCard(tour: tour);
                 },
                 childCount: recommendProvider.tourList.length,
               ),

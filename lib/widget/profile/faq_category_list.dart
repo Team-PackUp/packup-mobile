@@ -4,20 +4,20 @@ import 'package:packup/model/profile/contact_center/faq_category_model.dart';
 
 import '../../../model/ai_recommend/ai_recommend_category_model.dart';
 
-class FaqCategory extends StatefulWidget {
+class FaqCategoryList extends StatefulWidget {
   final List<FaqCategoryModel> categories;
   final void Function(FaqCategoryModel category)? onTapCategory;
-  const FaqCategory({
+  const FaqCategoryList({
     super.key,
     required this.categories,
     this.onTapCategory,
   });
 
   @override
-  State<FaqCategory> createState() => _FaqCategoryState();
+  State<FaqCategoryList> createState() => _FaqCategoryListState();
 }
 
-class _FaqCategoryState extends State<FaqCategory> {
+class _FaqCategoryListState extends State<FaqCategoryList> {
   int _selectedIdx = 0;
 
   @override

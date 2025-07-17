@@ -1,0 +1,34 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:packup/model/tour/tour_model.dart';
+import 'package:packup/widget/profile/reservation_card.dart';
+
+class ReservationList extends StatelessWidget {
+  final List<TourModel> tourList;
+  final double h;
+  final double w;
+
+  const ReservationList({
+    super.key,
+    required this.tourList,
+    required this.h,
+    required this.w,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (tourList.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      children: tourList.map((tour) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: h * 0.012),
+          child: GestureDetector(
+            onTap: () => context.push('/tour/${tour.seq}'),
+            child: ReservationCard(tour: tour, w: w, h: h),
+          ),
+        );
+      }).toList(),
+    );
+  }
+}

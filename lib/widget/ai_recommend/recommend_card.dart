@@ -5,8 +5,8 @@ import '../../../model/ai_recommend/recommend_tour_model.dart';
 import '../../common/util.dart';
 import '../common/slide_text.dart';
 
-class ListCard extends StatelessWidget {
-  const ListCard({super.key, required this.tour});
+class RecommendCard extends StatelessWidget {
+  const RecommendCard({super.key, required this.tour});
   final RecommendTourModel tour;
 
   @override

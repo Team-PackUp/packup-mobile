@@ -51,9 +51,7 @@ class EditorContentState extends State<EditorContent> {
   Widget build(BuildContext context) {
     _editorProvider = context.watch<EditorProvider>();
 
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
+    return Column(
           children: [
             EditorToolbar().editorToolBar(
                 _editorProvider.quillController,
@@ -68,8 +66,6 @@ class EditorContentState extends State<EditorContent> {
               ),
             ),
           ],
-        ),
-      ),
     );
   }
 

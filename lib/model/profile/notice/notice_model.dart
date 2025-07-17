@@ -33,7 +33,7 @@ class NoticeModel {
   }
 
   factory NoticeModel.empty() {
-    return NoticeModel(title: "", content: "", createdAt: null);
+    return NoticeModel(title: "", content: "", createdAt: DateTime.now());
   }
 
   Document get quillDocument {

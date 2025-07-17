@@ -14,8 +14,12 @@ class EditorProvider extends ChangeNotifier {
 
   String _content = '';
   String get content => _content;
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
 
   EditorProvider(String data, EditorType type) {
+    _isLoading = true;
     _content = data;
 
     if (_content.trim().isNotEmpty) {
@@ -30,6 +34,7 @@ class EditorProvider extends ChangeNotifier {
     _quillController.readOnly = true :
     _quillController.readOnly = false;
 
+    _isLoading = false;
     notifyListeners();
   }
 

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:provider/provider.dart';
-import '../../../provider/profile/notice/notice_provider.dart';
-import '../../../widget/profile/notice/notice_card.dart';
+import '../../../../provider/profile/notice/notice_provider.dart';
+import '../../../../widget/profile/notice/notice_card.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

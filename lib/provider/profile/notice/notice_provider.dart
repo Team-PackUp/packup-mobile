@@ -11,6 +11,7 @@ class NoticeProvider extends LoadingProvider {
 
   late NoticeModel noticeModel;
   late List<NoticeModel> _noticeList;
+  bool _isLoading = false;
 
   NoticeProvider() {
     noticeModel = NoticeModel.empty();
@@ -23,11 +24,13 @@ class NoticeProvider extends LoadingProvider {
   List<NoticeModel> get noticeList => _noticeList;
   int get totalPage => _totalPage;
   int get curPage => _curPage;
+  bool get isFetching => _isLoading;
 
   // 공지 리스트
   getNoticeList() async {
     if (_totalPage < _curPage) return;
 
+    _isLoading = true;
     await LoadingService.run(() async {
       final response = await noticeService.getNoticeList(_curPage);
       final page = PageModel<NoticeModel>.fromJson(response.response,
@@ -38,6 +41,7 @@ class NoticeProvider extends LoadingProvider {
       _totalPage = page.totalPage;
 
       _curPage++;
+      _isLoading = false;
 
       notifyListeners();
     });
@@ -45,13 +49,20 @@ class NoticeProvider extends LoadingProvider {
 
   // 공지 상세 보기
   getNoticeView(int noticeSeq) async {
+    try {
+      _isLoading = true;
 
-    await LoadingService.run(() async {
+      await LoadingService.run(() async {
 
-      final response = await noticeService.getNoticeView(noticeSeq);
-      noticeModel =  NoticeModel.fromJson(response.response);
-    });
+        final response = await noticeService.getNoticeView(noticeSeq);
+        noticeModel =  NoticeModel.fromJson(response.response);
+      });
+    } catch (e, stack) {
+      print('error');
+    } finally {
+      _isLoading = false;
 
-    notifyListeners();
+      notifyListeners();
+    }
   }
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:packup/widget/profile/faq_category_list.dart';
+import 'package:packup/widget/profile/faq_list.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/profile/contact_center/faq_category_model.dart';
 import '../../../provider/profile/contact_center/faq_provider.dart';
 import '../faq_card.dart';
-import '../faq_category.dart';
 
 class FaqSection extends StatelessWidget {
   const FaqSection({super.key});
@@ -20,11 +21,11 @@ class FaqSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FaqCategory(
+        FaqCategoryList(
           categories: provider.category,
           onTapCategory: (category) => _changeFaqCategory(context, category),
         ),
-        FaqCard(key: UniqueKey(), faqList: provider.faqList),
+        FaqList(key: UniqueKey(), faqList: provider.faqList),
       ],
     );
   }

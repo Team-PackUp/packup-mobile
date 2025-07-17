@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
+import 'package:packup/view/profile/setting_account/reservation_manage/reservation_manage.dart';
 import 'package:packup/view/reply/reply_write.dart';
 import 'package:packup/view/search/search.dart';
 import 'package:packup/view/tour/user/tour_detail.dart';
@@ -18,9 +19,10 @@ import 'package:packup/view/user/register_detail/register_detail.dart';
 import '../provider/search/search_provider.dart';
 import '../view/ai_recommend/detail/ai_recommend_detail.dart';
 import '../view/alert_center/alert_center_list.dart';
-import '../view/profile/notice/notice_list.dart';
-import '../view/profile/notice/notice_view.dart';
+import '../view/profile/setting_account/notice/notice_list.dart';
+import '../view/profile/setting_account/notice/notice_view.dart';
 import '../view/reply/reply_list.dart';
+import '../widget/profile/setting_account/reservation_manage/reservation_manage_section.dart';
 
 GoRouter createRouter(UserProvider userProvider) {
   return GoRouter(
@@ -175,6 +177,13 @@ GoRouter createRouter(UserProvider userProvider) {
         builder: (context, state) {
           final id = state.pathParameters['id'];
           return const TourDetailPage();
+        },
+      ),
+      GoRoute(
+        path: '/reservation/list',
+        name: 'reservationList',
+        builder: (context, state) {
+          return ReservationManage();
         },
       ),
       GoRoute(

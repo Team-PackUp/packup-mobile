@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:packup/common/util.dart';
+import 'package:packup/provider/common/loading_provider.dart';
+import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:packup/widget/editor/editor.dart';
 import 'package:provider/provider.dart';
 
 import 'package:packup/provider/common/editor_provider.dart';
 
-import '../../../provider/profile/notice/notice_provider.dart';
+import '../../../../provider/profile/notice/notice_provider.dart';
 
 class NoticeView extends StatelessWidget {
   final int noticeSeq;
@@ -59,14 +61,9 @@ class NoticeViewContentState extends State<NoticeViewContent> {
     _noticeProvider = context.watch<NoticeProvider>();
     final notice = _noticeProvider.noticeModel;
 
-    // editor에 값이 세팅 되는데 딜레이가 있는 것으로 보임
-    if (notice.title!.isEmpty || notice.content!.isEmpty) {
-      return SizedBox.shrink();
-    }
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text(notice.title!),
+      appBar: CustomAppbar(
+        title: notice.title!,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,6 +74,7 @@ class NoticeViewContentState extends State<NoticeViewContent> {
           ),
           Expanded(
             child: Editor(
+              key: ValueKey(notice.content),
               content: notice.content!,
               type: EditorType.view,
             ),

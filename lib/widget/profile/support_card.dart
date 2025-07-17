@@ -9,6 +9,7 @@ class SupportCard extends StatelessWidget {
   final double h;
 
   const SupportCard({
+    super.key,
     required this.icon,
     required this.title,
     required this.subtitle,

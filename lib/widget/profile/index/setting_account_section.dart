@@ -12,7 +12,7 @@ class SettingAccountSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final items = [
       {'title': '프로필 수정', 'icon': Icons.person, 'url': '/profile/update'},
-      {'title': '예약 관리', 'icon': Icons.calendar_today, 'url': '/profile/update'},
+      {'title': '예약 관리', 'icon': Icons.calendar_today, 'url': '/reservation/list'},
       {'title': '찜한 목록', 'icon': Icons.favorite_border, 'url': '/profile/update'},
       {'title': '결제 내역', 'icon': Icons.credit_card, 'url': '/profile/update'},
       {'title': '공지사항', 'icon': Icons.notifications, 'url': '/notice_list'},
