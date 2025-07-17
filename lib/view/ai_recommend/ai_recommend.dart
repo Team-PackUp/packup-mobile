@@ -90,17 +90,7 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
                       ? NetworkImage(profileUrl)
                       : null,
                 ),
-                bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(kToolbarHeight),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 0.03,
-                      vertical: MediaQuery.of(context).size.height * 0.01,
-                    ),
-                    child:
-                    CustomSearch(onTap: () => context.push('/search/all')),
-                  ),
-                ),
+                bottom: CustomSearch(onTap: () => context.push('/search/all')),
               ),
             ],
             body: ListView(
