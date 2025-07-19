@@ -27,18 +27,22 @@ class RewardSection extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              RewardCard(
-                icon: Icons.monetization_on_outlined,
-                title: '$point',
-                subtitle: '포인트',
-                description: '현재 보유 포인트',
+              Expanded(
+                child: RewardCard(
+                  icon: Icons.monetization_on_outlined,
+                  title: '$point',
+                  subtitle: '포인트',
+                  description: '현재 보유 포인트',
+                ),
               ),
               const SizedBox(width: 12),
-              RewardCard(
-                icon: Icons.percent,
-                title: '$couponCount개',
-                subtitle: '',
-                description: '사용 가능 쿠폰',
+              Expanded(
+                child: RewardCard(
+                  icon: Icons.percent,
+                  title: '$couponCount개',
+                  subtitle: '',
+                  description: '사용 가능 쿠폰',
+                ),
               ),
             ],
           ),

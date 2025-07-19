@@ -31,7 +31,6 @@ class RewardCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// 👉 아이콘 + 타이틀 한 줄 정렬
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
