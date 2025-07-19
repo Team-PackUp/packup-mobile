@@ -39,16 +39,6 @@ class _CategoryFilterState extends State<CategoryFilter> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
-          children: [
-            Text('🔎', style: TextStyle(fontSize: 18)),
-            SizedBox(width: 6),
-            Text(
-              '종류별로 탐색하기',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-          ],
-        ),
         const SizedBox(height: 12),
 
         SingleChildScrollView(

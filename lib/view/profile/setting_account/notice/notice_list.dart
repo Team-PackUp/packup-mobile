@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:provider/provider.dart';
-import '../../../provider/profile/notice/notice_provider.dart';
-import '../../../widget/profile/notice/notice_card.dart';
+import '../../../../provider/profile/notice/notice_provider.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../../../widget/common/util_widget.dart';
+import '../../../../widget/profile/setting_account/notice/notice_card.dart';
 
 class NoticeList extends StatelessWidget {
   const NoticeList({super.key});
@@ -78,8 +80,13 @@ class _NoticeListContentState extends State<NoticeListContent> {
                 final notice = filteredNoticeList[index];
 
                 return InkWell(
-                  onTap: () async {
-                    context.push('/notice_view/${notice.seq!}');
+                  onTap: () {
+                    final seq = notice.seq!;
+                    if (seq == 0) {
+                      CustomSnackBar.showError(context, '존재 하지 않는 공지사항 입니다.');
+                      return;
+                    }
+                    context.push('/notice_view/$seq');
                   },
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -103,7 +110,6 @@ class _NoticeListContentState extends State<NoticeListContent> {
                       ),
                     ),
                   ),
-
                 );
               },
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../common/util.dart';
+import '../../../../Common/util.dart';
+
 
 class NoticeCard extends StatelessWidget {
   final int index;

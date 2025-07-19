@@ -123,6 +123,11 @@ flutter:
     - family: Packup_icons
       fonts:
         - asset: assets/fonts/Packup_icons.ttf
+    - family: Aggro
+      fonts:
+#       - asset: assets/fonts/SB 어그로 M.ttf
+       - asset: assets/fonts/SB 어그로 L.ttf
+#       - asset: assets/fonts/SB 어그로 B.ttf
 
   #   - family: Schyler
   #     fonts:

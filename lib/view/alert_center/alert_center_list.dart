@@ -54,8 +54,8 @@ class _AlertCenterListContentState extends State<AlertCenterListContent> {
     final filteredAlertList = _alertCenterProvider.alertList;
 
     return Scaffold(
-      appBar: CustomAppbar(title: AppLocalizations.of(context)!.notice),
-      body: filteredAlertList.isEmpty
+      appBar: CustomAppbar(title: '알림 센터'),
+      body: filteredAlertList.isEmpty && !_alertCenterProvider.isLoading
           ? CustomEmptyList(
               message: '새 알림이 없습니다.',
               icon: Icons.notifications_none_outlined,

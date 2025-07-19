@@ -24,6 +24,10 @@ class AlertCenterProvider extends LoadingProvider {
   List<AlertCenterModel> get alertList => _alertList;
   int get alertCount => _alertCount;
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+
   Future<void> getAlertCount() async {
     await LoadingService.run(() async {
       final response = await alertService.getAlertCount();
@@ -38,6 +42,7 @@ class AlertCenterProvider extends LoadingProvider {
       _alertList.clear();
       _alertCount = 0;
     }
+    _isLoading = true;
 
     await LoadingService.run(() async {
       final response = await alertService.getAlertList();
@@ -48,6 +53,8 @@ class AlertCenterProvider extends LoadingProvider {
       _alertList.addAll(page.objectList);
 
     });
+
+    _isLoading = false;
 
     getAlertCount();
   }

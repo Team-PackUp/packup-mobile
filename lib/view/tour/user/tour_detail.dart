@@ -8,16 +8,18 @@ import 'package:packup/widget/tour/detail/tour_footer.dart';
 import 'package:packup/widget/tour/detail/tag.dart';
 import 'package:packup/widget/tour/detail/tour_include.dart';
 
+import '../../../widget/common/custom_appbar.dart';
+
 class TourDetailPage extends StatelessWidget {
   const TourDetailPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('인사동 & 북촌 걷기 투어'),
-        leading: BackButton(),
-      ),
+      backgroundColor: Colors.white,
+      appBar: CustomAppbar(
+        title: '인사동 & 북촌 걷기 투어',
+        ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

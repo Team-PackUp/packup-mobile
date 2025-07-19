@@ -29,7 +29,6 @@ class AIRecommendProvider extends LoadingProvider {
     notifyListeners();
 
     await LoadingService.run(() async {
-      // 첫 페이지(0) 요청
       final res  = await _service.getRecommendTour(page: 1, count: count);
       final data = res.response["tour"] as Map<String, dynamic>;
 
