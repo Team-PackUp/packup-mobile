@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/model/reply/reply_model.dart';
 import 'package:packup/provider/user/user_provider.dart';
@@ -15,6 +16,7 @@ import 'package:packup/view/search/search.dart';
 import 'package:packup/view/tour/user/tour_detail.dart';
 import 'package:packup/view/user/preference/preference.dart';
 import 'package:packup/view/user/register_detail/register_detail.dart';
+import 'package:packup/widget/common/custom_error.dart';
 
 import '../provider/search/search_provider.dart';
 import '../view/ai_recommend/detail/ai_recommend_detail.dart';
@@ -22,7 +24,7 @@ import '../view/alert_center/alert_center_list.dart';
 import '../view/profile/setting_account/notice/notice_list.dart';
 import '../view/profile/setting_account/notice/notice_view.dart';
 import '../view/reply/reply_list.dart';
-import '../widget/profile/setting_account/reservation_manage/reservation_manage_section.dart';
+import '../view/tour/user/tour.dart';
 
 GoRouter createRouter(UserProvider userProvider) {
   return GoRouter(
@@ -194,6 +196,21 @@ GoRouter createRouter(UserProvider userProvider) {
           return GuideDetailPage(guideId: guideId);
         },
       ),
+      GoRoute(
+        path: '/error',
+        name: 'error',
+        builder: (context, state) {
+          final msg = state.extra is String
+              ? state.extra as String
+              : '알 수 없는 오류가 발생했습니다.';
+          return CustomError(message: msg);
+        },
+      ),
     ],
+    // 라우트 에러 방지
+    errorBuilder: (context, state) {
+      Future.microtask(() => context.goNamed('error', extra: '유효하지 않은 경로 입니다.'));
+      return const SizedBox.shrink();
+    },
   );
 }

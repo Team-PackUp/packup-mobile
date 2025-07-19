@@ -134,7 +134,7 @@ class _IndexState extends State<Index> {
                 bottomNavItems.length,
                     (index) => BottomNavigationBarItem(
                   icon: SizedBox(
-                    height: MediaQuery.of(context).size.height * .022,
+                    height: MediaQuery.of(context).size.height * .026,
                     child: Icon(bottomNavItems[index]['icon']),
                   ),
                   label: bottomNavItems[index]['label'],

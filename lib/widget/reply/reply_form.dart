@@ -4,6 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:packup/provider/reply/reply_provider.dart';
 import 'package:packup/widget/common/custom_point_input.dart';
 
+import '../common/util_widget.dart';
+
 class ReplyForm extends StatefulWidget {
   final ReplyProvider replyProvider;
 
@@ -69,8 +71,6 @@ class _ReplyFormState extends State<ReplyForm> {
               hintText: 'reply...',
               border: OutlineInputBorder(),
             ),
-            validator: (v) =>
-            (v == null || v.trim().isEmpty) ? 'reply required..' : null,
           ),
           const SizedBox(height: 12),
 
@@ -124,15 +124,26 @@ class _ReplyFormState extends State<ReplyForm> {
 
 
   Future<void> _upsertReply() async {
-    if(_formKey.currentState!.validate()) {
-      await _replyProvider.upsertReply(
-          _contentController.text, _point,
-          AppLocalizations.of(context)!.notice,
-          AppLocalizations.of(context)!.advertise
-      );
-
-      if (mounted) Navigator.pop(context, true);
+    final text = _contentController.text.trim();
+    if (text.isEmpty) {
+      CustomSnackBar.showError(context, '댓글을 입력해주세요.');
+      return;
     }
+
+    if (_point < 1) {
+      CustomSnackBar.showError(context, '평점을 입력해주세요');
+      return;
+    }
+
+    await _replyProvider.upsertReply(
+      _contentController.text,
+      _point,
+      AppLocalizations.of(context)!.notice,
+      AppLocalizations.of(context)!.advertise,
+    );
+
+    if (mounted) Navigator.pop(context, true);
+
   }
 
   Future<void> _deleteReply() async {
