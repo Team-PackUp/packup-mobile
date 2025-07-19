@@ -5,6 +5,7 @@ import 'package:packup/provider/user/user_provider.dart';
 import 'package:packup/widget/banner/banner_section.dart';
 import 'package:packup/widget/common/alert_bell.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
+import 'package:packup/widget/common/custom_sliver_appbar.dart';
 import 'package:packup/widget/guide/guide_section.dart';
 import 'package:packup/widget/profile/reward/reward_section.dart';
 import 'package:packup/widget/search/category_section.dart';
@@ -27,7 +28,6 @@ class Tour extends StatelessWidget {
   }
 }
 
-/// 투어 목록을 그리는 Stateful 위젯
 class TourBody extends StatefulWidget {
   const TourBody({super.key});
 
@@ -74,46 +74,52 @@ class _TourBodyState extends State<TourBody> {
     final userProvider = context.watch<UserProvider>();
     final profileUrl = userProvider.userModel?.profileImagePath;
 
-    return Scaffold(
-      appBar: CustomAppbar(
-        title: 'PACKUP Explorer',
-        arrowFlag: false,
-        alert: AlertBell(
-          count: alertCount,
-          onTap: () async {
-            context.push('/alert_center');
-          },
-        ),
-        profile: CircleAvatar(
-          backgroundImage:
-              (profileUrl != null && profileUrl.isNotEmpty)
-                  ? NetworkImage(profileUrl)
-                  : null,
-          radius: MediaQuery.of(context).size.height * 0.02,
-        ),
-      ),
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
 
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomSearch(
-              onTap: () {
-                context.push("/search/all");
-              },
+    return Scaffold(
+      body: SafeArea(
+        child: NestedScrollView(
+          headerSliverBuilder:
+              (context, _) => [
+                CustomSliverAppBar(
+                  title: 'PACKUP Explorer',
+                  arrowFlag: false,
+                  alert: AlertBell(
+                    count: alertCount,
+                    onTap: () => context.push('/alert_center'),
+                  ),
+                  profile: CircleAvatar(
+                    radius: MediaQuery.of(context).size.height * 0.02,
+                    backgroundImage:
+                        (profileUrl != null && profileUrl.isNotEmpty)
+                            ? NetworkImage(profileUrl)
+                            : null,
+                  ),
+                  bottom: CustomSearch(
+                    onTap: () => context.push('/search/all'),
+                  ),
+                ),
+              ],
+          body: ListView(
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.01,
+              vertical: MediaQuery.of(context).size.height * 0.01,
             ),
-            const SizedBox(height: 12),
-            const BannerSection(),
-            const SizedBox(height: 12),
-            const CategorySection(),
-            const SizedBox(height: 24),
-            const HotTourSection(),
-            const SizedBox(height: 24),
-            const GuideSection(),
-            const SizedBox(height: 24),
-            const RewardSection(),
-            const SizedBox(height: 24),
-          ],
+            children: [
+              const SizedBox(height: 12),
+              const BannerSection(),
+              const SizedBox(height: 12),
+              const CategorySection(),
+              const SizedBox(height: 24),
+              const HotTourSection(),
+              const SizedBox(height: 24),
+              const GuideSection(),
+              const SizedBox(height: 24),
+              const RewardSection(),
+              const SizedBox(height: 24),
+            ],
+          ),
         ),
       ),
     );
