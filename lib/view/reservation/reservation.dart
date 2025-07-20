@@ -28,11 +28,13 @@ class ReservationPage extends StatelessWidget {
               ],
             ),
           ),
-
-          const Positioned(
+          Positioned(
             top: 16,
             right: 16,
-            child: Icon(Icons.close, size: 24),
+            child: GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: const Icon(Icons.close, size: 24),
+            ),
           ),
 
           const Positioned(
