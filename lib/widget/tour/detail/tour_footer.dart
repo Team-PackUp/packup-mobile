@@ -1,5 +1,6 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:packup/view/reservation/reservation.dart';
 
 class TourFooter extends StatelessWidget {
   const TourFooter({super.key});
@@ -19,7 +20,14 @@ class TourFooter extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: GestureDetector(
           onTap: () {
-            context.go('/reservation/time_select');
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) {
+                return const _ReservationModalWrapper();
+              },
+            );
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -38,6 +46,37 @@ class TourFooter extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ReservationModalWrapper extends StatelessWidget {
+  const _ReservationModalWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+          child: Container(color: Colors.black.withOpacity(0.3)),
+        ),
+
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.88,
+              child: SafeArea(
+                top: false,
+                bottom: true, // ✅ 여기!
+                child: ReservationPage(scrollController: ScrollController()),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

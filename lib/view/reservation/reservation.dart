@@ -4,23 +4,44 @@ import 'package:packup/widget/reservation/section/reservation_summary_section.da
 import 'package:packup/widget/reservation/section/reservation_time_list_section.dart';
 
 class ReservationPage extends StatelessWidget {
-  const ReservationPage({super.key});
+  final ScrollController scrollController;
+
+  const ReservationPage({super.key, required this.scrollController});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            const ReservationHeaderSection(),
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Column(
+              children: [
+                const ReservationHeaderSection(),
 
-            const Expanded(
-              child: SingleChildScrollView(child: ReservationTimeListSection()),
+                Expanded(
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: const ReservationTimeListSection(),
+                  ),
+                ),
+              ],
             ),
+          ),
 
-            const ReservationSummarySection(),
-          ],
-        ),
+          const Positioned(
+            top: 16,
+            right: 16,
+            child: Icon(Icons.close, size: 24),
+          ),
+
+          const Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: ReservationSummarySection(),
+          ),
+        ],
       ),
     );
   }

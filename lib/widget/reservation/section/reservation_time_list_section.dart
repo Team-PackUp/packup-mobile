@@ -56,6 +56,7 @@ class ReservationTimeListSection extends StatelessWidget {
             remainText: '10자리 남음',
             isSelected: false,
           ),
+          const SizedBox(height: 140),
         ],
       ),
     );
