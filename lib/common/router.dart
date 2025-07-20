@@ -12,6 +12,7 @@ import 'package:packup/view/index.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
 import 'package:packup/view/profile/setting_account/reservation_manage/reservation_manage.dart';
 import 'package:packup/view/reply/reply_write.dart';
+import 'package:packup/view/reservation/reservation.dart';
 import 'package:packup/view/search/search.dart';
 import 'package:packup/view/tour/user/tour_detail.dart';
 import 'package:packup/view/user/preference/preference.dart';
@@ -197,19 +198,27 @@ GoRouter createRouter(UserProvider userProvider) {
         },
       ),
       GoRoute(
+        path: '/reservation/time_select',
+        name: 'reservationTimeSelect',
+        builder: (context, state) => const ReservationPage(),
+      ),
+      GoRoute(
         path: '/error',
         name: 'error',
         builder: (context, state) {
-          final msg = state.extra is String
-              ? state.extra as String
-              : '알 수 없는 오류가 발생했습니다.';
+          final msg =
+              state.extra is String
+                  ? state.extra as String
+                  : '알 수 없는 오류가 발생했습니다.';
           return CustomError(message: msg);
         },
       ),
     ],
     // 라우트 에러 방지
     errorBuilder: (context, state) {
-      Future.microtask(() => context.goNamed('error', extra: '유효하지 않은 경로 입니다.'));
+      Future.microtask(
+        () => context.goNamed('error', extra: '유효하지 않은 경로 입니다.'),
+      );
       return const SizedBox.shrink();
     },
   );

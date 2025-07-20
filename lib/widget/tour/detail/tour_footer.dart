@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class TourFooter extends StatelessWidget {
   const TourFooter({super.key});
@@ -17,7 +18,9 @@ class TourFooter extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: GestureDetector(
-          onTap: () {},
+          onTap: () {
+            context.go('/reservation/time_select');
+          },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
