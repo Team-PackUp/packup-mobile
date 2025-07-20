@@ -1,55 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:packup/widget/reservation/time_slot_card.dart';
+import 'package:packup/widget/reservation/time_card.dart';
 
 class ReservationTimeListSection extends StatelessWidget {
   const ReservationTimeListSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // 임시 날짜 및 시간 데이터
-    final List<String> timeList = [
-      '10:00',
-      '11:00',
-      '12:00',
-      '13:00',
-      '14:00',
-      '15:00',
-      '16:00',
-      '17:00',
-      '18:00',
-    ];
-
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 16),
           const Text(
-            '7월 25일 (목)',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            '6월 2025',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+
+          const TimeCard(
+            dateText: '',
+            time: '오전 11:30 ~ 오후 1:30',
+            price: '₩55,000 1인당',
+            subtitle: '프라이빗 예약 요금 이용 가능',
+            remainText: '10자리 남음',
+            isSelected: false,
           ),
           const SizedBox(height: 12),
 
-          Expanded(
-            child: GridView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: timeList.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                childAspectRatio: 2.5,
-              ),
-              itemBuilder: (context, index) {
-                return TimeSlotCard(
-                  time: timeList[index],
-                  isSelected: index == 2, // 임시 선택 상태
-                  onTap: () {
-                    // TODO: 시간 선택 로직
-                  },
-                );
-              },
-            ),
+          const TimeCard(
+            dateText: '6월 24(화요일)',
+            time: '오전 11:30 ~ 오후 1:30',
+            price: '₩55,000 1인당',
+            subtitle: '프라이빗 예약 요금 이용 가능',
+            remainText: '10자리 남음',
+            isSelected: true, // 선택된 상태
+          ),
+          const SizedBox(height: 12),
+
+          const TimeCard(
+            dateText: '6월 25(수요일)',
+            time: '오전 11:30 ~ 오후 1:30',
+            price: '₩55,000 1인당',
+            subtitle: '프라이빗 예약 요금 이용 가능',
+            remainText: '10자리 남음',
+            isSelected: false,
+          ),
+          const SizedBox(height: 12),
+
+          const TimeCard(
+            dateText: '6월 26(수요일)',
+            time: '오전 11:30 ~ 오후 1:30',
+            price: '₩55,000 1인당',
+            subtitle: '프라이빗 예약 요금 이용 가능',
+            remainText: '10자리 남음',
+            isSelected: false,
           ),
         ],
       ),
