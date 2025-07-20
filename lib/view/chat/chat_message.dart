@@ -82,9 +82,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _chatMessageProvider = context.read<ChatMessageProvider>();
       _chatRoomProvider = context.read<ChatRoomProvider>();
-
-      await _chatMessageProvider.getMessage(widget.chatRoomSeq);
-      _chatMessageProvider.subscribeChatMessage(widget.chatRoomSeq);
     });
 
   }
@@ -105,15 +102,12 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     super.dispose();
     _controller.dispose();
     _scrollController.dispose();
-
-    _chatMessageProvider.unSubscribeChatMessage(widget.chatRoomSeq);
   }
 
   @override
   Widget build(BuildContext context) {
     _chatMessageProvider = context.watch<ChatMessageProvider>();
 
-    final messageList = _buildMessageListWithDateSeparators(_chatMessageProvider.chatMessage);
     final userProvider = context.watch<UserProvider>();
     final profileUrl = userProvider.userModel?.profileImagePath;
 

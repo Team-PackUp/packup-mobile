@@ -95,7 +95,7 @@ class ChatMessageCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
-            crossAxisAlignment: isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            crossAxisAlignment: isMine ? CrossAxisAlignment.end : CrossAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
