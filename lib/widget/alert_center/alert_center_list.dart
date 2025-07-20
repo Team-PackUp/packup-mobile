@@ -1,32 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../../model/alert_center/alert_center_model.dart';
-import 'package:packup/widget/alert_center/alert_center_card.dart';
+import 'alert_center_card.dart';
+import 'package:go_router/go_router.dart';
 
 class AlertCenterListCard extends StatelessWidget {
-  final int index;
-  final AlertCenterModel alert;
+  final List<AlertCenterModel> alerts;
+  final ScrollController? scrollController;
 
   const AlertCenterListCard({
     super.key,
-    required this.index,
-    required this.alert,
+    required this.alerts,
+    this.scrollController,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topCenter,
-      child: SizedBox(
-        width: double.infinity,
-        child: AlertCenterCard(
+    return ListView.separated(
+      controller: scrollController,
+      itemCount: alerts.length,
+      padding: EdgeInsets.symmetric(
+        horizontal: MediaQuery.of(context).size.width * 0.01,
+        vertical: MediaQuery.of(context).size.height * 0.002,
+      ),
+      separatorBuilder: (_, __) => const SizedBox(height: 8),
+      itemBuilder: (context, index) {
+        final alert = alerts[index];
+        return AlertCenterCard(
           index: index,
           alertType: alert.alertType,
           createdAt: alert.createdAt,
           payload: alert.payload,
-        ),
-      ),
+        );
+      },
     );
   }
+
 }

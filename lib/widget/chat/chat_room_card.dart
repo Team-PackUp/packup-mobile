@@ -3,14 +3,14 @@ import 'package:packup/const/color.dart';
 
 import '../../common/util.dart';
 
-class ChatRoomDivider extends StatelessWidget {
+class ChatRoomCard extends StatelessWidget {
   final String title;
   final String unReadCount;
   final String? lastMessage;
   final DateTime? lastMessageDate;
   final String fileFlag;
 
-  const ChatRoomDivider({
+  const ChatRoomCard({
     super.key,
     required this.title,
     required this.unReadCount,

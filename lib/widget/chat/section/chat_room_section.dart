@@ -27,19 +27,14 @@ class ChatRoomSection extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
-      controller: scrollController,
-      itemCount: chatRooms.length,
-      itemBuilder: (context, index) {
-        final room = chatRooms[index];
-        return ChatRoomListCard(
-          room: room,
-          userSeq: userSeq,
-          onTapRead: (int seq) {
-            context.read<ChatRoomProvider>().readMessageThisRoom(seq);
-          },
-        );
+    return ChatRoomListCard(
+      rooms: chatRooms,
+      scrollController: scrollController,
+      userSeq: userSeq,
+      onTapRead: (int seq) {
+        context.read<ChatRoomProvider>().readMessageThisRoom(seq);
       },
     );
   }
 }
+

@@ -47,15 +47,9 @@ class _NoticeListSectionState extends State<NoticeListSection> {
       );
     }
 
-    return ListView.builder(
-      controller: _scrollController,
-      itemCount: noticeList.length,
-      itemBuilder: (context, index) {
-        return NoticeListCard(
-          index: index,
-          notice: noticeList[index],
-        );
-      },
+    return NoticeCardList(
+      notices: noticeList,
+      scrollController: _scrollController,
     );
   }
 }

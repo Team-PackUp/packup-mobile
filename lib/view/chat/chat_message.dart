@@ -135,7 +135,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
               child: Align(
                 alignment: Alignment.topCenter,
                 child: ChatMessageSection(
-                  messages: _chatMessageProvider.chatMessage,
                   scrollController: _scrollController,
                   userSeq: widget.userSeq,
                   chatRoomSeq: widget.chatRoomSeq,

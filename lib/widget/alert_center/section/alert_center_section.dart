@@ -25,19 +25,9 @@ class AlertCenterSection extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
-      controller: scrollController,
-      itemCount: filteredAlertList.length,
-      padding: EdgeInsets.symmetric(
-        horizontal: MediaQuery.of(context).size.width * 0.01,
-        vertical: MediaQuery.of(context).size.height * 0.002,
-      ),
-      itemBuilder: (context, index) {
-        return AlertCenterListCard(
-          index: index,
-          alert: filteredAlertList[index],
-        );
-      },
+    return AlertCenterListCard(
+      alerts: filteredAlertList,
+      scrollController: scrollController,
     );
   }
 }
