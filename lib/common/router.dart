@@ -198,11 +198,6 @@ GoRouter createRouter(UserProvider userProvider) {
         },
       ),
       GoRoute(
-        path: '/reservation/time_select',
-        name: 'reservationTimeSelect',
-        builder: (context, state) => const ReservationPage(),
-      ),
-      GoRoute(
         path: '/error',
         name: 'error',
         builder: (context, state) {
