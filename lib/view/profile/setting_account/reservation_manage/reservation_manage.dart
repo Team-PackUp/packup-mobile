@@ -42,7 +42,6 @@ class _ReservationManageContent extends State<ReservationManageContent> {
 
   @override
   Widget build(BuildContext context) {
-    final alertCount = context.watch<AlertCenterProvider>().alertCount;
     final isLoading = context.watch<TourProvider>().isLoading;
     final isLoading2 = context.watch<LoadingProvider>().isLoading;
     final w = MediaQuery.of(context).size.width;
@@ -51,10 +50,7 @@ class _ReservationManageContent extends State<ReservationManageContent> {
       appBar: CustomAppbar(
         arrowFlag: false,
         title: '마이페이지',
-        alert: AlertBell(
-          count: alertCount,
-          onTap: () => context.push('/alert_center'),
-        ),
+        alert: AlertBell(),
       ),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: w * 0.04),

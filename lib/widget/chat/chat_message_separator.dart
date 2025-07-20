@@ -1,12 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // 날짜 포맷용
 
 class DateSeparator extends StatelessWidget {
   final String dateText;
 
   const DateSeparator({
     super.key,
-    required this.dateText
+    required this.dateText,
   });
 
   @override

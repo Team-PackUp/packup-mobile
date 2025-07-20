@@ -5,7 +5,7 @@ import 'package:packup/widget/common/custom_network_image_ratio.dart';
 import '../../common/util.dart';
 import '../../const/color.dart';
 
-class MessageCard extends StatelessWidget {
+class ChatMessageCard extends StatelessWidget {
   final String message;
   final String createTime;
   final int sender;
@@ -13,7 +13,7 @@ class MessageCard extends StatelessWidget {
   final String fileFlag;
   final String? profileImagePath;
 
-  const MessageCard({
+  const ChatMessageCard({
     super.key,
     required this.message,
     required this.createTime,

@@ -4,8 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../common/util.dart';
 import '../../model/alert_center/alert_center_model.dart';
 
-class ListCard extends StatelessWidget {
-  const ListCard({
+class AlertCenterCard extends StatelessWidget {
+  const AlertCenterCard({
     super.key,
     required this.index,
     required this.alertType,

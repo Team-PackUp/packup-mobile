@@ -79,12 +79,7 @@ class _TourBodyState extends State<TourBody> {
       appBar: CustomAppbar(
         title: 'PACKUP Explorer',
         arrowFlag: false,
-        alert: AlertBell(
-          count: alertCount,
-          onTap: () async {
-            context.push('/alert_center');
-          },
-        ),
+        alert: AlertBell(),
         profile: CircleAvatar(
           backgroundImage:
               (profileUrl != null && profileUrl.isNotEmpty)

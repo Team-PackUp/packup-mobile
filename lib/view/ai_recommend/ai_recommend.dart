@@ -67,10 +67,7 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
 
   @override
   Widget build(BuildContext context) {
-    final alertCount = context.watch<AlertCenterProvider>().alertCount;
     final profileUrl = context.watch<UserProvider>().userModel?.profileImagePath;
-
-    final screenW = MediaQuery.of(context).size.width;
     final screenH = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -80,10 +77,7 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
               CustomSliverAppBar(
                 title: 'AI 추천',
                 arrowFlag: false,
-                alert: AlertBell(
-                  count: alertCount,
-                  onTap: () => context.push('/alert_center'),
-                ),
+                alert: AlertBell(),
                 profile: CircleAvatar(
                   radius: MediaQuery.of(context).size.height * 0.02,
                   backgroundImage: (profileUrl != null && profileUrl.isNotEmpty)
