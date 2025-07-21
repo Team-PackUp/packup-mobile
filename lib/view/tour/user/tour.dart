@@ -85,10 +85,7 @@ class _TourBodyState extends State<TourBody> {
                 CustomSliverAppBar(
                   title: 'PACKUP Explorer',
                   arrowFlag: false,
-                  alert: AlertBell(
-                    count: alertCount,
-                    onTap: () => context.push('/alert_center'),
-                  ),
+                  alert: AlertBell(),
                   profile: CircleAvatar(
                     radius: MediaQuery.of(context).size.height * 0.02,
                     backgroundImage:

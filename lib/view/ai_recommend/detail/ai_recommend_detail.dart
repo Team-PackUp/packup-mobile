@@ -51,7 +51,6 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
   @override
   Widget build(BuildContext context) {
     final recommendProvider = context.watch<AIRecommendProvider>();
-    final alertCount       = context.watch<AlertCenterProvider>().alertCount;
     final profileUrl       = context.watch<UserProvider>().userModel?.profileImagePath;
 
     final screenW = MediaQuery.of(context).size.width;
@@ -62,10 +61,7 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
       appBar: CustomAppbar(
         title: 'AI 추천',
         arrowFlag: false,
-        alert: AlertBell(
-          count: alertCount,
-          onTap: () => context.push('/alert_center'),
-        ),
+        alert: AlertBell(),
         profile: CircleAvatar(
           radius: MediaQuery.of(context).size.height * 0.02,
           backgroundImage: (profileUrl != null && profileUrl.isNotEmpty)

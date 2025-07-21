@@ -3,9 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:packup/model/chat/chat_read_model.dart';
-import 'package:packup/model/common/user_model.dart';
 import 'package:packup/provider/chat/chat_message_provider.dart';
-import 'package:packup/widget/chat/message_card.dart';
+import 'package:packup/widget/chat/chat_message_card.dart';
 import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/chat_message_model.dart';
 import 'package:provider/provider.dart';
@@ -17,9 +16,10 @@ import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 
 import 'package:packup/common/util.dart';
-import 'package:packup/widget/chat/date_separator.dart';
+import 'package:packup/widget/chat/chat_message_separator.dart';
 
 import '../../provider/user/user_provider.dart';
+import '../../widget/chat/section/chat_message_section.dart';
 
 class ChatMessage extends StatelessWidget {
   final int chatRoomSeq;
@@ -82,9 +82,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _chatMessageProvider = context.read<ChatMessageProvider>();
       _chatRoomProvider = context.read<ChatRoomProvider>();
-
-      await _chatMessageProvider.getMessage(widget.chatRoomSeq);
-      _chatMessageProvider.subscribeChatMessage(widget.chatRoomSeq);
     });
 
   }
@@ -105,15 +102,12 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     super.dispose();
     _controller.dispose();
     _scrollController.dispose();
-
-    _chatMessageProvider.unSubscribeChatMessage(widget.chatRoomSeq);
   }
 
   @override
   Widget build(BuildContext context) {
     _chatMessageProvider = context.watch<ChatMessageProvider>();
 
-    final messageList = _buildMessageListWithDateSeparators(_chatMessageProvider.chatMessage);
     final userProvider = context.watch<UserProvider>();
     final profileUrl = userProvider.userModel?.profileImagePath;
 
@@ -134,54 +128,10 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
               onTap: () => FocusScope.of(context).unfocus(),
               child: Align(
                 alignment: Alignment.topCenter,
-                child: ListView.builder(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.02,
-                    right: MediaQuery.of(context).size.width * 0.02,
-                    bottom: MediaQuery.of(context).size.height * 0.02,
-                  ),
-                  controller: _scrollController,
-                  reverse: true,
-                  itemCount: messageList.length,
-                  itemBuilder: (context, index) {
-                    final item = messageList[index];
-
-                    if (item is DateTime) {
-                      return DateSeparator(dateText: convertToYmd(item));
-                    }
-
-                    final ChatMessageModel message = item;
-                    final isLatestMessage = index == 0;
-                    Widget messageWidget = MessageCard(
-                      message: message.message!,
-                      createTime: convertToHm(message.createdAt!),
-                      userSeq: widget.userSeq,
-                      sender: message.userSeq!,
-                      profileImagePath: message.profileImagePath,
-                      fileFlag: message.fileFlag!,
-                    );
-
-                    if (isLatestMessage) {
-                      messageWidget = VisibilityDetector(
-                        key: Key('last-message-${message.seq}'),
-                        onVisibilityChanged: (info) {
-                          bool readChatMessage = _chatMessageProvider.lastReadMessageSeq! < message.seq! ||
-                              _chatMessageProvider.lastReadMessageSeq! == 0;
-                          if (info.visibleFraction > 0.8 && readChatMessage) {
-                            ChatReadModel chatReadModel = ChatReadModel(
-                              chatRoomSeq: widget.chatRoomSeq,
-                              lastReadMessageSeq: message.seq!,
-                            );
-                            _chatMessageProvider.readChatMessage(chatReadModel);
-                            _chatRoomProvider.readMessageThisRoom(widget.chatRoomSeq);
-                          }
-                        },
-                        child: messageWidget,
-                      );
-                    }
-
-                    return messageWidget;
-                  },
+                child: ChatMessageSection(
+                  scrollController: _scrollController,
+                  userSeq: widget.userSeq,
+                  chatRoomSeq: widget.chatRoomSeq,
                 ),
               ),
             ),

@@ -108,10 +108,7 @@ class _ProfileIndexContentState extends State<ProfileIndexContent> {
       appBar: CustomAppbar(
         arrowFlag: false,
         title: '마이페이지',
-        alert: AlertBell(
-          count: alertCount,
-          onTap: () => context.push('/alert_center'),
-        ),
+        alert: AlertBell(),
       ),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: w * 0.04),

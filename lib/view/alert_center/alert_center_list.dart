@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../provider/alert_center/alert_center_provider.dart';
-import '../../widget/alert_center/list_card.dart';
+import '../../widget/alert_center/section/alert_center_section.dart';
 
 class AlertCenterListContent extends StatefulWidget {
   const AlertCenterListContent({super.key});
@@ -50,40 +50,14 @@ class _AlertCenterListContentState extends State<AlertCenterListContent> {
 
   @override
   Widget build(BuildContext context) {
-    _alertCenterProvider = context.watch<AlertCenterProvider>();
-    final filteredAlertList = _alertCenterProvider.alertList;
 
     return Scaffold(
       appBar: CustomAppbar(title: '알림 센터'),
-      body: filteredAlertList.isEmpty && !_alertCenterProvider.isLoading
-          ? CustomEmptyList(
-              message: '새 알림이 없습니다.',
-              icon: Icons.notifications_none_outlined,
-            )
-          : ListView.builder(
-        controller: _scrollController,
-        itemCount: filteredAlertList.length,
-        padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * 0.01,
-          vertical: MediaQuery.of(context).size.height * 0.002,
-        ),
-        itemBuilder: (context, index) {
-          final alert = filteredAlertList[index];
-          return Align(
-            alignment: Alignment.topCenter,
-            child: SizedBox(
-              width: double.infinity,
-              child: ListCard(
-                index: index,
-                alertType: alert.alertType,
-                createdAt: alert.createdAt,
-                payload: alert.payload,
-              ),
-            ),
-          );
-        },
+      body: AlertCenterSection(
+        scrollController: _scrollController,
       ),
     );
   }
+
 
 }

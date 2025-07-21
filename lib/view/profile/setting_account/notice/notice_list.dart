@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
+import 'package:packup/widget/profile/setting_account/notice/section/notice_list_section.dart';
 import 'package:provider/provider.dart';
 import '../../../../provider/profile/notice/notice_provider.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../../../../widget/common/util_widget.dart';
-import '../../../../widget/profile/setting_account/notice/notice_card.dart';
 
 class NoticeList extends StatelessWidget {
   const NoticeList({super.key});
@@ -25,20 +22,15 @@ class NoticeListContent extends StatefulWidget {
   const NoticeListContent({super.key});
 
   @override
-  _NoticeListContentState createState() => _NoticeListContentState();
+  State<NoticeListContent> createState() => _NoticeListContentState();
 }
 
 class _NoticeListContentState extends State<NoticeListContent> {
-
-  late ScrollController _scrollController;
   late NoticeProvider _noticeProvider;
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
-    _scrollController.addListener(_scrollListener);
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _noticeProvider = context.read<NoticeProvider>();
       await _noticeProvider.getNoticeList();
@@ -46,76 +38,10 @@ class _NoticeListContentState extends State<NoticeListContent> {
   }
 
   @override
-  Future<void> dispose() async {
-    super.dispose();
-    _scrollController.dispose();
-  }
-
-  void _scrollListener() {
-    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
-      getNoticeListMore();
-    }
-  }
-
-  getNoticeListMore() async {
-    _noticeProvider.getNoticeList();
-  }
-
-  @override
   Widget build(BuildContext context) {
-
-    _noticeProvider = context.watch<NoticeProvider>();
-
-    var filteredNoticeList = _noticeProvider.noticeList;
-
     return Scaffold(
       appBar: CustomAppbar(title: AppLocalizations.of(context)!.notice),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: filteredNoticeList.length,
-              itemBuilder: (context, index) {
-                final notice = filteredNoticeList[index];
-
-                return InkWell(
-                  onTap: () {
-                    final seq = notice.seq!;
-                    if (seq == 0) {
-                      CustomSnackBar.showError(context, '존재 하지 않는 공지사항 입니다.');
-                      return;
-                    }
-                    context.push('/notice_view/$seq');
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 0.01,
-                      vertical: MediaQuery.of(context).size.height * 0.002,
-                    ),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          SizedBox(
-                            width: double.infinity,
-                            child: NoticeCard(
-                              index: index,
-                              title: notice.title!,
-                              createdAt: notice.createdAt!,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+      body: const NoticeListSection(),
     );
   }
 }

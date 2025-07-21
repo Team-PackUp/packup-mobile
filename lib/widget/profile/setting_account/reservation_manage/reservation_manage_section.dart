@@ -12,10 +12,14 @@ class ReservationManageSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<TourProvider>();
-    final tourList = provider.tourList;
+    final tourProvider = context.watch<TourProvider>();
+    final tourList = tourProvider.tourList;
+    final isLoading = tourProvider.isLoading;
+
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
+
+    if (isLoading) return const SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,6 +32,7 @@ class ReservationManageSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: h * 0.02),
+
         if (tourList.isEmpty)
           const CustomEmptyList(
             message: '예약 중인 투어가 존재하지 않습니다.',
