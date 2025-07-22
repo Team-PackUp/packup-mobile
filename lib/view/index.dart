@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:packup/const/packup_icons.dart';
 import 'package:packup/view/chat/chat_room.dart';
-import 'package:packup/view/home/home.dart';
+import 'package:packup/view/like/like.dart';
 import 'package:packup/view/profile/profile_index.dart';
-import 'package:packup/view/tour/user/tour.dart';
+import 'package:packup/view/home/home.dart';
 
 import '../common/deep_link/handle_router.dart';
 import 'ai_recommend/ai_recommend.dart';
@@ -75,7 +75,7 @@ class _IndexState extends State<Index> {
 
   final List<Map<String, dynamic>> bottomNavItems = [
     {'icon': Icons.search_rounded, 'label': 'AI추천'},
-    {'icon': PackupIcons.favorite, 'label': '예약'},
+    {'icon': PackupIcons.favorite, 'label': 'LIKE'},
     {'icon': PackupIcons.group_1, 'label': '홈'},
     {'icon': PackupIcons.group, 'label': '메시지'},
     {'icon': Icons.account_circle_outlined, 'label': 'MY'},
@@ -86,11 +86,11 @@ class _IndexState extends State<Index> {
 
     switch (index) {
       case 0:
-        return const AIRecommend();
+        return const AIRecommend(); // AI 추천
       case 1:
-        return const Home();
+        return const Like(); // 이건 Like인가? 아니면 Reservation?
       case 2:
-        return const Tour(); // 나중에 이름 Home 으로 바꾸는게 직관적
+        return const Home(); // 나중에 이름 Home 으로 바꾸는게 직관적
       case 3:
         final chatRoomId = payload?['chatRoomId'];
         return ChatRoom(chatRoomId: chatRoomId);
@@ -132,7 +132,7 @@ class _IndexState extends State<Index> {
               onTap: _onTabTapped,
               items: List.generate(
                 bottomNavItems.length,
-                    (index) => BottomNavigationBarItem(
+                (index) => BottomNavigationBarItem(
                   icon: SizedBox(
                     height: MediaQuery.of(context).size.height * .026,
                     child: Icon(bottomNavItems[index]['icon']),
@@ -146,5 +146,4 @@ class _IndexState extends State<Index> {
       ),
     );
   }
-
 }
