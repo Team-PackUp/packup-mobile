@@ -8,7 +8,7 @@ import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:packup/widget/common/custom_sliver_appbar.dart';
 import 'package:packup/widget/guide/guide_section.dart';
 import 'package:packup/widget/profile/reward/reward_section.dart';
-import 'package:packup/widget/search/category_section.dart';
+import 'package:packup/widget/home/section/category_section.dart';
 import 'package:packup/widget/search/search.dart';
 import 'package:packup/widget/tour/hot_tour_section.dart';
 import 'package:provider/provider.dart';

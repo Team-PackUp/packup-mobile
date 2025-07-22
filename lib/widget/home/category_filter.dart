@@ -13,7 +13,7 @@ class CategoryFilter extends StatefulWidget {
 class _CategoryFilterState extends State<CategoryFilter> {
   final List<Map<String, String>> categories = const [
     {'emoji': '🏕', 'label': '팩업'},
-    {'emoji': '🏕', 'label': '끝내자제발'},
+    {'emoji': '?', 'label': '마무리'},
     {'emoji': '😊', 'label': '음식'},
     {'emoji': '🪂', 'label': '액티비티'},
     {'emoji': '🍲', 'label': '문화'},

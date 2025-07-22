@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:packup/Const/color.dart';
 
 import '../../../model/ai_recommend/ai_recommend_category_model.dart';
-import '../search/category_filter.dart';
+import '../home/category_filter.dart';
 
 class CategoryChip extends StatefulWidget {
   final List<AIRecommendCategoryModel> categories;
   final void Function(AIRecommendCategoryModel category)? onTapCategory;
-  const CategoryChip({
-    super.key,
-    required this.categories,
-    this.onTapCategory,
-  });
+  const CategoryChip({super.key, required this.categories, this.onTapCategory});
 
   @override
   State<CategoryChip> createState() => _CategoryChip();

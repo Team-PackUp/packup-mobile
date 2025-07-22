@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:packup/widget/search/category_filter.dart';
+import 'package:packup/widget/home/category_filter.dart';
 
 class CategorySection extends StatelessWidget {
   const CategorySection({super.key});
