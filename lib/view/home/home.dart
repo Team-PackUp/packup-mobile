@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/provider/alert_center/alert_center_provider.dart';
 import 'package:packup/provider/user/user_provider.dart';
+import 'package:packup/provider/tour/tour_provider.dart';
+import 'package:provider/provider.dart';
+
 import 'package:packup/widget/home/section/banner_section.dart';
-import 'package:packup/widget/common/alert_bell.dart';
-import 'package:packup/widget/common/custom_appbar.dart';
-import 'package:packup/widget/common/custom_sliver_appbar.dart';
+import 'package:packup/widget/home/section/category_section.dart';
+import 'package:packup/widget/home/section/hot_tour_section.dart';
 import 'package:packup/widget/guide/guide_section.dart';
 import 'package:packup/widget/profile/reward/reward_section.dart';
-import 'package:packup/widget/home/section/category_section.dart';
 import 'package:packup/widget/search/search.dart';
-import 'package:packup/widget/tour/hot_tour_section.dart';
-import 'package:provider/provider.dart';
-import 'package:packup/provider/tour/tour_provider.dart';
+import 'package:packup/widget/common/alert_bell.dart';
+import 'package:packup/widget/common/custom_sliver_appbar.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -21,7 +21,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => TourProvider(),
-      child: HomeContent(),
+      child: const HomeContent(),
     );
   }
 }
@@ -34,36 +34,17 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
-  late final TourProvider provider;
-  late final AlertCenterProvider _alertCenterProvider;
-
-  // 무한스크롤
-  final ScrollController _scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      provider = context.read<TourProvider>();
-      _alertCenterProvider = context.read<AlertCenterProvider>();
-      context.read<TourProvider>().getTourList();
-    });
+      final tourProvider = context.read<TourProvider>();
+      final alertProvider = context.read<AlertCenterProvider>();
 
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 100) {
-        if (provider.hasNextPage && !provider.isLoading) {
-          provider.getTourList();
-        }
-      }
+      tourProvider.getTourList();
+      await alertProvider.initProvider();
     });
-  }
-
-  // 메모리 leak
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 
   @override
@@ -71,6 +52,7 @@ class _HomeContentState extends State<HomeContent> {
     final profileUrl =
         context.watch<UserProvider>().userModel?.profileImagePath;
     final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: SafeArea(
@@ -80,9 +62,9 @@ class _HomeContentState extends State<HomeContent> {
                 CustomSliverAppBar(
                   title: 'PACKUP Explorer',
                   arrowFlag: false,
-                  alert: AlertBell(),
+                  alert: const AlertBell(),
                   profile: CircleAvatar(
-                    radius: MediaQuery.of(context).size.height * 0.02,
+                    radius: screenH * 0.02,
                     backgroundImage:
                         (profileUrl != null && profileUrl.isNotEmpty)
                             ? NetworkImage(profileUrl)
@@ -95,21 +77,21 @@ class _HomeContentState extends State<HomeContent> {
               ],
           body: ListView(
             padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.01,
-              vertical: MediaQuery.of(context).size.height * 0.01,
+              horizontal: screenW * 0.01,
+              vertical: screenH * 0.01,
             ),
-            children: [
-              SizedBox(height: screenH * 0.01),
-              const BannerSection(),
-              SizedBox(height: screenH * 0.01),
-              const CategorySection(),
-              SizedBox(height: screenH * 0.02),
-              const HotTourSection(),
-              SizedBox(height: screenH * 0.02),
-              const GuideSection(),
-              SizedBox(height: screenH * 0.02),
-              const RewardSection(),
-              SizedBox(height: screenH * 0.02),
+            children: const [
+              SizedBox(height: 8),
+              BannerSection(),
+              SizedBox(height: 12),
+              CategorySection(),
+              SizedBox(height: 20),
+              HotTourSection(),
+              SizedBox(height: 20),
+              GuideSection(),
+              SizedBox(height: 20),
+              RewardSection(),
+              SizedBox(height: 20),
             ],
           ),
         ),
