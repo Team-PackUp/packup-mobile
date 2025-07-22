@@ -22,7 +22,6 @@ class HomeBannerCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenW = MediaQuery.of(context).size.width;
     final screenH = MediaQuery.of(context).size.height;
 
     final List<BannerItem> banners = [
