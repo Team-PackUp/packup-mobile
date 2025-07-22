@@ -4,7 +4,7 @@ import 'package:packup/widget/guide/review_summary.dart';
 import 'package:packup/widget/guide/tour_detail.dart';
 import 'package:packup/widget/tour/detail/review_list.dart';
 
-import '../../widget/common/custom_appbar.dart';
+import '../../../widget/common/custom_appbar.dart';
 
 class GuideDetailPage extends StatelessWidget {
   final int guideId;
@@ -14,9 +14,7 @@ class GuideDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppbar(
-        title: 'Guide Details',
-      ),
+      appBar: CustomAppbar(title: 'Guide Details'),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),

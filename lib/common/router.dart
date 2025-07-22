@@ -4,7 +4,7 @@ import 'package:packup/model/reply/reply_model.dart';
 import 'package:packup/provider/user/user_provider.dart';
 import 'package:packup/view/chat/chat_message.dart';
 import 'package:packup/view/chat/chat_room.dart';
-import 'package:packup/view/guide/guide_detail.dart';
+import 'package:packup/view/guide/detail/guide_detail.dart';
 import 'package:packup/view/like/like.dart';
 import 'package:get/get.dart';
 import 'package:packup/view/login/login.dart';

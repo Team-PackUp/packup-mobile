@@ -18,7 +18,7 @@ class TourDescription extends StatelessWidget {
 
           Text(
             '투어에서 인사동의 매력과 누리미디어가 있는 홍대입구역을 걸어보세요. '
-            '주말만되면 사람이 엄청몰리지만 앉아서 사람구경하는것도 나름재밌습니다 이런것도 다 경험이죠.',
+            '출장가서도 개발공부하던 그런시절.. ',
             style: TextStyle(fontSize: 14, height: 1.5),
           ),
           SizedBox(height: 20),
