@@ -5,7 +5,7 @@ import 'package:packup/provider/user/user_provider.dart';
 import 'package:packup/view/chat/chat_message.dart';
 import 'package:packup/view/chat/chat_room.dart';
 import 'package:packup/view/guide/guide_detail.dart';
-import 'package:packup/view/home/home.dart';
+import 'package:packup/view/like/like.dart';
 import 'package:get/get.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
@@ -25,7 +25,7 @@ import '../view/alert_center/alert_center_list.dart';
 import '../view/profile/setting_account/notice/notice_list.dart';
 import '../view/profile/setting_account/notice/notice_view.dart';
 import '../view/reply/reply_list.dart';
-import '../view/tour/user/tour.dart';
+import '../view/home/home.dart';
 
 GoRouter createRouter(UserProvider userProvider) {
   return GoRouter(
