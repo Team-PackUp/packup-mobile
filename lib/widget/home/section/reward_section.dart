@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:packup/theme/typographies/app_typographies.dart';
 import 'package:packup/const/color.dart';
-import 'package:packup/widget/profile/reward/reward_card.dart';
+import 'package:packup/widget/home/reward_card.dart';
 
 class RewardSection extends StatelessWidget {
   const RewardSection({super.key});

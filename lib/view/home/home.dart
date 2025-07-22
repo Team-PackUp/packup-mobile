@@ -9,7 +9,7 @@ import 'package:packup/widget/home/section/banner_section.dart';
 import 'package:packup/widget/home/section/category_section.dart';
 import 'package:packup/widget/home/section/hot_tour_section.dart';
 import 'package:packup/widget/home/section/guide_section.dart';
-import 'package:packup/widget/profile/reward/reward_section.dart';
+import 'package:packup/widget/home/section/reward_section.dart';
 import 'package:packup/widget/search/search.dart';
 import 'package:packup/widget/common/alert_bell.dart';
 import 'package:packup/widget/common/custom_sliver_appbar.dart';
