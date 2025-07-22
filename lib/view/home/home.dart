@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/provider/alert_center/alert_center_provider.dart';
 import 'package:packup/provider/user/user_provider.dart';
-import 'package:packup/widget/banner/banner_section.dart';
+import 'package:packup/widget/home/section/banner_section.dart';
 import 'package:packup/widget/common/alert_bell.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:packup/widget/common/custom_sliver_appbar.dart';

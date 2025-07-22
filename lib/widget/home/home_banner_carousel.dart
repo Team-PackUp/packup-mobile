@@ -22,6 +22,9 @@ class HomeBannerCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
+
     final List<BannerItem> banners = [
       const BannerItem(
         imagePath: 'assets/image/background/seoul.jpg',
@@ -44,7 +47,7 @@ class HomeBannerCarousel extends StatelessWidget {
     ];
 
     return SizedBox(
-      height: 180,
+      height: screenH * .20,
       child: PageView.builder(
         controller: PageController(viewportFraction: 0.9),
         itemCount: banners.length,

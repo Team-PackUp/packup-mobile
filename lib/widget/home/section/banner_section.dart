@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/widget/banner/home_banner_carousel.dart';
+import 'package:packup/widget/home/home_banner_carousel.dart';
 
 class BannerSection extends StatelessWidget {
   const BannerSection({super.key});
