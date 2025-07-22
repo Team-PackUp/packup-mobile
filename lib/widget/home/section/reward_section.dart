@@ -50,44 +50,5 @@ class RewardSection extends StatelessWidget {
         ),
       ],
     );
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '🎁 혜택 및 포인트',
-            style: AppTypographies.get(
-              size: AppFontSize.lg,
-              weight: AppFontWeight.bold,
-              color: TEXT_COLOR_B,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: RewardCard(
-                  icon: Icons.monetization_on_outlined,
-                  title: '$point',
-                  subtitle: '포인트',
-                  description: '현재 보유 포인트',
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: RewardCard(
-                  icon: Icons.percent,
-                  title: '$couponCount개',
-                  subtitle: '',
-                  description: '사용 가능 쿠폰',
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
   }
 }
