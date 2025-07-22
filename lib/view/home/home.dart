@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:packup/widget/home/section/banner_section.dart';
 import 'package:packup/widget/home/section/category_section.dart';
 import 'package:packup/widget/home/section/hot_tour_section.dart';
-import 'package:packup/widget/guide/guide_section.dart';
+import 'package:packup/widget/home/section/guide_section.dart';
 import 'package:packup/widget/profile/reward/reward_section.dart';
 import 'package:packup/widget/search/search.dart';
 import 'package:packup/widget/common/alert_bell.dart';
@@ -80,18 +80,18 @@ class _HomeContentState extends State<HomeContent> {
               horizontal: screenW * 0.01,
               vertical: screenH * 0.01,
             ),
-            children: const [
-              SizedBox(height: 8),
-              BannerSection(),
-              SizedBox(height: 12),
-              CategorySection(),
-              SizedBox(height: 20),
-              HotTourSection(),
-              SizedBox(height: 20),
-              GuideSection(),
-              SizedBox(height: 20),
-              RewardSection(),
-              SizedBox(height: 20),
+            children: [
+              SizedBox(height: screenH * 0.01),
+              const BannerSection(),
+              SizedBox(height: screenH * 0.02),
+              const CategorySection(),
+              SizedBox(height: screenH * 0.02),
+              const HotTourSection(),
+              SizedBox(height: screenH * 0.02),
+              const GuideSection(),
+              SizedBox(height: screenH * 0.02),
+              const RewardSection(),
+              SizedBox(height: screenH * 0.02),
             ],
           ),
         ),
