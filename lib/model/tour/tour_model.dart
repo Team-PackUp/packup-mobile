@@ -57,6 +57,8 @@ class TourModel {
   /// 수정일
   final DateTime? updatedAt;
 
+  final GuideModel? guideModel;
+
   /// 기본 생성자
   TourModel({
     this.seq,
@@ -74,9 +76,12 @@ class TourModel {
     this.tourStatusLabel,
     this.tourLocation,
     this.titleImagePath,
+    this.guideModel,
     this.createdAt,
     this.updatedAt,
   });
+
+  int get remainPeople => (maxPeople ?? 0) - (minPeople ?? 0);
 
   /// JSON 데이터를 모델로 변환합니다.
   factory TourModel.fromJson(Map<String, dynamic> json) {
@@ -85,10 +90,22 @@ class TourModel {
       guide: json['guide'] != null ? GuideModel.fromJson(json['guide']) : null,
       minPeople: json['minPeople'],
       maxPeople: json['maxPeople'],
-      applyStartDate: json['applyStartDate'] != null ? DateTime.parse(json['applyStartDate']) : null,
-      applyEndDate: json['applyEndDate'] != null ? DateTime.parse(json['applyEndDate']) : null,
-      tourStartDate: json['tourStartDate'] != null ? DateTime.parse(json['tourStartDate']) : null,
-      tourEndDate: json['tourEndDate'] != null ? DateTime.parse(json['tourEndDate']) : null,
+      applyStartDate:
+          json['applyStartDate'] != null
+              ? DateTime.parse(json['applyStartDate'])
+              : null,
+      applyEndDate:
+          json['applyEndDate'] != null
+              ? DateTime.parse(json['applyEndDate'])
+              : null,
+      tourStartDate:
+          json['tourStartDate'] != null
+              ? DateTime.parse(json['tourStartDate'])
+              : null,
+      tourEndDate:
+          json['tourEndDate'] != null
+              ? DateTime.parse(json['tourEndDate'])
+              : null,
       tourTitle: json['tourTitle'],
       tourPrice: json['tourPrice'],
       tourIntroduce: json['tourIntroduce'],
@@ -96,8 +113,14 @@ class TourModel {
       tourStatusLabel: json['tourStatusLabel'],
       tourLocation: json['tourLocation'],
       titleImagePath: json['titleImagePath'],
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      guideModel:
+          json['guide'] != null
+              ? GuideModel.fromJson(json['guide'] as Map<String, dynamic>)
+              : null,
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
     );
   }
 
