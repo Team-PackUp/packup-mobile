@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 import 'package:packup/widget/home/hot_tour_list.dart';
 import 'package:packup/widget/home/section.dart';
@@ -51,7 +52,12 @@ class _HotTourSectionState extends State<HotTourSection> {
           title: '인기 급상승 투어!',
           subTitle: '여러 사람들이 신청하고 있어요',
         ),
-        HotTourList(tours: tourList, onTap: (_) {}),
+        HotTourList(
+          tours: tourList,
+          onTap: (_) {
+            context.push("/tour/123");
+          },
+        ),
       ],
     );
   }
