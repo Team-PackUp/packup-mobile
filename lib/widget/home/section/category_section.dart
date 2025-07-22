@@ -8,11 +8,7 @@ class CategorySection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: CategoryFilter(
-        onSelectionChanged: (selectedList) {
-          print('선택된 카테고리: $selectedList');
-        },
-      ),
+      child: CategoryFilter(onSelectionChanged: (_) {}),
     );
   }
 }

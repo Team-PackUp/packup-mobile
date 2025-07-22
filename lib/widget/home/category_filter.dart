@@ -3,7 +3,6 @@ import 'package:packup/const/color.dart';
 
 class CategoryFilter extends StatefulWidget {
   final void Function(List<String> selectedCategories) onSelectionChanged;
-
   const CategoryFilter({super.key, required this.onSelectionChanged});
 
   @override
@@ -36,10 +35,13 @@ class _CategoryFilterState extends State<CategoryFilter> {
 
   @override
   Widget build(BuildContext context) {
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 12),
+        SizedBox(height: screenH * 0.01),
 
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
