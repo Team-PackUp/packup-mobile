@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/common/util.dart';
-import 'package:packup/widget/chat/chat_room_card.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -47,15 +46,14 @@ class _ChatRoomContentState extends State<ChatRoomContent> with WidgetsBindingOb
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _scrollController.addListener(_scrollListener);
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      userSeq = await decodeTokenInfo();
+      final seq = await decodeTokenInfo();
       _chatRoomProvider = context.read<ChatRoomProvider>();
       await _chatRoomProvider.getRoom();
       await _chatRoomProvider.subscribeChatRoom();
-
+      if (!mounted) return;
+      setState(() => userSeq = seq);
       _maybeNavigateToChatDetail();
     });
   }
@@ -110,7 +108,7 @@ class _ChatRoomContentState extends State<ChatRoomContent> with WidgetsBindingOb
           Expanded(
             child: ChatRoomSection(
               scrollController: _scrollController,
-              userSeq: userSeq,
+              userSeq: userSeq!,
             ),
           ),
         ],
