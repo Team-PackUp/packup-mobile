@@ -48,6 +48,10 @@ class GuideModelTemp {
           json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       updatedAt:
           json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      desc: json['desc'],
+      tours: json['tours'],
+      image: json['image'],
+      name: json['name'],
     );
   }
 
@@ -64,6 +68,10 @@ class GuideModelTemp {
       'guideAvatarPath': guideAvatarPath,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
+      'desc': desc,
+      'tours': tours,
+      'image': image,
+      'name': name,
     };
   }
 
