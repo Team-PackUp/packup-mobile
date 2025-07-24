@@ -1,69 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:packup/model/tour/tour_detail_model.dart';
 
 class TourDescription extends StatelessWidget {
-  const TourDescription({super.key});
+  final TourDetailModel tour;
+
+  const TourDescription({super.key, required this.tour});
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '설명',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 12),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          '설명',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
 
-          Text(
-            '투어에서 인사동의 매력과 누리미디어가 있는 홍대입구역을 걸어보세요. '
-            '출장가서도 개발공부하던 그런시절.. ',
-            style: TextStyle(fontSize: 14, height: 1.5),
-          ),
-          SizedBox(height: 20),
+        Text(
+          tour.description,
+          style: const TextStyle(fontSize: 14, height: 1.5),
+        ),
+        const SizedBox(height: 20),
 
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(Icons.access_time, size: 20, color: Colors.black54),
-              SizedBox(width: 8),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '소요 시간: ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(text: '3시간'),
-                  ],
-                ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(Icons.access_time, size: 20, color: Colors.black54),
+            const SizedBox(width: 8),
+            Text.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(
+                    text: '소요 시간: ',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(text: tour.duration),
+                ],
               ),
-            ],
-          ),
-          SizedBox(height: 12),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
 
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(Icons.language, size: 20, color: Colors.black54),
-              SizedBox(width: 8),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '언어: ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(text: '영어, 한국어, 중국어'),
-                  ],
-                ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(Icons.language, size: 20, color: Colors.black54),
+            const SizedBox(width: 8),
+            Text.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(
+                    text: '언어: ',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(text: tour.languages.join(', ')),
+                ],
               ),
-            ],
-          ),
-          SizedBox(height: 24),
-        ],
-      ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+      ],
     );
   }
 }

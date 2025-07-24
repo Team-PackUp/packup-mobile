@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:packup/model/tour/tour_detail_model.dart';
-import 'package:packup/widget/tour/user/tour_image_card.dart';
-import 'package:packup/widget/tour/user/tour_meta_card.dart';
+import 'package:packup/widget/tour/user/tour_description.dart';
 
-class TourHeaderSection extends StatelessWidget {
-  const TourHeaderSection({super.key});
+class TourDescriptionSection extends StatelessWidget {
+  const TourDescriptionSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,15 +19,9 @@ class TourHeaderSection extends StatelessWidget {
       languages: ['영어', '준모어', '중국어'],
     );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TourImageCard(tour: tour),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          child: TourMetaCard(tour: tour),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: TourDescription(tour: tour),
     );
   }
 }
