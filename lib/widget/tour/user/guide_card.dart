@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/widget/tour/detail/rating.dart';
-import 'package:packup/widget/tour/detail/tag.dart';
+import 'package:packup/widget/tour/user/rating.dart';
+import 'package:packup/widget/tour/user/tag.dart';
 
 class GuideCard extends StatelessWidget {
   const GuideCard({super.key});

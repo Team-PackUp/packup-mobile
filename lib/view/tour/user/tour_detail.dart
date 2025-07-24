@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:packup/widget/tour/detail/guide_card.dart';
-import 'package:packup/widget/tour/detail/rating.dart';
-import 'package:packup/widget/tour/detail/review_list.dart';
-import 'package:packup/widget/tour/detail/tour_description.dart';
-import 'package:packup/widget/tour/detail/tour_exclude.dart';
-import 'package:packup/widget/tour/detail/tour_footer.dart';
-import 'package:packup/widget/tour/detail/tag.dart';
-import 'package:packup/widget/tour/detail/tour_include.dart';
+import 'package:packup/widget/tour/user/guide_card.dart';
+import 'package:packup/widget/tour/user/rating.dart';
+import 'package:packup/widget/tour/user/review_list.dart';
+import 'package:packup/widget/tour/user/tour_description.dart';
+import 'package:packup/widget/tour/user/tour_exclude.dart';
+import 'package:packup/widget/tour/user/tour_footer.dart';
+import 'package:packup/widget/tour/user/tag.dart';
+import 'package:packup/widget/tour/user/tour_include.dart';
 
 import '../../../widget/common/custom_appbar.dart';
 
@@ -17,9 +17,7 @@ class TourDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppbar(
-        title: '인사동 & 북촌 걷기 투어',
-        ),
+      appBar: CustomAppbar(title: '인사동 & 북촌 걷기 투어'),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
