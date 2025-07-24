@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
-import 'package:packup/widget/guide/detail/guide_review_summary.dart';
 import 'package:packup/widget/guide/detail/section/guide_profile_section.dart';
 import 'package:packup/widget/guide/detail/section/guide_review_summary_section.dart';
 import 'package:packup/widget/guide/detail/section/guide_tour_section.dart';
