@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:packup/model/guide/guide_model_temp.dart';
 import 'package:packup/widget/tour/detail/rating.dart';
 import 'package:packup/widget/tour/detail/tag.dart';
 
 class GuideProfileCard extends StatelessWidget {
-  const GuideProfileCard({super.key});
+  final GuideModelTemp guide;
+
+  const GuideProfileCard({super.key, required this.guide});
 
   @override
   Widget build(BuildContext context) {
@@ -21,26 +24,31 @@ class GuideProfileCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 32,
                 backgroundImage: NetworkImage(
-                  'https://i.imgur.com/BoN9kdC.png',
+                  guide.guideAvatarPath?.isNotEmpty == true
+                      ? guide.guideAvatarPath!
+                      : 'https://i.imgur.com/BoN9kdC.png',
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
-                      'Joonmo Jeong',
-                      style: TextStyle(
+                      guide.guideName ?? '가이드 이름 없음',
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
                     ),
-                    SizedBox(height: 6),
-                    Rating(rating: 4.8, reviewCount: 37),
+                    const SizedBox(height: 6),
+                    Rating(
+                      rating: guide.guideRating ?? 0.0,
+                      reviewCount: 37, // TODO: reviewCount도 모델에 포함 가능
+                    ),
                   ],
                 ),
               ),
@@ -49,21 +57,22 @@ class GuideProfileCard extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          const Text(
-            "리액트 팩업 스프링 타입스크립트 리액트 팩업 스프링 타입스크립트 리액트 팩업 스프링 타입스크립트 리액트 팩업 스프링 타입스크립트 리액트 팩업 스프링 타입스크립트 리액트 팩업 스프링 타입스크립트 리액트 팩업 스프링 타입스크립트 ",
-            style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.4),
+          Text(
+            guide.guideIntroduce ?? '',
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black87,
+              height: 1.4,
+            ),
           ),
 
           const SizedBox(height: 16),
 
-          const Wrap(
+          Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: [
-              Tag(label: 'English'),
-              Tag(label: 'Japanese'),
-              Tag(label: 'Korean'),
-            ],
+            children:
+                guide.languages?.map((lang) => Tag(label: lang)).toList() ?? [],
           ),
         ],
       ),
