@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:packup/widget/tour/user/guide_card.dart';
 import 'package:packup/widget/tour/user/rating.dart';
 import 'package:packup/widget/tour/user/review_list.dart';
+import 'package:packup/widget/tour/user/section/tour_header_section.dart';
 import 'package:packup/widget/tour/user/tour_description.dart';
 import 'package:packup/widget/tour/user/tour_exclude.dart';
 import 'package:packup/widget/tour/user/tour_footer.dart';
@@ -15,6 +16,9 @@ class TourDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppbar(title: '인사동 & 북촌 걷기 투어'),
@@ -28,41 +32,22 @@ class TourDetailPage extends StatelessWidget {
               width: double.infinity,
               fit: BoxFit.cover,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '인사동 & 북촌 걷기 투어',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-
-                  SizedBox(height: 8),
-                  Rating(rating: 4.8, reviewCount: 150),
-                  SizedBox(height: 12),
-
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      Tag(label: 'Culture'),
-                      Tag(label: 'History'),
-                      Tag(label: 'Walking Tour'),
-                      Tag(label: 'Seoul'),
-                    ],
-                  ),
-
-                  SizedBox(height: 24),
-                  GuideCard(),
-                  SizedBox(height: 24),
-                  TourDescription(),
-                  SizedBox(height: 24),
-                  TourInclude(),
-                  SizedBox(height: 24),
-                  TourExclude(),
-                  SizedBox(height: 24),
-                  ReviewList(),
+                  const TourHeaderSection(),
+                  SizedBox(height: screenH * 0.03),
+                  const GuideCard(),
+                  SizedBox(height: screenH * 0.03),
+                  const TourDescription(),
+                  SizedBox(height: screenH * 0.03),
+                  const TourInclude(),
+                  SizedBox(height: screenH * 0.03),
+                  const TourExclude(),
+                  SizedBox(height: screenH * 0.03),
+                  const ReviewList(),
                 ],
               ),
             ),
