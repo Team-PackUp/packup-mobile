@@ -110,7 +110,7 @@ class ChatMessageList extends StatelessWidget {
 
       if (isNewDate) {
         if (currentGroup.isNotEmpty) {
-          result.insert(0, currentGroup.reversed.toList());
+          result.insert(0, currentGroup);
           currentGroup = [];
         }
         result.insert(0, messageDate);
@@ -118,7 +118,7 @@ class ChatMessageList extends StatelessWidget {
         lastSender = message.userSeq;
       } else if (isNewSender) {
         if (currentGroup.isNotEmpty) {
-          result.insert(0, currentGroup.reversed.toList());
+          result.insert(0, currentGroup);
           currentGroup = [];
         }
         lastSender = message.userSeq;
@@ -128,11 +128,12 @@ class ChatMessageList extends StatelessWidget {
     }
 
     if (currentGroup.isNotEmpty) {
-      result.insert(0, currentGroup.reversed.toList());
+      result.insert(0, currentGroup);
     }
 
     return result;
   }
+
 
   bool isSameDate(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;

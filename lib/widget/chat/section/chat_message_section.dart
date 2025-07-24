@@ -28,14 +28,12 @@ class ChatMessageSection extends StatefulWidget {
 
 class _ChatMessageSectionState extends State<ChatMessageSection> {
   late ChatMessageProvider _chatMessageProvider;
-  late ChatRoomProvider _chatRoomProvider;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _chatMessageProvider = context.read<ChatMessageProvider>();
-      _chatRoomProvider = context.read<ChatRoomProvider>();
 
       await _chatMessageProvider.getMessage(widget.chatRoomSeq);
       _chatMessageProvider.subscribeChatMessage(widget.chatRoomSeq);
