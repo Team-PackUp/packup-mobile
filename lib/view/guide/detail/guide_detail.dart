@@ -3,6 +3,7 @@ import 'package:packup/provider/tour/tour_provider.dart';
 import 'package:packup/widget/guide/detail/section/guide_profile_section.dart';
 import 'package:packup/widget/guide/detail/section/guide_review_summary_section.dart';
 import 'package:packup/widget/guide/detail/section/guide_tour_section.dart';
+import 'package:packup/widget/guide/detail/section/review_list_section.dart';
 import 'package:packup/widget/tour/detail/review_list.dart';
 import 'package:provider/provider.dart';
 
@@ -57,7 +58,7 @@ class _GuideDetailContentState extends State<GuideDetailContent> {
             SizedBox(height: screenH * 0.03),
             GuideReviewSummarySection(),
             SizedBox(height: screenH * 0.03),
-            const ReviewList(),
+            const ReviewListSection(),
             SizedBox(height: screenH * 0.03),
           ],
         ),

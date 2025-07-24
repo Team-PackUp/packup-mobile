@@ -29,7 +29,6 @@ class ReviewCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// 프로필, 이름, 별점
           Row(
             children: [
               CircleAvatar(backgroundImage: NetworkImage(imageUrl), radius: 20),
@@ -64,12 +63,10 @@ class ReviewCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          /// 본문
           Text(content, style: const TextStyle(fontSize: 14)),
 
           const SizedBox(height: 12),
 
-          /// 날짜
           Text(
             date,
             style: const TextStyle(fontSize: 12, color: Colors.black45),
