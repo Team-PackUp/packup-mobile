@@ -10,6 +10,9 @@ class GuideProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -31,7 +34,7 @@ class GuideProfileCard extends StatelessWidget {
                       : 'https://i.imgur.com/BoN9kdC.png',
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: screenW * 0.04),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +54,7 @@ class GuideProfileCard extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: screenH * 0.02),
 
           Text(
             guide.guideIntroduce ?? '',
@@ -62,7 +65,7 @@ class GuideProfileCard extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: screenH * 0.02),
 
           Wrap(
             spacing: 8,
