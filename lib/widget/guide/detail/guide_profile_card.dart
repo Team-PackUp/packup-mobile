@@ -20,7 +20,6 @@ class GuideProfileCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// 프로필 상단
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -45,10 +44,7 @@ class GuideProfileCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    Rating(
-                      rating: guide.guideRating ?? 0.0,
-                      reviewCount: 37, // TODO: reviewCount도 모델에 포함 가능
-                    ),
+                    Rating(rating: guide.guideRating ?? 0.0, reviewCount: 37),
                   ],
                 ),
               ),
