@@ -3,11 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:packup/widget/chat/chat_room_card.dart';
 import 'package:packup/model/chat/chat_room_model.dart';
 
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:packup/model/chat/chat_room_model.dart';
-import 'package:packup/widget/chat/chat_room_card.dart';
-
 class ChatRoomListCard extends StatelessWidget {
   final List<ChatRoomModel> rooms;
   final ScrollController? scrollController;
@@ -43,6 +38,7 @@ class ChatRoomListCard extends StatelessWidget {
             child: ChatRoomCard(
               title: room.title ?? '',
               unReadCount: unReadCount,
+              profileImagePath: room.user!.profileImagePath!,
               lastMessage: room.lastMessage,
               lastMessageDate: room.lastMessageDate,
               fileFlag: room.fileFlag ?? 'N',

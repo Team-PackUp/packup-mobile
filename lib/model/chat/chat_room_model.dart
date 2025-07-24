@@ -1,7 +1,9 @@
+import 'package:packup/model/common/user_model.dart';
+
 class ChatRoomModel {
   final int? seq;
   final List<int>? partUserSeq;
-  final int? userSeq;
+  final UserModel? user;
   final String? title;
   int? unReadCount;
   String? lastMessage;
@@ -14,7 +16,7 @@ class ChatRoomModel {
   ChatRoomModel({
     this.seq,
     this.partUserSeq,
-    this.userSeq,
+    this.user,
     this.title,
     this.unReadCount,
     this.lastMessage,
@@ -25,30 +27,30 @@ class ChatRoomModel {
   });
 
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'partUserSeq': partUserSeq,
-    };
+    return <String, dynamic>{'partUserSeq': partUserSeq};
   }
 
   factory ChatRoomModel.fromJson(Map<String, dynamic> json) {
     return ChatRoomModel(
-      seq           : (json['seq'] as num).toInt(),
-      partUserSeq   : (json['partUserSeq'] as List? ?? [])
-          .map((e) => (e as num).toInt())
-          .toList(),
-      userSeq       : (json['userSeq'] as num?)?.toInt(),
-      title         : json['title'] as String? ?? '',
-      unReadCount   : (json['unReadCount'] as num?)?.toInt() ?? 0,
-      lastMessage   : json['lastMessage'] as String?,
-      lastMessageDate : json['lastMessageDate'] != null && json['lastMessageDate'] != ''
-          ? DateTime.parse(json['lastMessageDate'])
-          : null,
-      fileFlag      : json['fileFlag'] as String? ?? 'N',
-      createdAt     : DateTime.parse(json['createdAt']),
-      updatedAt     : json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'])
-          : DateTime.now(),             // 또는 null
+      seq: (json['seq'] as num).toInt(),
+      partUserSeq:
+          (json['partUserSeq'] as List? ?? [])
+              .map((e) => (e as num).toInt())
+              .toList(),
+      user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
+      title: json['title'] as String? ?? '',
+      unReadCount: (json['unReadCount'] as num?)?.toInt() ?? 0,
+      lastMessage: json['lastMessage'] as String?,
+      lastMessageDate:
+          json['lastMessageDate'] != null && json['lastMessageDate'] != ''
+              ? DateTime.parse(json['lastMessageDate'])
+              : null,
+      fileFlag: json['fileFlag'] as String? ?? 'N',
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt:
+          json['updatedAt'] != null
+              ? DateTime.parse(json['updatedAt'])
+              : DateTime.now(), // 또는 null
     );
   }
-
 }
