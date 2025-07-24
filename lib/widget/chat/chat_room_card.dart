@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:packup/const/color.dart';
+import 'package:packup/model/common/user_model.dart';
 
 import '../../common/util.dart';
 
 class ChatRoomCard extends StatelessWidget {
   final String title;
   final String unReadCount;
+  final String profileImagePath;
   final String? lastMessage;
   final DateTime? lastMessageDate;
   final String fileFlag;
@@ -14,6 +16,7 @@ class ChatRoomCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.unReadCount,
+    required this.profileImagePath,
     this.lastMessage,
     this.lastMessageDate,
     required this.fileFlag,
@@ -27,9 +30,9 @@ class ChatRoomCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
           child: Row(
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 24,
-                backgroundColor: Colors.grey,
+                backgroundImage: NetworkImage(profileImagePath),
               ),
               const SizedBox(width: 12),
               Expanded(
