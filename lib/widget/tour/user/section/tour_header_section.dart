@@ -21,7 +21,7 @@ class TourHeaderSection extends StatelessWidget {
       children: [
         TourImageCard(tour: tour),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           child: TourMetaCard(tour: tour),
         ),
       ],

@@ -10,6 +10,8 @@ class TourMetaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
@@ -19,11 +21,11 @@ class TourMetaCard extends StatelessWidget {
             tour.title,
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: screenH * 0.01),
           Rating(rating: tour.rating, reviewCount: tour.reviewCount),
-          const SizedBox(height: 12),
+          SizedBox(height: screenH * 0.02),
           Wrap(
-            spacing: 8,
+            spacing: 4,
             runSpacing: 8,
             children: tour.tags.map((tag) => Tag(label: tag)).toList(),
           ),
