@@ -16,7 +16,7 @@ class GuideReviewSummary extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          "Reviews (142)",
+          "Reviews (5)",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         SizedBox(height: screenH * 0.02),
