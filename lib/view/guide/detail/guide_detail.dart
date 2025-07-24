@@ -43,20 +43,22 @@ class _GuideDetailContentState extends State<GuideDetailContent> {
 
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: CustomAppbar(title: 'Guide Details'),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
-          children: const [
-            GuideProfileSection(),
-            SizedBox(height: 24),
-            GuideTourSection(),
-            SizedBox(height: 24),
-            ReviewSummary(),
-            SizedBox(height: 24),
-            ReviewList(),
-            SizedBox(height: 24),
+          children: [
+            const GuideProfileSection(),
+            SizedBox(height: screenH * 0.03),
+            const GuideTourSection(),
+            SizedBox(height: screenH * 0.03),
+            const ReviewSummary(),
+            SizedBox(height: screenH * 0.03),
+            const ReviewList(),
+            SizedBox(height: screenH * 0.03),
           ],
         ),
       ),
