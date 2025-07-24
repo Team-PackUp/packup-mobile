@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
-import 'package:packup/widget/guide/detail/review_summary.dart';
+import 'package:packup/widget/guide/detail/guide_review_summary.dart';
 import 'package:packup/widget/guide/detail/section/guide_profile_section.dart';
+import 'package:packup/widget/guide/detail/section/guide_review_summary_section.dart';
 import 'package:packup/widget/guide/detail/section/guide_tour_section.dart';
 import 'package:packup/widget/tour/detail/review_list.dart';
 import 'package:provider/provider.dart';
@@ -55,7 +56,7 @@ class _GuideDetailContentState extends State<GuideDetailContent> {
             SizedBox(height: screenH * 0.03),
             const GuideTourSection(),
             SizedBox(height: screenH * 0.03),
-            const ReviewSummary(),
+            GuideReviewSummarySection(),
             SizedBox(height: screenH * 0.03),
             const ReviewList(),
             SizedBox(height: screenH * 0.03),

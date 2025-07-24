@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:packup/const/color.dart';
+import 'package:packup/model/guide/guide_rating_model_temp.dart';
 
-class ReviewSummary extends StatelessWidget {
-  const ReviewSummary({super.key});
+class GuideReviewSummary extends StatelessWidget {
+  final GuideRatingModelTemp rating;
+
+  const GuideReviewSummary({super.key, required this.rating});
 
   @override
   Widget build(BuildContext context) {
-    final ratingData = {5: 0.5, 4: 0.1, 3: 0.2, 2: 0.1, 1: 0.1};
-
-    const totalRatings = 5;
-    const average = 4.4;
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -18,34 +19,31 @@ class ReviewSummary extends StatelessWidget {
           "Reviews",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: screenH * 0.02),
 
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 평균 점수
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  average.toStringAsFixed(1),
+                  rating.average.toStringAsFixed(1),
                   style: const TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: screenH * 0.01),
                 const Text("out of 5", style: TextStyle(color: Colors.grey)),
               ],
             ),
-            const SizedBox(width: 24),
-
-            // 히스토그램
+            SizedBox(width: screenW * 0.05),
             Expanded(
               child: Column(
                 children: List.generate(5, (index) {
                   final star = 5 - index;
-                  final value = ratingData[star] ?? 0.0;
+                  final value = rating.ratingDistribution[star] ?? 0.0;
                   final hasRating = value > 0;
 
                   return _RatingBarRow(
@@ -60,14 +58,13 @@ class ReviewSummary extends StatelessWidget {
           ],
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: screenH * 0.02),
         Text(
-          "$totalRatings Ratings",
+          "${rating.totalCount} Ratings",
           style: const TextStyle(color: Colors.grey, fontSize: 13),
         ),
 
-        const SizedBox(height: 20),
-
+        SizedBox(height: screenH * 0.02),
         SizedBox(
           width: double.infinity,
           child: OutlinedButton(

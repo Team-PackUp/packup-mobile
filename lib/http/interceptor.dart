@@ -5,21 +5,21 @@ import 'package:packup/const/const.dart';
 import 'package:packup/const/const.dart';
 
 class CustomInterceptor extends Interceptor {
-
   String httpPrefix = dotenv.env['HTTP_URL']!;
   String refreshTokenKey = dotenv.env['REFRESH_TOKEN_KEY']!;
   String accessTokenKey = dotenv.env['ACCESS_TOKEN_KEY']!;
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     logger('[REQ] [${options.method}] ${options.uri}');
 
     final accessToken = await getToken(ACCESS_TOKEN);
 
     if (accessToken != null && accessToken.isNotEmpty) {
-      options.headers.addAll({
-        'Authorization': 'Bearer $accessToken',
-      });
+      options.headers.addAll({'Authorization': 'Bearer $accessToken'});
     }
 
     return super.onRequest(options, handler);
@@ -27,17 +27,23 @@ class CustomInterceptor extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    logger('[REQ] [${response.requestOptions.method}] ${response.requestOptions.uri}');
+    logger(
+      '[REQ] [${response.requestOptions.method}] ${response.requestOptions.uri}',
+    );
 
     return super.onResponse(response, handler);
   }
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) async {
-
-    logger('[REQ] [${err.requestOptions.method}] ${err.requestOptions.uri}', ERROR);
+    logger(
+      '[REQ] [${err.requestOptions.method}] ${err.requestOptions.uri}',
+      ERROR,
+    );
 
     final refreshToken = await getToken(REFRESH_TOKEN);
+
+    print('리프레쉬토큰입니다asdf: ${refreshToken}');
 
     if (refreshToken == null) {
       return handler.reject(err);
@@ -71,29 +77,28 @@ class CustomInterceptor extends Interceptor {
         final isPathRefresh = err.requestOptions.path == '/api/auth/refresh';
 
         if (!isPathRefresh) {
-          final dio = Dio(BaseOptions(
-            baseUrl: httpPrefix,
-            connectTimeout: const Duration(seconds: 10),
-            receiveTimeout: const Duration(seconds: 10),
-          ));
+          final dio = Dio(
+            BaseOptions(
+              baseUrl: httpPrefix,
+              connectTimeout: const Duration(seconds: 10),
+              receiveTimeout: const Duration(seconds: 10),
+            ),
+          );
 
           try {
             final res = await dio.post(
               '$httpPrefix/auth/refresh',
-              data: {
-                'refreshToken': refreshToken,
-              },
+              data: {'refreshToken': refreshToken},
             );
 
             final newAccessToken = res.data['response']['accessToken'];
-            await saveToken(ACCESS_TOKEN, newAccessToken);            
+            await saveToken(ACCESS_TOKEN, newAccessToken);
 
             final options = err.requestOptions;
             options.headers['Authorization'] = 'Bearer $newAccessToken';
 
             final retryResponse = await dio.fetch(options);
             return handler.resolve(retryResponse);
-
           } on DioException catch (e) {
             // await storage.deleteAll();
             // Get.key.currentContext?.go('/');
