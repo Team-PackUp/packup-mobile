@@ -18,7 +18,7 @@ class GuideTourSection extends StatelessWidget {
         SectionHeader(
           icon: '🌟',
           title: 'Tour Detail',
-          subTitle: 'Joona Lim 가이드가 운영하는 투어입니다!',
+          subTitle: 'JALIM 가이드가 운영하는 투어입니다!',
         ),
         GuideTourList(tours: tourList, onTap: (_) {}),
       ],
