@@ -17,9 +17,6 @@ class TourGuideSection extends StatelessWidget {
       languages: ['Java', '준모어', 'Python'],
     );
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: GuideCard(guide: guide),
-    );
+    return GuideCard(guide: guide);
   }
 }

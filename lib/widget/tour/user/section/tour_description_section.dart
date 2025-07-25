@@ -9,9 +9,6 @@ class TourDescriptionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final tour = TourDetailModel.mock();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: TourDescription(tour: tour),
-    );
+    return TourDescription(tour: tour);
   }
 }

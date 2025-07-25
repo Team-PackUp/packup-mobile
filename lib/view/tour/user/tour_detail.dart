@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:packup/widget/guide/detail/section/review_list_section.dart';
 import 'package:packup/widget/tour/user/section/tour_description_section.dart';
 import 'package:packup/widget/tour/user/section/tour_exclude_section.dart';
 import 'package:packup/widget/tour/user/section/tour_guide_section.dart';
@@ -23,15 +24,23 @@ class TourDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const TourHeaderSection(),
-            const TourGuideSection(),
-            const TourDescriptionSection(),
-            const TourIncludeSection(),
-            const TourExcludeSection(),
-            SizedBox(height: screenH * 0.03),
-            SizedBox(height: screenH * 0.03),
-            SizedBox(height: screenH * 0.03),
-            SizedBox(height: screenH * 0.03),
-            SizedBox(height: screenH * 0.03),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  const TourGuideSection(),
+                  SizedBox(height: screenH * 0.03),
+                  const TourDescriptionSection(),
+                  SizedBox(height: screenH * 0.03),
+                  const TourIncludeSection(),
+                  SizedBox(height: screenH * 0.03),
+                  const TourExcludeSection(),
+                  SizedBox(height: screenH * 0.03),
+                  const ReviewListSection(),
+                  SizedBox(height: screenH * 0.03),
+                ],
+              ),
+            ),
           ],
         ),
       ),
