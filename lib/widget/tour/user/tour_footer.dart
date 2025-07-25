@@ -70,7 +70,7 @@ class _ReservationModalWrapper extends StatelessWidget {
               height: MediaQuery.of(context).size.height * 0.88,
               child: SafeArea(
                 top: false,
-                bottom: true, // ✅ 여기!
+                bottom: true,
                 child: ReservationPage(scrollController: ScrollController()),
               ),
             ),

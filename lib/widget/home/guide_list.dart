@@ -35,7 +35,10 @@ class GuideList extends StatelessWidget {
               final guide = guides[index];
               return SizedBox(
                 width: cardWidth,
-                child: InkWell(onTap: () => {}, child: GuideCard(guide: guide)),
+                child: InkWell(
+                  onTap: () => onTap(guide),
+                  child: GuideCard(guide: guide),
+                ),
               );
             },
           ),

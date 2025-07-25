@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:packup/model/guide/guide_model_temp.dart';
-import 'package:packup/widget/tour/detail/rating.dart';
-import 'package:packup/widget/tour/detail/tag.dart';
+import 'package:packup/widget/tour/user/rating.dart';
+import 'package:packup/widget/tour/user/tag.dart';
 
 class GuideProfileCard extends StatelessWidget {
   final GuideModelTemp guide;

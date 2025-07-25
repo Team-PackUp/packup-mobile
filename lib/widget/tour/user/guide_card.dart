@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/widget/tour/detail/rating.dart';
-import 'package:packup/widget/tour/detail/tag.dart';
+import 'package:packup/model/guide/guide_model_temp.dart';
+import 'package:packup/widget/tour/user/rating.dart';
+import 'package:packup/widget/tour/user/tag.dart';
 
 class GuideCard extends StatelessWidget {
-  const GuideCard({super.key});
+  final GuideModelTemp guide;
 
+  const GuideCard({super.key, required this.guide});
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.push('/guide/123');
+        context.push('/guide/${guide.seq}');
       },
       borderRadius: BorderRadius.circular(12),
       child: Container(
@@ -23,35 +25,37 @@ class GuideCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const CircleAvatar(
-              backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=32'),
+            CircleAvatar(
+              backgroundImage: NetworkImage(guide.image ?? ''),
               radius: 30,
             ),
             const SizedBox(width: 12),
-
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Joonmo Jeong',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  Text(
+                    guide.name ?? '이름 없음',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                   const SizedBox(height: 4),
-                  Rating(rating: 4.1, reviewCount: 12),
-                  const SizedBox(height: 8),
-                  const Text(
-                    "Chungnam National University Computer Science and Engineering department, Junior. Interested in robust backend Engineering.",
-                    style: TextStyle(fontSize: 13),
+                  Rating(
+                    rating: guide.guideRating ?? 0.0,
+                    reviewCount: guide.tours ?? 0,
                   ),
+                  const SizedBox(height: 8),
+                  Text(guide.desc ?? '', style: const TextStyle(fontSize: 13)),
                   const SizedBox(height: 12),
                   Wrap(
                     spacing: 8,
-                    children: const [
-                      Tag(label: 'Java'),
-                      Tag(label: 'Javascript'),
-                      Tag(label: 'Python'),
-                    ],
+                    children:
+                        guide.languages
+                            ?.map((lang) => Tag(label: lang))
+                            .toList() ??
+                        [],
                   ),
                 ],
               ),

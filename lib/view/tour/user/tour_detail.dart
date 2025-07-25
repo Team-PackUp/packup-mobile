@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:packup/widget/tour/detail/guide_card.dart';
-import 'package:packup/widget/tour/detail/rating.dart';
-import 'package:packup/widget/tour/detail/review_list.dart';
-import 'package:packup/widget/tour/detail/tour_description.dart';
-import 'package:packup/widget/tour/detail/tour_exclude.dart';
-import 'package:packup/widget/tour/detail/tour_footer.dart';
-import 'package:packup/widget/tour/detail/tag.dart';
-import 'package:packup/widget/tour/detail/tour_include.dart';
+import 'package:packup/widget/guide/detail/section/review_list_section.dart';
+import 'package:packup/widget/tour/user/section/tour_description_section.dart';
+import 'package:packup/widget/tour/user/section/tour_exclude_section.dart';
+import 'package:packup/widget/tour/user/section/tour_guide_section.dart';
+import 'package:packup/widget/tour/user/section/tour_header_section.dart';
+import 'package:packup/widget/tour/user/section/tour_include_section.dart';
+import 'package:packup/widget/tour/user/tour_footer.dart';
 
 import '../../../widget/common/custom_appbar.dart';
 
@@ -15,61 +14,33 @@ class TourDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppbar(
-        title: '인사동 & 북촌 걷기 투어',
-        ),
+      appBar: CustomAppbar(title: '인사동 & 북촌 걷기 투어'),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-              'assets/image/background/jeonju.jpg',
-              height: 220,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            const TourHeaderSection(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '인사동 & 북촌 걷기 투어',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-
-                  SizedBox(height: 8),
-                  Rating(rating: 4.8, reviewCount: 150),
-                  SizedBox(height: 12),
-
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      Tag(label: 'Culture'),
-                      Tag(label: 'History'),
-                      Tag(label: 'Walking Tour'),
-                      Tag(label: 'Seoul'),
-                    ],
-                  ),
-
-                  SizedBox(height: 24),
-                  GuideCard(),
-                  SizedBox(height: 24),
-                  TourDescription(),
-                  SizedBox(height: 24),
-                  TourInclude(),
-                  SizedBox(height: 24),
-                  TourExclude(),
-                  SizedBox(height: 24),
-                  ReviewList(),
+                  const TourGuideSection(),
+                  SizedBox(height: screenH * 0.03),
+                  const TourDescriptionSection(),
+                  SizedBox(height: screenH * 0.03),
+                  const TourIncludeSection(),
+                  SizedBox(height: screenH * 0.03),
+                  const TourExcludeSection(),
+                  SizedBox(height: screenH * 0.03),
+                  const ReviewListSection(),
+                  SizedBox(height: screenH * 0.03),
                 ],
               ),
             ),
-
-            // const SizedBox(height: 60),
           ],
         ),
       ),
