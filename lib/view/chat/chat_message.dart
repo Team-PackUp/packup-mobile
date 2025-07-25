@@ -20,6 +20,7 @@ import 'package:packup/widget/chat/chat_message_separator.dart';
 
 import '../../provider/user/user_provider.dart';
 import '../../widget/chat/section/chat_message_section.dart';
+import '../../widget/common/app_bar_profile.dart';
 
 class ChatMessage extends StatelessWidget {
   final int chatRoomSeq;
@@ -108,18 +109,12 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   Widget build(BuildContext context) {
     _chatMessageProvider = context.watch<ChatMessageProvider>();
 
-    final userProvider = context.watch<UserProvider>();
-    final profileUrl = userProvider.userModel?.profileImagePath;
+    final h = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: CustomAppbar(
         title: widget.title,
-        profile: CircleAvatar(
-          backgroundImage: profileUrl != null && profileUrl.isNotEmpty
-              ? NetworkImage(profileUrl)
-              : null,
-          radius: MediaQuery.of(context).size.height * 0.02,
-        ),
+        profile: CircleProfileImage(radius: h * 0.02,),
       ),
       body: Column(
         children: [

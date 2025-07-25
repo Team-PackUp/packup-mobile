@@ -9,6 +9,7 @@ import '../../../provider/alert_center/alert_center_provider.dart';
 import '../../../provider/user/user_provider.dart';
 
 import '../../../widget/common/alert_bell.dart';
+import '../../../widget/common/app_bar_profile.dart';
 import '../../../widget/common/custom_appbar.dart';
 import '../../../widget/search/search.dart';
 import '../../../widget/ai_recommend/section.dart';
@@ -51,8 +52,7 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
   @override
   Widget build(BuildContext context) {
     final recommendProvider = context.watch<AIRecommendProvider>();
-    final profileUrl       = context.watch<UserProvider>().userModel?.profileImagePath;
-
+    final h = MediaQuery.of(context).size.height;
     final screenW = MediaQuery.of(context).size.width;
     final isWide = screenW > 600;
 
@@ -62,12 +62,7 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
         title: 'AI 추천',
         arrowFlag: false,
         alert: AlertBell(),
-        profile: CircleAvatar(
-          radius: MediaQuery.of(context).size.height * 0.02,
-          backgroundImage: (profileUrl != null && profileUrl.isNotEmpty)
-              ? NetworkImage(profileUrl)
-              : null,
-        ),
+        profile: CircleProfileImage(radius: h * 0.02,),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: Padding(

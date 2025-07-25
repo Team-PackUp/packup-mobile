@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileSection extends StatelessWidget {
   final String userName;
@@ -45,7 +46,9 @@ class ProfileSection extends StatelessWidget {
                     child: OutlinedButton.icon(
                       icon: Icon(Icons.edit, size: w * 0.045),
                       label: Text('프로필 수정', style: TextStyle(fontSize: w * 0.035)),
-                      onPressed: () {},
+                      onPressed: () {
+                        context.push('/profile/profile_modify');
+                      },
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: h * 0.014),
                       ),
