@@ -10,25 +10,27 @@ class GuideSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 임시 가이드 데이터
     final guides = [
       {
-        'name': '임준아',
-        'desc': '플러터의신. 다음직장은 어디로갈것인가',
+        'name': 'Juna Im',
+        'desc': 'Flutter / PHP print("GOAT")',
         'tours': 15,
-        'image': 'https://i.pravatar.cc/150?img=3',
+        'image':
+            'https://i.imgur.com/kHJ7CsJ_d.webp?maxwidth=520&shape=thumb&fidelity=high',
       },
       {
         'name': '박민석',
-        'desc': '미국 거주 PRO 가이드 - 과제 따오는법도 알려줌',
+        'desc': 'Chungbuk telecommunication master',
         'tours': 12,
-        'image': 'https://i.pravatar.cc/150?img=5',
+        'image':
+            'https://i.imgur.com/uLfUuwk_d.webp?maxwidth=520&shape=thumb&fidelity=high',
       },
       {
         'name': '정준모',
-        'desc': '행복해지고싶다',
+        'desc': 'Samsung Kakao Naver Lets go',
         'tours': 10,
-        'image': 'https://i.pravatar.cc/150?img=8',
+        'image':
+            'https://i.imgur.com/HVkGsb9_d.webp?maxwidth=520&shape=thumb&fidelity=high',
       },
     ];
 
@@ -53,7 +55,12 @@ class GuideSection extends StatelessWidget {
           onSeeMore: () => context.push('/index'),
         ),
 
-        GuideList(guides: guideModels, onTap: (_) {}),
+        GuideList(
+          guides: guideModels,
+          onTap: (_) {
+            context.push('/guide/123');
+          },
+        ),
       ],
     );
   }
