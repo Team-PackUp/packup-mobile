@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../provider/user/user_provider.dart';
-import '../../common/custom_show_picker.dart'; // showCustomPicker가 들어 있는 파일
+import '../../common/custom_show_picker.dart';
 
 class ProfileInfoSection extends StatefulWidget {
   const ProfileInfoSection({super.key});
