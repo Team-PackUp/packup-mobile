@@ -56,7 +56,7 @@ class _GuideDetailContentState extends State<GuideDetailContent> {
             SizedBox(height: screenH * 0.03),
             const GuideTourSection(),
             SizedBox(height: screenH * 0.03),
-            GuideReviewSummarySection(),
+            const GuideReviewSummarySection(),
             SizedBox(height: screenH * 0.03),
             const ReviewListSection(),
             SizedBox(height: screenH * 0.03),
