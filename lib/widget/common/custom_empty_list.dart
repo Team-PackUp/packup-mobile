@@ -18,6 +18,7 @@ class CustomEmptyList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
     final theme = Theme.of(context);
 
     return Center(
@@ -25,7 +26,7 @@ class CustomEmptyList extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: iconSize, color: iconColor),
-          const SizedBox(height: 12),
+          SizedBox(height: screenH * 0.02),
           Text(
             message,
             style: messageStyle ??

@@ -3,11 +3,11 @@ import '../../model/alert_center/alert_center_model.dart';
 import 'alert_center_card.dart';
 import 'package:go_router/go_router.dart';
 
-class AlertCenterListCard extends StatelessWidget {
+class AlertCenterList extends StatelessWidget {
   final List<AlertCenterModel> alerts;
   final ScrollController? scrollController;
 
-  const AlertCenterListCard({
+  const AlertCenterList({
     super.key,
     required this.alerts,
     this.scrollController,
@@ -15,14 +15,18 @@ class AlertCenterListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
+
     return ListView.separated(
       controller: scrollController,
       itemCount: alerts.length,
       padding: EdgeInsets.symmetric(
-        horizontal: MediaQuery.of(context).size.width * 0.01,
-        vertical: MediaQuery.of(context).size.height * 0.002,
+        horizontal: screenW * 0.01,
+        vertical: screenH * 0.002,
       ),
-      separatorBuilder: (_, __) => const SizedBox(height: 8),
+      separatorBuilder: (_, __) => SizedBox(height: screenH * 0.01),
       itemBuilder: (context, index) {
         final alert = alerts[index];
         return AlertCenterCard(

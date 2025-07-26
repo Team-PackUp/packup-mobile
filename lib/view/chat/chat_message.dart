@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:packup/provider/chat/chat_message_provider.dart';
 import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/chat_message_model.dart';
+import 'package:packup/widget/chat/chat_message_input.dart';
 import 'package:provider/provider.dart';
 
 import 'package:packup/model/common/file_model.dart';
@@ -100,12 +101,12 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   Widget build(BuildContext context) {
     _chatMessageProvider = context.watch<ChatMessageProvider>();
 
-    final h = MediaQuery.of(context).size.height;
+    final screenH = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: CustomAppbar(
         title: widget.title,
-        profile: CircleProfileImage(radius: h * 0.02,),
+        profile: CircleProfileImage(radius: screenH * 0.02,),
       ),
       body: Column(
         children: [
@@ -122,74 +123,19 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
               ),
             ),
           ),
-          sendMessage(),
+          ChatMessageInput(
+              controller: _controller,
+              onPickImage: _pickImage,
+              onSend: _sendMessage
+          )
         ],
       ),
     );
   }
 
-  Widget sendMessage() => Container(
-    height: MediaQuery.of(context).size.height * 0.1,
-    padding: EdgeInsets.only(
-        left: MediaQuery.of(context).size.width * 0.01,
-        right: MediaQuery.of(context).size.width * 0.01,
-        bottom: MediaQuery.of(context).size.height * 0.01
-    ),
-    child: Row(
-      children: [
-        IconButton(
-          onPressed: _pickImage,
-          icon: Transform.rotate(
-            angle: math.pi / 4,
-            child: const Icon(Icons.attach_file_rounded),
-          ),
-          color: SELECTED,
-          iconSize: 25,
-        ),
-        Expanded(
-          child: TextField(
-            maxLines: null,
-            keyboardType: TextInputType.multiline,
-            controller: _controller,
-            decoration: InputDecoration(
-              suffixIcon: IconButton(
-                onPressed: _sendMessage,
-                icon: const Icon(Icons.send),
-                color: SELECTED,
-                iconSize: 25,
-              ),
-              hintText: "메시지 입력...",
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 10,
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
-
   bool isSameDate(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
-
-  List<dynamic> _buildMessageListWithDateSeparators(List<ChatMessageModel> messages) {
-    final List<dynamic> result = [];
-    DateTime? lastDate;
-
-    for (var message in messages) {
-      final currentDate = message.createdAt!;
-      if (lastDate == null || !isSameDate(lastDate, currentDate)) {
-        // result.add(currentDate);
-        lastDate = currentDate;
-      }
-      result.add(message);
-    }
-
-    return result;
-  }
-
 
   void _handleAfterSendChatMessage(chat) {
     _controller.clear();

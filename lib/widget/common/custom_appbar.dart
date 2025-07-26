@@ -25,6 +25,8 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenW = MediaQuery.of(context).size.width;
+
     return AppBar(
       backgroundColor: backgroundColor,
       elevation: 0,
@@ -49,12 +51,12 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         if (alert != null)
           Padding(
-            padding: const EdgeInsets.only(right: 4),
+            padding: EdgeInsets.only(right: screenW * 0.05),
             child: alert!,
           ),
         if (profile != null)
           Padding(
-            padding: const EdgeInsets.only(right: 12),
+            padding: EdgeInsets.only(right: screenW * 0.05),
             child: profile!,
           ),
       ],

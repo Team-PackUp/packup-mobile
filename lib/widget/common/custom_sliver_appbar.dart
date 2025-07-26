@@ -28,6 +28,8 @@ class CustomSliverAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenW = MediaQuery.of(context).size.width;
+
     return SliverAppBar(
       scrolledUnderElevation: 0,
       backgroundColor: Colors.white,
@@ -53,12 +55,12 @@ class CustomSliverAppBar extends StatelessWidget {
       actions: [
         if (alert != null)
           Padding(
-            padding: const EdgeInsets.only(right: 4.0),
+            padding: EdgeInsets.only(right: screenW * 0.03),
             child: alert!,
           ),
         if (profile != null)
           Padding(
-            padding: const EdgeInsets.only(right: 12.0),
+            padding: EdgeInsets.only(right: screenW * 0.05),
             child: profile!,
           ),
       ],

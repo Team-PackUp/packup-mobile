@@ -50,9 +50,5 @@ class AIRecommendCategorySection extends StatelessWidget {
       ],
     );
   }
-
-  void _changeAIRecommendCategory(AIRecommendCategoryModel category) {
-    print(category.name);
-  }
 }
 

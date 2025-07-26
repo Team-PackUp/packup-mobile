@@ -27,7 +27,7 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
 
   @override
   Widget build(BuildContext context) {
-    final h = MediaQuery.of(context).size.height;
+    final screenH = MediaQuery.of(context).size.height;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +39,7 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
             border: OutlineInputBorder(),
           ),
         ),
-        SizedBox(height: h * 0.02),
+        SizedBox(height: screenH * 0.02),
         GestureDetector(
           onTap: () {
             final initialIndex = languageOptions.indexOf(selectedLanguage);

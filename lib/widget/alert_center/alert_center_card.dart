@@ -20,17 +20,21 @@ class AlertCenterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
+
     return Card(
       margin: EdgeInsets.symmetric(
-        horizontal: MediaQuery.of(context).size.width * 0.02,
-        vertical:  MediaQuery.of(context).size.height * 0.002,
+        horizontal: screenW * 0.02,
+        vertical:  screenH * 0.002,
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 2,
       child: ListTile(
         contentPadding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * 0.05,
-          vertical:   MediaQuery.of(context).size.height * 0.015,
+          horizontal: screenW * 0.05,
+          vertical:   screenH * 0.015,
         ),
         leading: index == 0
             ? const Icon(Icons.fiber_manual_record, color: Colors.blue, size: 14)

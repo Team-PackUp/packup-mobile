@@ -12,15 +12,16 @@ class CustomPickerBottomSheet extends StatelessWidget {
     required this.selectedIndex,
     required this.options,
     required this.onSelected,
-    this.title = '선택',
+    this.title = '',
   });
 
   @override
   Widget build(BuildContext context) {
-    final h = MediaQuery.of(context).size.height;
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
 
     return Container(
-      height: h * 0.5,
+      height: screenH * 0.5,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -32,15 +33,18 @@ class CustomPickerBottomSheet extends StatelessWidget {
         children: [
           SizedBox(height: 8),
           Container(
-            height: 4,
-            width: 40,
+            height: screenH * 0.005,
+            width: screenW * 0.3,
             decoration: BoxDecoration(
               color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(2),
+              borderRadius: BorderRadius.circular(1),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
+            padding: EdgeInsets.symmetric(
+                horizontal: screenW * 0.03,
+                vertical: screenH * 0.001
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -56,7 +60,7 @@ class CustomPickerBottomSheet extends StatelessWidget {
           Expanded(
             child: CupertinoPicker(
               scrollController: FixedExtentScrollController(initialItem: selectedIndex),
-              itemExtent: 40,
+              itemExtent: screenH * 0.05,
               magnification: 1.1,
               useMagnifier: true,
               backgroundColor: Colors.white,

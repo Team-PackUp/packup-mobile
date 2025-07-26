@@ -25,7 +25,7 @@ class AlertCenterSection extends StatelessWidget {
       );
     }
 
-    return AlertCenterListCard(
+    return AlertCenterList(
       alerts: filteredAlertList,
       scrollController: scrollController,
     );

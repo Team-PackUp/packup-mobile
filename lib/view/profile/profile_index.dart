@@ -57,11 +57,9 @@ class _ProfileIndexContentState extends State<ProfileIndexContent> {
 
   @override
   Widget build(BuildContext context) {
-    final alertCount = context.watch<AlertCenterProvider>().alertCount;
     final profile = context.watch<UserProvider>().userModel;
-    final tourList = context.watch<TourProvider>().tourList;
-    final w = MediaQuery.of(context).size.width;
-    final h = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
 
     final List<TourModel> sampleTours = [
       TourModel(
@@ -111,23 +109,23 @@ class _ProfileIndexContentState extends State<ProfileIndexContent> {
         alert: AlertBell(),
       ),
       body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: w * 0.04),
+        padding: EdgeInsets.symmetric(horizontal: screenW * 0.04),
         children: [
-          SizedBox(height: h * 0.015),
-          ProfileSection(userName: profile?.nickname ?? '익명', w: w, h: h),
-          SizedBox(height: h * 0.03),
-          ActivitySummarySection(w: w, h: h),
-          SizedBox(height: h * 0.03),
-          RecentReservationSection(w: w, h: h, tourList: sampleTours),
-          SizedBox(height: h * 0.03),
-          PointCouponSection(w: w, h: h),
-          SizedBox(height: h * 0.03),
-          SettingAccountSection(w: w, h: h),
-          SizedBox(height: h * 0.03),
-          SupportWaySection(w: w, h: h),
-          SizedBox(height: h * 0.04),
+          SizedBox(height: screenH * 0.015),
+          ProfileSection(userName: profile?.nickname ?? '익명', w: screenW, h: screenH),
+          SizedBox(height: screenH * 0.03),
+          ActivitySummarySection(w: screenW, h: screenH),
+          SizedBox(height: screenH * 0.03),
+          RecentReservationSection(w: screenW, h: screenH, tourList: sampleTours),
+          SizedBox(height: screenH * 0.03),
+          PointCouponSection(w: screenW, h: screenH),
+          SizedBox(height: screenH * 0.03),
+          SettingAccountSection(w: screenW, h: screenH),
+          SizedBox(height: screenH * 0.03),
+          SupportWaySection(w: screenW, h: screenH),
+          SizedBox(height: screenH * 0.04),
           FaqSection(),
-          SizedBox(height: h * 0.04),
+          SizedBox(height: screenH * 0.04),
         ],
       ),
     );

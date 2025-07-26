@@ -26,7 +26,9 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
 
   @override
   Widget build(BuildContext context) {
-    final h = MediaQuery.of(context).size.height;
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+
     final user = context.watch<UserProvider>().userModel!;
     final nickname = user.nickname!;
     final displayImage = _localImagePath ?? user.profileImagePath;
@@ -41,7 +43,7 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
                 _pickImage();
               },
               child: CircleProfileImage(
-                radius: h * 0.045,
+                radius: screenH * 0.045,
                 imagePath: displayImage,
               ),
             ),
@@ -51,7 +53,7 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
             // ),
           ],
         ),
-        SizedBox(width: 16),
+        SizedBox(width: screenW * 0.05),
         Text(nickname, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       ],
     );

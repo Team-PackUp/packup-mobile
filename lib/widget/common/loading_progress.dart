@@ -10,6 +10,7 @@ class LoadingProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenW = MediaQuery.of(context).size.width;
     return Stack(
       children: [
         child,
@@ -20,10 +21,10 @@ class LoadingProgress extends StatelessWidget {
             return Positioned.fill(
               child: Container(
                 color: Colors.black.withOpacity(0.4),
-                child: const Center(
+                child: Center(
                   child: SpinKitFadingCircle(
                     color: Colors.blueAccent,
-                    size: 60,
+                    size: screenW * 0.15,
                   ),
                 ),
               ),

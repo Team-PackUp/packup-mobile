@@ -27,6 +27,10 @@ class ChatMessageList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+
     final groupedList = _buildGroupedMessagesWithDateSeparators(messages);
     final chatMessageProvider = context.watch<ChatMessageProvider>();
     final chatRoomProvider = context.read<ChatRoomProvider>();
@@ -35,9 +39,9 @@ class ChatMessageList extends StatelessWidget {
       controller: scrollController,
       reverse: true,
       padding: EdgeInsets.only(
-        left: MediaQuery.of(context).size.width * 0.02,
-        right: MediaQuery.of(context).size.width * 0.02,
-        bottom: MediaQuery.of(context).size.height * 0.02,
+        left: screenW * 0.02,
+        right: screenW * 0.02,
+        bottom: screenH * 0.02,
       ),
       itemCount: groupedList.length,
       itemBuilder: (context, index) {

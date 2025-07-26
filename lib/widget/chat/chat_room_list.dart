@@ -3,13 +3,13 @@ import 'package:go_router/go_router.dart';
 import 'package:packup/widget/chat/chat_room_card.dart';
 import 'package:packup/model/chat/chat_room_model.dart';
 
-class ChatRoomListCard extends StatelessWidget {
+class ChatRoomList extends StatelessWidget {
   final List<ChatRoomModel> rooms;
   final ScrollController? scrollController;
   final int userSeq;
   final Function(int) onTapRead;
 
-  const ChatRoomListCard({
+  const ChatRoomList({
     super.key,
     required this.rooms,
     required this.userSeq,

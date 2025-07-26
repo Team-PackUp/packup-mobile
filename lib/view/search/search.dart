@@ -62,6 +62,10 @@ class _SearchContentState extends State<SearchContent> {
 
   @override
   Widget build(BuildContext context) {
+
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+
     final viewInsets = MediaQuery.of(context).viewInsets;
 
     return Scaffold(
@@ -72,12 +76,14 @@ class _SearchContentState extends State<SearchContent> {
             children: [
               SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.all(8),
+                  padding: EdgeInsets.all(screenW * 0.03),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screenW * 0.01
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(screenW * 0.05),
                     ),
                     child: Row(
                       children: [
@@ -104,7 +110,7 @@ class _SearchContentState extends State<SearchContent> {
                   ),
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+              SizedBox(height: screenH * 0.2),
               Padding(
                 padding: EdgeInsets.only(bottom: viewInsets.bottom),
                 child: CustomEmptyList(
@@ -123,7 +129,10 @@ class _SearchContentState extends State<SearchContent> {
               right: 0,
               child: Container(
                 color: Colors.grey[100],
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenW * 0.08,
+                    vertical: screenH * 0.015
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

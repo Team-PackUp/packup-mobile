@@ -69,6 +69,7 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
   Widget build(BuildContext context) {
     final profileUrl = context.watch<UserProvider>().userModel?.profileImagePath;
     final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: SafeArea(
@@ -79,7 +80,7 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
                 arrowFlag: false,
                 alert: AlertBell(),
                 profile: CircleAvatar(
-                  radius: MediaQuery.of(context).size.height * 0.02,
+                  radius: screenH * 0.02,
                   backgroundImage: (profileUrl != null && profileUrl.isNotEmpty)
                       ? NetworkImage(profileUrl)
                       : null,
@@ -89,8 +90,8 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
             ],
             body: ListView(
               padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * 0.03,
-                vertical: MediaQuery.of(context).size.height * 0.01,
+                horizontal: screenW * 0.03,
+                vertical: screenH * 0.01,
               ),
               children: [
                 SizedBox(height: screenH * 0.03),

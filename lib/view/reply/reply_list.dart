@@ -79,7 +79,8 @@ class _ReplyListContentState extends State<ReplyListContent> {
 
   @override
   Widget build(BuildContext context) {
-
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
     _replyProvider = context.watch<ReplyProvider>();
 
     var filteredReplyList = _replyProvider.replyList;
@@ -104,7 +105,10 @@ class _ReplyListContentState extends State<ReplyListContent> {
                           if (moved == true) refreshReply();
                         },
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: screenW * 0.02,
+                            vertical: screenH * 0.005,
+                        ),
                         child: Align(
                           alignment: Alignment.topCenter,
                           child: Stack(
@@ -117,7 +121,6 @@ class _ReplyListContentState extends State<ReplyListContent> {
                                   avatarUrl: reply.profileImagePath,
                                   content: reply.content!,
                                   point: reply.point!,
-                                  // targetType: reply.targetType!,
                                   createdAt: reply.createdAt!,
                                 ),
                               ),

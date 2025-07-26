@@ -52,7 +52,7 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
   @override
   Widget build(BuildContext context) {
     final recommendProvider = context.watch<AIRecommendProvider>();
-    final h = MediaQuery.of(context).size.height;
+    final screenH = MediaQuery.of(context).size.height;
     final screenW = MediaQuery.of(context).size.width;
     final isWide = screenW > 600;
 
@@ -62,11 +62,14 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
         title: 'AI 추천',
         arrowFlag: false,
         alert: AlertBell(),
-        profile: CircleProfileImage(radius: h * 0.02,),
+        profile: CircleProfileImage(radius: screenH * 0.02,),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.03,
+              vertical: screenH * 0.01,
+            ),
             child: CustomSearch(onTap: () => context.push('/search/all')),
           ),
         ),

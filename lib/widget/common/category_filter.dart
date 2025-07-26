@@ -55,6 +55,8 @@ class _CategoryFilterState<T> extends State<CategoryFilter<T>> {
 
   @override
   Widget build(BuildContext context) {
+    final screenW = MediaQuery.of(context).size.width;
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -65,14 +67,14 @@ class _CategoryFilterState<T> extends State<CategoryFilter<T>> {
           final chipLabel = avatar != null
               ? Row(mainAxisSize: MainAxisSize.min, children: [
             avatar,
-            const SizedBox(width: 4),
+            SizedBox(width: screenW * 0.02),
             Text(label),
           ]) : Text(label);
 
           final isSelected = _selected.contains(i);
 
           return Padding(
-            padding: const EdgeInsets.only(right: 8),
+            padding: EdgeInsets.only(right: screenW * 0.015),
             child: widget.mode == SelectionMode.single
                 ? ChoiceChip(
               label: chipLabel,

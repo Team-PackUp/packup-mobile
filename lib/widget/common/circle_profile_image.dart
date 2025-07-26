@@ -15,6 +15,7 @@ class CircleProfileImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final rawPath = imagePath?.isNotEmpty == true
         ? imagePath!
         : context.watch<UserProvider>().userModel!.profileImagePath ?? '';
@@ -32,11 +33,6 @@ class CircleProfileImage extends StatelessWidget {
       radius: radius,
       backgroundImage: bgImage,
       backgroundColor: Colors.grey[200],
-      child: bgImage == null
-          ? Icon(Icons.person,
-          size: radius * 0.6,
-          color: Colors.grey)
-          : null,
     );
   }
 }
