@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/provider/reply/reply_provider.dart';
-import 'package:packup/widget/common/custom_appbar.dart';
-import 'package:packup/widget/reply/section/reply_list_section.dart';
+import 'package:packup/widget/reply/reply_card.dart';
 import 'package:provider/provider.dart';
-import '../../model/reply/reply_model.dart';
+import '../../../model/reply/reply_model.dart';
 
-import '../../widget/reply/reply_card.dart';
 
-class ReplyList extends StatelessWidget {
+class ReplyListSection extends StatelessWidget {
 
   final int targetSeq;
   final TargetType targetType;
 
-  const ReplyList(
+  const ReplyListSection(
       {
         super.key,
         required this.targetSeq,
@@ -65,13 +63,10 @@ class _ReplyListContentState extends State<ReplyListContent> {
 
   void _scrollListener() {
     if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
-      getNoticeListMore();
+      print("더 조회하기 있긴 함..");
     }
   }
 
-  getNoticeListMore() async {
-    _replyProvider.getReplyList();
-  }
 
   Future<void> refreshReplyList() {
     return _replyProvider.getReplyList(reset: true);
@@ -79,29 +74,45 @@ class _ReplyListContentState extends State<ReplyListContent> {
 
   @override
   Widget build(BuildContext context) {
-
+    final screenH = MediaQuery.of(context).size.height;
     _replyProvider = context.watch<ReplyProvider>();
 
-    return Scaffold(
-      appBar: CustomAppbar(title: '모든 댓글'),
-      body: Column(
-        children: [
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: refreshReplyList,
-              child: ReplyListSection(
-                  targetSeq: _replyProvider.targetSeq!,
-                  targetType: _replyProvider.targetType!
-              )
+    var filteredReplyList = _replyProvider.replyList;
+
+    return ListView.builder(
+      shrinkWrap: true,
+      controller: _scrollController,
+      itemCount: filteredReplyList.length,
+      itemBuilder: (context, index) {
+        final reply = filteredReplyList[index];
+
+        return Card(
+          color: Colors.transparent,
+          elevation: 0,
+          margin: EdgeInsets.zero,
+          child: InkWell(
+            onTap: () async {
+              final moved = await context.push<bool>('/reply_write/${reply.seq}');
+              if (moved == true) refreshReply();
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: screenH * 0.02),
+              child: ReplyCard(
+                nickName: reply.nickName!,
+                avatarUrl: reply.profileImagePath,
+                content: reply.content!,
+                point: reply.point!,
+                createdAt: reply.createdAt!,
+              ),
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
+
   }
 
   Future<void> refreshReply() async {
     _replyProvider.getReplyList(reset: true);
   }
 }
-

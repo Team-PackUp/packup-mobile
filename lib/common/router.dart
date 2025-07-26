@@ -113,6 +113,18 @@ GoRouter createRouter(UserProvider userProvider) {
         builder: (context, state) => const RegisterDetail(),
       ),
       GoRoute(
+        path: '/reply_list/:targetSeq/:targetType',
+        builder: (context, state) {
+          final targetSeq = int.parse(state.pathParameters['targetSeq']!);
+          final String param = state.pathParameters['targetType']!;
+          final TargetType targetType = TargetType.values.firstWhere(
+            (e) => e.code == param,
+          );
+
+          return ReplyList(targetSeq: targetSeq, targetType: targetType);
+        },
+      ),
+      GoRoute(
         path: '/reply_write/:targetSeq/:targetType',
         builder: (context, state) {
           final targetSeq = int.parse(state.pathParameters['targetSeq']!);
