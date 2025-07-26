@@ -2,25 +2,18 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:packup/model/chat/chat_read_model.dart';
 import 'package:packup/provider/chat/chat_message_provider.dart';
-import 'package:packup/widget/chat/chat_message_card.dart';
 import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/chat_message_model.dart';
 import 'package:provider/provider.dart';
 
 import 'package:packup/model/common/file_model.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 
-import 'package:packup/common/util.dart';
-import 'package:packup/widget/chat/chat_message_separator.dart';
-
-import '../../provider/user/user_provider.dart';
 import '../../widget/chat/section/chat_message_section.dart';
-import '../../widget/common/app_bar_profile.dart';
+import '../../widget/common/circle_profile_image.dart';
 
 class ChatMessage extends StatelessWidget {
   final int chatRoomSeq;
@@ -68,7 +61,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   late final TextEditingController _controller;
   late final ScrollController _scrollController;
   late ChatMessageProvider _chatMessageProvider;
-  late ChatRoomProvider _chatRoomProvider;
 
   final ImagePicker _picker = ImagePicker();
 
@@ -82,7 +74,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _chatMessageProvider = context.read<ChatMessageProvider>();
-      _chatRoomProvider = context.read<ChatRoomProvider>();
     });
 
   }

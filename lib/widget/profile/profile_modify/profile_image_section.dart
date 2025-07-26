@@ -1,43 +1,68 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../../provider/user/user_provider.dart';
-import '../../common/app_bar_profile.dart';
+import '../../common/circle_profile_image.dart';
 
-class ProfileImageSection extends StatelessWidget {
-  const ProfileImageSection({super.key});
+class ProfileImageSection extends StatefulWidget {
 
+  @override
+  State<StatefulWidget> createState() => _ProfileImageSectionState();
+
+
+}
+
+class _ProfileImageSectionState extends State<ProfileImageSection> {
+  final ImagePicker _picker = ImagePicker();
+  String? _localImagePath;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
-
     final user = context.watch<UserProvider>().userModel!;
-    final nickname = user.nickname;
+    final nickname = user.nickname!;
+    final displayImage = _localImagePath ?? user.profileImagePath;
 
     return Row(
       children: [
-        // 상단 이미지 + 이름
         Stack(
           alignment: Alignment.bottomRight,
           children: [
-            CircleProfileImage(radius: h * 0.045,),
-            IconButton(
-              icon: Icon(Icons.camera_alt, size: 20),
-              onPressed: () {
-                // 사진 변경 기능
+            GestureDetector(
+              onTap: () {
+                _pickImage();
               },
+              child: CircleProfileImage(
+                radius: h * 0.045,
+                imagePath: displayImage,
+              ),
             ),
+            // IconButton(
+            //   onPressed: _pickImage,
+            //   icon: Icon(Icons.camera_alt),
+            // ),
           ],
         ),
-        SizedBox(width: w * 0.03),
-        Text(nickname!, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        SizedBox(width: 16),
+        Text(nickname, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       ],
     );
   }
 
+  Future<void> _pickImage() async {
+    final picked = await _picker.pickImage(source: ImageSource.gallery);
+    if (picked != null) {
+      setState(() {
+        _localImagePath = picked.path;
+      });
+    }
+  }
 }

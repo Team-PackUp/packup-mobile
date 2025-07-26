@@ -142,4 +142,11 @@ class UserProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void setProfileImagePath(String path) {
+    if (userModel != null) {
+      userModel!.profileImagePath = path;
+      notifyListeners();
+    }
+  }
 }

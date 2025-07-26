@@ -3,7 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:packup/model/guide/guide_model_temp.dart';
 import 'package:packup/widget/home/guide_card.dart';
 import 'package:packup/widget/home/guide_list.dart';
-import 'package:packup/widget/home/section.dart';
+
+import '../../common/section_header.dart';
 
 class GuideSection extends StatelessWidget {
   const GuideSection({super.key});

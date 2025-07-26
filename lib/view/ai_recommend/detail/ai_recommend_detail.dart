@@ -9,10 +9,10 @@ import '../../../provider/alert_center/alert_center_provider.dart';
 import '../../../provider/user/user_provider.dart';
 
 import '../../../widget/common/alert_bell.dart';
-import '../../../widget/common/app_bar_profile.dart';
+import '../../../widget/common/circle_profile_image.dart';
 import '../../../widget/common/custom_appbar.dart';
+import '../../../widget/common/section_header.dart';
 import '../../../widget/search/search.dart';
-import '../../../widget/ai_recommend/section.dart';
 
 class AiRecommendDetail extends StatelessWidget {
   const AiRecommendDetail({super.key});

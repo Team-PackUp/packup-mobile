@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../common/section_header.dart';
 import '../recommend_list.dart';
-import '../section.dart';
 import '../../../provider/ai_recommend/ai_recommend_provider.dart';
 import 'package:provider/provider.dart';
 
