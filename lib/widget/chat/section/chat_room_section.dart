@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../provider/chat/chat_room_provider.dart';
 import '../../common/custom_empty_list.dart';
-import '../chat_room_list_card.dart';
+import '../chat_room_list.dart';
 
 class ChatRoomSection extends StatelessWidget {
   final ScrollController scrollController;
@@ -27,7 +27,7 @@ class ChatRoomSection extends StatelessWidget {
       );
     }
 
-    return ChatRoomListCard(
+    return ChatRoomList(
       rooms: chatRooms,
       scrollController: scrollController,
       userSeq: userSeq,

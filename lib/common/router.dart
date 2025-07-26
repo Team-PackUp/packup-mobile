@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
+import 'package:packup/view/profile/profile_modify/profile_modify.dart';
 import 'package:packup/view/profile/setting_account/reservation_manage/reservation_manage.dart';
 import 'package:packup/view/reply/reply_write.dart';
 import 'package:packup/view/reservation/reservation.dart';
@@ -195,6 +196,13 @@ GoRouter createRouter(UserProvider userProvider) {
         builder: (context, state) {
           final guideId = int.parse(state.pathParameters['guideId']!);
           return GuideDetailPage(guideId: guideId);
+        },
+      ),
+      GoRoute(
+        path: '/profile/profile_modify',
+        name: 'profileModify',
+        builder: (context, state) {
+          return ProfileModify();
         },
       ),
       GoRoute(

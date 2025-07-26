@@ -9,6 +9,9 @@ class AlertBell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+
     final count = context.watch<AlertCenterProvider>().alertCount;
     final iconSize = MediaQuery.of(context).size.width * 0.07;
 
@@ -30,14 +33,13 @@ class AlertBell extends StatelessWidget {
             top: 4,
             right: 4,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+              padding: EdgeInsets.symmetric(
+                  horizontal: screenW * 0.015,
+                  vertical: screenH * 0.003
+              ),
               decoration: BoxDecoration(
                 color: Colors.red,
                 borderRadius: BorderRadius.circular(12),
-              ),
-              constraints: const BoxConstraints(
-                minWidth: 16,
-                minHeight: 16,
               ),
               child: Text(
                 count > 99 ? '99+' : '$count',

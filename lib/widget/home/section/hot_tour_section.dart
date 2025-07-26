@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 import 'package:packup/widget/home/hot_tour_list.dart';
-import 'package:packup/widget/home/section.dart';
 import 'package:provider/provider.dart';
+
+import '../../common/section_header.dart';
 
 class HotTourSection extends StatefulWidget {
   const HotTourSection({super.key});

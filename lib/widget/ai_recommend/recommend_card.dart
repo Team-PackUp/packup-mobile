@@ -49,7 +49,7 @@ class RecommendCard extends StatelessWidget {
                     child: Container(
                       padding: EdgeInsets.symmetric(
                           horizontal: screenW * 0.02,
-                          vertical: 2
+                          vertical: screenH * 0.01
                       ),
                       decoration: BoxDecoration(
                         color: PRIMARY_COLOR,
@@ -109,7 +109,7 @@ class RecommendCard extends StatelessWidget {
                   Row(
                     children: [
                       CircleAvatar(
-                        radius: 10,
+                        radius: screenW * 0.03,
                         backgroundImage: NetworkImage(
                           fullFileUrl(tour.guideModel?.guideAvatarPath ?? ''),
                         ),

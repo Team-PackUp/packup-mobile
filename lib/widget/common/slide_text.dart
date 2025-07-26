@@ -13,6 +13,9 @@ class SlideText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+
     final textStyle = style ??
         const TextStyle(
           fontSize: 14,
@@ -20,7 +23,7 @@ class SlideText extends StatelessWidget {
         );
 
     return SizedBox(
-      height: 20,
+      height: screenH * 0.03,
       child: LayoutBuilder(
         builder: (context, constraints) {
           final span = TextSpan(text: title, style: textStyle);
@@ -38,10 +41,10 @@ class SlideText extends StatelessWidget {
               text: title,
               style: textStyle,
               scrollAxis: Axis.horizontal,
-              blankSpace: 40.0,
+              blankSpace: screenW * 0.05,
               velocity: 30.0,
               pauseAfterRound: const Duration(seconds: 1),
-              startPadding: 10.0,
+              startPadding: 0,
               accelerationDuration: const Duration(seconds: 1),
               decelerationDuration: const Duration(milliseconds: 500),
             );

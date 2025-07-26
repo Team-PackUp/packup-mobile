@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:packup/widget/common/circle_profile_image.dart';
 import 'package:packup/widget/common/custom_image_viewer.dart';
 import 'package:packup/widget/common/custom_network_image_ratio.dart';
 
@@ -25,6 +26,9 @@ class ChatMessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
+
     final isMine = sender == userSeq;
     final imagePath = profileImagePath ?? 'assets/image/logo/logo.png';
 
@@ -48,7 +52,7 @@ class ChatMessageCard extends StatelessWidget {
         child: Hero(
           tag: heroTag,                               // 동일 태그
           child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.4,
+            width: screenW * 0.4,
             child: CustomNetworkImageRatio(imageUrl: imageUrl),
           ),
         ),
@@ -61,19 +65,19 @@ class ChatMessageCard extends StatelessWidget {
         children: isMine
             ? [
           imageWidget,
-          SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-          _avatar(context, imagePath),
+          SizedBox(width: screenW * 0.03),
+          CircleProfileImage(radius: screenW * 0.05, imagePath: imagePath,),
         ]
             : [
-          _avatar(context, imagePath),
-          SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+          CircleProfileImage(radius: screenW * 0.05, imagePath: imagePath,),
+          SizedBox(width: screenW * 0.03),
           imageWidget,
         ],
       );
       return Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * 0.03,
-          vertical: MediaQuery.of(context).size.height * 0.01,
+          horizontal: screenW * 0.03,
+          vertical: screenH * 0.01,
         ),
         child: row,
       );
@@ -83,12 +87,12 @@ class ChatMessageCard extends StatelessWidget {
     final bubble = IntrinsicWidth(
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.7,
+          maxWidth: screenW * 0.7,
         ),
         child: Container(
           padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.03,
-              vertical: MediaQuery.of(context).size.height * 0.01
+              horizontal: screenW * 0.03,
+              vertical: screenH * 0.01
           ),
           decoration: BoxDecoration(
             color: isMine ? MY_MESSAGE_BACKGROUND : YOUR_MESSAGE_BACKGROUND,
@@ -108,7 +112,7 @@ class ChatMessageCard extends StatelessWidget {
                 softWrap: true,
                 overflow: TextOverflow.visible,
               ),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+              SizedBox(width: screenW * 0.03),
               Align(
                 alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
                 child: Text(
@@ -132,8 +136,8 @@ class ChatMessageCard extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * 0.03,
-          vertical: MediaQuery.of(context).size.height * 0.01,
+          horizontal: screenW * 0.03,
+          vertical: screenH * 0.01,
       ),
       child: Row(
         mainAxisAlignment: isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -141,26 +145,14 @@ class ChatMessageCard extends StatelessWidget {
         children: isMine
             ? [
           bubble,
-          SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-          _avatar(context, imagePath),
-        ]
-            : [
-          _avatar(context, imagePath),
-          SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+          SizedBox(width: screenW * 0.03),
+          CircleProfileImage(radius: screenW * 0.07, imagePath: imagePath,),
+        ] : [
+          CircleProfileImage(radius: screenW * 0.07, imagePath: imagePath,),
+          SizedBox(width: screenW * 0.03),
           bubble,
         ],
       ),
-    );
-  }
-
-  Widget _avatar(
-      BuildContext context,
-      String? profileUrl,
-      ) {
-    return CircleAvatar(
-      radius: MediaQuery.of(context).size.height * 0.03,
-      backgroundImage: profileUrl != null && profileUrl.isNotEmpty
-          ? NetworkImage(profileUrl) : null,
     );
   }
 }

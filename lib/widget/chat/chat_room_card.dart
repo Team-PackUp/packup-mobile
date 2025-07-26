@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:packup/const/color.dart';
 import 'package:packup/model/common/user_model.dart';
+import 'package:packup/widget/common/circle_profile_image.dart';
 
 import '../../common/util.dart';
 
@@ -24,17 +25,24 @@ class ChatRoomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+          padding: EdgeInsets.symmetric(
+              horizontal: screenW * 0.02,
+              vertical: screenH * 0.015
+          ),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 24,
-                backgroundImage: NetworkImage(profileImagePath),
+              CircleProfileImage(
+                radius: screenW * 0.065,
+                imagePath: profileImagePath,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: screenW * 0.05),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +59,7 @@ class ChatRoomCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        if (lastMessageDate != null) const SizedBox(width: 20),
+                        if (lastMessageDate != null) SizedBox(width: screenW * 0.05),
                         if (lastMessageDate != null)
                           Text(
                             convertToChatRoomDate(lastMessageDate!),
@@ -62,12 +70,15 @@ class ChatRoomCard extends StatelessWidget {
                             ),
                           ),
                         if (unReadCount != "0") ...[
-                          const SizedBox(width: 20),
+                          SizedBox(width: screenW * 0.05),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: screenW * 0.02,
+                                vertical: screenH * 0.015
+                            ),
                             decoration: BoxDecoration(
                               color: SELECTED,
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(screenW * 0.065,),
                             ),
                             child: Text(
                               unReadCount,
@@ -81,7 +92,7 @@ class ChatRoomCard extends StatelessWidget {
                         ],
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: screenW * 0.01),
                     Text(
                       fileFlag == 'Y'
                           ? '사진'

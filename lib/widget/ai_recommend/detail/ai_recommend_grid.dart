@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:packup/widget/ai_recommend/recommend_card.dart';
 import '../../../model/ai_recommend/recommend_tour_model.dart';
-import '../section.dart';
+import '../../common/section_header.dart';
 
 class AiRecommendGrid extends StatelessWidget {
   final List<RecommendTourModel> tourList;

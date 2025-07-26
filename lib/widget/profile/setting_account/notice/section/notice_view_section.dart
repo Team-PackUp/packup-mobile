@@ -12,6 +12,8 @@ class NoticeViewSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenW = MediaQuery.of(context).size.width;
+
     final notice = context.watch<NoticeProvider>().noticeModel;
 
     return Scaffold(
@@ -20,7 +22,7 @@ class NoticeViewSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(screenW * 0.05),
             child: Text(convertToYmd(notice.createdAt!)),
           ),
           Expanded(

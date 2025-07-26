@@ -44,7 +44,7 @@ class _ReservationManageContent extends State<ReservationManageContent> {
   Widget build(BuildContext context) {
     final isLoading = context.watch<TourProvider>().isLoading;
     final isLoading2 = context.watch<LoadingProvider>().isLoading;
-    final w = MediaQuery.of(context).size.width;
+    final screenW = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: CustomAppbar(
@@ -53,7 +53,7 @@ class _ReservationManageContent extends State<ReservationManageContent> {
         alert: AlertBell(),
       ),
       body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: w * 0.04),
+        padding: EdgeInsets.symmetric(horizontal: screenW * 0.04),
         children: [
           if (!isLoading && !isLoading2)
             const ReservationManageSection(),

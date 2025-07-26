@@ -3,7 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:packup/theme/typographies/app_typographies.dart';
 import 'package:packup/const/color.dart';
 import 'package:packup/widget/home/reward_card.dart';
-import 'package:packup/widget/home/section.dart';
+
+import '../../common/section_header.dart';
 
 class RewardSection extends StatelessWidget {
   const RewardSection({super.key});

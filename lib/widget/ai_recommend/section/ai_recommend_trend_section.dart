@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../provider/ai_recommend/ai_recommend_provider.dart';
+import '../../common/section_header.dart';
 import '../recommend_list.dart';
-import '../section.dart';
 
 class AiRecommendTrendSection extends StatelessWidget {
   const AiRecommendTrendSection({super.key});

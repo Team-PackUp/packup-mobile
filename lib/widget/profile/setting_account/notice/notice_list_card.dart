@@ -17,6 +17,9 @@ class NoticeCardList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
+
     return ListView.builder(
       controller: scrollController,
       itemCount: notices.length,
@@ -34,8 +37,8 @@ class NoticeCardList extends StatelessWidget {
           },
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.01,
-              vertical: MediaQuery.of(context).size.height * 0.002,
+              horizontal: screenW * 0.01,
+              vertical: screenH * 0.002,
             ),
             child: Align(
               alignment: Alignment.topCenter,

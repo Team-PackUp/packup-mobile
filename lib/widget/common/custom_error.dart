@@ -7,6 +7,8 @@ class CustomError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(24),
@@ -20,9 +22,9 @@ class CustomError extends StatelessWidget {
               style: const TextStyle(fontSize: 18),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: screenH * 0.02),
             SizedBox(
-              width: double.infinity,
+              width: screenH,
               child: ElevatedButton(
                 onPressed: () {
                   if (GoRouter.of(context).canPop()) {

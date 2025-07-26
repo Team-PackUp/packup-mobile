@@ -7,25 +7,28 @@ class CustomSearch extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
+
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: MediaQuery.of(context).size.width * 0.03,
-        vertical: MediaQuery.of(context).size.height * 0.01,
+        horizontal: screenW * 0.03,
+        vertical: screenH * 0.01,
       ),
       child: InkWell(
         onTap: onTap,
         child: Container(
-          height: kToolbarHeight - 8,          // 앱바 높이와 비슷하게만
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          height: kToolbarHeight - screenH * 0.01,
+          padding: EdgeInsets.symmetric(horizontal: screenW * 0.03),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(screenW * 0.05),
             border: Border.all(color: Colors.grey.shade300),
           ),
           child: Row(
-            children: const [
+            children: [
               Icon(Icons.search, color: Colors.grey),
-              SizedBox(width: 8),
+              SizedBox(width: screenW * 0.02),
               Expanded(
                 child: Text(
                   '같이 여름휴가 갈 사람 구함@@',

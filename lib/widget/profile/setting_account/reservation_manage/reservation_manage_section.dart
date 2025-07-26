@@ -16,8 +16,8 @@ class ReservationManageSection extends StatelessWidget {
     final tourList = tourProvider.tourList;
     final isLoading = tourProvider.isLoading;
 
-    final w = MediaQuery.of(context).size.width;
-    final h = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
 
     if (isLoading) return const SizedBox.shrink();
 
@@ -28,10 +28,10 @@ class ReservationManageSection extends StatelessWidget {
           '모든 예약 내역',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: w * 0.045,
+            fontSize: screenW * 0.045,
           ),
         ),
-        SizedBox(height: h * 0.02),
+        SizedBox(height: screenH * 0.02),
 
         if (tourList.isEmpty)
           const CustomEmptyList(
@@ -47,10 +47,10 @@ class ReservationManageSection extends StatelessWidget {
             itemBuilder: (ctx, idx) {
               final tour = tourList[idx];
               return Padding(
-                padding: EdgeInsets.only(bottom: h * 0.012),
+                padding: EdgeInsets.only(bottom: screenH * 0.012),
                 child: GestureDetector(
                   onTap: () => context.push('/tour/${tour.seq}'),
-                  child: ReservationCard(tour: tour, w: w, h: h),
+                  child: ReservationCard(tour: tour, w: screenW, h: screenH),
                 ),
               );
             },

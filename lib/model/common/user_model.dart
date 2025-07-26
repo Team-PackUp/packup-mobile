@@ -6,7 +6,7 @@ class UserModel {
 
   final String? email;
   final String? nickname;
-  final String? profileImagePath;
+  late final String? profileImagePath;
   final List<String>? preferCategorySeqJson;
 
   UserModel({

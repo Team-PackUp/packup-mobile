@@ -9,9 +9,10 @@ import '../../../provider/alert_center/alert_center_provider.dart';
 import '../../../provider/user/user_provider.dart';
 
 import '../../../widget/common/alert_bell.dart';
+import '../../../widget/common/circle_profile_image.dart';
 import '../../../widget/common/custom_appbar.dart';
+import '../../../widget/common/section_header.dart';
 import '../../../widget/search/search.dart';
-import '../../../widget/ai_recommend/section.dart';
 
 class AiRecommendDetail extends StatelessWidget {
   const AiRecommendDetail({super.key});
@@ -51,8 +52,7 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
   @override
   Widget build(BuildContext context) {
     final recommendProvider = context.watch<AIRecommendProvider>();
-    final profileUrl       = context.watch<UserProvider>().userModel?.profileImagePath;
-
+    final screenH = MediaQuery.of(context).size.height;
     final screenW = MediaQuery.of(context).size.width;
     final isWide = screenW > 600;
 
@@ -62,16 +62,14 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
         title: 'AI 추천',
         arrowFlag: false,
         alert: AlertBell(),
-        profile: CircleAvatar(
-          radius: MediaQuery.of(context).size.height * 0.02,
-          backgroundImage: (profileUrl != null && profileUrl.isNotEmpty)
-              ? NetworkImage(profileUrl)
-              : null,
-        ),
+        profile: CircleProfileImage(radius: screenH * 0.02,),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.03,
+              vertical: screenH * 0.01,
+            ),
             child: CustomSearch(onTap: () => context.push('/search/all')),
           ),
         ),
