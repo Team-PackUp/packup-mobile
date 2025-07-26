@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:packup/Const/color.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import '../../../widget/common/circle_profile_image.dart';
+import '../../../widget/common/util_widget.dart';
 import '../../../widget/profile/profile_modify/profile_detail_section.dart';
 import '../../../widget/profile/profile_modify/profile_image_section.dart';
 import '../../../widget/profile/profile_modify/profile_info_section.dart';
@@ -38,22 +40,19 @@ class ProfileModify extends StatelessWidget {
               SizedBox(height: screenH * 0.02),
               ProfileDetailSection(),
               SizedBox(height: screenH * 0.02),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // 저장 로직
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Text('저장'),
-                ),
-              ),
+              CustomButton.textButton(
+                  context: context,
+                  onPressed: _updateProfile,
+                  backgroundColor: PRIMARY_COLOR,
+                  label: '저장하기'
+              )
             ],
           ),
       ),
     );
+  }
+
+  void _updateProfile() {
+
   }
 }

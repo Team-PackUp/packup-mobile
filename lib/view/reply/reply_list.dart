@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/provider/reply/reply_provider.dart';
-import 'package:packup/widget/common/custom_appbar.dart';
-import 'package:packup/widget/reply/reply_list_card.dart';
+import 'package:packup/widget/reply/reply_card.dart';
 import 'package:provider/provider.dart';
 import '../../model/reply/reply_model.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ReplyList extends StatelessWidget {
 
@@ -65,13 +63,10 @@ class _ReplyListContentState extends State<ReplyListContent> {
 
   void _scrollListener() {
     if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
-      getNoticeListMore();
+      print("더 조회하기 있긴 함..");
     }
   }
 
-  getNoticeListMore() async {
-    _replyProvider.getReplyList();
-  }
 
   Future<void> refreshReplyList() {
     return _replyProvider.getReplyList(reset: true);
@@ -79,62 +74,37 @@ class _ReplyListContentState extends State<ReplyListContent> {
 
   @override
   Widget build(BuildContext context) {
-    final screenW = MediaQuery.of(context).size.width;
     final screenH = MediaQuery.of(context).size.height;
     _replyProvider = context.watch<ReplyProvider>();
 
     var filteredReplyList = _replyProvider.replyList;
 
-    return Scaffold(
-      appBar: CustomAppbar(title: 'AppLocalizations.of(context)!.reply'),
-      body: Column(
-        children: [
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: refreshReplyList,
-              child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: filteredReplyList.length,
-                  itemBuilder: (context, index) {
-                    final reply = filteredReplyList[index];
+    return ListView.builder(
+            shrinkWrap: true,
+            controller: _scrollController,
+              itemCount: filteredReplyList.length,
+              itemBuilder: (context, index) {
+                final reply = filteredReplyList[index];
 
-                    return InkWell(
-                        onTap: () async {
-                          final moved = await context.push<bool>('/reply_write/${reply.seq}');
-
-                          if (moved == true) refreshReply();
-                        },
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: screenW * 0.02,
-                            vertical: screenH * 0.005,
-                        ),
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              SizedBox(
-                                width: double.infinity,
-                                child: ReplyCard(
-                                  nickName: reply.nickName!,
-                                  avatarUrl: reply.profileImagePath,
-                                  content: reply.content!,
-                                  point: reply.point!,
-                                  createdAt: reply.createdAt!,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
+                return InkWell(
+                  onTap: () async {
+                    final moved = await context.push<bool>('/reply_write/${reply.seq}');
+                    if (moved == true) refreshReply();
                   },
-                ),
-            ),
-            ),
-        ],
-      ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: screenH * 0.02,
+                    ),
+                    child: ReplyCard(
+                      nickName: reply.nickName!,
+                      avatarUrl: reply.profileImagePath,
+                      content: reply.content!,
+                      point: reply.point!,
+                      createdAt: reply.createdAt!,
+                    ),
+                  ),
+                );
+              },
     );
   }
 

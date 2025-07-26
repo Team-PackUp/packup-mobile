@@ -50,7 +50,6 @@ class _GuideDetailContentState extends State<GuideDetailContent> {
       appBar: CustomAppbar(title: 'Guide Details'),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(16),
           children: [
             const GuideProfileSection(),
             SizedBox(height: screenH * 0.03),
@@ -58,7 +57,7 @@ class _GuideDetailContentState extends State<GuideDetailContent> {
             SizedBox(height: screenH * 0.03),
             const GuideReviewSummarySection(),
             SizedBox(height: screenH * 0.03),
-            const ReviewListSection(),
+            ReviewListSection(seq: 4,),
             SizedBox(height: screenH * 0.03),
           ],
         ),

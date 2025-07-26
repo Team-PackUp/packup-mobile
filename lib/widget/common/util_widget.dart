@@ -14,3 +14,40 @@ class CustomSnackBar {
       );
   }
 }
+
+class CustomButton {
+  static Widget textButton({
+    required BuildContext context,
+    required VoidCallback onPressed,
+    required Color backgroundColor,
+    required String label,
+    Color foregroundColor = Colors.white,
+  }) {
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: screenW * 0.01),
+      child: SizedBox(
+        width: double.infinity,
+        height: screenH * 0.05,
+        child: TextButton(
+          style: TextButton.styleFrom(
+            elevation: 0,
+            backgroundColor: backgroundColor,
+            foregroundColor: foregroundColor,
+            padding: EdgeInsets.symmetric(vertical: screenH * 0.01),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(screenW * 0.02),
+            ),
+          ),
+          onPressed: onPressed,
+          child: Text(
+            label,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+        ),
+      ),
+    );
+  }
+}

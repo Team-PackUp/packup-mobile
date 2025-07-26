@@ -137,6 +137,11 @@ String getMonthYear(DateTime dateTime) {
   return formatter.format(dateTime);
 }
 
+String getDayMonthYear(DateTime dateTime) {
+  final formatter = DateFormat('MMMM dd, yyyy', 'en_US');
+  return formatter.format(dateTime);
+}
+
 /// ################### FILE ################### ///
 String fullFileUrl(String path) {
   return '$httpPrefix$path';
