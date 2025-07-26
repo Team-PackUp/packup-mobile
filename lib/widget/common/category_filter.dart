@@ -5,6 +5,7 @@ enum SelectionMode { single, multiple }
 
 class CategoryFilter<T> extends StatefulWidget {
   final List<T> items;
+  final List<T>? initialSelectedItems;
 
   // 라벨 뽑는 함수
   final String Function(T item) labelBuilder;
@@ -25,6 +26,7 @@ class CategoryFilter<T> extends StatefulWidget {
     this.emojiBuilder,
     this.mode = SelectionMode.multiple,
     required this.onSelectionChanged,
+    this.initialSelectedItems,
   });
 
   @override
@@ -33,6 +35,19 @@ class CategoryFilter<T> extends StatefulWidget {
 
 class _CategoryFilterState<T> extends State<CategoryFilter<T>> {
   final Set<int> _selected = {};
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialSelectedItems != null) {
+      for (var item in widget.initialSelectedItems!) {
+        final idx = widget.items.indexOf(item);
+        if (idx != -1) {
+          _selected.add(idx);
+        }
+      }
+    }
+  }
 
   void _onTap(int idx, bool selected) {
     setState(() {

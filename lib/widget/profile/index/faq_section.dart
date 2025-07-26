@@ -24,6 +24,7 @@ class FaqSection extends StatelessWidget {
           items: provider.category,
           labelBuilder: (c) => c.codeName!,
           mode: SelectionMode.single,
+          initialSelectedItems: [provider.category[0]],
           onSelectionChanged: (List<FaqCategoryModel> sel) {
             if (sel.isNotEmpty) {
               print(sel.first.codeName);
