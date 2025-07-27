@@ -54,7 +54,7 @@ class HotTourCard extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: PRIMARY_COLOR,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(screenW * 0.02),
                       ),
                       child: Text(
                         '마감 임박! (${tour.remainPeople}자리 남음)',
