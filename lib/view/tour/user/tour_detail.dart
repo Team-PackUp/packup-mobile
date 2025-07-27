@@ -36,7 +36,7 @@ class TourDetailPage extends StatelessWidget {
                   SizedBox(height: screenH * 0.03),
                   const TourExcludeSection(),
                   SizedBox(height: screenH * 0.03),
-                  const ReviewListSection(seq: 4, ),
+                  const ReviewListSection(seq: 4),
                   SizedBox(height: screenH * 0.03),
                 ],
               ),
