@@ -23,6 +23,7 @@ class HomeBannerCarousel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
 
     final List<BannerItem> banners = [
       const BannerItem(
@@ -55,7 +56,7 @@ class HomeBannerCarousel extends StatelessWidget {
         itemBuilder: (context, index) {
           final banner = banners[index];
           return Padding(
-            padding: const EdgeInsets.only(right: 12),
+            padding: EdgeInsets.only(right: screenW * 0.02),
             child: HomeBanner(
               imagePath: banner.imagePath,
               title: banner.title,

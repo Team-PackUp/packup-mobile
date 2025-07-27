@@ -19,12 +19,14 @@ class HomeBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // 배경 이미지
           Image.asset(
             imagePath,
             width: double.infinity,
@@ -32,16 +34,14 @@ class HomeBanner extends StatelessWidget {
             fit: BoxFit.cover,
           ),
 
-          // 어두운 오버레이
           Container(
             width: double.infinity,
             height: 180,
             color: Colors.black.withOpacity(0.3),
           ),
 
-          // 텍스트 + 버튼
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: EdgeInsets.symmetric(horizontal: screenH * 0.03),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -60,7 +60,7 @@ class HomeBanner extends StatelessWidget {
                   style: const TextStyle(color: Colors.white, fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: screenH * 0.02),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -70,7 +70,7 @@ class HomeBanner extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      padding: EdgeInsets.symmetric(vertical: screenW * 0.02),
                     ),
                     onPressed: onTap,
                     child: Text(

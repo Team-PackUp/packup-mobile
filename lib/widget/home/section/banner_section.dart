@@ -7,8 +7,11 @@ class BannerSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: screenH * 0.01),
       child: HomeBannerCarousel(
         onTapBanner: (index) {
           context.push('/banner/$index');
