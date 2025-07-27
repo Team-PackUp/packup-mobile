@@ -8,18 +8,22 @@ class GuideCard extends StatelessWidget {
   final GuideModelTemp guide;
 
   const GuideCard({super.key, required this.guide});
+
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+
     return InkWell(
       onTap: () {
         context.push('/guide/${guide.seq}');
       },
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(screenH * 0.015),
         decoration: BoxDecoration(
           border: Border.all(color: const Color(0xFFE0E0E0)),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(screenW * 0.02),
           color: Colors.white,
         ),
         child: Row(
@@ -29,7 +33,7 @@ class GuideCard extends StatelessWidget {
               backgroundImage: NetworkImage(guide.image ?? ''),
               radius: 30,
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: screenW * 0.03),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,16 +45,16 @@ class GuideCard extends StatelessWidget {
                       fontSize: 16,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: screenH * 0.01),
                   Rating(
                     rating: guide.guideRating ?? 0.0,
                     reviewCount: guide.tours ?? 0,
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: screenH * 0.01),
                   Text(guide.desc ?? '', style: const TextStyle(fontSize: 13)),
-                  const SizedBox(height: 12),
+                  SizedBox(height: screenH * 0.02),
                   Wrap(
-                    spacing: 8,
+                    spacing: screenW * 0.01,
                     children:
                         guide.languages
                             ?.map((lang) => Tag(label: lang))
