@@ -16,8 +16,11 @@ class CategorySection extends StatelessWidget {
       {'emoji': '🏕', 'label': '자연'},
     ];
 
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: screenH * 0.02),
       child: CategoryFilter<Map<String, String>>(
         items: categories,
         labelBuilder: (cat) => cat['label']!,
