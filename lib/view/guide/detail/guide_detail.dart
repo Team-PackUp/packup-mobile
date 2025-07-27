@@ -4,7 +4,6 @@ import 'package:packup/widget/guide/detail/section/guide_profile_section.dart';
 import 'package:packup/widget/guide/detail/section/guide_review_summary_section.dart';
 import 'package:packup/widget/guide/detail/section/guide_tour_section.dart';
 import 'package:packup/widget/guide/detail/section/review_list_section.dart';
-import 'package:packup/widget/tour/user/review_list.dart';
 import 'package:provider/provider.dart';
 
 import '../../../widget/common/custom_appbar.dart';
