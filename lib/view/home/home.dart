@@ -77,7 +77,7 @@ class _HomeContentState extends State<HomeContent> {
               ],
           body: ListView(
             padding: EdgeInsets.symmetric(
-              horizontal: screenW * 0.01,
+              horizontal: screenW * 0.03,
               vertical: screenH * 0.01,
             ),
             children: [
