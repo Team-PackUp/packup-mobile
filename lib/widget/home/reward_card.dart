@@ -18,12 +18,15 @@ class RewardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+
     return Container(
-      width: 170, // 💡 기존 160 → 180으로 넓힘
-      padding: const EdgeInsets.all(12),
+      width: screenW * 0.2,
+      padding: EdgeInsets.all(screenH * 0.02),
       decoration: BoxDecoration(
         color: BACK_GROUND_COLOR_W,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(screenW * 0.02),
         boxShadow: [
           BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
         ],
@@ -35,7 +38,7 @@ class RewardCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(icon, color: SELECTED, size: 24),
-              const SizedBox(width: 8),
+              SizedBox(width: screenW * 0.02),
               RichText(
                 text: TextSpan(
                   children: [
@@ -60,7 +63,7 @@ class RewardCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: screenH * 0.01),
           Text(
             description,
             style: AppTypographies.get(

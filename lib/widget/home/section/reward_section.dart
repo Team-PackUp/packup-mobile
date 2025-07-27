@@ -26,7 +26,7 @@ class RewardSection extends StatelessWidget {
           subTitle: '적립된 포인트로 다양한 혜택을 누리세요',
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: screenH * 0.02),
           child: Row(
             children: [
               Expanded(
