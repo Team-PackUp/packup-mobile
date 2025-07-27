@@ -1,107 +1,75 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:packup/provider/reply/reply_provider.dart';
-import 'package:packup/widget/common/custom_appbar.dart';
-import 'package:packup/widget/reply/section/reply_list_section.dart';
 import 'package:provider/provider.dart';
+
 import '../../model/reply/reply_model.dart';
+import '../../provider/reply/reply_provider.dart';
+import '../../widget/common/custom_appbar.dart';
+import '../../widget/review/section/reply_list_section.dart';
 
-import '../../widget/reply/reply_card.dart';
-
-class ReplyList extends StatelessWidget {
-
+// 이 위젯은 댓글(리뷰) 전체 보기용
+class ReplyList extends StatefulWidget {
   final int targetSeq;
   final TargetType targetType;
 
-  const ReplyList(
-      {
-        super.key,
-        required this.targetSeq,
-        required this.targetType,
-      }
-      );
+  const ReplyList({
+    super.key,
+    required this.targetSeq,
+    required this.targetType,
+  });
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ReplyProvider.create(
-          targetSeq: targetSeq,
-          targetType: TargetType.replyTour
-      ),
-      child: const ReplyListContent(),
-    );
-  }
+  State<ReplyList> createState() => _ReplyListState();
 }
 
-class ReplyListContent extends StatefulWidget {
-  const ReplyListContent({super.key});
-
-  @override
-  _ReplyListContentState createState() => _ReplyListContentState();
-}
-
-class _ReplyListContentState extends State<ReplyListContent> {
-
-  late ScrollController _scrollController;
+class _ReplyListState extends State<ReplyList> {
+  late final ScrollController _scrollController;
   late ReplyProvider _replyProvider;
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
-    _scrollController.addListener(_scrollListener);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _replyProvider = context.read<ReplyProvider>();
-      await _replyProvider.getReplyList();
-    });
+    _scrollController = ScrollController()..addListener(_onScroll);
   }
 
   @override
-  Future<void> dispose() async {
-    super.dispose();
+  void dispose() {
     _scrollController.dispose();
+    super.dispose();
   }
 
-  void _scrollListener() {
-    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
-      getNoticeListMore();
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent) {
+      _replyProvider.getReplyList();
     }
   }
 
-  getNoticeListMore() async {
-    _replyProvider.getReplyList();
-  }
-
-  Future<void> refreshReplyList() {
-    return _replyProvider.getReplyList(reset: true);
+  Future<void> _onRefresh() async {
+    await _replyProvider.getReplyList(reset: true);
   }
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider<ReplyProvider>(
+      create: (_) => ReplyProvider.create(
+        targetSeq: widget.targetSeq,
+        targetType: widget.targetType,
+      )..getReplyList(),
+      builder: (context, child) {
+        _replyProvider = context.read<ReplyProvider>();
 
-    _replyProvider = context.watch<ReplyProvider>();
-
-    return Scaffold(
-      appBar: CustomAppbar(title: '모든 댓글'),
-      body: Column(
-        children: [
-          Expanded(
+        return Scaffold(
+          appBar: CustomAppbar(title: '모든 댓글'),
+          body: PrimaryScrollController(
+            controller: _scrollController,
             child: RefreshIndicator(
-              onRefresh: refreshReplyList,
-              child: ReplyListSection(
-                  targetSeq: _replyProvider.targetSeq!,
-                  targetType: _replyProvider.targetType!
-              )
+              onRefresh: _onRefresh,
+              child: ReplyListSection(),
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Future<void> refreshReply() async {
-    _replyProvider.getReplyList(reset: true);
-  }
 }
-

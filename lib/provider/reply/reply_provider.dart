@@ -42,7 +42,6 @@ class ReplyProvider extends LoadingProvider {
 
   Future<void> getReplyList({bool reset = false}) async {
     
-    // 강제로 새로고침
     if (reset) {
       _replyList.clear();
       _curPage   = 0;

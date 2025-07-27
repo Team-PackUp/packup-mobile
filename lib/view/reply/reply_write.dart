@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:packup/provider/reply/reply_provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
-import 'package:packup/widget/reply/reply_form.dart';
 
 import '../../model/reply/reply_model.dart';
+import '../../widget/review/reply_form.dart';
 
 class ReplyWrite extends StatelessWidget {
   const ReplyWrite({

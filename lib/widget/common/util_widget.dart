@@ -50,4 +50,37 @@ class CustomButton {
       ),
     );
   }
+
+  static Widget textGestureDetector({
+    required BuildContext context,
+    required VoidCallback onTap,
+    required String label,
+    Color textColor = Colors.blue,
+    double fontSize = 16,
+    FontWeight fontWeight = FontWeight.w600,
+    EdgeInsetsGeometry? padding,
+  }) {
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
+    final effectivePadding = padding ?? EdgeInsets.symmetric(
+      horizontal: screenW * 0.01,
+      vertical: screenH * 0.005,
+    );
+
+    return Padding(
+      padding: effectivePadding,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Text(
+          label,
+          style: TextStyle(
+            color: textColor,
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+          ),
+        ),
+      ),
+    );
+  }
 }
