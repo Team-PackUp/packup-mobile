@@ -7,10 +7,13 @@ class IncludeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+
     return Row(
       children: [
         const Icon(Icons.check, size: 18, color: Colors.green),
-        const SizedBox(width: 8),
+        SizedBox(width: screenW * 0.02),
         Expanded(child: Text(text, style: const TextStyle(fontSize: 14))),
       ],
     );

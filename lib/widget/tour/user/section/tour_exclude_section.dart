@@ -8,7 +8,6 @@ class TourExcludeSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tour = TourDetailModel.mock();
-
     final screenH = MediaQuery.of(context).size.height;
 
     return Column(
@@ -21,7 +20,7 @@ class TourExcludeSection extends StatelessWidget {
         SizedBox(height: screenH * 0.02),
         ...tour.excludeItems.map(
           (item) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
+            padding: EdgeInsets.only(bottom: screenH * 0.01),
             child: ExcludeItem(text: item),
           ),
         ),

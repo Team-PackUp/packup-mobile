@@ -20,7 +20,7 @@ class TourIncludeSection extends StatelessWidget {
         SizedBox(height: screenH * 0.02),
         ...tour.includeItems.map(
           (item) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
+            padding: EdgeInsets.only(bottom: screenH * 0.01),
             child: IncludeItem(text: item),
           ),
         ),
