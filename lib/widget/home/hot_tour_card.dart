@@ -23,7 +23,9 @@ class HotTourCard extends StatelessWidget {
           vertical: screenH * 0.01,
         ),
         elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(screenW * 0.02),
+        ),
         clipBehavior: Clip.hardEdge,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
