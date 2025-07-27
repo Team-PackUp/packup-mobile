@@ -8,6 +8,9 @@ class TourDescription extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -15,19 +18,19 @@ class TourDescription extends StatelessWidget {
           '설명',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: screenH * 0.02),
 
         Text(
           tour.description,
           style: const TextStyle(fontSize: 14, height: 1.5),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: screenH * 0.02),
 
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Icon(Icons.access_time, size: 20, color: Colors.black54),
-            const SizedBox(width: 8),
+            SizedBox(width: screenW * 0.015),
             Text.rich(
               TextSpan(
                 children: [
@@ -47,7 +50,7 @@ class TourDescription extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Icon(Icons.language, size: 20, color: Colors.black54),
-            const SizedBox(width: 8),
+            SizedBox(width: screenW * 0.015),
             Text.rich(
               TextSpan(
                 children: [
@@ -61,7 +64,7 @@ class TourDescription extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: screenH * 0.01),
       ],
     );
   }
