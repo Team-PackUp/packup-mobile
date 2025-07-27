@@ -18,7 +18,7 @@ class GuideProfileCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(screenH * 0.02),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,7 +27,7 @@ class GuideProfileCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CircleAvatar(
-                radius: 32,
+                radius: screenH * 0.035,
                 backgroundImage: NetworkImage(
                   guide.guideAvatarPath?.isNotEmpty == true
                       ? guide.guideAvatarPath!
@@ -46,7 +46,6 @@ class GuideProfileCard extends StatelessWidget {
                         fontSize: 18,
                       ),
                     ),
-                    const SizedBox(height: 6),
                     Rating(rating: guide.guideRating ?? 0.0, reviewCount: 37),
                   ],
                 ),
