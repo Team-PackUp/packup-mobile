@@ -25,7 +25,10 @@ class GuideCard extends StatelessWidget {
         clipBehavior: Clip.hardEdge,
         child: SizedBox(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            padding: EdgeInsets.symmetric(
+              horizontal: screenH * 0.02,
+              vertical: screenW * 0.03,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -61,7 +64,7 @@ class GuideCard extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: SELECTED,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(screenW * 0.04),
                   ),
                   child: Text(
                     '${guide.tours ?? 0}개 투어 진행중',
