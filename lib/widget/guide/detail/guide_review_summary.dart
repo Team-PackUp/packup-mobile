@@ -69,10 +69,10 @@ class GuideReviewSummary extends StatelessWidget {
           width: double.infinity,
           child: OutlinedButton(
             style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
+              padding: EdgeInsets.symmetric(vertical: screenW * 0.02),
               side: BorderSide(color: Colors.grey.shade300),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(screenH * 0.02),
               ),
             ),
             onPressed: () {},

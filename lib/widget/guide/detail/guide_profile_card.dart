@@ -67,8 +67,8 @@ class GuideProfileCard extends StatelessWidget {
           SizedBox(height: screenH * 0.02),
 
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: screenW * 0.01,
+            runSpacing: screenW * 0.01,
             children:
                 guide.languages?.map((lang) => Tag(label: lang)).toList() ?? [],
           ),

@@ -23,7 +23,9 @@ class GuideTourCard extends StatelessWidget {
           vertical: screenH * 0.01,
         ),
         elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(screenH * 0.02),
+        ),
         clipBehavior: Clip.hardEdge,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +56,7 @@ class GuideTourCard extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: PRIMARY_COLOR,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(screenH * 0.02),
                       ),
                       child: Text(
                         '마감 임박! (${tour.remainPeople}자리 남음)',
