@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/model/tour/tour_model.dart';
+import 'package:packup/widget/common/custom_empty_list.dart';
 import 'package:packup/widget/profile/reservation_card.dart';
 
 class ReservationList extends StatelessWidget {
@@ -17,7 +18,11 @@ class ReservationList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (tourList.isEmpty) return const SizedBox.shrink();
+    if (tourList.isEmpty) {
+      return CustomEmptyList(
+        message: '예약중인 투어가 존재 하지 않습니다.', icon: Icons.airplanemode_on_sharp
+    );
+    }
 
     return Column(
       children: tourList.map((tour) {

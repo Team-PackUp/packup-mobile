@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/model/tour/tour_model.dart';
 
+import '../../common/util_widget.dart';
 import '../reservation_list.dart';
 
 class RecentReservationSection extends StatelessWidget {
@@ -23,11 +24,12 @@ class RecentReservationSection extends StatelessWidget {
             Expanded(
                 child: Text('최근 예약 내역',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: w * 0.045))),
-            InkWell(
+            CustomButton.textGestureDetector(
+                context: context,
                 onTap: () {
                   context.push("/reservation/list");
                 },
-                child: Text('모두 보기', style: TextStyle(fontSize: w * 0.032, color: Colors.grey))),
+                label: '모두보기'),
           ],
         ),
         SizedBox(height: h * 0.015),

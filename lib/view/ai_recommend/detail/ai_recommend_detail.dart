@@ -62,12 +62,11 @@ class _AiRecommendDetailContentState extends State<AiRecommendDetailContent> {
         title: 'AI 추천',
         arrowFlag: false,
         alert: AlertBell(),
-        profile: CircleProfileImage(radius: screenH * 0.02,),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.03,
+              horizontal: screenW * 0.02,
               vertical: screenH * 0.01,
             ),
             child: CustomSearch(onTap: () => context.push('/search/all')),

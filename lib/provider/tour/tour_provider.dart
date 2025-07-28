@@ -12,6 +12,9 @@ class TourProvider extends LoadingProvider {
   // 투어 목록
   List<TourModel> _tourList = [];
 
+  // 검색용
+  List<TourModel> _originalList = [];
+
   /// 현재 불러온 전체 투어 목록
   List<TourModel> get tourList => _tourList;
 
@@ -43,6 +46,7 @@ class TourProvider extends LoadingProvider {
     if (refresh) {
       // 새로고침: 상태 초기화
       _tourList = [];
+      _originalList = [];
       _currentPage = 1;
       _hasNextPage = true;
       notifyListeners(); // UI 갱신
@@ -66,6 +70,7 @@ class TourProvider extends LoadingProvider {
 
         // 응답 데이터 누적
         _tourList.addAll(page.content);
+        _originalList.addAll(_tourList);
         _hasNextPage = !page.last;
         _currentPage++;
 
@@ -76,5 +81,18 @@ class TourProvider extends LoadingProvider {
         _isFetching = false;
       }
     });
+  }
+
+  void filterTourList(String keyword) {
+    if (keyword.isEmpty) {
+      _tourList = List.from(_originalList);
+    } else {
+      _tourList = _originalList.where((tour) {
+        final title = tour.tourTitle ?? '';
+        final guide = tour.guide?.guideName ?? '';
+        return title.contains(keyword) || guide.contains(keyword);
+      }).toList();
+    }
+    notifyListeners();
   }
 }
