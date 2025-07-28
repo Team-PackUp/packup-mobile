@@ -44,7 +44,7 @@ class _ReplyListState extends State<ReplyList> {
         controller: _scrollController,
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: screenW * 0.03,
+            horizontal: screenW * 0.04,
             vertical: screenH * 0.01,
           ),
           child: ReplyListSection(

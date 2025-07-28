@@ -24,27 +24,23 @@ class ReplyListView extends StatelessWidget {
     itemBuilder(BuildContext context, int index) {
       final reply = replyList[index];
 
-      return Card(
-        color: Colors.transparent,
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        child: InkWell(
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: screenH * 0.01),
+        child: GestureDetector(
           onTap: () async {
             final moved = await context.push<bool>('/reply_write/${reply.seq}');
             if (moved == true) refreshReply();
           },
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: screenH * 0.02),
-            child: ReplyCard(
-              nickName: reply.nickName!,
-              avatarUrl: reply.profileImagePath,
-              content: reply.content!,
-              point: reply.point!,
-              createdAt: reply.createdAt!,
-            ),
+          child: ReplyCard(
+            nickName: reply.nickName!,
+            avatarUrl: reply.profileImagePath,
+            content: reply.content!,
+            point: reply.point!,
+            createdAt: reply.createdAt!,
           ),
         ),
       );
+
     }
 
     if (useListView) {
