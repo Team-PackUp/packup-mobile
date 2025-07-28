@@ -36,7 +36,9 @@ class RecentReservationSection extends StatelessWidget {
         ReservationList(
           w: w,
           h: h,
-          tourList: tourList,),
+          tourList: tourList,
+          scrollable: false
+        ),
       ],
     );
   }

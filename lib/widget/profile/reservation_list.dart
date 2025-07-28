@@ -10,12 +10,15 @@ class ReservationList extends StatelessWidget {
   final double h;
   final double w;
 
+  final bool scrollable;
+
   const ReservationList({
     super.key,
     required this.tourList,
     this.scrollController,
     required this.h,
     required this.w,
+    this.scrollable = true,
   });
 
   @override
@@ -27,20 +30,33 @@ class ReservationList extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
-      controller: scrollController,
-      shrinkWrap: false,
-      itemCount: tourList.length,
-      itemBuilder: (context, index) {
-        final tour = tourList[index];
-        return Padding(
-          padding: EdgeInsets.only(bottom: h * 0.012),
-          child: GestureDetector(
-            onTap: () => context.push('/tour/${tour.seq}'),
-            child: ReservationCard(tour: tour, w: w, h: h),
-          ),
-        );
-      },
-    );
+    if (scrollable) {
+      return ListView.builder(
+        controller: scrollController,
+        itemCount: tourList.length,
+        itemBuilder: (context, index) {
+          final tour = tourList[index];
+          return Padding(
+            padding: EdgeInsets.only(bottom: h * 0.012),
+            child: GestureDetector(
+              onTap: () => context.push('/tour/${tour.seq}'),
+              child: ReservationCard(tour: tour, w: w, h: h),
+            ),
+          );
+        },
+      );
+    } else {
+      return Column(
+        children: tourList.map((tour) {
+          return Padding(
+            padding: EdgeInsets.only(bottom: h * 0.012),
+            child: GestureDetector(
+              onTap: () => context.push('/tour/${tour.seq}'),
+              child: ReservationCard(tour: tour, w: w, h: h),
+            ),
+          );
+        }).toList(),
+      );
+    }
   }
 }
