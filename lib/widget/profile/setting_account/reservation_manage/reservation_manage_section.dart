@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 
+import '../../reservation_list.dart';
+
 class ReservationManageSection extends StatefulWidget {
   const ReservationManageSection({super.key});
 
