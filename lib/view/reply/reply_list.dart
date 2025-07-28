@@ -35,14 +35,23 @@ class _ReplyListState extends State<ReplyList> {
 
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: CustomAppbar(title: '모든 댓글'),
       body: PrimaryScrollController(
         controller: _scrollController,
-        child: ReplyListSection(
-          targetSeq: widget.targetSeq,
-          targetType: widget.targetType,
-          scrollController: _scrollController,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: screenW * 0.03,
+            vertical: screenH * 0.01,
+          ),
+          child: ReplyListSection(
+            targetSeq: widget.targetSeq,
+            targetType: widget.targetType,
+            scrollController: _scrollController,
+          ),
         ),
       ),
     );
