@@ -1,9 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import '../../model/reply/reply_model.dart';
-import '../../provider/reply/reply_provider.dart';
 import '../../widget/common/custom_appbar.dart';
 import '../../widget/review/section/reply_list_section.dart';
 
@@ -24,12 +20,11 @@ class ReplyList extends StatefulWidget {
 
 class _ReplyListState extends State<ReplyList> {
   late final ScrollController _scrollController;
-  late ReplyProvider _replyProvider;
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController()..addListener(_onScroll);
+    _scrollController = ScrollController();
   }
 
   @override
@@ -38,38 +33,18 @@ class _ReplyListState extends State<ReplyList> {
     super.dispose();
   }
 
-  void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent) {
-      _replyProvider.getReplyList();
-    }
-  }
-
-  Future<void> _onRefresh() async {
-    await _replyProvider.getReplyList(reset: true);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ReplyProvider>(
-      create: (_) => ReplyProvider.create(
-        targetSeq: widget.targetSeq,
-        targetType: widget.targetType,
-      )..getReplyList(),
-      builder: (context, child) {
-        _replyProvider = context.read<ReplyProvider>();
-
-        return Scaffold(
-          appBar: CustomAppbar(title: '모든 댓글'),
-          body: PrimaryScrollController(
-            controller: _scrollController,
-            child: RefreshIndicator(
-              onRefresh: _onRefresh,
-              child: ReplyListSection(),
-            ),
-          ),
-        );
-      },
+    return Scaffold(
+      appBar: CustomAppbar(title: '모든 댓글'),
+      body: PrimaryScrollController(
+        controller: _scrollController,
+        child: ReplyListSection(
+          targetSeq: widget.targetSeq,
+          targetType: widget.targetType,
+          scrollController: _scrollController,
+        ),
+      ),
     );
   }
-
 }

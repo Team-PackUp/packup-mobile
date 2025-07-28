@@ -26,14 +26,14 @@ class _ReviewListSectionState extends State<ReviewListSection> {
   }
 
   Future<void> _loadTopReplies() async {
-    final tempProvider = ReplyProvider.create(
+    final _replyProvider = ReplyProvider.create(
       targetSeq: widget.seq,
       targetType: TargetType.replyTour,
     );
 
-    await tempProvider.getReplyList();
+    await _replyProvider.getReplyList();
     setState(() {
-      _replyList = tempProvider.replyList.take(10).toList();
+      _replyList = _replyProvider.replyList.take(10).toList();
     });
   }
 
@@ -59,8 +59,9 @@ class _ReviewListSectionState extends State<ReviewListSection> {
           ],
         ),
         ReplyListView(
-            replyList: _replyList,
-            useListView: false // Column 위젯 사용
+          replyList: _replyList,
+          useListView: false,
+          refreshReply: _loadTopReplies,
         ),
       ],
     );

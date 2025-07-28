@@ -34,6 +34,7 @@ class ReplyProvider extends LoadingProvider {
 
   int _totalPage = 1;
   int _curPage = 0;
+  bool _isLoading = false;
 
   List<ReplyModel> get replyList => _replyList;
   ReplyModel? get currentReply   => replyModel;
@@ -41,14 +42,16 @@ class ReplyProvider extends LoadingProvider {
   int get curPage                => _curPage;
 
   Future<void> getReplyList({bool reset = false}) async {
-    
+    if (_isLoading) return;
+    if (!reset && _totalPage <= _curPage) return;
+
+    _isLoading = true;
+
     if (reset) {
-      _replyList.clear();
-      _curPage   = 0;
+      _replyList = [];
+      _curPage = 0;
       _totalPage = 1;
     }
-
-    if (_totalPage <= _curPage) return;
 
     await LoadingService.run(() async {
       final reply = ReplyModel(
@@ -56,12 +59,10 @@ class ReplyProvider extends LoadingProvider {
         targetType: targetType!,
       );
 
-      final response = await _service.getReplyList(
-        _curPage,
-        replyModel: reply,
-      );
+      final response = await _service.getReplyList(_curPage, replyModel: reply);
 
-      final page = PageModel<ReplyModel>.fromJson(response.response,
+      final page = PageModel<ReplyModel>.fromJson(
+        response.response,
             (e) => ReplyModel.fromJson(e),
       );
 
@@ -71,7 +72,10 @@ class ReplyProvider extends LoadingProvider {
 
       notifyListeners();
     });
+
+    _isLoading = false;
   }
+
 
 
   Future<void> getReply(int seq) async {
