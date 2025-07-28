@@ -65,23 +65,23 @@ class GuideReviewSummary extends StatelessWidget {
         ),
 
         SizedBox(height: screenH * 0.02),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              padding: EdgeInsets.symmetric(vertical: screenW * 0.02),
-              side: BorderSide(color: Colors.grey.shade300),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(screenH * 0.02),
-              ),
-            ),
-            onPressed: () {},
-            child: Text(
-              "Write a Review",
-              style: TextStyle(fontWeight: FontWeight.w500, color: SELECTED),
-            ),
-          ),
-        ),
+        // SizedBox(
+        //   width: double.infinity,
+        //   child: OutlinedButton(
+        //     style: OutlinedButton.styleFrom(
+        //       padding: EdgeInsets.symmetric(vertical: screenW * 0.02),
+        //       side: BorderSide(color: Colors.grey.shade300),
+        //       shape: RoundedRectangleBorder(
+        //         borderRadius: BorderRadius.circular(screenH * 0.02),
+        //       ),
+        //     ),
+        //     onPressed: () {},
+        //     child: Text(
+        //       "Write a Review",
+        //       style: TextStyle(fontWeight: FontWeight.w500, color: SELECTED),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
