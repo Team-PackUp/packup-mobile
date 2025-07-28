@@ -1,14 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
-import 'package:packup/widget/profile/reservation_list.dart';
 
-import '../../../common/custom_empty_list.dart';
-import '../../reservation_card.dart';
-
-class ReservationManageSection extends StatelessWidget {
+class ReservationManageSection extends StatefulWidget {
   const ReservationManageSection({super.key});
+
+  @override
+  State<ReservationManageSection> createState() => _ReservationManageSectionState();
+}
+
+class _ReservationManageSectionState extends State<ReservationManageSection> {
+  late final ScrollController _scrollController;
+  late TourProvider _tourProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
+      _tourProvider.getTourList();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,41 +43,32 @@ class ReservationManageSection extends StatelessWidget {
 
     if (isLoading) return const SizedBox.shrink();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '모든 예약 내역',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: screenW * 0.045,
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: screenW * 0.03,
+        vertical: screenH * 0.01,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '모든 예약 내역',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: screenW * 0.045,
+            ),
           ),
-        ),
-        SizedBox(height: screenH * 0.02),
-
-        if (tourList.isEmpty)
-          const CustomEmptyList(
-            message: '예약 중인 투어가 존재하지 않습니다.',
-            icon: Icons.airplanemode_on_sharp,
-          )
-        else
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: tourList.length,
-            padding: EdgeInsets.zero,
-            itemBuilder: (ctx, idx) {
-              final tour = tourList[idx];
-              return Padding(
-                padding: EdgeInsets.only(bottom: screenH * 0.012),
-                child: GestureDetector(
-                  onTap: () => context.push('/tour/${tour.seq}'),
-                  child: ReservationCard(tour: tour, w: screenW, h: screenH),
-                ),
-              );
-            },
+          SizedBox(height: screenH * 0.02),
+          Expanded(
+            child: ReservationList(
+              w: screenW,
+              h: screenH,
+              tourList: tourList,
+              scrollController: _scrollController,
+            ),
           ),
-      ],
+        ],
+      ),
     );
   }
 }

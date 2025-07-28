@@ -33,7 +33,10 @@ class RecentReservationSection extends StatelessWidget {
           ],
         ),
         SizedBox(height: h * 0.015),
-        ReservationList(w: w, h: h, tourList: tourList,),
+        ReservationList(
+          w: w,
+          h: h,
+          tourList: tourList,),
       ],
     );
   }

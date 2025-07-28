@@ -41,10 +41,6 @@ class _ReservationManageContent extends State<ReservationManageContent> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context.watch<TourProvider>().isLoading;
-    final isLoading2 = context.watch<LoadingProvider>().isLoading;
-    final screenW = MediaQuery.of(context).size.width;
-    final screenH = MediaQuery.of(context).size.height;
 
     return Scaffold(
         appBar: CustomAppbar(
@@ -59,20 +55,7 @@ class _ReservationManageContent extends State<ReservationManageContent> {
               },
             ),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                padding: EdgeInsets.symmetric(horizontal: screenW * 0.041),
-                children: [
-                  if (!isLoading && !isLoading2)
-                    const ReservationManageSection(),
-                ],
-              ),
-            ),
-          ],
-        ),
+        body: const ReservationManageSection(),
     );
   }
 }
