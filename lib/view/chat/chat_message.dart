@@ -41,7 +41,6 @@ class ChatMessage extends StatelessWidget {
   }
 }
 
-
 class ChatMessageContent extends StatefulWidget {
   final int chatRoomSeq;
   final String title;
@@ -76,11 +75,11 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _chatMessageProvider = context.read<ChatMessageProvider>();
     });
-
   }
 
   _scrollListener() {
-    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
+    if (_scrollController.position.maxScrollExtent ==
+        _scrollController.position.pixels) {
       if (_chatMessageProvider.isLoading) return;
       getChatMessageMore();
     }
@@ -106,7 +105,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     return Scaffold(
       appBar: CustomAppbar(
         title: widget.title,
-        profile: CircleProfileImage(radius: screenH * 0.02,),
+        profile: CircleProfileImage(radius: screenH * 0.02),
       ),
       body: Column(
         children: [
@@ -123,11 +122,16 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
               ),
             ),
           ),
-          ChatMessageInput(
+          SafeArea(
+            top: false,
+            left: false,
+            right: false,
+            child: ChatMessageInput(
               controller: _controller,
               onPickImage: _pickImage,
-              onSend: _sendMessage
-          )
+              onSend: _sendMessage,
+            ),
+          ),
         ],
       ),
     );
@@ -157,14 +161,13 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     _handleAfterSendChatMessage(chat);
   }
 
-
   void _sendFile(XFile imageFile) async {
     FileModel fileModel = await _chatMessageProvider.sendFile(imageFile);
     if (fileModel.path != null) {
       final chat = ChatMessageModel(
-          message: "${fileModel.path}/${fileModel.encodedName}",
-          chatRoomSeq: widget.chatRoomSeq,
-          fileFlag: 'Y',
+        message: "${fileModel.path}/${fileModel.encodedName}",
+        chatRoomSeq: widget.chatRoomSeq,
+        fileFlag: 'Y',
       );
 
       _sendMessage(chat);
@@ -183,7 +186,9 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
   }
 
   Future<void> _pickImage() async {
-    final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedImage = await _picker.pickImage(
+      source: ImageSource.gallery,
+    );
     if (pickedImage != null) {
       _sendFile(pickedImage);
     }
