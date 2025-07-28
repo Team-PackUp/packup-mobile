@@ -7,7 +7,12 @@ class ProfileSection extends StatelessWidget {
   final double w;
   final double h;
 
-  const ProfileSection({super.key, required this.userName, required this.w, required this.h});
+  const ProfileSection({
+    super.key,
+    required this.userName,
+    required this.w,
+    required this.h,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +22,7 @@ class ProfileSection extends StatelessWidget {
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(w * 0.03),
-          side: BorderSide(
-            color: Colors.grey.shade50,
-            width: 1,
-          ),
+          side: BorderSide(color: Colors.grey.shade50, width: 1),
         ),
         child: Padding(
           padding: EdgeInsets.all(w * 0.04),
@@ -45,7 +47,10 @@ class ProfileSection extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton.icon(
                       icon: Icon(Icons.edit, size: w * 0.045),
-                      label: Text('프로필 수정', style: TextStyle(fontSize: w * 0.035)),
+                      label: Text(
+                        '프로필 수정',
+                        style: TextStyle(fontSize: w * 0.035),
+                      ),
                       onPressed: () {
                         context.push('/profile/profile_modify');
                       },
@@ -57,8 +62,18 @@ class ProfileSection extends StatelessWidget {
                   SizedBox(width: w * 0.02),
                   Expanded(
                     child: OutlinedButton.icon(
-                      icon: Icon(Icons.refresh, size: w * 0.05, color: Colors.white),
-                      label: Text('호스트 모드로 전환', style: TextStyle(fontSize: w * 0.035, color: Colors.white)),
+                      icon: Icon(
+                        Icons.refresh,
+                        size: w * 0.05,
+                        color: Colors.white,
+                      ),
+                      label: Text(
+                        '가이드 모드로 전환',
+                        style: TextStyle(
+                          fontSize: w * 0.035,
+                          color: Colors.white,
+                        ),
+                      ),
                       onPressed: () {},
                       style: OutlinedButton.styleFrom(
                         backgroundColor: Colors.black,
@@ -68,7 +83,7 @@ class ProfileSection extends StatelessWidget {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
