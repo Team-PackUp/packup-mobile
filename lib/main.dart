@@ -102,7 +102,9 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ChatRoomProvider()),
         ChangeNotifierProvider(create: (_) => AlertCenterProvider()),
         ChangeNotifierProvider.value(value: userProvider),
-        ChangeNotifierProvider.value(value: loadingNotifier),
+        ChangeNotifierProvider.value(
+          value: loadingNotifier,
+        ), // value / create 차이ㄹ
       ],
       child: PackUp(),
     ),
@@ -114,7 +116,6 @@ void main() async {
 }
 
 class PackUp extends StatelessWidget {
-
   const PackUp({Key? key}) : super(key: key);
 
   static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(

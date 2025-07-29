@@ -5,7 +5,6 @@ import 'package:packup/provider/tour/tour_provider.dart';
 import 'package:packup/model/tour/tour_model.dart';
 import 'package:packup/view/tour/guide/edit/edit.dart';
 
-/// 투어 목록 화면 (무한 스크롤 및 편집/추가 기능 포함)
 class GuideTourList extends StatelessWidget {
   const GuideTourList({super.key});
 
