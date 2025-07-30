@@ -32,6 +32,7 @@ class ReservationList extends StatelessWidget {
 
     if (scrollable) {
       return ListView.builder(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         controller: scrollController,
         itemCount: tourList.length,
         itemBuilder: (context, index) {
