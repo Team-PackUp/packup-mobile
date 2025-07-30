@@ -69,6 +69,8 @@ dependencies:
   flutter_spinkit: ^5.1.0
   photo_view: ^0.15.0
   marquee: ^2.3.0
+  smooth_page_indicator: ^1.2.1
+  carousel_slider: ^5.1.1
 
 dev_dependencies:
   flutter_native_splash: ^2.3.10

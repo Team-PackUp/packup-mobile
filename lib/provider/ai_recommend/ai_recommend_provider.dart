@@ -79,6 +79,7 @@ class AIRecommendProvider extends LoadingProvider {
     await LoadingService.run(() async {
       final res  = await _service.getRecommendPopular(page: _curPage, count: count);
       final data = res.response as Map<String, dynamic>;
+      print(data);
 
       final popularPage = PageModel<RecommendTourModel>.fromJson(
         data['popular'] as Map<String, dynamic>,

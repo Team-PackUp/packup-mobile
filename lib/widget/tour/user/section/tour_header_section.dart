@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:packup/model/tour/tour_detail_model.dart';
-import 'package:packup/widget/tour/user/tour_image_card.dart';
 import 'package:packup/widget/tour/user/tour_meta_card.dart';
+
+import '../tour_image_list.dart';
 
 class TourHeaderSection extends StatelessWidget {
   const TourHeaderSection({super.key});
@@ -13,7 +14,7 @@ class TourHeaderSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TourImageCard(tour: tour),
+        TourImageList(toursImageUrl: tour.imageUrl),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           child: TourMetaCard(tour: tour),

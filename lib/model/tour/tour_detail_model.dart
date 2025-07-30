@@ -1,6 +1,6 @@
 class TourDetailModel {
   final String title;
-  final String imageUrl;
+  final List<String> imageUrl;
   final double rating;
   final int reviewCount;
   final List<String> tags;
@@ -26,7 +26,12 @@ class TourDetailModel {
   static TourDetailModel mock() {
     return TourDetailModel(
       title: '인사동 & 북촌 걷기 투어',
-      imageUrl: 'assets/image/background/jeonju.jpg',
+      imageUrl: [
+        'assets/image/background/jeonju.jpg',
+        'assets/image/background/busan.jpg',
+        'assets/image/background/daejeon.jpg',
+        'assets/image/background/IMG_5607.GIF',
+      ],
       rating: 4.8,
       reviewCount: 150,
       tags: ['Culture', 'History', 'Walking Tour', 'Seoul'],
