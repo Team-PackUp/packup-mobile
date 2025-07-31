@@ -7,6 +7,7 @@ import 'package:packup/view/profile/profile_index.dart';
 import 'package:packup/view/home/home.dart';
 
 import '../common/deep_link/handle_router.dart';
+import '../widget/common/custom_map.dart';
 import 'ai_recommend/ai_recommend.dart';
 
 class Index extends StatefulWidget {
@@ -88,7 +89,7 @@ class _IndexState extends State<Index> {
       case 0:
         return const AIRecommend(); // AI 추천
       case 1:
-        return const Like(); // 이건 Like인가? 아니면 Reservation?
+        return CustomMap(); // 이건 Like인가? 아니면 Reservation?
       case 2:
         return const Home(); // 나중에 이름 Home 으로 바꾸는게 직관적
       case 3:

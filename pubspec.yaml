@@ -71,6 +71,8 @@ dependencies:
   marquee: ^2.3.0
   smooth_page_indicator: ^1.2.1
   carousel_slider: ^5.1.1
+  google_maps_flutter: ^2.12.3
+  geolocator: ^14.0.2
 
 dev_dependencies:
   flutter_native_splash: ^2.3.10
