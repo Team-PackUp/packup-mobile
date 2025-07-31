@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:packup/Const/color.dart';
+import 'package:packup/widget/common/alert_bell.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import '../../../widget/common/circle_profile_image.dart';
 import '../../../widget/common/util_widget.dart';
@@ -22,7 +23,7 @@ class ProfileModify extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppbar(
         title: '프로필 수정',
-        profile: CircleProfileImage(radius: screenH * 0.02,)
+        alert: AlertBell()
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,

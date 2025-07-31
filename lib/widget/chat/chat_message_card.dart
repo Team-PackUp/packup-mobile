@@ -1,10 +1,12 @@
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:packup/widget/common/circle_profile_image.dart';
-import 'package:packup/widget/common/custom_image_viewer.dart';
 import 'package:packup/widget/common/custom_network_image_ratio.dart';
+import 'package:path/path.dart';
 
 import '../../common/util.dart';
 import '../../const/color.dart';
+import '../common/image_viewer/image_viewer.dart';
 
 class ChatMessageCard extends StatelessWidget {
   final String message;
@@ -37,20 +39,34 @@ class ChatMessageCard extends StatelessWidget {
       final String heroTag = createTime + message;   // 고유 태그
 
       final imageWidget = InkWell(
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+          final resultIndex = await Navigator.push<int>(
             context,
             PageRouteBuilder(
               opaque: false,
-              transitionDuration: const Duration(milliseconds: 250),
-              reverseTransitionDuration: const Duration(milliseconds: 200),
-              pageBuilder: (_, __, ___) =>
-                  CustomImageViewer(imageUrl: imageUrl),
+              barrierColor: Colors.transparent,
+              transitionDuration: const Duration(milliseconds: 300),
+              reverseTransitionDuration: const Duration(milliseconds: 300),
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return ImageViewer(
+                  imageUrls: [imageUrl],
+                  initialIndex: 0,
+                  onIndexChanged: (updatedIndex) {
+                    // setState(() {
+                    //   activeIndex = updatedIndex;
+                    // });
+                  },
+                  transitionAnimation: animation,
+                );
+              },
+              transitionsBuilder: (_, animation, __, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
             ),
           );
         },
         child: Hero(
-          tag: heroTag,                               // 동일 태그
+          tag: heroTag,
           child: SizedBox(
             width: screenW * 0.4,
             child: CustomNetworkImageRatio(imageUrl: imageUrl),

@@ -61,7 +61,12 @@ class CustomSliverAppBar extends StatelessWidget {
         if (profile != null)
           Padding(
             padding: EdgeInsets.only(right: screenW * 0.05),
-            child: profile!,
+            child: GestureDetector(
+              onTap: () {
+                context.push('/profile/profile_modify');
+              },
+              child: profile!,
+            ),
           ),
       ],
       bottom: bottom,
