@@ -25,6 +25,7 @@ class ImageSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenH = MediaQuery.of(context).size.height;
+    bool infiniteScrollFlag = images.length > 1;
 
     return Stack(
       children: [
@@ -45,7 +46,7 @@ class ImageSlider extends StatelessWidget {
             initialPage: activeIndex,
             height: double.infinity,
             viewportFraction: 1.0,
-            enableInfiniteScroll: true,
+            enableInfiniteScroll: infiniteScrollFlag,
             onPageChanged: (index, reason) => onPageChanged(index),
           ),
         ),
