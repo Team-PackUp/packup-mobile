@@ -70,15 +70,15 @@ class ChatRoomCard extends StatelessWidget {
                             ),
                           ),
                         if (unReadCount != "0") ...[
-                          SizedBox(width: screenW * 0.05),
+                          SizedBox(width: screenW * 0.02),
                           Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: screenW * 0.02,
-                                vertical: screenH * 0.015
+                                horizontal: screenW * 0.04,
+                                vertical: screenH * 0.001
                             ),
                             decoration: BoxDecoration(
                               color: SELECTED,
-                              borderRadius: BorderRadius.circular(screenW * 0.065,),
+                              borderRadius: BorderRadius.circular(screenW,),
                             ),
                             child: Text(
                               unReadCount,
