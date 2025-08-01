@@ -63,6 +63,17 @@
 			<string>comgoogleoauth2</string>
 			<string>com.googleusercontent.apps.413154186328-vgu30o62g4iq90oiivhd541msavb0175</string>
 		</array>
+
+		<!-- Google Map -->
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>이 앱은 현재 위치를 사용하여 지도를 표시합니다.</string>
+
+        <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+        <string>이 앱은 백그라운드에서도 위치를 사용할 수 있습니다.</string>
+
+        <key>NSLocationAlwaysUsageDescription</key>
+        <string>위치 기반 서비스를 백그라운드에서도 제공합니다.</string>
+
 		<!-- 아래는 개발할때만 사용 -->
 		<key>NSAppTransportSecurity</key>
 		<dict>

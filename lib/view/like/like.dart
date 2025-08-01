@@ -88,6 +88,13 @@ class Like extends StatelessWidget {
               },
               child: const Text('댓글 신규 작성'),
             ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                context.push('/map');
+              },
+              child: const Text('구글 지도 유료인 것 같은데?'),
+            ),
           ],
         ),
       ),
