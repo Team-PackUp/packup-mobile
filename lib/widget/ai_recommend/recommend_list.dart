@@ -30,7 +30,7 @@ class RecommendList extends StatelessWidget {
         final cardWidth = (width - (columns - 1) * (screenW / 60)) / columns;
 
         return SizedBox(
-          height: screenH * .32,
+          height: screenH * .35,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: tours.length,
