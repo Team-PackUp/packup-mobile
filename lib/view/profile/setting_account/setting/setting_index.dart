@@ -12,7 +12,7 @@ class SettingIndex extends StatelessWidget {
     return Scaffold(
         appBar: CustomAppbar(
         arrowFlag: false,
-        title: '환경설정',
+        title: '앱 설정',
         alert: AlertBell(),
     ),
     body: const SettingIndexSection()

@@ -12,7 +12,6 @@ import 'package:packup/view/index.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
 import 'package:packup/view/profile/profile_modify/profile_modify.dart';
 import 'package:packup/view/profile/setting_account/reservation_manage/reservation_manage.dart';
-import 'package:packup/view/profile/setting_account/setting/push_setting.dart';
 import 'package:packup/view/profile/setting_account/setting/setting_index.dart';
 import 'package:packup/view/reply/reply_write.dart';
 import 'package:packup/view/reservation/reservation.dart';
@@ -27,6 +26,7 @@ import '../view/ai_recommend/detail/ai_recommend_detail.dart';
 import '../view/alert_center/alert_center_list.dart';
 import '../view/profile/setting_account/notice/notice_list.dart';
 import '../view/profile/setting_account/notice/notice_view.dart';
+import '../view/profile/setting_account/setting/setting_push.dart';
 import '../view/reply/reply_list.dart';
 import '../view/home/home.dart';
 
@@ -224,7 +224,7 @@ GoRouter createRouter(UserProvider userProvider) {
         path: '/profile/push-setting',
         name: 'pushSetting',
         builder: (context, state) {
-          return PushSetting();
+          return SettingPush();
         },
       ),
       GoRoute(

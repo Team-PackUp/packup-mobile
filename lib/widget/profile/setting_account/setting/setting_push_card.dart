@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class PushSettingCard extends StatelessWidget {
+class SettingPushCard extends StatelessWidget {
   final String title;
   final String? subtitle;
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  const PushSettingCard({
+  const SettingPushCard({
     super.key,
     required this.title,
     this.subtitle,

@@ -60,7 +60,7 @@ class SettingIndexSection extends StatelessWidget {
         ),
 
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenW * 0.04),
+          padding: EdgeInsets.symmetric(horizontal: screenW * 0.02),
           child: TextButton.icon(
             icon: Icon(Icons.delete_forever, color: Colors.red),
             label: Text(
