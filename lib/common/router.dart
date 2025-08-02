@@ -217,6 +217,13 @@ GoRouter createRouter(UserProvider userProvider) {
         },
       ),
       GoRoute(
+        path: '/profile/push-setting',
+        name: 'settingIndex',
+        builder: (context, state) {
+          return SettingIndex();
+        },
+      ),
+      GoRoute(
         path: '/error',
         name: 'error',
         builder: (context, state) {
