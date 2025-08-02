@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:packup/common/util.dart';
 import 'package:packup/const/const.dart';
 import 'package:packup/model/common/user_model.dart';
@@ -16,7 +15,7 @@ class UserProvider with ChangeNotifier {
   late SocialLogin socialLogin;
   UserModel? _userModel;
   ResultModel? _resultModel;
-  late bool _isLoading;
+  bool _isLoading = false;
   String? _socialAccessToken = '';
   late bool _isResult;
   bool isInitialized = false;
@@ -76,14 +75,11 @@ class UserProvider with ChangeNotifier {
     } catch (e) {
       logger(e.toString(), 'DEBUG');
     } finally {
+
+      await initLoginStatus();
+
       _isLoading = false;
       notifyListeners();
-
-      // 디버깅
-      print('aaaaaaaaaaaaaaaaaaaa');
-      final token = await getToken(ACCESS_TOKEN);
-      print(token);
-      print('aaaaaaaaaaaaaaaaaaaa');
     }
   }
 
@@ -123,15 +119,22 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> logout() async {
-    await socialLogin.logout();
-    await deleteToken(ACCESS_TOKEN);
-    await deleteToken(REFRESH_TOKEN);
-    _userModel = null;
-    accessToken = null;
-    refreshToken = null;
-    isInitialized = false;
-    notifyListeners();
-    _httpService.logout();
+    try {
+      _isLoading = true;
+      await _httpService.logout(); // 먼저 서버에 토큰을 전달 하여 로그아웃 처리
+
+      // await socialLogin.logout();
+      await deleteToken(ACCESS_TOKEN);
+      await deleteToken(REFRESH_TOKEN);
+      _userModel = null;
+      accessToken = null;
+      refreshToken = null;
+      isInitialized = false;
+
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> getMyInfo() async {
