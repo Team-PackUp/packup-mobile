@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:packup/widget/ai_recommend/recommend_card.dart';
-
-import '../../const/const.dart';
 import '../../model/ai_recommend/recommend_tour_model.dart';
 
 class RecommendList extends StatelessWidget {
@@ -15,23 +13,25 @@ class RecommendList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (tours.isEmpty) return const SizedBox.shrink();
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SizedBox(
-          height: INDEX_TOUR_CARD_HEGIHT,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: tours.length,
-            itemBuilder: (context, index) {
-              final tour = tours[index];
-              return SizedBox(
-                width: INDEX_TOUR_CARD_WIDTH,
-                child: RecommendCard(tour: tour),
+    final screenW = MediaQuery.of(context).size.width;
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children:
+            tours.map((tour) {
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: screenW * 0.005),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: screenW * 0.6),
+                  child: InkWell(
+                    onTap: () => onTap(tour),
+                    child: RecommendCard(tour: tour),
+                  ),
+                ),
               );
-            },
-          ),
-        );
-      },
+            }).toList(),
+      ),
     );
   }
 }

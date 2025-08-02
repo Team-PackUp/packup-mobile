@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:packup/Const/color.dart';
 import '../../../model/ai_recommend/recommend_tour_model.dart';
 import '../../common/util.dart';
-import '../../const/const.dart';
 import '../common/slide_text.dart';
 
 class RecommendCard extends StatelessWidget {
@@ -25,9 +23,8 @@ class RecommendCard extends StatelessWidget {
           children: [
             Stack(
               children: [
-                SizedBox(
-                  height: INDEX_TOUR_CARD_HEGIHT - 220,
-                  width: double.infinity,
+                AspectRatio(
+                  aspectRatio: 5 / 3,
                   child: Image.network(
                     fullFileUrl(tour.titleImagePath ?? ''),
                     fit: BoxFit.cover,
