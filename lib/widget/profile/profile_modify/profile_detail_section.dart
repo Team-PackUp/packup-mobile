@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:packup/widget/common/custom_empty_list.dart';
 import 'package:provider/provider.dart';
 
 import '../../../provider/user/user_provider.dart';
@@ -14,7 +15,11 @@ class ProfileDetailSection extends StatelessWidget {
     final h = MediaQuery.of(context).size.height;
 
     final user = context.watch<UserProvider>().userModel!;
-    final List<String> interests = user.preferCategorySeqJson!;
+    final List<String>? interests = user.preferCategorySeqJson;
+
+    if(interests == null) {
+      return CustomEmptyList(message: '선호하는 카테고리가 없습니다.', icon: Icons.room_preferences);
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
