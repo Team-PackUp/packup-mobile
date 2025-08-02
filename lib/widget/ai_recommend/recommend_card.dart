@@ -31,9 +31,11 @@ class RecommendCard extends StatelessWidget {
                   child: Image.network(
                     fullFileUrl(tour.titleImagePath ?? ''),
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) =>
-                        Image.asset('assets/image/logo/logo.png',
-                            fit: BoxFit.cover),
+                    errorBuilder:
+                        (_, __, ___) => Image.asset(
+                          'assets/image/logo/logo.png',
+                          fit: BoxFit.cover,
+                        ),
                   ),
                 ),
                 if (tour.remainPeople <= 3)
@@ -42,8 +44,8 @@ class RecommendCard extends StatelessWidget {
                     right: 8,
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                          horizontal: screenW * 0.02,
-                          vertical: screenH * 0.01
+                        horizontal: screenW * 0.02,
+                        vertical: screenH * 0.01,
                       ),
                       decoration: BoxDecoration(
                         color: PRIMARY_COLOR,
@@ -63,17 +65,11 @@ class RecommendCard extends StatelessWidget {
             ),
 
             Padding(
-              padding:
-              EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 30,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SlideText(
-                    title: tour.tourTitle ?? '',
-                  ),
+                  SlideText(title: tour.tourTitle ?? ''),
                   SizedBox(height: screenH * 0.01),
                   Row(
                     children: [
@@ -85,7 +81,9 @@ class RecommendCard extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                              fontSize: 11, color: Colors.grey),
+                            fontSize: 11,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
                     ],
@@ -115,7 +113,9 @@ class RecommendCard extends StatelessWidget {
                           tour.guideModel?.guideName ?? '',
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                              fontSize: 11, color: Colors.grey),
+                            fontSize: 11,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
                     ],
