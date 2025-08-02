@@ -11,7 +11,6 @@ class SettingIndex extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppbar(
-        arrowFlag: false,
         title: '앱 설정',
         alert: AlertBell(),
     ),

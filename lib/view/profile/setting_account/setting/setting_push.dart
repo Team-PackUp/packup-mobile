@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:packup/widget/common/custom_appbar.dart';
+import 'package:packup/widget/profile/setting_account/setting/section/setting_push_section.dart';
 
-import '../../../../widget/profile/setting_account/setting/section/setting_index_section.dart';
+import '../../../../widget/common/alert_bell.dart';
 
 class SettingPush extends StatefulWidget {
   const SettingPush({super.key});
@@ -17,10 +19,11 @@ class _SettingPushState extends State<SettingPush> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("알림 수신 설정"),
-      ),
-      body: SettingIndexSection()
+        appBar: CustomAppbar(
+          title: '알림 수신 설정',
+          alert: AlertBell(),
+        ),
+      body: SettingPushSection()
     );
   }
 }

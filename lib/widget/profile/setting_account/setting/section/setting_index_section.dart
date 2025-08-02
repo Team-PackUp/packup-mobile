@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:packup/provider/user/user_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../common/util_widget.dart';
+
 class SettingIndexSection extends StatelessWidget {
   const SettingIndexSection({super.key});
 
@@ -50,26 +52,19 @@ class SettingIndexSection extends StatelessWidget {
             ),
           ),
         ),
-
-        ListTile(
-          leading: Icon(Icons.logout, size: screenW * 0.06, color: Colors.redAccent),
-          title: Text('로그아웃', style: textStyle.copyWith(color: Colors.redAccent)),
-          onTap: () async {
-            await context.read<UserProvider>().logout();
-          },
+        CustomButton.textIconButton(
+          context: context,
+          icon: Icons.logout,
+          label: '로그아웃',
+          onPressed: () => context.read<UserProvider>().logout(),
         ),
 
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenW * 0.02),
-          child: TextButton.icon(
-            icon: Icon(Icons.delete_forever, color: Colors.red),
-            label: Text(
-              '탈퇴하기',
-              style: TextStyle(color: Colors.red, fontSize: screenW * 0.04),
-            ),
-            onPressed: () => context.push('/withdraw'),
-          ),
-        ),
+        CustomButton.textIconButton(
+          context: context,
+          icon: Icons.delete_forever,
+          label: '탈퇴하기',
+          onPressed: () => context.push('/withdraw'),
+        )
       ],
     );
   }

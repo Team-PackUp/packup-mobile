@@ -86,4 +86,48 @@ class CustomButton {
       ),
     );
   }
+
+  static Widget textIconButton({
+    required BuildContext context,
+    required VoidCallback onPressed,
+    required IconData icon,
+    required String label,
+    Color textColor = Colors.red,
+    double iconSize = 20,
+    double fontSize = 14,
+    FontWeight fontWeight = FontWeight.w500,
+    EdgeInsetsGeometry? padding,
+    MainAxisAlignment alignment = MainAxisAlignment.start,
+  }) {
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
+    final effectivePadding = padding ??
+        EdgeInsets.symmetric(
+          horizontal: screenW * 0.05,
+        );
+
+    return Padding(
+      padding: effectivePadding,
+      child: TextButton.icon(
+        style: TextButton.styleFrom(
+          foregroundColor: textColor,
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.zero,
+        ),
+        icon: Icon(icon, size: iconSize, color: textColor),
+        label: Text(
+          label,
+          style: TextStyle(
+            color: textColor,
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+          ),
+        ),
+        onPressed: onPressed,
+      ),
+    );
+  }
+
 }
+
+
