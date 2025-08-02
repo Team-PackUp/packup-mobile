@@ -69,7 +69,10 @@ GoRouter createRouter(UserProvider userProvider) {
       print('isDetailRegistered: ${userProvider.hasDetailInfo}');
       print('isLoading: ${userProvider.isLoading}');
 
-      if (hasToken && !hasDetail && currentLoc != '/register-detail' && !isLoading) {
+      if (hasToken &&
+          !hasDetail &&
+          currentLoc != '/register-detail' &&
+          !isLoading) {
         return '/register-detail';
       }
 
@@ -218,7 +221,7 @@ GoRouter createRouter(UserProvider userProvider) {
       ),
       GoRoute(
         path: '/profile/push-setting',
-        name: 'settingIndex',
+        name: 'pushSetting',
         builder: (context, state) {
           return SettingIndex();
         },
