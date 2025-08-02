@@ -12,6 +12,7 @@ import 'package:packup/view/index.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
 import 'package:packup/view/profile/profile_modify/profile_modify.dart';
 import 'package:packup/view/profile/setting_account/reservation_manage/reservation_manage.dart';
+import 'package:packup/view/profile/setting_account/setting/setting_index.dart';
 import 'package:packup/view/reply/reply_write.dart';
 import 'package:packup/view/reservation/reservation.dart';
 import 'package:packup/view/search/search.dart';
@@ -38,10 +39,12 @@ GoRouter createRouter(UserProvider userProvider) {
       final accessToken = userProvider.accessToken;
       final hasToken = accessToken != null && accessToken.isNotEmpty;
       final hasDetail = userProvider.hasDetailInfo;
+      final isLoading = userProvider.isLoading;
 
       final currentLoc = state.fullPath!;
 
-      if (!isInitialized) return null;
+      // 회원 인증이 되어있는지 체크하려면 이게 빠져야..??
+      // if (!isInitialized) return null;
 
       // 보호된 페이지 모두 나열 - 추가 시 반영 필요.
       final isProtected = [
@@ -64,8 +67,9 @@ GoRouter createRouter(UserProvider userProvider) {
       print('userGender: ${userProvider.userModel?.userGender}');
       print('nickname: ${userProvider.userModel?.nickname}');
       print('isDetailRegistered: ${userProvider.hasDetailInfo}');
+      print('isLoading: ${userProvider.isLoading}');
 
-      if (hasToken && !hasDetail && currentLoc != '/register-detail') {
+      if (hasToken && !hasDetail && currentLoc != '/register-detail' && !isLoading) {
         return '/register-detail';
       }
 
@@ -203,6 +207,13 @@ GoRouter createRouter(UserProvider userProvider) {
         name: 'profileModify',
         builder: (context, state) {
           return ProfileModify();
+        },
+      ),
+      GoRoute(
+        path: '/profile/setting_index',
+        name: 'settingIndex',
+        builder: (context, state) {
+          return SettingIndex();
         },
       ),
       GoRoute(

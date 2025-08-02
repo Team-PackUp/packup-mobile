@@ -16,7 +16,7 @@ class SettingAccountSection extends StatelessWidget {
       {'title': '찜한 목록', 'icon': Icons.favorite_border, 'url': '/profile/update'},
       {'title': '결제 내역', 'icon': Icons.credit_card, 'url': '/profile/update'},
       {'title': '공지사항', 'icon': Icons.notifications, 'url': '/notice_list'},
-      {'title': '환경설정', 'icon': Icons.settings, 'url': '/profile/update'},
+      {'title': '앱 설정', 'icon': Icons.settings, 'url': '/profile/setting_index'},
     ];
 
     return Column(
