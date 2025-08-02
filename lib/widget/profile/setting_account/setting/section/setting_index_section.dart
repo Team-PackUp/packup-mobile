@@ -34,7 +34,7 @@ class SettingIndexSection extends StatelessWidget {
           leading: Icon(Icons.notifications, size: screenW * 0.06, color: Colors.grey),
           title: Text('알림 수신 설정', style: textStyle),
           trailing: Icon(Icons.chevron_right, size: screenW * 0.05),
-          onTap: () => context.push('/profile/push-settings'),
+          onTap: () => context.push('/profile/push-setting'),
         ),
 
         SizedBox(height: screenH * 0.03),
