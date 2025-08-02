@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:packup/Const/color.dart';
 import '../../../model/ai_recommend/recommend_tour_model.dart';
 import '../../common/util.dart';
+import '../../const/const.dart';
 import '../common/slide_text.dart';
 
 class RecommendCard extends StatelessWidget {
@@ -13,16 +14,9 @@ class RecommendCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenW = MediaQuery.of(context).size.width;
     final screenH = MediaQuery.of(context).size.height;
-    final cardWidth   = screenW * 0.4;
-    final imageHeight = cardWidth * 0.65;
 
     return SizedBox(
-      width: cardWidth,
       child: Card(
-        margin: EdgeInsets.symmetric(
-          horizontal: screenW * 0.02,
-          vertical: screenH * 0.01,
-        ),
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         clipBehavior: Clip.hardEdge,
@@ -32,7 +26,7 @@ class RecommendCard extends StatelessWidget {
             Stack(
               children: [
                 SizedBox(
-                  height: imageHeight,
+                  height: INDEX_TOUR_CARD_HEGIHT - 220,
                   width: double.infinity,
                   child: Image.network(
                     fullFileUrl(tour.titleImagePath ?? ''),
@@ -71,8 +65,8 @@ class RecommendCard extends StatelessWidget {
             Padding(
               padding:
               EdgeInsets.symmetric(
-                  horizontal: screenW * 0.03,
-                  vertical: screenH * 0.03,
+                  horizontal: 20,
+                  vertical: 30,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

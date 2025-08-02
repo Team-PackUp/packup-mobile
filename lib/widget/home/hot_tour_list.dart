@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:packup/model/tour/tour_model.dart';
 import 'package:packup/widget/home/hot_tour_card.dart';
 
+import '../../const/const.dart';
+
 class HotTourList extends StatelessWidget {
   final List<TourModel> tours;
   final ValueChanged<TourModel> onTap;
@@ -22,21 +24,16 @@ class HotTourList extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final width = constraints.maxWidth;
-        final columns = _crossAxisCount(width);
-
-        final cardWidth = (width - (columns - 1) * (screenW / 60)) / columns;
 
         return SizedBox(
-          height: screenH * .32,
-          child: ListView.separated(
+          height: INDEX_TOUR_CARD_HEGIHT,
+          child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: tours.length,
-            separatorBuilder: (_, __) => SizedBox(width: 0),
             itemBuilder: (context, index) {
               final tour = tours[index];
               return SizedBox(
-                width: cardWidth,
+                width: INDEX_TOUR_CARD_WIDTH,
                 child: InkWell(
                   onTap: () => onTap(tour),
                   child: HotTourCard(tour: tour),

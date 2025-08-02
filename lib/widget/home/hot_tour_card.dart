@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:packup/Const/color.dart';
 import 'package:packup/model/tour/tour_model.dart';
 import '../../common/util.dart';
+import '../../const/const.dart';
 import '../common/slide_text.dart';
 
 class HotTourCard extends StatelessWidget {
@@ -18,10 +19,6 @@ class HotTourCard extends StatelessWidget {
     return SizedBox(
       width: cardWidth,
       child: Card(
-        margin: EdgeInsets.symmetric(
-          horizontal: screenW * 0.02,
-          vertical: screenH * 0.01,
-        ),
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(screenW * 0.02),
@@ -33,7 +30,7 @@ class HotTourCard extends StatelessWidget {
             Stack(
               children: [
                 SizedBox(
-                  height: imageHeight,
+                  height: INDEX_TOUR_CARD_HEGIHT - 220,
                   width: double.infinity,
                   child: Image.network(
                     fullFileUrl(tour.titleImagePath ?? ''),
@@ -73,8 +70,8 @@ class HotTourCard extends StatelessWidget {
 
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: screenW * 0.03,
-                vertical: screenH * 0.03,
+                horizontal: 20,
+                vertical: 30,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
