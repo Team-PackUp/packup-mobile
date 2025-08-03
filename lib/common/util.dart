@@ -199,3 +199,22 @@ String urlGenerator(String url) {
 String formatPrice(int price) {
   return NumberFormat.currency(locale: 'ko_KR', symbol: '₩').format(price);
 }
+
+
+/// ################### Type Converter ################### ///
+bool stringToBoolean(String ynString) {
+  ynString = ynString.toUpperCase();
+  if(ynString == 'Y') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+String booleanToString(bool ynBool) {
+  if(ynBool == true) {
+    return 'Y';
+  } else {
+    return 'N';
+  }
+}

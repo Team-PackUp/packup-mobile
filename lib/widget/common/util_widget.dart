@@ -16,6 +16,19 @@ class CustomSnackBar {
         ),
       );
   }
+
+  static void showResult(BuildContext context, String message) {
+    final messenger = ScaffoldMessenger.of(context);
+    messenger
+      ..removeCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+  }
 }
 
 class CustomButton {

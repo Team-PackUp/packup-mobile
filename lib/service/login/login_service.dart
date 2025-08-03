@@ -54,4 +54,9 @@ class LoginService {
     }
   }
 
+  Future<ResultModel> updateSettingPush(String pushFlg, String marketingFLag) async {
+    final data = {'pushFlag': pushFlg, 'marketingFlag': marketingFLag};
+    return await DioService().putRequest('/user/setting-push', data);
+  }
+
 }

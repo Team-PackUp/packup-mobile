@@ -6,8 +6,12 @@ class UserModel {
 
   final String? email;
   final String? nickname;
+  late final String? marketingFlag;
+  late final String? pushFlag;
   late final String? profileImagePath;
   final List<String>? preferCategorySeqJson;
+
+
 
   UserModel({
     required this.userId,
@@ -17,8 +21,11 @@ class UserModel {
 
     this.email,
     this.nickname,
+    this.marketingFlag,
+    this.pushFlag,
     this.profileImagePath,
     this.preferCategorySeqJson,
+
   });
 
   Map<String, dynamic> toJson() {
@@ -40,6 +47,8 @@ class UserModel {
       userGender: json['gender'] ?? '',
       email: json['email'],
       nickname: json['nickname'],
+      marketingFlag: json['marketingFlag'],
+      pushFlag: json['pushFlag'],
       profileImagePath: json['profileImagePath'],
       preferCategorySeqJson:
           (json['preferCategorySeqJson'] as List<dynamic>?)

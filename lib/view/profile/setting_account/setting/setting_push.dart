@@ -12,9 +12,6 @@ class SettingPush extends StatefulWidget {
 }
 
 class _SettingPushState extends State<SettingPush> {
-  bool receiveAll = true;
-  bool marketing = true;
-  bool ad = true;
 
   @override
   Widget build(BuildContext context) {

@@ -149,7 +149,25 @@ class UserProvider with ChangeNotifier {
   void setProfileImagePath(String path) {
     if (userModel != null) {
       userModel!.profileImagePath = path;
+
+      // 서버 요청
+
       notifyListeners();
     }
+  }
+
+  Future<bool> updateSettingPush(bool pushFlag, bool marketingFLag) async {
+
+    String strPushFlag = booleanToString(pushFlag);
+    String strMarketingFLag = booleanToString(marketingFLag);
+
+    _resultModel = await _httpService.updateSettingPush(strPushFlag, strMarketingFLag);
+    if(_resultModel!.resultFlag!) {
+      await getMyInfo();
+    }
+
+    notifyListeners();
+
+    return _resultModel!.resultFlag!;
   }
 }
