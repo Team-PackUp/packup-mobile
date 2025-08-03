@@ -39,13 +39,13 @@ class _SettingPUshListState extends State<SettingPushList> {
 
             try {
               if(!await updateSettingPush()) {
-                throw Exception("푸시 수신 설정 변경에 실패했습니다.");
+                throw Exception();
               }
               CustomSnackBar.showResult(context, "푸시 수신 설정 변경 하였습니다.");
 
             } catch (e) {
               setState(() => newPushFlag = prevValue);
-              CustomSnackBar.showError(context, e.toString());
+              CustomSnackBar.showError(context, "푸시 수신 설정 변경에 실패했습니다.");
             }
           },
         ),
@@ -62,14 +62,14 @@ class _SettingPUshListState extends State<SettingPushList> {
 
             try {
               if(!await updateSettingPush()) {
-                throw Exception("마케팅 수신 설정 변경 하였습니다.");
+                throw Exception();
               }
 
               CustomSnackBar.showResult(context, "마케팅 수신 설정 변경 하였습니다.");
 
             } catch (e) {
               setState(() => newMarketingFlag = prevValue);
-              CustomSnackBar.showError(context, e.toString());
+              CustomSnackBar.showError(context, "푸시 수신 설정 변경에 실패했습니다.");
             }
           },
         ),
