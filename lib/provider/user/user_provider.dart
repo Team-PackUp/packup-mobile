@@ -156,18 +156,16 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> updateSettingPush(bool pushFlag, bool marketingFLag) async {
+  Future<void> updateSettingPush(bool pushFlag, bool marketingFLag) async {
 
     String strPushFlag = booleanToString(pushFlag);
     String strMarketingFLag = booleanToString(marketingFLag);
 
-    _resultModel = await _httpService.updateSettingPush(strPushFlag, strMarketingFLag);
+    await _httpService.updateSettingPush(strPushFlag, strMarketingFLag);
     if(_resultModel!.resultFlag!) {
       await getMyInfo();
     }
 
     notifyListeners();
-
-    return _resultModel!.resultFlag!;
   }
 }

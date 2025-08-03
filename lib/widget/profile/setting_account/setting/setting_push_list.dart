@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:packup/widget/common/custom_error_handler.dart';
 import 'package:packup/widget/profile/setting_account/setting/setting_push_card.dart';
 import 'package:provider/provider.dart';
 
@@ -32,60 +34,59 @@ class _SettingPUshListState extends State<SettingPushList> {
           title: "일반 푸시 수신",
           subtitle: "서비스 이용 관련 알림 수신 동의",
           value: newPushFlag,
-          onChanged: (val) async {
-            final prevValue = newPushFlag;
+          onChanged: (val) {
+            final prevPush = newPushFlag;
+            final prevMarketing = newMarketingFlag;
 
-            setState(() => newPushFlag= val);
+            setState(() => newPushFlag = val);
 
-            try {
-              if(!await updateSettingPush()) {
-                throw Exception();
-              }
-              CustomSnackBar.showResult(context, "푸시 수신 설정 변경 하였습니다.");
-
-            } catch (e) {
-              setState(() => newPushFlag = prevValue);
-              CustomSnackBar.showError(context, "푸시 수신 설정 변경에 실패했습니다.");
-            }
+            updateSettingPushWithRollback(
+              oldPush: prevPush,
+              oldMarketing: prevMarketing,
+              successMessage: "푸시 수신 설정이 변경되었습니다.",
+            );
           },
         ),
 
         const Divider(),
+
         SettingPushCard(
           title: "마케팅 푸시 수신 동의",
           subtitle: "이벤트, 할인 등 마케팅 정보 수신",
           value: newMarketingFlag,
-          onChanged: (val) async {
-            final prevValue = newMarketingFlag;
+          onChanged: (val) {
+            final prevPush = newPushFlag;
+            final prevMarketing = newMarketingFlag;
 
             setState(() => newMarketingFlag = val);
 
-            try {
-              if(!await updateSettingPush()) {
-                throw Exception();
-              }
-
-              CustomSnackBar.showResult(context, "마케팅 수신 설정 변경 하였습니다.");
-
-            } catch (e) {
-              setState(() => newMarketingFlag = prevValue);
-              CustomSnackBar.showError(context, "푸시 수신 설정 변경에 실패했습니다.");
-            }
+            updateSettingPushWithRollback(
+              oldPush: prevPush,
+              oldMarketing: prevMarketing,
+              successMessage: "마케팅 수신 설정이 변경되었습니다.",
+            );
           },
         ),
-        // SettingPushCard(
-        //   title: "광고 푸시 수신 동의",
-        //   subtitle: "신규 상품, 프로모션 등 광고 정보 수신",
-        //   value: ad,
-        //   onChanged: (val) => setState(() => ad = val),
-        // ),
       ],
     );
   }
 
-  Future<bool> updateSettingPush() async {
+  Future<void> updateSettingPushWithRollback({
+    required bool oldPush,
+    required bool oldMarketing,
+    required String successMessage,
+  }) async {
+    try {
+      await context.read<UserProvider>().updateSettingPush(newPushFlag, newMarketingFlag);
 
-    return await context.read<UserProvider>().updateSettingPush(newPushFlag, newMarketingFlag);
+      CustomSnackBar.showResult(context, successMessage);
+
+    } catch (e) {
+      setState(() {
+        newPushFlag = oldPush;
+        newMarketingFlag = oldMarketing;
+      });
+      CustomErrorHandler.run(context, e);
+    }
   }
-
 }
