@@ -63,7 +63,7 @@ class SettingIndexSection extends StatelessWidget {
           context: context,
           icon: Icons.delete_forever,
           label: '탈퇴하기',
-          onPressed: () => context.push('/withdraw'),
+          onPressed: () => context.push('/profile/withdraw'),
         )
       ],
     );
