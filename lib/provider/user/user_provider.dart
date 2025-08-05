@@ -3,6 +3,7 @@ import 'package:packup/common/util.dart';
 import 'package:packup/const/const.dart';
 import 'package:packup/model/common/user_model.dart';
 import 'package:packup/model/common/result_model.dart';
+import 'package:packup/provider/common/loading_provider.dart';
 import 'package:packup/service/login/login_service.dart';
 import 'package:packup/widget/login/social_login_btn.dart';
 import 'package:packup/service/login/google_login_service.dart';
@@ -10,9 +11,11 @@ import 'package:packup/service/login/kakao_login_service.dart';
 
 import 'package:packup/service/login/social_login.dart';
 
+import '../../service/common/loading_service.dart';
+
 /// UserModel 구독
-class UserProvider with ChangeNotifier {
-  late SocialLogin socialLogin;
+class UserProvider extends LoadingProvider {
+  late SocialLogin? socialLogin;
   UserModel? _userModel;
   ResultModel? _resultModel;
   bool _isLoading = false;
@@ -42,17 +45,17 @@ class UserProvider with ChangeNotifier {
       switch (type) {
         case SocialLoginType.kakao:
           socialLogin = KakaoLogin();
-          isResult = await socialLogin.login();
+          isResult = await socialLogin!.login();
           break;
 
         case SocialLoginType.google:
           socialLogin = GoogleLogin();
-          isResult = await socialLogin.login();
+          isResult = await socialLogin!.login();
           break;
       }
 
       if (isResult) {
-        final token = await socialLogin.getAccessToken();
+        final token = await socialLogin!.getAccessToken();
         _socialAccessToken = token;
 
         _resultModel = await _httpService.checkLogin(_socialAccessToken);
@@ -121,17 +124,25 @@ class UserProvider with ChangeNotifier {
   Future<void> logout() async {
     try {
       _isLoading = true;
-      await _httpService.logout(); // 먼저 서버에 토큰을 전달 하여 로그아웃 처리
 
-      // await socialLogin.logout();
+      await LoadingService.run(() async {
+        await _httpService.logout(); // 먼저 서버에 토큰을 전달 하여 로그아웃 처리
+      });
+
+      await socialLogin!.logout();
+
       await deleteToken(ACCESS_TOKEN);
       await deleteToken(REFRESH_TOKEN);
+
       _userModel = null;
       accessToken = null;
       refreshToken = null;
+      socialLogin = null; // 이거를 null 초기화 해야 계정 선택 창이 나오는듯..?
       isInitialized = false;
 
-    } finally {
+    } catch(e) {
+      print(e.toString());
+    }finally {
       _isLoading = false;
       notifyListeners();
     }
