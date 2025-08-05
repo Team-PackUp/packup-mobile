@@ -2,6 +2,17 @@ import 'package:flutter/material.dart';
 
 enum SocialLoginType { kakao, google }
 
+extension SocialLoginTypeCode on SocialLoginType {
+  String get codeNumber {
+    switch (this) {
+      case SocialLoginType.kakao:
+        return '010000';
+      case SocialLoginType.google:
+        return '010001';
+    }
+  }
+}
+
 class SocialLoginButton extends StatelessWidget {
   final SocialLoginType type;
   final VoidCallback onPressed;

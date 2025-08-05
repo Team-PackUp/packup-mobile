@@ -77,7 +77,7 @@ class _SettingWithdrawConfirmSectionState extends State<SettingWithdrawConfirmSe
       await context.read<UserWithDrawLogProvider>().userWithDraw(model);
 
       CustomSnackBar.showResult(context, "회원 탈퇴 되었습니다.");
-      context.read<UserProvider>().logout();
+      context.read<UserProvider>().logout(context);
 
     } catch (e) {
       CustomErrorHandler.run(context, e);

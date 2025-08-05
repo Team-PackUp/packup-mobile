@@ -83,4 +83,11 @@ class ChatRoomProvider extends LoadingProvider {
       notifyListeners();
     } 
   }
+
+  void clearChatRooms() {
+    _chatRoom.clear();
+    _totalPage = 0;
+    _curPage = 0;
+    notifyListeners();
+  }
 }

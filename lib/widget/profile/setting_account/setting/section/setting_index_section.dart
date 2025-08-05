@@ -56,7 +56,7 @@ class SettingIndexSection extends StatelessWidget {
           context: context,
           icon: Icons.logout,
           label: '로그아웃',
-          onPressed: () => context.read<UserProvider>().logout(),
+          onPressed: () => context.read<UserProvider>().logout(context),
         ),
 
         CustomButton.textIconButton(

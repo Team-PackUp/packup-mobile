@@ -10,8 +10,10 @@ import 'package:packup/service/login/google_login_service.dart';
 import 'package:packup/service/login/kakao_login_service.dart';
 
 import 'package:packup/service/login/social_login.dart';
+import 'package:provider/provider.dart';
 
 import '../../service/common/loading_service.dart';
+import '../chat/chat_room_provider.dart';
 
 /// UserModel 구독
 class UserProvider extends LoadingProvider {
@@ -94,6 +96,10 @@ class UserProvider extends LoadingProvider {
       await getMyInfo();
     }
 
+    if (_userModel!.joinType.trim() == SocialLoginType.google.codeNumber) {
+      socialLogin = GoogleLogin();
+    }
+
     isInitialized = true;
     notifyListeners();
   }
@@ -121,15 +127,15 @@ class UserProvider extends LoadingProvider {
     }
   }
 
-  Future<void> logout() async {
+  Future<void> logout(BuildContext context) async {
     try {
       _isLoading = true;
 
-      await LoadingService.run(() async {
-        await _httpService.logout(); // 먼저 서버에 토큰을 전달 하여 로그아웃 처리
-      });
-
       await socialLogin!.logout();
+
+      await LoadingService.run(() async {
+        await _httpService.logout();
+      });
 
       await deleteToken(ACCESS_TOKEN);
       await deleteToken(REFRESH_TOKEN);
@@ -137,16 +143,19 @@ class UserProvider extends LoadingProvider {
       _userModel = null;
       accessToken = null;
       refreshToken = null;
-      socialLogin = null; // 이거를 null 초기화 해야 계정 선택 창이 나오는듯..?
+      socialLogin = null;
       isInitialized = false;
 
-    } catch(e) {
+      context.read<ChatRoomProvider>().clearChatRooms();
+
+    } catch (e) {
       print(e.toString());
-    }finally {
+    } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
+
 
   Future<void> getMyInfo() async {
     _resultModel = await _httpService.getMyInfo();
@@ -160,8 +169,6 @@ class UserProvider extends LoadingProvider {
   void setProfileImagePath(String path) {
     if (userModel != null) {
       userModel!.profileImagePath = path;
-
-      // 서버 요청
 
       notifyListeners();
     }

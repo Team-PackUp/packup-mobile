@@ -2,6 +2,7 @@ class UserModel {
   final String userId;
   final String userAge;
   final String userNation;
+  final String joinType;
   final String userGender;
 
   final String? email;
@@ -17,6 +18,7 @@ class UserModel {
     required this.userId,
     required this.userAge,
     required this.userNation,
+    required this.joinType,
     required this.userGender,
 
     this.email,
@@ -44,6 +46,7 @@ class UserModel {
       userId: json['userId'] ?? '',
       userAge: json['age']?.toString() ?? '',
       userNation: json['nation'] ?? '',
+      joinType: json['joinType'] ?? '',
       userGender: json['gender'] ?? '',
       email: json['email'],
       nickname: json['nickname'],

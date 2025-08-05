@@ -108,7 +108,7 @@ class _ChatRoomContentState extends State<ChatRoomContent> with WidgetsBindingOb
           Expanded(
             child: ChatRoomSection(
               scrollController: _scrollController,
-              userSeq: userSeq!,
+              userSeq: userSeq,
             ),
           ),
         ],
