@@ -196,10 +196,3 @@ String urlGenerator(String url) {
 String formatPrice(int price) {
   return NumberFormat.currency(locale: 'ko_KR', symbol: '₩').format(price);
 }
-
-void clear() {
-  _chatRooms = [];
-  currentPage = 1;
-  totalPages = 1;
-  notifyListeners();
-}
