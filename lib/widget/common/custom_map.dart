@@ -40,6 +40,29 @@ class _CustomMapState extends State<CustomMap> {
       });
     } else {
       print(result.message);
+      if (result == LocationStatus.notAuthLocationSetting) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text('위치 권한 필요'),
+            content: Text('앱 설정에서 위치 권한을 허용해주세요.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Geolocator.openAppSettings();
+                },
+                child: Text('설정으로 이동'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('취소'),
+              ),
+            ],
+          ),
+        );
+      }
+
       setState(() {
         currentLatLng = null;
       });
