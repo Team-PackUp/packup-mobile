@@ -14,6 +14,8 @@ import 'package:packup/widget/search/search.dart';
 import 'package:packup/widget/common/alert_bell.dart';
 import 'package:packup/widget/common/custom_sliver_appbar.dart';
 
+import '../../widget/common/circle_profile_image.dart';
+
 class Home extends StatelessWidget {
   const Home({super.key});
 
@@ -63,13 +65,7 @@ class _HomeContentState extends State<HomeContent> {
                   title: 'PACKUP Explorer',
                   arrowFlag: false,
                   alert: const AlertBell(),
-                  profile: CircleAvatar(
-                    radius: screenH * 0.02,
-                    backgroundImage:
-                        (profileUrl != null && profileUrl.isNotEmpty)
-                            ? NetworkImage(profileUrl)
-                            : null,
-                  ),
+                  profile: CircleProfileImage(radius: screenH * 0.02),
                   bottom: CustomSearch(
                     onTap: () => context.push('/search/all'),
                   ),

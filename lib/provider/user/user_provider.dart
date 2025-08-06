@@ -12,6 +12,7 @@ import 'package:packup/service/login/kakao_login_service.dart';
 import 'package:packup/service/login/social_login.dart';
 import 'package:provider/provider.dart';
 
+import '../../model/user/profile/user_profile_model.dart';
 import '../../service/common/loading_service.dart';
 import '../chat/chat_room_provider.dart';
 
@@ -168,6 +169,16 @@ class UserProvider extends LoadingProvider {
 
       notifyListeners();
     }
+  }
+
+  Future<void> updateUserProfile(UserProfileModel model) async {
+
+    await _httpService.updateUserProfile(model);
+    if(_resultModel!.resultFlag!) {
+      await getMyInfo();
+    }
+
+    notifyListeners();
   }
 
   Future<void> updateSettingPush(bool pushFlag, bool marketingFLag) async {

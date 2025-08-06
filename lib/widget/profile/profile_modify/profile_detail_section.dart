@@ -11,7 +11,9 @@ import '../../common/category_filter.dart';
 import '../../common/util_widget.dart';
 
 class ProfileDetailSection extends StatefulWidget {
-  const ProfileDetailSection({super.key});
+  final void Function(List<String>) preferenceChange;
+
+  const ProfileDetailSection({super.key, required this.preferenceChange});
 
   @override
   State<ProfileDetailSection> createState() => _ProfileDetailSectionState();
@@ -67,6 +69,7 @@ class _ProfileDetailSectionState extends State<ProfileDetailSection> {
                 setState(() {
                   _preference = result;
                 });
+                widget.preferenceChange(result);
               }
 
               print(result);

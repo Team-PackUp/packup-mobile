@@ -12,6 +12,7 @@ import '../../provider/alert_center/alert_center_provider.dart';
 import '../../provider/user/user_provider.dart';
 
 import '../../widget/common/alert_bell.dart';
+import '../../widget/common/circle_profile_image.dart';
 import '../../widget/common/custom_sliver_appbar.dart';
 
 class AIRecommend extends StatelessWidget {
@@ -79,12 +80,7 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
                 title: 'AI 추천',
                 arrowFlag: false,
                 alert: AlertBell(),
-                profile: CircleAvatar(
-                  radius: screenH * 0.02,
-                  backgroundImage: (profileUrl != null && profileUrl.isNotEmpty)
-                      ? NetworkImage(profileUrl)
-                      : null,
-                ),
+                profile: CircleProfileImage(radius: screenH * 0.02),
                 bottom: CustomSearch(onTap: () => context.push('/search/all')),
               ),
             ],

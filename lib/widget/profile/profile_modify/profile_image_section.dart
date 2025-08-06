@@ -8,11 +8,12 @@ import '../../../provider/user/user_provider.dart';
 import '../../common/circle_profile_image.dart';
 
 class ProfileImageSection extends StatefulWidget {
+  final void Function(String imagePath) onImageChanged;
+
+  const ProfileImageSection({super.key, required this.onImageChanged});
 
   @override
-  State<StatefulWidget> createState() => _ProfileImageSectionState();
-
-
+  State<ProfileImageSection> createState() => _ProfileImageSectionState();
 }
 
 class _ProfileImageSectionState extends State<ProfileImageSection> {
@@ -65,6 +66,8 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
       setState(() {
         _localImagePath = picked.path;
       });
+
+      widget.onImageChanged(picked.path);
     }
   }
 }
