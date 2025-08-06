@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../Const/color.dart';
+import '../../../../Const/color.dart';
 
 class PreferenceCard extends StatelessWidget {
   final String category;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:packup/widget/user/preference/preference_card.dart';
+import 'package:packup/widget/common/preference/preference_card.dart';
 
 class PreferenceList extends StatelessWidget {
   final List<String> categories;

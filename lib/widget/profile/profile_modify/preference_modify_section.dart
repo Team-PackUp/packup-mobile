@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:packup/widget/user/preference/preference_list.dart';
+import 'package:packup/widget/common/preference/preference_list.dart';
 
 class PreferenceModifySection extends StatelessWidget {
   final Set<String> selected;
