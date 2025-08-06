@@ -137,16 +137,12 @@ class UserProvider extends LoadingProvider {
         await _httpService.logout();
       });
 
-      await deleteToken(ACCESS_TOKEN);
-      await deleteToken(REFRESH_TOKEN);
+      // 공통 프로바이더 정리
+      await clearCommonProvider(context);
 
-      _userModel = null;
-      accessToken = null;
-      refreshToken = null;
-      socialLogin = null;
-      isInitialized = false;
+      // 회원 정보 정리
+      await clearUser();
 
-      context.read<ChatRoomProvider>().clearChatRooms();
 
     } catch (e) {
       print(e.toString());
@@ -185,5 +181,23 @@ class UserProvider extends LoadingProvider {
     }
 
     notifyListeners();
+  }
+
+  Future<void> clearUser() async {
+    await deleteToken(ACCESS_TOKEN);
+    await deleteToken(REFRESH_TOKEN);
+
+    _userModel = null;
+    accessToken = null;
+    refreshToken = null;
+    socialLogin = null;
+    isInitialized = false;
+  }
+
+  Future<void> clearCommonProvider(BuildContext context) async {
+
+    // 채팅 변수 초기화
+    context.read<ChatRoomProvider>().clearChatRooms();
+
   }
 }
