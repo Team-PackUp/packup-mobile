@@ -6,18 +6,17 @@ import 'package:packup/provider/user/user_provider.dart';
 import 'package:packup/view/chat/chat_message.dart';
 import 'package:packup/view/chat/chat_room.dart';
 import 'package:packup/view/guide/detail/guide_detail.dart';
-import 'package:packup/view/like/like.dart';
 import 'package:get/get.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
+import 'package:packup/view/profile/profile_modify/preference_modify.dart';
 import 'package:packup/view/profile/profile_modify/profile_modify.dart';
 import 'package:packup/view/profile/setting_account/reservation_manage/reservation_manage.dart';
 import 'package:packup/view/profile/setting_account/setting/setting_index.dart';
 import 'package:packup/view/profile/setting_account/setting/setting_withdraw.dart';
 import 'package:packup/view/profile/setting_account/setting/setting_withdraw_confirm.dart';
 import 'package:packup/view/reply/reply_write.dart';
-import 'package:packup/view/reservation/reservation.dart';
 import 'package:packup/view/search/search.dart';
 import 'package:packup/view/tour/user/tour_detail.dart';
 import 'package:packup/view/user/preference/preference.dart';
@@ -214,6 +213,14 @@ GoRouter createRouter(UserProvider userProvider) {
         name: 'profileModify',
         builder: (context, state) {
           return ProfileModify();
+        },
+      ),
+      GoRoute(
+        path: '/profile/preference-modify',
+        name: 'preferenceModify',
+        builder: (context, state) {
+          final alreadyPreference = state.extra! as List<String>;
+          return PreferenceModify(alreadyPreference: alreadyPreference,);
         },
       ),
       GoRoute(

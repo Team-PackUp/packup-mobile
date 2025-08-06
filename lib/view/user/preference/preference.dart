@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:packup/model/user/preference/user_preference_model.dart';
 import 'package:packup/service/user/preference_service.dart';
 
+import '../../../widget/user/preference/preference_list.dart';
+
 class Preference extends StatefulWidget {
   const Preference({super.key});
 
@@ -72,59 +74,11 @@ class _PreferenceState extends State<Preference> {
               const SizedBox(height: 24),
 
               // 선택 카드들
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 1.8,
-                  children:
-                      categories.map((category) {
-                        final isSelected = selected.contains(category);
-                        return GestureDetector(
-                          onTap: () => toggleSelect(category),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color:
-                                    isSelected
-                                        ? SECONDARY_COLOR
-                                        : Colors.grey.shade300,
-                                width: 1.5,
-                              ),
-                              color:
-                                  isSelected
-                                      ? SECONDARY_COLOR.withOpacity(0.15)
-                                      : Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  categoryImageMap[category]!,
-                                  width: 32,
-                                  height: 32,
-                                  fit: BoxFit.contain,
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  category,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color:
-                                        isSelected
-                                            ? SECONDARY_COLOR
-                                            : Colors.black87,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                ),
+              PreferenceList(
+                categories: categories,
+                selected: selected,
+                toggleSelect: toggleSelect,
+                categoryImageMap: categoryImageMap,
               ),
 
               const SizedBox(height: 8),

@@ -6,18 +6,12 @@ enum SelectionMode { single, multiple }
 class CategoryFilter<T> extends StatefulWidget {
   final List<T> items;
   final List<T>? initialSelectedItems;
-
-  // 라벨 뽑는 함수
   final String Function(T item) labelBuilder;
-
-  // 이모지 뽑는 함수
   final Widget? Function(T item)? emojiBuilder;
-
-  // single: ChoiceChip (하나만 선택)
-  // multiple: FilterChip (다중 선택)
   final SelectionMode mode;
-
   final void Function(List<T> selectedItems) onSelectionChanged;
+
+  final bool readOnly;
 
   const CategoryFilter({
     super.key,
@@ -27,6 +21,7 @@ class CategoryFilter<T> extends StatefulWidget {
     this.mode = SelectionMode.multiple,
     required this.onSelectionChanged,
     this.initialSelectedItems,
+    this.readOnly = false,
   });
 
   @override
@@ -50,6 +45,7 @@ class _CategoryFilterState<T> extends State<CategoryFilter<T>> {
   }
 
   void _onTap(int idx, bool selected) {
+    if (widget.readOnly) return;
     setState(() {
       if (widget.mode == SelectionMode.single) {
         _selected
@@ -84,7 +80,8 @@ class _CategoryFilterState<T> extends State<CategoryFilter<T>> {
             avatar,
             SizedBox(width: screenW * 0.02),
             Text(label),
-          ]) : Text(label);
+          ])
+              : Text(label);
 
           final isSelected = _selected.contains(i);
 
@@ -94,16 +91,23 @@ class _CategoryFilterState<T> extends State<CategoryFilter<T>> {
                 ? ChoiceChip(
               label: chipLabel,
               selected: isSelected,
-              onSelected: (sel) => _onTap(i, sel),
+              onSelected: (sel) {
+                if (widget.readOnly) return;
+                _onTap(i, sel);
+              },
               selectedColor: PRIMARY_COLOR,
               backgroundColor: Colors.grey.shade200,
               labelStyle: TextStyle(
                 color: isSelected ? Colors.white : Colors.black,
               ),
-            ) : FilterChip(
+            )
+                : FilterChip(
               label: chipLabel,
               selected: isSelected,
-              onSelected: (sel) => _onTap(i, sel),
+              onSelected: (sel) {
+                if (widget.readOnly) return;
+                _onTap(i, sel);
+              },
               selectedColor: PRIMARY_COLOR.withOpacity(0.2),
               backgroundColor: BACK_GROUND_COLOR_W,
               side: BorderSide(
@@ -113,11 +117,11 @@ class _CategoryFilterState<T> extends State<CategoryFilter<T>> {
                 color: isSelected ? PRIMARY_COLOR : TEXT_COLOR_B,
               ),
               checkmarkColor: PRIMARY_COLOR,
-            ),
+            )
+
           );
         }),
       ),
     );
   }
 }
-
