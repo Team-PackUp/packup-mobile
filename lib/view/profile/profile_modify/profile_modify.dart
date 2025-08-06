@@ -20,8 +20,6 @@ class ProfileModify extends StatefulWidget {
 
 
 class _ProfileModifyState extends State<ProfileModify> {
-  final TextEditingController nameController = TextEditingController();
-
   String newProfileImagePath = '';
   String newNickName = '';
   String newLanguage = '';
@@ -85,12 +83,15 @@ class _ProfileModifyState extends State<ProfileModify> {
             SizedBox(height: screenH * 0.02),
             CustomButton.textButton(
               context: context,
-              onPressed: () => _updateProfile(
-                newProfileImagePath: newProfileImagePath,
-                newNickName: newNickName,
-                newLanguage: newLanguage,
-                selectedCategories: selectedCategories,
-              ),
+              onPressed: () {
+                FocusScope.of(context).unfocus();
+                _updateProfile(
+                  newProfileImagePath: newProfileImagePath,
+                  newNickName: newNickName,
+                  newLanguage: newLanguage,
+                  selectedCategories: selectedCategories,
+                );
+              },
               backgroundColor: PRIMARY_COLOR,
               label: '저장하기',
             )
