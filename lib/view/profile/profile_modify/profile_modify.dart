@@ -161,10 +161,10 @@ class _ProfileModifyState extends State<ProfileModify> {
       return false;
     }
 
-    // if (newLanguage.isEmpty) {
-    //   CustomSnackBar.showResult(context, "언어를 선택해주세요");
-    //   return false;
-    // }
+    if (newLanguage.isEmpty) {
+      CustomSnackBar.showResult(context, "언어를 선택해주세요");
+      return false;
+    }
 
     return true;
   }

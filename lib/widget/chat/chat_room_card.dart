@@ -59,8 +59,8 @@ class ChatRoomCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        if (lastMessageDate != null) SizedBox(width: screenW * 0.05),
                         if (lastMessageDate != null)
+                          SizedBox(width: screenW * 0.05),
                           Text(
                             convertToChatRoomDate(lastMessageDate!),
                             style: const TextStyle(

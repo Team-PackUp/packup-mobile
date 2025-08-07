@@ -4,6 +4,7 @@ class UserModel {
   final String userNation;
   final String joinType;
   final String userGender;
+  final String userLanguage;
 
   final String? email;
   final String? nickname;
@@ -20,6 +21,7 @@ class UserModel {
     required this.userNation,
     required this.joinType,
     required this.userGender,
+    required this.userLanguage,
 
     this.email,
     this.nickname,
@@ -37,6 +39,7 @@ class UserModel {
       'userNation': userNation,
       'email': email,
       'nickname': nickname,
+      'userLanguage': userLanguage,
       'preferCategorySeqJson': preferCategorySeqJson,
     };
   }
@@ -53,6 +56,7 @@ class UserModel {
       marketingFlag: json['marketingFlag'],
       pushFlag: json['pushFlag'],
       profileImagePath: json['profileImagePath'],
+      userLanguage: json['language'],
       preferCategorySeqJson:
           (json['preferCategorySeqJson'] as List<dynamic>?)
               ?.map((e) => e.toString())

@@ -19,10 +19,10 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
   late TextEditingController nickNameController;
   late TextEditingController ageController;
   late TextEditingController genderController;
-  // late TextEditingController languageController; // 언어는 나중에 추가 예정
+  late TextEditingController languageController;
 
-  // String selectedLanguageCode = '';
   String selectedGenderCode = '';
+  String selectedLanguageCode = '';
 
   final List<CodeMappingModel> genderOptions = [
     CodeMappingModel(code: '020001', label: '남성'),
@@ -30,12 +30,12 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
     CodeMappingModel(code: '020003', label: '기타'),
   ];
 
-  // 언어 옵션은 나중에 추가
-  // final List<CodeMappingModel> languageOptions = [
-  //   CodeMappingModel(code: 'ko', label: '한국어'),
-  //   CodeMappingModel(code: 'en', label: 'English'),
-  //   CodeMappingModel(code: 'ja', label: '日本語'),
-  // ];
+  final List<CodeMappingModel> languageOptions = [
+    CodeMappingModel(code: '030101', label: '한국어'),
+    CodeMappingModel(code: '030102', label: 'English'),
+    CodeMappingModel(code: '030103', label: '中國語'),
+    CodeMappingModel(code: '030104', label: '日本語'),
+  ];
 
   @override
   void initState() {
@@ -50,11 +50,16 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
       orElse: () => genderOptions.first,
     );
 
+    final initLanguage = languageOptions.firstWhere(
+          (e) => e.code == user.userLanguage,
+      orElse: () => languageOptions.first,
+    );
+
     genderController = TextEditingController(text: initGender.label);
-    // languageController = TextEditingController(text: '언어');
+    languageController = TextEditingController(text: initLanguage.label);
 
     selectedGenderCode = initGender.code;
-    // selectedLanguageCode = initLanguage.code;
+    selectedLanguageCode = initLanguage.code;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _emitChange();
@@ -64,7 +69,7 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
   void _emitChange() {
     widget.detailInfoChange(
       nickNameController.text,
-      '', // 언어는 나중에
+      selectedLanguageCode,
       ageController.text,
       selectedGenderCode,
     );
@@ -75,7 +80,7 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
     nickNameController.dispose();
     ageController.dispose();
     genderController.dispose();
-    // languageController.dispose();
+    languageController.dispose();
     super.dispose();
   }
 
@@ -133,9 +138,37 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
             ),
           ),
         ),
-        // SizedBox(height: screenH * 0.02),
-        // 언어는 나중에 추가 예정
+        SizedBox(height: screenH * 0.02),
+        GestureDetector(
+          onTap: () {
+            final initialIndex = languageOptions.indexWhere((e) => e.code == selectedLanguageCode);
+            showCustomPicker(
+              context,
+              selectedIndex: initialIndex >= 0 ? initialIndex : 0,
+              options: languageOptions.map((e) => e.label).toList(),
+              onSelected: (index) {
+                setState(() {
+                  selectedLanguageCode = languageOptions[index].code;
+                  languageController.text = languageOptions[index].label;
+                });
+                _emitChange();
+              },
+            );
+          },
+          child: AbsorbPointer(
+            child: TextFormField(
+              readOnly: true,
+              controller: languageController,
+              decoration: const InputDecoration(
+                labelText: '언어',
+                border: OutlineInputBorder(),
+                suffixIcon: Icon(Icons.arrow_drop_down),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
 }
+

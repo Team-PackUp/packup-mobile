@@ -1,11 +1,12 @@
-import 'package:packup/model/user/register_detail/register_detail_model.dart';
-import 'package:packup/service/user/register_detail_service.dart';
-import 'package:provider/provider.dart';
-import 'package:packup/provider/user/user_provider.dart';
-import 'package:go_router/go_router.dart';
-
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
 import 'package:packup/const/color.dart';
+import 'package:packup/model/user/register_detail/register_detail_model.dart';
+import 'package:packup/provider/user/user_provider.dart';
+import 'package:packup/service/user/register_detail_service.dart';
+import 'package:packup/provider/common/code_mapping_model.dart';
 
 class RegisterDetail extends StatefulWidget {
   const RegisterDetail({super.key});
@@ -17,9 +18,15 @@ class RegisterDetail extends StatefulWidget {
 class _RegisterDetailState extends State<RegisterDetail> {
   String? _selectedGenderDisplay;
   String? _selectedNationDisplay;
+  String? _selectedLanguageDisplay;
   String? _age;
 
-  final genderOptions = {'남성': '남성', '여성': '여성', '기타': '성별-기타'};
+  final genderOptions = {
+    '남성': '남성',
+    '여성': '여성',
+    '기타': '성별-기타',
+  };
+
   final nationOptions = {
     '대한민국': '대한민국',
     '미국': '미국',
@@ -27,6 +34,13 @@ class _RegisterDetailState extends State<RegisterDetail> {
     '중국': '중국',
     '기타': '국가-기타',
   };
+
+  final List<CodeMappingModel> languageOptions = [
+    CodeMappingModel(code: '030101', label: '한국어'),
+    CodeMappingModel(code: '030102', label: 'English'),
+    CodeMappingModel(code: '030103', label: '中國語'),
+    CodeMappingModel(code: '030104', label: '日本語'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -44,39 +58,38 @@ class _RegisterDetailState extends State<RegisterDetail> {
               ),
               const SizedBox(height: 8),
               const Text(
-                '성별, 나이, 국적을 입력해주세요.',
+                '성별, 나이, 국적, 언어를 입력해주세요.',
                 style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
               const SizedBox(height: 32),
 
+              // 성별
               const Text('성별', style: TextStyle(fontSize: 16)),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 12,
-                children:
-                    genderOptions.entries.map((entry) {
-                      final label = entry.key;
-                      final value = entry.value;
-                      final isSelected = _selectedGenderDisplay == label;
+                children: genderOptions.entries.map((entry) {
+                  final label = entry.key;
+                  final isSelected = _selectedGenderDisplay == label;
 
-                      return ChoiceChip(
-                        label: Text(label),
-                        selected: isSelected,
-                        onSelected: (_) {
-                          setState(() => _selectedGenderDisplay = label);
-                        },
-
-                        selectedColor: SECONDARY_COLOR.withOpacity(0.2),
-                        checkmarkColor: SECONDARY_COLOR,
-                        labelStyle: TextStyle(
-                          color: isSelected ? SECONDARY_COLOR : Colors.black,
-                        ),
-                        backgroundColor: Colors.grey.shade100,
-                      );
-                    }).toList(),
+                  return ChoiceChip(
+                    label: Text(label),
+                    selected: isSelected,
+                    onSelected: (_) {
+                      setState(() => _selectedGenderDisplay = label);
+                    },
+                    selectedColor: SECONDARY_COLOR.withOpacity(0.2),
+                    checkmarkColor: SECONDARY_COLOR,
+                    labelStyle: TextStyle(
+                      color: isSelected ? SECONDARY_COLOR : Colors.black,
+                    ),
+                    backgroundColor: Colors.grey.shade100,
+                  );
+                }).toList(),
               ),
               const SizedBox(height: 24),
 
+              // 나이
               const Text('나이', style: TextStyle(fontSize: 16)),
               const SizedBox(height: 8),
               TextField(
@@ -92,14 +105,14 @@ class _RegisterDetailState extends State<RegisterDetail> {
               ),
               const SizedBox(height: 24),
 
+              // 국적
               const Text('국적', style: TextStyle(fontSize: 16)),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 value: _selectedNationDisplay,
-                items:
-                    nationOptions.keys.map((label) {
-                      return DropdownMenuItem(value: label, child: Text(label));
-                    }).toList(),
+                items: nationOptions.keys.map((label) {
+                  return DropdownMenuItem(value: label, child: Text(label));
+                }).toList(),
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
                   focusedBorder: OutlineInputBorder(
@@ -107,17 +120,40 @@ class _RegisterDetailState extends State<RegisterDetail> {
                   ),
                 ),
                 hint: const Text('국가를 선택하세요'),
-                onChanged:
-                    (val) => setState(() => _selectedNationDisplay = val),
+                onChanged: (val) => setState(() => _selectedNationDisplay = val),
+              ),
+              const SizedBox(height: 24),
+
+              // 언어
+              const Text('언어', style: TextStyle(fontSize: 16)),
+              const SizedBox(height: 8),
+              DropdownButtonFormField<String>(
+                value: _selectedLanguageDisplay,
+                items: languageOptions.map((lang) {
+                  return DropdownMenuItem(
+                    value: lang.label,
+                    child: Text(lang.label),
+                  );
+                }).toList(),
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: SECONDARY_COLOR, width: 2),
+                  ),
+                ),
+                hint: const Text('언어를 선택하세요'),
+                onChanged: (val) => setState(() => _selectedLanguageDisplay = val),
               ),
               const SizedBox(height: 48),
 
+              // 다음 버튼
               Align(
                 alignment: Alignment.centerRight,
                 child: ElevatedButton(
                   onPressed: () async {
                     if (_selectedGenderDisplay == null ||
                         _selectedNationDisplay == null ||
+                        _selectedLanguageDisplay == null ||
                         _age == null ||
                         _age!.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -126,10 +162,15 @@ class _RegisterDetailState extends State<RegisterDetail> {
                       return;
                     }
 
+                    final selectedLanguageCode = languageOptions
+                        .firstWhere((e) => e.label == _selectedLanguageDisplay!)
+                        .code;
+
                     final model = RegisterDetailModel(
                       userGender: _selectedGenderDisplay!,
                       userAge: _age!,
                       userNation: _selectedNationDisplay!,
+                      userLanguage: selectedLanguageCode,
                     );
 
                     try {
@@ -140,9 +181,7 @@ class _RegisterDetailState extends State<RegisterDetail> {
                       await context.read<UserProvider>().getMyInfo();
 
                       // 다음 페이지 이동
-                      print('다음으로 이동 할게용');
                       context.go('/preference');
-                      print('다음으로 이동 할게용 하이요 ㅋ');
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('저장 실패: ${e.toString()}')),
