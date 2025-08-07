@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/model/user/user_withdraw_log/user_withdraw_log_model.dart';
-import 'package:packup/provider/user/user_provider.dart';
-import 'package:packup/provider/user/user_withdraw_log_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../Const/color.dart';
+import '../../../../../provider/user/user_provider.dart';
 import '../../../../common/custom_error_handler.dart';
 import '../../../../common/util_widget.dart';
 
@@ -21,8 +19,7 @@ class _SettingWithdrawConfirmSectionState extends State<SettingWithdrawConfirmSe
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = context.read<UserProvider>();
-    final userModel = userProvider.userModel!;
+    final user = context.read<UserProvider>().userModel!;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -30,7 +27,7 @@ class _SettingWithdrawConfirmSectionState extends State<SettingWithdrawConfirmSe
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${userModel.nickname}님, 기어코... 탈퇴하시겠어요?',
+            '${user.nickname}님, 기어코... 탈퇴하시겠어요?',
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
@@ -74,10 +71,11 @@ class _SettingWithdrawConfirmSectionState extends State<SettingWithdrawConfirmSe
     required UserWithDrawLogModel model,
   }) async {
     try {
-      await context.read<UserWithDrawLogProvider>().userWithDraw(model);
-
       CustomSnackBar.showResult(context, "회원 탈퇴 되었습니다.");
-      context.read<UserProvider>().logout(context);
+
+      context.read<UserProvider>()
+        ..userWithDraw(model)
+        ..logout(context);
 
     } catch (e) {
       CustomErrorHandler.run(context, e);

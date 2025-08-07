@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:packup/Const/color.dart';
+import 'package:packup/model/common/file_model.dart';
 import 'package:packup/model/user/profile/user_profile_model.dart';
 import 'package:packup/widget/common/alert_bell.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
@@ -18,9 +20,8 @@ class ProfileModify extends StatefulWidget {
   State<ProfileModify> createState() => _ProfileModifyState();
 }
 
-
 class _ProfileModifyState extends State<ProfileModify> {
-  String newProfileImagePath = '';
+  XFile? newProfileImage;
   String newNickName = '';
   String newLanguage = '';
   List<String> selectedCategories = [];
@@ -29,7 +30,6 @@ class _ProfileModifyState extends State<ProfileModify> {
   void initState() {
     super.initState();
     final user = context.read<UserProvider>().userModel!;
-    newProfileImagePath = user.profileImagePath ?? '';
     newNickName = user.nickname ?? '';
     // newLanguage = user.language ?? '';
     selectedCategories = List<String>.from(user.preferCategorySeqJson ?? []);
@@ -57,9 +57,9 @@ class _ProfileModifyState extends State<ProfileModify> {
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           children: [
             ProfileImageSection(
-              onImageChanged: (newImagePath) {
+              onImageChanged: (path) {
                 setState(() {
-                  newProfileImagePath = newImagePath;
+                  newProfileImage = XFile(path);
                 });
               },
             ),
@@ -86,7 +86,7 @@ class _ProfileModifyState extends State<ProfileModify> {
               onPressed: () {
                 FocusScope.of(context).unfocus();
                 _updateProfile(
-                  newProfileImagePath: newProfileImagePath,
+                  newProfileImage: newProfileImage,
                   newNickName: newNickName,
                   newLanguage: newLanguage,
                   selectedCategories: selectedCategories,
@@ -102,7 +102,7 @@ class _ProfileModifyState extends State<ProfileModify> {
   }
 
   Future<void> _updateProfile({
-    required String newProfileImagePath,
+    XFile? newProfileImage,
     required String newNickName,
     required String newLanguage,
     required List<String> selectedCategories,
@@ -110,11 +110,18 @@ class _ProfileModifyState extends State<ProfileModify> {
     try {
       if (!validator()) return;
 
+      String? imagePathToSave;
+
+      if (newProfileImage != null) {
+        FileModel uploaded = await context.read<UserProvider>().updateUserProfileImage(newProfileImage);
+        imagePathToSave = '${uploaded.path!}/${uploaded.encodedName!}';
+      }
+
       final model = UserProfileModel(
-        profileImagePath: newProfileImagePath,
+        profileImagePath: imagePathToSave,
         language: newLanguage,
         nickName: newNickName,
-        preference: selectedCategories
+        preference: selectedCategories,
       );
 
       await context.read<UserProvider>().updateUserProfile(model);
@@ -124,18 +131,13 @@ class _ProfileModifyState extends State<ProfileModify> {
     }
   }
 
-  validator() {
-    if(newProfileImagePath.isEmpty) {
-      CustomSnackBar.showResult(context, "프로필 이미지를 선택해주세요");
-      return false;
-    }
-
-    if(newNickName.isEmpty) {
+  bool validator() {
+    if (newNickName.isEmpty) {
       CustomSnackBar.showResult(context, "닉네임을 입력해주세요");
       return false;
     }
 
-    if(newLanguage.isEmpty) {
+    if (newLanguage.isEmpty) {
       CustomSnackBar.showResult(context, "언어를 선택해주세요");
       return false;
     }

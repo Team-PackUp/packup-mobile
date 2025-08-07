@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:packup/common/util.dart';
 import 'package:packup/const/const.dart';
 import 'package:packup/model/common/user_model.dart';
@@ -12,8 +13,11 @@ import 'package:packup/service/login/kakao_login_service.dart';
 import 'package:packup/service/login/social_login.dart';
 import 'package:provider/provider.dart';
 
+import '../../model/common/file_model.dart';
 import '../../model/user/profile/user_profile_model.dart';
+import '../../model/user/user_withdraw_log/user_withdraw_log_model.dart';
 import '../../service/common/loading_service.dart';
+import '../../service/user/user_service.dart';
 import '../chat/chat_room_provider.dart';
 
 /// UserModel 구독
@@ -30,6 +34,7 @@ class UserProvider extends LoadingProvider {
   String? refreshToken = '';
 
   final LoginService _httpService = LoginService();
+  final UserService _userService = UserService();
 
   UserModel? get userModel => _userModel;
   ResultModel? get resultModel => _resultModel;
@@ -163,37 +168,6 @@ class UserProvider extends LoadingProvider {
     }
   }
 
-  void setProfileImagePath(String path) {
-    if (userModel != null) {
-      userModel!.profileImagePath = path;
-
-      notifyListeners();
-    }
-  }
-
-  Future<void> updateUserProfile(UserProfileModel model) async {
-
-    await _httpService.updateUserProfile(model);
-    if(_resultModel!.resultFlag!) {
-      await getMyInfo();
-    }
-
-    notifyListeners();
-  }
-
-  Future<void> updateSettingPush(bool pushFlag, bool marketingFLag) async {
-
-    String strPushFlag = booleanToString(pushFlag);
-    String strMarketingFLag = booleanToString(marketingFLag);
-
-    await _httpService.updateSettingPush(strPushFlag, strMarketingFLag);
-    if(_resultModel!.resultFlag!) {
-      await getMyInfo();
-    }
-
-    notifyListeners();
-  }
-
   Future<void> clearUser() async {
     await deleteToken(ACCESS_TOKEN);
     await deleteToken(REFRESH_TOKEN);
@@ -210,5 +184,51 @@ class UserProvider extends LoadingProvider {
     // 채팅 변수 초기화
     context.read<ChatRoomProvider>().clearChatRooms();
 
+  }
+
+  void setProfileImagePath(String path) {
+    if (userModel != null) {
+      userModel!.profileImagePath = path;
+
+      notifyListeners();
+    }
+  }
+
+  Future<FileModel> updateUserProfileImage(XFile image) async {
+
+    return await LoadingService.run(() async {
+       final response = await _userService.updateUserProfileImage(image);
+      return FileModel.fromJson(response.response);
+    });
+
+  }
+
+  Future<void> updateUserProfile(UserProfileModel model) async {
+
+    await _userService.updateUserProfile(model);
+    if(_resultModel!.resultFlag!) {
+      await getMyInfo();
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> updateSettingPush(bool pushFlag, bool marketingFLag) async {
+
+    String strPushFlag = booleanToString(pushFlag);
+    String strMarketingFLag = booleanToString(marketingFLag);
+
+    await _userService.updateSettingPush(strPushFlag, strMarketingFLag);
+    if(_resultModel!.resultFlag!) {
+      await getMyInfo();
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> userWithDraw(UserWithDrawLogModel model) async {
+    await LoadingService.run(() async {
+      await _userService.withDraw(model);
+    });
   }
 }

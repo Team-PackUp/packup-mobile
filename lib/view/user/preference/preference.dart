@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:packup/model/user/preference/user_preference_model.dart';
 import 'package:packup/service/user/preference_service.dart';
 
-import '../../../widget/common/preference/preference_list.dart';
+import '../../../widget/user/preference/preference_list.dart';
+
 
 class Preference extends StatefulWidget {
   const Preference({super.key});

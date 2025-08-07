@@ -1,11 +1,11 @@
 class UserProfileModel {
-  final String profileImagePath;
+  final String? profileImagePath;
   final String nickName;
   final String language;
   final List<String> preference;
 
   UserProfileModel({
-    required this.profileImagePath,
+    this.profileImagePath,
     required this.nickName,
     required this.language,
     required this.preference,

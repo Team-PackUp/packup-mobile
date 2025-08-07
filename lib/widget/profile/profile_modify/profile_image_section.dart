@@ -48,10 +48,6 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
                 imagePath: displayImage,
               ),
             ),
-            // IconButton(
-            //   onPressed: _pickImage,
-            //   icon: Icon(Icons.camera_alt),
-            // ),
           ],
         ),
         SizedBox(width: screenW * 0.05),

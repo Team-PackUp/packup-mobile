@@ -25,13 +25,21 @@ class FileModel {
       encodedName : json['encodedName'],
       realName    : json['realName'],
       type        : json['type'],
-      createdAt   : DateTime.parse(json['createdAt']),
+      createdAt   : json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'])
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'path' : path,
+      'seq'        : seq,
+      'path'       : path,
+      'userSeq'    : userSeq,
+      'encodedName': encodedName,
+      'realName'   : realName,
+      'type'       : type,
+      'createdAt'  : createdAt?.toIso8601String(),
     };
   }
 }

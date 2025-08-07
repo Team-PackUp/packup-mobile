@@ -98,7 +98,6 @@ class _SettingWithdrawSectionState extends State<SettingWithdrawSection> {
         reason: _selectedReason!, codeName: 'WITHDRAW');
 
     context.push("/profile/withdraw-confirm", extra: userWithdrawLog);
-    print("real withdraw");
   }
 
 }

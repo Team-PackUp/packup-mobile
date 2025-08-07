@@ -20,7 +20,14 @@ class ProfileDetailSection extends StatefulWidget {
 }
 
 class _ProfileDetailSectionState extends State<ProfileDetailSection> {
-
+  final List<String> categories = [
+    '기사',
+    '책',
+    '여행 가이드',
+    '블로그',
+    '시각 콘텐츠',
+    '오디오 콘텐츠',
+  ];
   List<String>? _preference;
   @override
   void initState() {
@@ -41,42 +48,18 @@ class _ProfileDetailSectionState extends State<ProfileDetailSection> {
           child: Text('관심사'),
         ),
         SizedBox(height: h * 0.02),
-        if (_preference == null || _preference!.isEmpty)
-          const CustomEmptyList(
-            message: '선호하는 카테고리가 없습니다.',
-            icon: Icons.room_preferences,
-          )
-        else
-          CategoryFilter<String>(
-            items: _preference!,
-            labelBuilder: (c) => c,
-            mode: SelectionMode.multiple,
-            onSelectionChanged: (selectedCats) {
-              final labels = selectedCats.map((c) => c.trim()).toList();
-              print('선택된 카테고리: $labels');
-            },
-            readOnly: true,
-          ),
+        CategoryFilter<String>(
+          items: categories,
+          initialSelectedItems: _preference,
+          labelBuilder: (c) => c,
+          mode: SelectionMode.multiple,
+          onSelectionChanged: (selectedCats) {
+            final labels = selectedCats.map((c) => c.trim()).toList();
+            print('선택된 카테고리: $labels');
+            widget.preferenceChange(labels);
+          },
+        ),
         SizedBox(height: h * 0.02),
-        CustomButton.textButton(
-            context: context,
-            onPressed: () async {
-              final result = await context.push<List<String>>(
-                '/profile/preference-modify',
-                extra: _preference,
-              );
-              if (mounted && result != null) {
-                setState(() {
-                  _preference = result;
-                });
-                widget.preferenceChange(result);
-              }
-
-              print(result);
-            },
-            backgroundColor: PRIMARY_COLOR,
-            label: '선호 카테고리 선택'
-        )
       ],
     );
   }

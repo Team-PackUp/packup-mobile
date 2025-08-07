@@ -7,8 +7,6 @@ import 'package:packup/http/dio_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:packup/common/util.dart';
 
-import '../../model/user/profile/user_profile_model.dart';
-
 class LoginService {
 
   static final LoginService _instance = LoginService._internal();
@@ -55,19 +53,4 @@ class LoginService {
       });
     }
   }
-
-  Future<ResultModel> updateUserProfile(UserProfileModel model) async {
-    return await DioService().putRequest('/user/profile-update', model.toJson());
-  }
-
-  Future<ResultModel> updateSettingPush(String pushFlg, String marketingFLag) async {
-    final data = {'pushFlag': pushFlg, 'marketingFlag': marketingFLag};
-    return await DioService().putRequest('/user/setting-push', data);
-  }
-
-  Future<ResultModel> userWithDraw(String reason) async {
-    final data = {'reason': reason};
-    return await DioService().putRequest('/user/withdraw', data);
-  }
-
 }
