@@ -38,7 +38,7 @@ class ChatRoomList extends StatelessWidget {
             child: ChatRoomCard(
               title: room.title ?? '',
               unReadCount: unReadCount,
-              profileImagePath: room.user!.profileImagePath!,
+              profileImagePath: room.user!.profileImagePath,
               lastMessage: room.lastMessage,
               lastMessageDate: room.lastMessageDate,
               fileFlag: room.fileFlag ?? 'N',

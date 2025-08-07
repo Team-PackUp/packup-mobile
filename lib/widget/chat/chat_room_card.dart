@@ -8,7 +8,7 @@ import '../../common/util.dart';
 class ChatRoomCard extends StatelessWidget {
   final String title;
   final String unReadCount;
-  final String profileImagePath;
+  final String? profileImagePath;
   final String? lastMessage;
   final DateTime? lastMessageDate;
   final String fileFlag;
@@ -17,7 +17,7 @@ class ChatRoomCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.unReadCount,
-    required this.profileImagePath,
+    this.profileImagePath,
     this.lastMessage,
     this.lastMessageDate,
     required this.fileFlag,
