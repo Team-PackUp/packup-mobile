@@ -24,6 +24,8 @@ class _ProfileModifyState extends State<ProfileModify> {
   XFile? newProfileImage;
   String newNickName = '';
   String newLanguage = '';
+  String newGender = '';
+  String newAge = '';
   List<String> selectedCategories = [];
 
   @override
@@ -65,10 +67,12 @@ class _ProfileModifyState extends State<ProfileModify> {
             ),
             SizedBox(height: screenH * 0.03),
             ProfileInfoSection(
-              detailInfoChange: (nickName, language) {
+              detailInfoChange: (nickName, languageCode, age, genderCode) {
                 setState(() {
                   newNickName = nickName;
-                  newLanguage = language;
+                  newLanguage = languageCode;
+                  newAge = age;
+                  newGender = genderCode;
                 });
               },
             ),
@@ -88,6 +92,8 @@ class _ProfileModifyState extends State<ProfileModify> {
                 _updateProfile(
                   newProfileImage: newProfileImage,
                   newNickName: newNickName,
+                  newAge: newAge,
+                  newGender: newGender,
                   newLanguage: newLanguage,
                   selectedCategories: selectedCategories,
                 );
@@ -104,29 +110,37 @@ class _ProfileModifyState extends State<ProfileModify> {
   Future<void> _updateProfile({
     XFile? newProfileImage,
     required String newNickName,
+    required String newAge,
+    required String newGender,
     required String newLanguage,
     required List<String> selectedCategories,
   }) async {
     try {
       if (!validator()) return;
 
+      final user = context.read<UserProvider>();
+
       String? imagePathToSave;
 
       if (newProfileImage != null) {
-        FileModel uploaded = await context.read<UserProvider>().updateUserProfileImage(newProfileImage);
+        FileModel uploaded = await user.updateUserProfileImage(newProfileImage);
         imagePathToSave = '${uploaded.path!}/${uploaded.encodedName!}';
       }
 
       final model = UserProfileModel(
         profileImagePath: imagePathToSave,
-        language: newLanguage,
         nickName: newNickName,
+        age: newAge,
+        gender: newGender,
+        language: newLanguage,
         preference: selectedCategories,
       );
 
-      await context.read<UserProvider>().updateUserProfile(model);
+      if (!mounted) return;
+      await user.updateUserProfile(model);
       CustomSnackBar.showResult(context, "수정 되었습니다");
     } catch (e) {
+      if (!mounted) return;
       CustomErrorHandler.run(context, e);
     }
   }
@@ -137,10 +151,20 @@ class _ProfileModifyState extends State<ProfileModify> {
       return false;
     }
 
-    if (newLanguage.isEmpty) {
-      CustomSnackBar.showResult(context, "언어를 선택해주세요");
+    if (newAge.isEmpty) {
+      CustomSnackBar.showResult(context, "나이를 입력해주세요");
       return false;
     }
+
+    if (newGender.isEmpty) {
+      CustomSnackBar.showResult(context, "성별을 입력해주세요");
+      return false;
+    }
+
+    // if (newLanguage.isEmpty) {
+    //   CustomSnackBar.showResult(context, "언어를 선택해주세요");
+    //   return false;
+    // }
 
     return true;
   }

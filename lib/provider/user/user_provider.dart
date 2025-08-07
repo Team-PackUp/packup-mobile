@@ -205,12 +205,15 @@ class UserProvider extends LoadingProvider {
 
   Future<void> updateUserProfile(UserProfileModel model) async {
 
-    await _userService.updateUserProfile(model);
-    if(_resultModel!.resultFlag!) {
-      await getMyInfo();
-    }
+    await LoadingService.run(() async {
+      await _userService.updateUserProfile(model);
+      if(_resultModel!.resultFlag!) {
+        await getMyInfo();
+      }
 
-    notifyListeners();
+      notifyListeners();
+    });
+
   }
 
   Future<void> updateSettingPush(bool pushFlag, bool marketingFLag) async {

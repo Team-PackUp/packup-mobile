@@ -29,11 +29,6 @@ class UserService {
     return await DioService().putRequest('/user/setting-push', data);
   }
 
-  Future<ResultModel> userWithDraw(String reason) async {
-    final data = {'reason': reason};
-    return await DioService().putRequest('/user/withdraw', data);
-  }
-
   Future<void> withDraw(UserWithDrawLogModel model) async {
     await _dio.postRequest('/user/withdraw', model.toJson());
   }

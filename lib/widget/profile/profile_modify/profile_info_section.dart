@@ -2,11 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/common/code_mapping_model.dart';
 import '../../../provider/user/user_provider.dart';
 import '../../common/custom_show_picker.dart';
 
 class ProfileInfoSection extends StatefulWidget {
-  final void Function(String nickname, String language) detailInfoChange;
+  final void Function(String nickname, String languageCode, String age, String genderCode) detailInfoChange;
 
   const ProfileInfoSection({super.key, required this.detailInfoChange});
 
@@ -16,19 +17,44 @@ class ProfileInfoSection extends StatefulWidget {
 
 class _ProfileInfoSectionState extends State<ProfileInfoSection> {
   late TextEditingController nickNameController;
-  late TextEditingController languageController;
+  late TextEditingController ageController;
+  late TextEditingController genderController;
+  // late TextEditingController languageController; // 언어는 나중에 추가 예정
 
-  String selectedLanguage = '한국어'; // 초기값
+  // String selectedLanguageCode = '';
+  String selectedGenderCode = '';
 
-  final List<String> languageOptions = ['한국어', 'English', '日本語'];
+  final List<CodeMappingModel> genderOptions = [
+    CodeMappingModel(code: '020001', label: '남성'),
+    CodeMappingModel(code: '020002', label: '여성'),
+    CodeMappingModel(code: '020003', label: '기타'),
+  ];
+
+  // 언어 옵션은 나중에 추가
+  // final List<CodeMappingModel> languageOptions = [
+  //   CodeMappingModel(code: 'ko', label: '한국어'),
+  //   CodeMappingModel(code: 'en', label: 'English'),
+  //   CodeMappingModel(code: 'ja', label: '日本語'),
+  // ];
 
   @override
   void initState() {
     super.initState();
 
-    final nickname = context.read<UserProvider>().userModel?.nickname ?? '';
-    nickNameController = TextEditingController(text: nickname);
-    languageController = TextEditingController(text: selectedLanguage);
+    final user = context.read<UserProvider>().userModel!;
+    nickNameController = TextEditingController(text: user.nickname ?? '');
+    ageController = TextEditingController(text: user.userAge ?? '');
+
+    final initGender = genderOptions.firstWhere(
+          (e) => e.code == user.userGender,
+      orElse: () => genderOptions.first,
+    );
+
+    genderController = TextEditingController(text: initGender.label);
+    // languageController = TextEditingController(text: '언어');
+
+    selectedGenderCode = initGender.code;
+    // selectedLanguageCode = initLanguage.code;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _emitChange();
@@ -36,13 +62,20 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
   }
 
   void _emitChange() {
-    widget.detailInfoChange(nickNameController.text, selectedLanguage);
+    widget.detailInfoChange(
+      nickNameController.text,
+      '', // 언어는 나중에
+      ageController.text,
+      selectedGenderCode,
+    );
   }
 
   @override
   void dispose() {
     nickNameController.dispose();
-    languageController.dispose();
+    ageController.dispose();
+    genderController.dispose();
+    // languageController.dispose();
     super.dispose();
   }
 
@@ -62,17 +95,27 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
           onChanged: (_) => _emitChange(),
         ),
         SizedBox(height: screenH * 0.02),
+        TextField(
+          keyboardType: TextInputType.number,
+          controller: ageController,
+          decoration: const InputDecoration(
+            labelText: '나이',
+            border: OutlineInputBorder(),
+          ),
+          onChanged: (_) => _emitChange(),
+        ),
+        SizedBox(height: screenH * 0.02),
         GestureDetector(
           onTap: () {
-            final initialIndex = languageOptions.indexOf(selectedLanguage);
+            final initialIndex = genderOptions.indexWhere((e) => e.code == selectedGenderCode);
             showCustomPicker(
               context,
               selectedIndex: initialIndex >= 0 ? initialIndex : 0,
-              options: languageOptions,
+              options: genderOptions.map((e) => e.label).toList(),
               onSelected: (index) {
                 setState(() {
-                  selectedLanguage = languageOptions[index];
-                  languageController.text = selectedLanguage;
+                  selectedGenderCode = genderOptions[index].code;
+                  genderController.text = genderOptions[index].label;
                 });
                 _emitChange();
               },
@@ -81,15 +124,17 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
           child: AbsorbPointer(
             child: TextFormField(
               readOnly: true,
-              controller: languageController,
+              controller: genderController,
               decoration: const InputDecoration(
-                labelText: '언어',
+                labelText: '성별',
                 border: OutlineInputBorder(),
                 suffixIcon: Icon(Icons.arrow_drop_down),
               ),
             ),
           ),
         ),
+        // SizedBox(height: screenH * 0.02),
+        // 언어는 나중에 추가 예정
       ],
     );
   }

@@ -33,6 +33,10 @@ class CircleProfileImage extends StatelessWidget {
       radius: radius,
       backgroundImage: bgImage,
       backgroundColor: Colors.grey[200],
+      child: bgImage == null
+          ? Icon(Icons.person, size: radius, color: Colors.grey[500])
+          : null,
     );
+
   }
 }

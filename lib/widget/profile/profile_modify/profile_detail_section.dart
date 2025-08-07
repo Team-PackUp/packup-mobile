@@ -55,7 +55,6 @@ class _ProfileDetailSectionState extends State<ProfileDetailSection> {
           mode: SelectionMode.multiple,
           onSelectionChanged: (selectedCats) {
             final labels = selectedCats.map((c) => c.trim()).toList();
-            print('선택된 카테고리: $labels');
             widget.preferenceChange(labels);
           },
         ),
