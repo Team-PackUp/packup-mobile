@@ -43,8 +43,6 @@ class CustomInterceptor extends Interceptor {
 
     final refreshToken = await getToken(REFRESH_TOKEN);
 
-    print('리프레쉬토큰입니다asdf: ${refreshToken}');
-
     if (refreshToken == null) {
       return handler.reject(err);
     }
