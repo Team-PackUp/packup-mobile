@@ -1,6 +1,6 @@
 class UserModel {
   final String userId;
-  final String userAge;
+  final String userBirth;
   final String userNation;
   final String joinType;
   final String userGender;
@@ -17,7 +17,7 @@ class UserModel {
 
   UserModel({
     required this.userId,
-    required this.userAge,
+    required this.userBirth,
     required this.userNation,
     required this.joinType,
     required this.userGender,
@@ -35,7 +35,7 @@ class UserModel {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'userNumber': userId,
-      'userAge': userAge,
+      'userBirth': userBirth,
       'userNation': userNation,
       'email': email,
       'nickname': nickname,
@@ -47,7 +47,7 @@ class UserModel {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       userId: json['userId'] ?? '',
-      userAge: json['age']?.toString() ?? '',
+      userBirth: json['birth']?.toString() ?? '',
       userNation: json['nation'] ?? '',
       joinType: json['joinType'] ?? '',
       userGender: json['gender'] ?? '',
@@ -67,7 +67,7 @@ class UserModel {
 
 extension UserModelExtension on UserModel {
   bool get isDetailRegistered {
-    return userAge.isNotEmpty &&
+    return userBirth.isNotEmpty &&
         userNation.isNotEmpty &&
         userGender.isNotEmpty &&
         nickname != null &&

@@ -1,12 +1,12 @@
 class RegisterDetailModel {
   final String userGender;
-  final String userAge;
+  final String userBirth;
   final String userNation;
   final String userLanguage;
 
   RegisterDetailModel({
     required this.userGender,
-    required this.userAge,
+    required this.userBirth,
     required this.userNation,
     required this.userLanguage,
   });
@@ -14,7 +14,7 @@ class RegisterDetailModel {
   Map<String, dynamic> toJson() {
     return {
       'userGender': userGender,
-      'userAge': userAge,
+      'userBirth': userBirth,
       'userNation': userNation,
       'userLanguage': userLanguage,
     };

@@ -64,7 +64,7 @@ GoRouter createRouter(UserProvider userProvider) {
       }
 
       print('프린트할게요');
-      print('userAge: ${userProvider.userModel?.userAge}');
+      print('userAge: ${userProvider.userModel?.userBirth}');
       print('userNation: ${userProvider.userModel?.userNation}');
       print('userGender: ${userProvider.userModel?.userGender}');
       print('nickname: ${userProvider.userModel?.nickname}');

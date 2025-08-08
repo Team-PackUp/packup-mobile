@@ -1,13 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../Common/util.dart';
 import '../../../provider/common/code_mapping_model.dart';
 import '../../../provider/user/user_provider.dart';
+import '../../common/custom_birth_input.dart';
 import '../../common/custom_show_picker.dart';
 
 class ProfileInfoSection extends StatefulWidget {
-  final void Function(String nickname, String languageCode, String age, String genderCode) detailInfoChange;
+  final void Function(String nickname, String languageCode, String birth, String genderCode) detailInfoChange;
 
   const ProfileInfoSection({super.key, required this.detailInfoChange});
 
@@ -17,9 +18,10 @@ class ProfileInfoSection extends StatefulWidget {
 
 class _ProfileInfoSectionState extends State<ProfileInfoSection> {
   late TextEditingController nickNameController;
-  late TextEditingController ageController;
   late TextEditingController genderController;
   late TextEditingController languageController;
+
+  DateTime? birth;
 
   String selectedGenderCode = '';
   String selectedLanguageCode = '';
@@ -43,7 +45,10 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
 
     final user = context.read<UserProvider>().userModel!;
     nickNameController = TextEditingController(text: user.nickname ?? '');
-    ageController = TextEditingController(text: user.userAge ?? '');
+
+    if (user.userBirth.isNotEmpty) {
+      birth = DateTime.tryParse(user.userBirth);
+    }
 
     final initGender = genderOptions.firstWhere(
           (e) => e.code == user.userGender,
@@ -70,7 +75,7 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
     widget.detailInfoChange(
       nickNameController.text,
       selectedLanguageCode,
-      ageController.text,
+      convertToYmd(birth!),
       selectedGenderCode,
     );
   }
@@ -78,7 +83,6 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
   @override
   void dispose() {
     nickNameController.dispose();
-    ageController.dispose();
     genderController.dispose();
     languageController.dispose();
     super.dispose();
@@ -100,15 +104,18 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
           onChanged: (_) => _emitChange(),
         ),
         SizedBox(height: screenH * 0.02),
-        TextField(
-          keyboardType: TextInputType.number,
-          controller: ageController,
-          decoration: const InputDecoration(
-            labelText: '나이',
-            border: OutlineInputBorder(),
-          ),
-          onChanged: (_) => _emitChange(),
+
+        const Text("생년월일"),
+        CustomBirthInput(
+          initialDate: birth,
+          onDateChanged: (val) {
+            setState(() {
+              birth = val;
+            });
+            _emitChange();
+          },
         ),
+
         SizedBox(height: screenH * 0.02),
         GestureDetector(
           onTap: () {
@@ -171,4 +178,3 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
     );
   }
 }
-

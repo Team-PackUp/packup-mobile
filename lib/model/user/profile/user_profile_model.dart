@@ -1,7 +1,7 @@
 class UserProfileModel {
   final String? profileImagePath;
   final String nickName;
-  final String age;
+  final String birth;
   final String gender;
   final String language;
   final List<String> preference;
@@ -9,7 +9,7 @@ class UserProfileModel {
   UserProfileModel({
     this.profileImagePath,
     required this.nickName,
-    required this.age,
+    required this.birth,
     required this.gender,
     required this.language,
     required this.preference,
@@ -19,7 +19,7 @@ class UserProfileModel {
     return {
       'profileImagePath': profileImagePath,
       'nickName': nickName,
-      'age': age,
+      'birth': birth,
       'gender': gender,
       'language': language,
       'preference': preference,

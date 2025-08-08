@@ -25,7 +25,7 @@ class _ProfileModifyState extends State<ProfileModify> {
   String newNickName = '';
   String newLanguage = '';
   String newGender = '';
-  String newAge = '';
+  String newBirth = '';
   List<String> selectedCategories = [];
 
   @override
@@ -33,7 +33,7 @@ class _ProfileModifyState extends State<ProfileModify> {
     super.initState();
     final user = context.read<UserProvider>().userModel!;
     newNickName = user.nickname ?? '';
-    // newLanguage = user.language ?? '';
+    newLanguage = user.userLanguage ?? '';
     selectedCategories = List<String>.from(user.preferCategorySeqJson ?? []);
   }
 
@@ -67,11 +67,11 @@ class _ProfileModifyState extends State<ProfileModify> {
             ),
             SizedBox(height: screenH * 0.03),
             ProfileInfoSection(
-              detailInfoChange: (nickName, languageCode, age, genderCode) {
+              detailInfoChange: (nickName, languageCode, birth, genderCode) {
                 setState(() {
                   newNickName = nickName;
                   newLanguage = languageCode;
-                  newAge = age;
+                  newBirth = birth;
                   newGender = genderCode;
                 });
               },
@@ -92,7 +92,7 @@ class _ProfileModifyState extends State<ProfileModify> {
                 _updateProfile(
                   newProfileImage: newProfileImage,
                   newNickName: newNickName,
-                  newAge: newAge,
+                  newBirth: newBirth,
                   newGender: newGender,
                   newLanguage: newLanguage,
                   selectedCategories: selectedCategories,
@@ -110,7 +110,7 @@ class _ProfileModifyState extends State<ProfileModify> {
   Future<void> _updateProfile({
     XFile? newProfileImage,
     required String newNickName,
-    required String newAge,
+    required String newBirth,
     required String newGender,
     required String newLanguage,
     required List<String> selectedCategories,
@@ -130,7 +130,7 @@ class _ProfileModifyState extends State<ProfileModify> {
       final model = UserProfileModel(
         profileImagePath: imagePathToSave,
         nickName: newNickName,
-        age: newAge,
+        birth: newBirth,
         gender: newGender,
         language: newLanguage,
         preference: selectedCategories,
@@ -151,7 +151,7 @@ class _ProfileModifyState extends State<ProfileModify> {
       return false;
     }
 
-    if (newAge.isEmpty) {
+    if (newBirth.isEmpty) {
       CustomSnackBar.showResult(context, "나이를 입력해주세요");
       return false;
     }
