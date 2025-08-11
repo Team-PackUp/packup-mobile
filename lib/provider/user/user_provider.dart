@@ -86,7 +86,6 @@ class UserProvider extends LoadingProvider {
     } catch (e) {
       logger(e.toString(), 'DEBUG');
     } finally {
-
       await initLoginStatus();
 
       _isLoading = false;
@@ -102,9 +101,18 @@ class UserProvider extends LoadingProvider {
       await getMyInfo();
     }
 
-    if (_userModel!.joinType.trim() == SocialLoginType.google.codeNumber) {
+    final joinType = _userModel?.joinType?.trim();
+    if (joinType == SocialLoginType.google.codeNumber) {
       socialLogin = GoogleLogin();
+    } else if (joinType == SocialLoginType.kakao.codeNumber) {
+      socialLogin = KakaoLogin();
+    } else {
+      socialLogin = null;
     }
+
+    // if (_userModel!.joinType.trim() == SocialLoginType.google.codeNumber) {
+    //   socialLogin = GoogleLogin();
+    // }
 
     isInitialized = true;
     notifyListeners();
@@ -148,8 +156,6 @@ class UserProvider extends LoadingProvider {
 
       // 회원 정보 정리
       await clearUser();
-
-
     } catch (e) {
       print(e.toString());
     } finally {
@@ -157,7 +163,6 @@ class UserProvider extends LoadingProvider {
       notifyListeners();
     }
   }
-
 
   Future<void> getMyInfo() async {
     _resultModel = await _httpService.getMyInfo();
@@ -180,10 +185,8 @@ class UserProvider extends LoadingProvider {
   }
 
   Future<void> clearCommonProvider(BuildContext context) async {
-
     // 채팅 변수 초기화
     context.read<ChatRoomProvider>().clearChatRooms();
-
   }
 
   void setProfileImagePath(String path) {
@@ -195,34 +198,29 @@ class UserProvider extends LoadingProvider {
   }
 
   Future<FileModel> updateUserProfileImage(XFile image) async {
-
     return await LoadingService.run(() async {
-       final response = await _userService.updateUserProfileImage(image);
+      final response = await _userService.updateUserProfileImage(image);
       return FileModel.fromJson(response.response);
     });
-
   }
 
   Future<void> updateUserProfile(UserProfileModel model) async {
-
     await LoadingService.run(() async {
       await _userService.updateUserProfile(model);
-      if(_resultModel!.resultFlag!) {
+      if (_resultModel!.resultFlag!) {
         await getMyInfo();
       }
 
       notifyListeners();
     });
-
   }
 
   Future<void> updateSettingPush(bool pushFlag, bool marketingFLag) async {
-
     String strPushFlag = booleanToString(pushFlag);
     String strMarketingFLag = booleanToString(marketingFLag);
 
     await _userService.updateSettingPush(strPushFlag, strMarketingFLag);
-    if(_resultModel!.resultFlag!) {
+    if (_resultModel!.resultFlag!) {
       await getMyInfo();
     }
 

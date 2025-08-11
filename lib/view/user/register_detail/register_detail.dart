@@ -24,11 +24,7 @@ class _RegisterDetailState extends State<RegisterDetail> {
   String? _selectedLanguageDisplay;
   String? _birth;
 
-  final genderOptions = {
-    '남성': '남성',
-    '여성': '여성',
-    '기타': '성별-기타',
-  };
+  final genderOptions = {'남성': '남성', '여성': '여성', '기타': '성별-기타'};
 
   final nationOptions = {
     '대한민국': '대한민국',
@@ -77,24 +73,25 @@ class _RegisterDetailState extends State<RegisterDetail> {
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 12,
-                  children: genderOptions.entries.map((entry) {
-                    final label = entry.key;
-                    final isSelected = _selectedGenderDisplay == label;
+                  children:
+                      genderOptions.entries.map((entry) {
+                        final label = entry.key;
+                        final isSelected = _selectedGenderDisplay == label;
 
-                    return ChoiceChip(
-                      label: Text(label),
-                      selected: isSelected,
-                      onSelected: (_) {
-                        setState(() => _selectedGenderDisplay = label);
-                      },
-                      selectedColor: SECONDARY_COLOR.withOpacity(0.2),
-                      checkmarkColor: SECONDARY_COLOR,
-                      labelStyle: TextStyle(
-                        color: isSelected ? SECONDARY_COLOR : Colors.black,
-                      ),
-                      backgroundColor: Colors.grey.shade100,
-                    );
-                  }).toList(),
+                        return ChoiceChip(
+                          label: Text(label),
+                          selected: isSelected,
+                          onSelected: (_) {
+                            setState(() => _selectedGenderDisplay = label);
+                          },
+                          selectedColor: SECONDARY_COLOR.withOpacity(0.2),
+                          checkmarkColor: SECONDARY_COLOR,
+                          labelStyle: TextStyle(
+                            color: isSelected ? SECONDARY_COLOR : Colors.black,
+                          ),
+                          backgroundColor: Colors.grey.shade100,
+                        );
+                      }).toList(),
                 ),
                 const SizedBox(height: 24),
 
@@ -113,7 +110,9 @@ class _RegisterDetailState extends State<RegisterDetail> {
                 //   onChanged: (val) => _age = val,
                 // ),
                 CustomBirthInput(
-                  onDateChanged: (val) => _birth = convertToYmd(val!),
+                  onDateChanged: (val) {
+                    _birth = (val != null) ? convertToYmd(val) : null;
+                  },
                 ),
                 const SizedBox(height: 24),
 
@@ -122,9 +121,13 @@ class _RegisterDetailState extends State<RegisterDetail> {
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
                   value: _selectedNationDisplay,
-                  items: nationOptions.keys.map((label) {
-                    return DropdownMenuItem(value: label, child: Text(label));
-                  }).toList(),
+                  items:
+                      nationOptions.keys.map((label) {
+                        return DropdownMenuItem(
+                          value: label,
+                          child: Text(label),
+                        );
+                      }).toList(),
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
                     focusedBorder: OutlineInputBorder(
@@ -132,7 +135,8 @@ class _RegisterDetailState extends State<RegisterDetail> {
                     ),
                   ),
                   hint: const Text('국가를 선택하세요'),
-                  onChanged: (val) => setState(() => _selectedNationDisplay = val),
+                  onChanged:
+                      (val) => setState(() => _selectedNationDisplay = val),
                 ),
                 const SizedBox(height: 24),
 
@@ -141,12 +145,13 @@ class _RegisterDetailState extends State<RegisterDetail> {
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
                   value: _selectedLanguageDisplay,
-                  items: languageOptions.map((lang) {
-                    return DropdownMenuItem(
-                      value: lang.label,
-                      child: Text(lang.label),
-                    );
-                  }).toList(),
+                  items:
+                      languageOptions.map((lang) {
+                        return DropdownMenuItem(
+                          value: lang.label,
+                          child: Text(lang.label),
+                        );
+                      }).toList(),
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
                     focusedBorder: OutlineInputBorder(
@@ -154,7 +159,8 @@ class _RegisterDetailState extends State<RegisterDetail> {
                     ),
                   ),
                   hint: const Text('언어를 선택하세요'),
-                  onChanged: (val) => setState(() => _selectedLanguageDisplay = val),
+                  onChanged:
+                      (val) => setState(() => _selectedLanguageDisplay = val),
                 ),
                 const SizedBox(height: 48),
 
@@ -173,9 +179,12 @@ class _RegisterDetailState extends State<RegisterDetail> {
                         );
                         return;
                       }
-                      final selectedLanguageCode = languageOptions
-                          .firstWhere((e) => e.label == _selectedLanguageDisplay!)
-                          .code;
+                      final selectedLanguageCode =
+                          languageOptions
+                              .firstWhere(
+                                (e) => e.label == _selectedLanguageDisplay!,
+                              )
+                              .code;
 
                       final model = RegisterDetailModel(
                         userGender: _selectedGenderDisplay!,
