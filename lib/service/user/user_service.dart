@@ -1,4 +1,5 @@
 import 'package:image_picker/image_picker.dart';
+import 'package:packup/model/user/guide_me_response_model.dart';
 
 import '../../http/dio_service.dart';
 import '../../model/common/result_model.dart';
@@ -17,14 +18,23 @@ class UserService {
   }
 
   Future<ResultModel> updateUserProfileImage(XFile image) async {
-    return await DioService().multipartRequest('/user/update/profile-image', image);
+    return await DioService().multipartRequest(
+      '/user/update/profile-image',
+      image,
+    );
   }
 
   Future<ResultModel> updateUserProfile(UserProfileModel model) async {
-    return await DioService().putRequest('/user/update/profile', model.toJson());
+    return await DioService().putRequest(
+      '/user/update/profile',
+      model.toJson(),
+    );
   }
 
-  Future<ResultModel> updateSettingPush(String pushFlg, String marketingFLag) async {
+  Future<ResultModel> updateSettingPush(
+    String pushFlg,
+    String marketingFLag,
+  ) async {
     final data = {'pushFlag': pushFlg, 'marketingFlag': marketingFLag};
     return await DioService().putRequest('/user/setting-push', data);
   }
@@ -32,6 +42,14 @@ class UserService {
   Future<void> withDraw(UserWithDrawLogModel model) async {
     await _dio.postRequest('/user/withdraw', model.toJson());
   }
+
+  Future<bool> isGuideExists() async {
+    final res = await DioService().getRequest('/guide/me/exists');
+    return res.response == true;
+  }
+
+  Future<GuideMeResponseModel> fetchMyGuide() async {
+    final res = await DioService().getRequest('/guide/me');
+    return GuideMeResponseModel.fromJson(res.response);
+  }
 }
-
-

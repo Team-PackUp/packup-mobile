@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'package:packup/common/toast.dart';
+import 'package:packup/service/user/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -74,7 +75,21 @@ class ProfileSection extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        try {
+                          final exists = await UserService().isGuideExists();
+
+                          if (exists) {
+                            print('이미 가이드입니다~ 가이드 전환 페이지로 이동~');
+                            return;
+                          }
+
+                          if (context.mounted) {
+                            print('가이드지원서 페이지로 갈게요');
+                            context.push('/guide/application/submit');
+                          }
+                        } catch (e) {}
+                      },
                       style: OutlinedButton.styleFrom(
                         backgroundColor: Colors.black,
                         side: const BorderSide(color: Colors.black),
