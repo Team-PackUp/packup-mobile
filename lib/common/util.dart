@@ -64,7 +64,6 @@ String formatAmount(int amount) {
 
 /// ################### DATE ################### ///
 DateTime getToday() {
-
   // 오늘 날짜
   DateTime nowDate = DateTime.utc(
     DateTime.now().year,
@@ -151,17 +150,17 @@ String fullFileUrl(String path) {
 logger(dynamic message, [String type = "TRACE"]) {
   final logger = Logger();
 
-  switch(type) {
-    case "TRACE" :
+  switch (type) {
+    case "TRACE":
       logger.t('$type $message');
       break;
-    case "DEBUG" :
+    case "DEBUG":
       logger.d('$type $message');
       break;
-    case "INFO" :
+    case "INFO":
       logger.i('$type $message');
       break;
-    case "ERROR" :
+    case "ERROR":
       logger.e('$type $message');
       break;
   }
@@ -190,21 +189,18 @@ bool tokenExpired(String token) {
 }
 
 String urlGenerator(String url) {
-
   return httpPrefix + url;
 }
-
 
 /// ################### Currency ################### ///
 String formatPrice(int price) {
   return NumberFormat.currency(locale: 'ko_KR', symbol: '₩').format(price);
 }
 
-
 /// ################### Type Converter ################### ///
 bool stringToBoolean(String ynString) {
   ynString = ynString.toUpperCase();
-  if(ynString == 'Y') {
+  if (ynString == 'Y') {
     return true;
   } else {
     return false;
@@ -212,7 +208,7 @@ bool stringToBoolean(String ynString) {
 }
 
 String booleanToString(bool ynBool) {
-  if(ynBool == true) {
+  if (ynBool == true) {
     return 'Y';
   } else {
     return 'N';

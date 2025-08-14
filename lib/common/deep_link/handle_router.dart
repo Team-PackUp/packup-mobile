@@ -1,11 +1,9 @@
-import 'package:packup/Common/util.dart';
-import 'package:packup/main.dart';
-
 class DeepLinkRouter {
   static Function(int index, {Map<String, dynamic>? payload})? _navigator;
 
   static void registerNavigator(
-      Function(int index, {Map<String, dynamic>? payload}) navigator) {
+    Function(int index, {Map<String, dynamic>? payload}) navigator,
+  ) {
     _navigator = navigator;
   }
 
