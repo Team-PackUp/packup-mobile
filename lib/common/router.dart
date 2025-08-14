@@ -21,6 +21,7 @@ import 'package:packup/view/tour/user/tour_detail.dart';
 import 'package:packup/view/user/preference/preference.dart';
 import 'package:packup/view/user/register_detail/register_detail.dart';
 import 'package:packup/widget/common/custom_error.dart';
+import 'package:packup/view/guide/application/guide_application_submit.dart';
 
 import '../provider/search/search_provider.dart';
 import '../view/ai_recommend/detail/ai_recommend_detail.dart';
@@ -57,6 +58,7 @@ GoRouter createRouter(UserProvider userProvider) {
         '/notice_view',
         '/chat_message',
         '/preference',
+        '/guide/application/submit',
       ].any((path) => currentLoc.startsWith(path));
 
       if (!hasToken && isProtected) {
@@ -240,7 +242,9 @@ GoRouter createRouter(UserProvider userProvider) {
         name: 'withdrawConfirm',
         builder: (context, state) {
           final userWithdrawModel = state.extra as UserWithDrawLogModel;
-          return SettingWithdrawConfirm(userWithDrawLogModel: userWithdrawModel,);
+          return SettingWithdrawConfirm(
+            userWithDrawLogModel: userWithdrawModel,
+          );
         },
       ),
       GoRoute(
@@ -253,6 +257,11 @@ GoRouter createRouter(UserProvider userProvider) {
                   : '알 수 없는 오류가 발생했습니다.';
           return CustomError(message: msg);
         },
+      ),
+      GoRoute(
+        path: '/guide/application/submit',
+        name: 'guideApplicationSubmit',
+        builder: (context, state) => const GuideApplicationSubmitPage(),
       ),
     ],
     // 라우트 에러 방지
