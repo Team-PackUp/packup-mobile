@@ -76,63 +76,66 @@ class ProfileSection extends StatelessWidget {
                         ),
                       ),
                       onPressed: () async {
-                        // try {
-                        //   final status =
-                        //       await UserService().fetchMyGuideStatus();
+                        try {
+                          final status =
+                              await UserService().fetchMyGuideStatus();
 
-                        //   if (status.isGuide) {
-                        //     toast(context, '알림', '승인된 가이드입니다. 가이드 모드로 전환합니다!');
-                        //     return;
-                        //   }
+                          print('테스테스트');
+                          print(status.toJson());
 
-                        //   final app = status.application;
-                        //   if (!app.exists) {
-                        //     if (context.mounted) {
-                        //       context.push('/guide/application/submit');
-                        //     }
-                        //     return;
-                        //   }
+                          if (status.isGuide) {
+                            toast(context, '알림', '승인된 가이드입니다. 가이드 모드로 전환합니다!');
+                            return;
+                          }
 
-                        //   switch (app.statusName) {
-                        //     case 'APPLIED':
-                        //       toast(context, '알림', '신청이 완료되었습니다. 심사 중입니다.');
-                        //       break;
+                          final app = status.application;
+                          if (!app.exists) {
+                            if (context.mounted) {
+                              context.push('/guide/application/submit');
+                            }
+                            return;
+                          }
 
-                        //     case 'APPROVED':
-                        //       toast(
-                        //         context,
-                        //         '알림',
-                        //         '승인된 가이드입니다. 가이드 모드로 전환합니다!',
-                        //       );
-                        //       break;
+                          switch (app.statusName) {
+                            case 'APPLIED':
+                              toast(context, '알림', '신청이 완료되었습니다. 심사 중입니다.');
+                              break;
 
-                        //     case 'REJECTED':
-                        //       final reason =
-                        //           (app.rejectReason?.isNotEmpty ?? false)
-                        //               ? '반려 사유: ${app.rejectReason}'
-                        //               : '반려되었습니다. 내용을 보완해 다시 신청해주세요.';
-                        //       toast(context, '알림', reason);
-                        //       if (app.canReapply && context.mounted) {
-                        //         context.push('/guide/application/submit');
-                        //       }
-                        //       break;
+                            case 'APPROVED':
+                              toast(
+                                context,
+                                '알림',
+                                '승인된 가이드입니다. 가이드 모드로 전환합니다!',
+                              );
+                              break;
 
-                        //     case 'CANCELED':
-                        //       if (app.canReapply && context.mounted) {
-                        //         context.push('/guide/application/submit');
-                        //       } else {
-                        //         toast(context, '알림', '신청이 취소되었습니다.');
-                        //       }
-                        //       break;
+                            case 'REJECTED':
+                              final reason =
+                                  (app.rejectReason?.isNotEmpty ?? false)
+                                      ? '반려 사유: ${app.rejectReason}'
+                                      : '반려되었습니다. 내용을 보완해 다시 신청해주세요.';
+                              toast(context, '알림', reason);
+                              if (app.canReapply && context.mounted) {
+                                context.push('/guide/application/submit');
+                              }
+                              break;
 
-                        //     default:
-                        //       if (context.mounted)
-                        //         context.push('/guide/application/submit');
-                        //       break;
-                        //   }
-                        // } catch (e) {
-                        //   toast(context, '오류', '가이드 상태 확인에 실패했습니다.');
-                        // }
+                            case 'CANCELED':
+                              if (app.canReapply && context.mounted) {
+                                context.push('/guide/application/submit');
+                              } else {
+                                toast(context, '알림', '신청이 취소되었습니다.');
+                              }
+                              break;
+
+                            default:
+                              if (context.mounted)
+                                context.push('/guide/application/submit');
+                              break;
+                          }
+                        } catch (e) {
+                          toast(context, '오류', '가이드 상태 확인에 실패했습니다.');
+                        }
                       },
 
                       style: OutlinedButton.styleFrom(
