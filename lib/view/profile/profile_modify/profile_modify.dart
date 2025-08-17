@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:packup/Const/color.dart';
-import 'package:packup/model/common/file_model.dart';
 import 'package:packup/model/user/profile/user_profile_model.dart';
 import 'package:packup/widget/common/alert_bell.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
@@ -9,13 +8,12 @@ import 'package:provider/provider.dart';
 import '../../../provider/user/user_provider.dart';
 import '../../../widget/common/custom_error_handler.dart';
 import '../../../widget/common/util_widget.dart';
-import '../../../widget/profile/profile_modify/profile_detail_section.dart';
-import '../../../widget/profile/profile_modify/profile_image_section.dart';
-import '../../../widget/profile/profile_modify/profile_info_section.dart';
+import '../../../widget/profile/profile_modify/section/profile_detail_section.dart';
+import '../../../widget/profile/profile_modify/section/profile_image_section.dart';
+import '../../../widget/profile/profile_modify/section/profile_info_section.dart';
 
 class ProfileModify extends StatefulWidget {
   const ProfileModify({super.key});
-
   @override
   State<ProfileModify> createState() => _ProfileModifyState();
 }
@@ -28,13 +26,21 @@ class _ProfileModifyState extends State<ProfileModify> {
   String newBirth = '';
   List<String> selectedCategories = [];
 
+  bool _inited = false;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_inited) return;
+    _inited = true;
+
     final user = context.read<UserProvider>().userModel!;
     newNickName = user.nickname ?? '';
-    newLanguage = user.userLanguage ?? '';
+    newLanguage = user.userLanguage ?? '';   // ✅ 언어 초기값도 채워둠
+    newGender   = user.userGender ?? '';         // 있으면 채우기
+    newBirth    = user.userBirth  ?? '';         // 있으면 채우기
     selectedCategories = List<String>.from(user.preferCategorySeqJson ?? []);
+    // setState() 필요 없음: 첫 build 전에 값만 준비
   }
 
   @override
@@ -44,7 +50,7 @@ class _ProfileModifyState extends State<ProfileModify> {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
     return Scaffold(
-      appBar: CustomAppbar(
+      appBar: const CustomAppbar(
         title: '프로필 수정',
         alert: AlertBell(),
       ),
@@ -60,9 +66,7 @@ class _ProfileModifyState extends State<ProfileModify> {
           children: [
             ProfileImageSection(
               onImageChanged: (path) {
-                setState(() {
-                  newProfileImage = XFile(path);
-                });
+                setState(() => newProfileImage = XFile(path));
               },
             ),
             SizedBox(height: screenH * 0.03),
@@ -94,13 +98,12 @@ class _ProfileModifyState extends State<ProfileModify> {
                   newNickName: newNickName,
                   newBirth: newBirth,
                   newGender: newGender,
-                  newLanguage: newLanguage,
                   selectedCategories: selectedCategories,
                 );
               },
               backgroundColor: PRIMARY_COLOR,
               label: '저장하기',
-            )
+            ),
           ],
         ),
       ),
@@ -112,7 +115,6 @@ class _ProfileModifyState extends State<ProfileModify> {
     required String newNickName,
     required String newBirth,
     required String newGender,
-    required String newLanguage,
     required List<String> selectedCategories,
   }) async {
     try {
@@ -121,9 +123,8 @@ class _ProfileModifyState extends State<ProfileModify> {
       final user = context.read<UserProvider>();
 
       String? imagePathToSave;
-
       if (newProfileImage != null) {
-        FileModel uploaded = await user.updateUserProfileImage(newProfileImage);
+        final uploaded = await user.updateUserProfileImage(newProfileImage);
         imagePathToSave = '${uploaded.path!}/${uploaded.encodedName!}';
       }
 
@@ -132,12 +133,12 @@ class _ProfileModifyState extends State<ProfileModify> {
         nickName: newNickName,
         birth: newBirth,
         gender: newGender,
-        language: newLanguage,
         preference: selectedCategories,
       );
 
-      if (!mounted) return;
       await user.updateUserProfile(model);
+
+      if (!mounted) return;
       CustomSnackBar.showResult(context, "수정 되었습니다");
     } catch (e) {
       if (!mounted) return;
@@ -150,19 +151,12 @@ class _ProfileModifyState extends State<ProfileModify> {
       CustomSnackBar.showResult(context, "닉네임을 입력해주세요");
       return false;
     }
-
     if (newBirth.isEmpty) {
       CustomSnackBar.showResult(context, "나이를 입력해주세요");
       return false;
     }
-
     if (newGender.isEmpty) {
       CustomSnackBar.showResult(context, "성별을 입력해주세요");
-      return false;
-    }
-
-    if (newLanguage.isEmpty) {
-      CustomSnackBar.showResult(context, "언어를 선택해주세요");
       return false;
     }
 

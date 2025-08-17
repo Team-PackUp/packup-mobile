@@ -5,6 +5,7 @@ import 'package:packup/provider/user/user_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../common/util_widget.dart';
+import '../setting_normal_list.dart';
 
 class SettingIndexSection extends StatelessWidget {
   const SettingIndexSection({super.key});
@@ -14,8 +15,6 @@ class SettingIndexSection extends StatelessWidget {
     final screenW = MediaQuery.of(context).size.width;
     final screenH = MediaQuery.of(context).size.height;
 
-    final textStyle = TextStyle(fontSize: screenW * 0.04);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -24,7 +23,7 @@ class SettingIndexSection extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: screenW * 0.04, vertical: screenH * 0.01),
           child: Text(
-            '알림설정',
+            '일반설정',
             style: TextStyle(
               fontSize: screenW * 0.045,
               fontWeight: FontWeight.bold,
@@ -32,11 +31,10 @@ class SettingIndexSection extends StatelessWidget {
             ),
           ),
         ),
-        ListTile(
-          leading: Icon(Icons.notifications, size: screenW * 0.06, color: Colors.grey),
-          title: Text('알림 수신 설정', style: textStyle),
-          trailing: Icon(Icons.chevron_right, size: screenW * 0.05),
-          onTap: () => context.push('/profile/push-setting'),
+
+        SettingNormalList(
+          onTapNation: () => context.push('/profile/setting-nation'),
+          onTapLanguage: () => context.push('/profile/setting-language'),
         ),
 
         SizedBox(height: screenH * 0.03),
@@ -58,13 +56,12 @@ class SettingIndexSection extends StatelessWidget {
           label: '로그아웃',
           onPressed: () => context.read<UserProvider>().logout(context),
         ),
-
         CustomButton.textIconButton(
           context: context,
           icon: Icons.delete_forever,
           label: '탈퇴하기',
           onPressed: () => context.push('/profile/withdraw'),
-        )
+        ),
       ],
     );
   }
