@@ -60,9 +60,11 @@ class ChatMessageList extends StatelessWidget {
               final i = entry.key;
               final message = entry.value;
 
-              final isLatestMessage = index == 0 && i == 0;
+              final isFirstInGroup = i == 0;
+              final isLatestMessage = index == 0 && isFirstInGroup;
 
               Widget messageWidget = ChatMessageCard(
+                showProfile: isFirstInGroup,
                 message: message.message ?? '',
                 createTime: convertToHm(message.createdAt!),
                 userSeq: userSeq,

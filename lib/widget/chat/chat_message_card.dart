@@ -9,6 +9,7 @@ import '../../const/color.dart';
 import '../common/image_viewer/image_viewer.dart';
 
 class ChatMessageCard extends StatelessWidget {
+  final bool showProfile;
   final String message;
   final String createTime;
   final int sender;
@@ -18,6 +19,7 @@ class ChatMessageCard extends StatelessWidget {
 
   const ChatMessageCard({
     super.key,
+    required this.showProfile,
     required this.message,
     required this.createTime,
     required this.sender,
@@ -33,6 +35,18 @@ class ChatMessageCard extends StatelessWidget {
 
     final isMine = sender == userSeq;
     final imagePath = profileImagePath ?? 'assets/image/logo/logo.png';
+    final avatarRadius = screenW * 0.08;
+
+    final profileWidget = Visibility(
+      visible: showProfile == true,
+      maintainSize: true,
+      maintainAnimation: true,
+      maintainState: true,
+      child: CircleProfileImage(
+        radius: avatarRadius,
+        imagePath: imagePath,
+      ),
+    );
 
     if (fileFlag == 'Y') {
       final imageUrl = fullFileUrl(message);
@@ -78,18 +92,18 @@ class ChatMessageCard extends StatelessWidget {
       final row = Row(
         mainAxisAlignment: isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: isMine
-            ? [
+        children: isMine ? [
           imageWidget,
           SizedBox(width: screenW * 0.03),
-          CircleProfileImage(radius: screenW * 0.05, imagePath: imagePath,),
-        ]
-            : [
-          CircleProfileImage(radius: screenW * 0.05, imagePath: imagePath,),
+          profileWidget,
+        ] : [
+          profileWidget,
           SizedBox(width: screenW * 0.03),
           imageWidget,
         ],
       );
+
+      // 이거는 이미지
       return Padding(
         padding: EdgeInsets.symmetric(
           horizontal: screenW * 0.03,
@@ -100,6 +114,7 @@ class ChatMessageCard extends StatelessWidget {
     }
 
 
+    // 이거는 텍스트
     final bubble = IntrinsicWidth(
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -162,9 +177,9 @@ class ChatMessageCard extends StatelessWidget {
             ? [
           bubble,
           SizedBox(width: screenW * 0.03),
-          CircleProfileImage(radius: screenW * 0.07, imagePath: imagePath,),
+          profileWidget,
         ] : [
-          CircleProfileImage(radius: screenW * 0.07, imagePath: imagePath,),
+          profileWidget,
           SizedBox(width: screenW * 0.03),
           bubble,
         ],
