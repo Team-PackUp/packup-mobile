@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class GuideApplicationSelfIntroCard extends StatelessWidget {
+class GuideApplicationSelfIntroCard extends StatefulWidget {
   const GuideApplicationSelfIntroCard({
     super.key,
     required this.value,
@@ -13,8 +13,45 @@ class GuideApplicationSelfIntroCard extends StatelessWidget {
   final int maxLength;
 
   @override
+  State<GuideApplicationSelfIntroCard> createState() =>
+      _GuideApplicationSelfIntroCardState();
+}
+
+class _GuideApplicationSelfIntroCardState
+    extends State<GuideApplicationSelfIntroCard> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.value);
+  }
+
+  @override
+  void didUpdateWidget(covariant GuideApplicationSelfIntroCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value && _controller.text != widget.value) {
+      final composing = _controller.value.composing;
+      // 조합 중일 때는 덮어쓰지 않음
+      if (!(composing.isValid && !composing.isCollapsed)) {
+        _controller.text = widget.value;
+        _controller.selection = TextSelection.collapsed(
+          offset: widget.value.length,
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final radius = BorderRadius.circular(12);
+
     InputDecoration deco(String hint) => InputDecoration(
       hintText: hint,
       border: OutlineInputBorder(borderRadius: radius),
@@ -29,9 +66,6 @@ class GuideApplicationSelfIntroCard extends StatelessWidget {
       contentPadding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
       counterText: "",
     );
-
-    final controller = TextEditingController(text: value)
-      ..selection = TextSelection.collapsed(offset: value.length);
 
     return Container(
       decoration: BoxDecoration(
@@ -63,21 +97,23 @@ class GuideApplicationSelfIntroCard extends StatelessWidget {
           Stack(
             children: [
               TextField(
-                controller: controller,
+                controller: _controller,
                 onChanged:
-                    (v) => onChanged(
-                      v.length > maxLength ? v.substring(0, maxLength) : v,
+                    (v) => widget.onChanged(
+                      v.length > widget.maxLength
+                          ? v.substring(0, widget.maxLength)
+                          : v,
                     ),
                 minLines: 5,
                 maxLines: 8,
-                maxLength: maxLength,
+                maxLength: widget.maxLength,
                 decoration: deco("가이드로서 자신을 소개하고, 어떤 점이 특별한지 설명해주세요."),
               ),
               Positioned(
                 right: 8,
                 bottom: 8,
                 child: Text(
-                  "${controller.text.characters.length}/$maxLength",
+                  "${_controller.text.characters.length}/${widget.maxLength}",
                   style: const TextStyle(
                     color: Color(0xFF6B7280),
                     fontSize: 12,

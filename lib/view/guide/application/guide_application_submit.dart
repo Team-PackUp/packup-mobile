@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:packup/widget/guide/application/section/guide_application_detail_section.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:packup/provider/guide/application/guide_application_provider.dart';
+import 'package:provider/provider.dart';
+
+import 'package:packup/service/guide/guide_service.dart';
+
 import 'package:packup/widget/guide/application/section/guide_application_self_intro_section.dart';
 import 'package:packup/widget/guide/application/section/guide_application_id_upload_section.dart';
 import 'package:packup/widget/guide/application/section/guide_application_submit_section.dart';
 
-class GuideApplicationSubmitPage extends StatefulWidget {
+class GuideApplicationSubmitPage extends StatelessWidget {
   const GuideApplicationSubmitPage({super.key});
-  @override
-  State<GuideApplicationSubmitPage> createState() => _State();
-}
-
-class _State extends State<GuideApplicationSubmitPage> {
-  String occupation = "",
-      expertise = "",
-      experienceYears = "",
-      expertiseDetail = "",
-      selfIntro = "";
-  String? pickedFileName;
-
-  bool get isValid =>
-      occupation.isNotEmpty &&
-      expertise.isNotEmpty &&
-      experienceYears.isNotEmpty &&
-      expertiseDetail.isNotEmpty &&
-      selfIntro.isNotEmpty &&
-      pickedFileName != null;
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => GuideApplicationProvider(service: GuideService()),
+      child: const _Content(),
+    );
+  }
+}
+
+class _Content extends StatelessWidget {
+  const _Content();
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.watch<GuideApplicationProvider>();
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -38,43 +38,40 @@ class _State extends State<GuideApplicationSubmitPage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    GuideApplicationDetailSection(
-                      occupation: occupation,
-                      expertise: expertise,
-                      experienceYears: experienceYears,
-                      expertiseDetail: expertiseDetail,
-                      onChangeOccupation: (v) => setState(() => occupation = v),
-                      onChangeExpertise: (v) => setState(() => expertise = v),
-                      onChangeExperienceYears:
-                          (v) => setState(() => experienceYears = v),
-                      onChangeExpertiseDetail:
-                          (v) => setState(() => expertiseDetail = v),
-                    ),
                     GuideApplicationSelfIntroSection(
-                      value: selfIntro,
+                      value: p.selfIntro,
                       onChanged:
-                          (v) => setState(
-                            () => selfIntro = v.characters.take(500).toString(),
-                          ),
+                          context.read<GuideApplicationProvider>().setSelfIntro,
                     ),
+
                     GuideApplicationIdUploadSection(
-                      pickedFileName: pickedFileName,
-                      onPickPressed:
-                          () =>
-                              setState(() => pickedFileName = "my_id_card.png"),
+                      pickedFileName: p.pickedFileName,
+                      onPickPressed: () async {
+                        final picker = ImagePicker();
+                        final x = await picker.pickImage(
+                          source: ImageSource.gallery,
+                          imageQuality: 85,
+                        );
+                        if (x != null) {
+                          context
+                              .read<GuideApplicationProvider>()
+                              .setPickedXFile(x);
+                          HapticFeedback.selectionClick();
+                        }
+                      },
                     ),
+
                     const SizedBox(height: 90),
                   ],
                 ),
               ),
             ),
+
             GuideApplicationSubmitSection(
-              enabled: isValid,
+              enabled: p.isValid && !p.submitting,
               onSubmit: () {
                 HapticFeedback.lightImpact();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("정보 제출 (디자인 미리보기)")),
-                );
+                context.read<GuideApplicationProvider>().submit(context);
               },
             ),
           ],
@@ -86,6 +83,7 @@ class _State extends State<GuideApplicationSubmitPage> {
 
 class _Header extends StatelessWidget {
   const _Header();
+
   @override
   Widget build(BuildContext context) {
     return const Padding(

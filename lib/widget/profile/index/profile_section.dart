@@ -80,11 +80,12 @@ class ProfileSection extends StatelessWidget {
                           final status =
                               await UserService().fetchMyGuideStatus();
 
-                          print('테스테스트');
-                          print(status.toJson());
-
                           if (status.isGuide) {
-                            toast(context, '알림', '승인된 가이드입니다. 가이드 모드로 전환합니다!');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("승인된 가이드입니다. 가이드 모드로 전환합니다!"),
+                              ),
+                            );
                             return;
                           }
 
@@ -98,14 +99,18 @@ class ProfileSection extends StatelessWidget {
 
                           switch (app.statusName) {
                             case 'APPLIED':
-                              toast(context, '알림', '신청이 완료되었습니다. 심사 중입니다.');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("신청이 완료되었습니다. 심사 중입니다."),
+                                ),
+                              );
                               break;
 
                             case 'APPROVED':
-                              toast(
-                                context,
-                                '알림',
-                                '승인된 가이드입니다. 가이드 모드로 전환합니다!',
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("승인된 가이드입니다. 가이드 모드로 전환합니다!"),
+                                ),
                               );
                               break;
 
@@ -114,7 +119,11 @@ class ProfileSection extends StatelessWidget {
                                   (app.rejectReason?.isNotEmpty ?? false)
                                       ? '반려 사유: ${app.rejectReason}'
                                       : '반려되었습니다. 내용을 보완해 다시 신청해주세요.';
-                              toast(context, '알림', reason);
+
+                              ScaffoldMessenger.of(
+                                context,
+                              ).showSnackBar(SnackBar(content: Text(reason)));
+
                               if (app.canReapply && context.mounted) {
                                 context.push('/guide/application/submit');
                               }
@@ -124,7 +133,9 @@ class ProfileSection extends StatelessWidget {
                               if (app.canReapply && context.mounted) {
                                 context.push('/guide/application/submit');
                               } else {
-                                toast(context, '알림', '신청이 취소되었습니다.');
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("신청이 취소되었습니다.")),
+                                );
                               }
                               break;
 
@@ -134,7 +145,9 @@ class ProfileSection extends StatelessWidget {
                               break;
                           }
                         } catch (e) {
-                          toast(context, '오류', '가이드 상태 확인에 실패했습니다.');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("가이드 상태 확인에 실패했습니다.")),
+                          );
                         }
                       },
 

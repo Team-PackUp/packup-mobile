@@ -37,7 +37,7 @@ class GuideApplicationSubmitBar extends StatelessWidget {
                 fontSize: 16,
               ),
             ),
-            child: const Text("정보 제출"),
+            child: const Text("지원서 제출"),
           ),
         ),
       ),
