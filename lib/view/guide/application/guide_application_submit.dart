@@ -38,18 +38,18 @@ class _State extends State<GuideApplicationSubmitPage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    GuideApplicationDetailSection(
-                      occupation: occupation,
-                      expertise: expertise,
-                      experienceYears: experienceYears,
-                      expertiseDetail: expertiseDetail,
-                      onChangeOccupation: (v) => setState(() => occupation = v),
-                      onChangeExpertise: (v) => setState(() => expertise = v),
-                      onChangeExperienceYears:
-                          (v) => setState(() => experienceYears = v),
-                      onChangeExpertiseDetail:
-                          (v) => setState(() => expertiseDetail = v),
-                    ),
+                    // GuideApplicationDetailSection(
+                    //   occupation: occupation,
+                    //   expertise: expertise,
+                    //   experienceYears: experienceYears,
+                    //   expertiseDetail: expertiseDetail,
+                    //   onChangeOccupation: (v) => setState(() => occupation = v),
+                    //   onChangeExpertise: (v) => setState(() => expertise = v),
+                    //   onChangeExperienceYears:
+                    //       (v) => setState(() => experienceYears = v),
+                    //   onChangeExpertiseDetail:
+                    //       (v) => setState(() => expertiseDetail = v),
+                    // ),
                     GuideApplicationSelfIntroSection(
                       value: selfIntro,
                       onChanged: (v) => setState(() => selfIntro = v),
