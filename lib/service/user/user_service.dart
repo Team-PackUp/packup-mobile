@@ -1,5 +1,6 @@
 import 'package:image_picker/image_picker.dart';
 import 'package:packup/model/user/guide_me_response_model.dart';
+import 'package:packup/model/user/my_guide_status_response_model.dart';
 
 import '../../http/dio_service.dart';
 import '../../model/common/result_model.dart';
@@ -51,5 +52,10 @@ class UserService {
   Future<GuideMeResponseModel> fetchMyGuide() async {
     final res = await DioService().getRequest('/guide/me');
     return GuideMeResponseModel.fromJson(res.response);
+  }
+
+  Future<MyGuideStatusResponseModel> fetchMyGuideStatus() async {
+    final res = await DioService().getRequest('/guide/me/status');
+    return MyGuideStatusResponseModel.fromJson(res.response);
   }
 }
