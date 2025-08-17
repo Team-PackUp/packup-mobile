@@ -80,9 +80,6 @@ class ProfileSection extends StatelessWidget {
                           final status =
                               await UserService().fetchMyGuideStatus();
 
-                          print('테스테스트');
-                          print(status.toJson());
-
                           if (status.isGuide) {
                             toast(context, '알림', '승인된 가이드입니다. 가이드 모드로 전환합니다!');
                             return;
