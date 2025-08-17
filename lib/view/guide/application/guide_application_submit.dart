@@ -52,10 +52,7 @@ class _State extends State<GuideApplicationSubmitPage> {
                     ),
                     GuideApplicationSelfIntroSection(
                       value: selfIntro,
-                      onChanged:
-                          (v) => setState(
-                            () => selfIntro = v.characters.take(500).toString(),
-                          ),
+                      onChanged: (v) => setState(() => selfIntro = v),
                     ),
                     GuideApplicationIdUploadSection(
                       pickedFileName: pickedFileName,
