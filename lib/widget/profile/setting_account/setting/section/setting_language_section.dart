@@ -5,6 +5,8 @@ import 'package:packup/widget/common/custom_error_handler.dart';
 import 'package:packup/widget/common/util_widget.dart';
 import 'package:packup/widget/profile/setting_account/setting/setting_language_list.dart';
 
+import '../../../../../Const/color.dart';
+
 class SettingLanguageSection extends StatefulWidget {
   const SettingLanguageSection({
     super.key,
@@ -83,45 +85,36 @@ class _SettingLanguageSectionState extends State<SettingLanguageSection> {
 
               SizedBox(
                 height: 48,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: cs.primary,
-                    foregroundColor: cs.onPrimary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: (_selectedCode == _initialCode || _submitting)
-                      ? null
-                      : () async {
-                    setState(() => _submitting = true);
-                    try {
-                      await context
-                          .read<UserProvider>()
-                          .updateSettingLanguage(_selectedCode);
-
-                      if (!mounted) return;
-                      CustomSnackBar.showResult(context, '국가/지역이 변경되었습니다.');
-
-                      setState(() => _initialCode = _selectedCode);
-
-                      widget.onSaved?.call(_selectedCode);
-                    } catch (e) {
-                      if (!mounted) return;
-                      CustomErrorHandler.run(context, e);
-                    } finally {
-                      if (!mounted) return;
-                      setState(() => _submitting = false);
-                    }
-                  },
-                  child: const Text('적용',
-                      style: TextStyle(fontWeight: FontWeight.w700)),
-                ),
+                child: CustomButton.textButton(
+                context: context,
+                onPressed: () {
+                  _selectedCode == _initialCode ? null : updateLanguage();
+                },
+                label: '저장하기',
+                backgroundColor: PRIMARY_COLOR,
+              ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> updateLanguage() async {
+    try {
+      await context
+          .read<UserProvider>()
+          .updateSettingLanguage(_selectedCode);
+
+      setState(() {
+        _initialCode = _selectedCode;
+      });
+      widget.onSaved?.call(_selectedCode);
+
+      CustomSnackBar.showResult(context, '언어가 변경되었습니다.');
+    } catch (e) {
+      CustomErrorHandler.run(context, e);
+    }
   }
 }

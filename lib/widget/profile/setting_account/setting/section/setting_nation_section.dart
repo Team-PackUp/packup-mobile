@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:packup/Const/color.dart';
 import 'package:packup/widget/profile/setting_account/setting/setting_nation_list.dart';
 import 'package:packup/widget/search/search.dart';
 import 'package:provider/provider.dart';
@@ -102,32 +103,13 @@ class _SettingNationSectionState extends State<SettingNationSection> {
               const SizedBox(height: 8),
               SizedBox(
                 height: 48,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: cs.primary,
-                    foregroundColor: cs.onPrimary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: _selectedCode == _initialCode
-                      ? null
-                      : () async {
-                    try {
-                      await context
-                          .read<UserProvider>()
-                          .updateSettingNation(_selectedCode);
-
-                      CustomSnackBar.showResult(context, '국가/지역이 변경되었습니다.');
-                      setState(() {
-                        _initialCode = _selectedCode;
-                      });
-                      widget.onSaved?.call(_selectedCode);
-                    } catch (e) {
-                      CustomErrorHandler.run(context, e);
-                    }
+                child: CustomButton.textButton(
+                  context: context,
+                  onPressed: () {
+                    _selectedCode == _initialCode ? null : updateNation();
                   },
-                  child: const Text('적용', style: TextStyle(fontWeight: FontWeight.w700)),
+                  label: '저장하기',
+                  backgroundColor: PRIMARY_COLOR,
                 ),
               ),
             ],
@@ -135,5 +117,22 @@ class _SettingNationSectionState extends State<SettingNationSection> {
         ),
       ),
     );
+  }
+
+  Future<void> updateNation() async {
+    try {
+      await context
+          .read<UserProvider>()
+          .updateSettingNation(_selectedCode);
+
+      setState(() {
+        _initialCode = _selectedCode;
+      });
+      widget.onSaved?.call(_selectedCode);
+
+      CustomSnackBar.showResult(context, '국가/지역이 변경되었습니다.');
+    } catch (e) {
+      CustomErrorHandler.run(context, e);
+    }
   }
 }
