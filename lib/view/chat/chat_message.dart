@@ -1,18 +1,12 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:packup/provider/chat/chat_message_provider.dart';
-import 'package:packup/const/color.dart';
 import 'package:packup/model/chat/chat_message_model.dart';
 import 'package:packup/widget/chat/chat_message_input.dart';
 import 'package:provider/provider.dart';
-
 import 'package:packup/model/common/file_model.dart';
-
-import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
-
 import '../../widget/chat/section/chat_message_section.dart';
 import '../../widget/common/circle_profile_image.dart';
 
@@ -87,9 +81,7 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
 
     final bool nearTop = pos.pixels >= (pos.maxScrollExtent - _threshold);
 
-    if (!nearTop ||
-        _isPaginating ||
-        _chatMessageProvider.isLoading) {
+    if (!nearTop || _isPaginating || _chatMessageProvider.isLoading) {
       return;
     }
 
@@ -151,10 +143,6 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
         ],
       ),
     );
-  }
-
-  bool isSameDate(DateTime a, DateTime b) {
-    return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 
   void _handleAfterSendChatMessage(chat) {
