@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:packup/model/common/app_mode.dart';
 import 'package:packup/model/reply/reply_model.dart';
 import 'package:packup/model/user/user_withdraw_log/user_withdraw_log_model.dart';
 import 'package:packup/provider/user/user_provider.dart';
+import 'package:packup/view/ai_recommend/ai_recommend.dart';
 import 'package:packup/view/chat/chat_message.dart';
 import 'package:packup/view/chat/chat_room.dart';
 import 'package:packup/view/guide/detail/guide_detail.dart';
@@ -10,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
+import 'package:packup/view/profile/profile_index.dart';
 import 'package:packup/view/profile/profile_modify/profile_modify.dart';
 import 'package:packup/view/profile/setting_account/reservation_manage/reservation_manage.dart';
 import 'package:packup/view/profile/setting_account/setting/setting_index.dart';
@@ -24,6 +27,8 @@ import 'package:packup/view/user/preference/preference.dart';
 import 'package:packup/view/user/register_detail/register_detail.dart';
 import 'package:packup/widget/common/custom_error.dart';
 import 'package:packup/view/guide/application/guide_application_submit.dart';
+import 'package:packup/provider/common/app_mode_provider.dart';
+import 'package:packup/widget/common/guide_shell.dart';
 
 import '../provider/search/search_provider.dart';
 import '../view/ai_recommend/detail/ai_recommend_detail.dart';
@@ -33,11 +38,11 @@ import '../view/profile/setting_account/notice/notice_view.dart';
 import '../view/reply/reply_list.dart';
 import '../view/home/home.dart';
 
-GoRouter createRouter(UserProvider userProvider) {
+GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
   return GoRouter(
     navigatorKey: Get.key,
     initialLocation: '/',
-    refreshListenable: userProvider,
+    refreshListenable: Listenable.merge([appMode, userProvider]),
     redirect: (context, state) {
       final isInitialized = userProvider.isInitialized;
       final accessToken = userProvider.accessToken;
@@ -46,6 +51,18 @@ GoRouter createRouter(UserProvider userProvider) {
       final isLoading = userProvider.isLoading;
 
       final currentLoc = state.fullPath!;
+      final current = state.fullPath ?? '/';
+
+      final isGuidePath = current.startsWith('/g');
+
+      if (appMode.mode == AppMode.guide && !isGuidePath) {
+        if (current == '/' || current == '/index' || current == '/home') {
+          return '/g';
+        }
+      }
+      if (appMode.mode == AppMode.user && isGuidePath) {
+        return '/index';
+      }
 
       // 회원 인증이 되어있는지 체크하려면 이게 빠져야..??
       // if (!isInitialized) return null;
@@ -270,6 +287,19 @@ GoRouter createRouter(UserProvider userProvider) {
         path: '/guide/application/submit',
         name: 'guideApplicationSubmit',
         builder: (context, state) => const GuideApplicationSubmitPage(),
+      ),
+
+      // 가이드 전용 라우팅
+      ShellRoute(
+        builder: (context, state, child) => GuideShell(child: child),
+        routes: [
+          GoRoute(path: '/g', builder: (context, state) => const AIRecommend()),
+          GoRoute(path: '/g/message', builder: (context, state) => ChatRoom()),
+          GoRoute(
+            path: '/g/profile',
+            builder: (context, state) => const ProfileIndex(),
+          ),
+        ],
       ),
     ],
     // 라우트 에러 방지
