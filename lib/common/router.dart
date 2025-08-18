@@ -53,14 +53,16 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
       final currentLoc = state.fullPath!;
       final current = state.fullPath ?? '/';
 
-      final isGuidePath = current.startsWith('/g');
+      final loc = state.uri.toString();
 
-      if (appMode.mode == AppMode.guide && !isGuidePath) {
-        if (current == '/' || current == '/index' || current == '/home') {
+      final isGuideShell = loc == '/g' || loc.startsWith('/g/');
+
+      if (appMode.mode == AppMode.guide && !isGuideShell) {
+        if (loc == '/' || loc == '/index' || loc == '/home') {
           return '/g';
         }
       }
-      if (appMode.mode == AppMode.user && isGuidePath) {
+      if (appMode.mode == AppMode.user && isGuideShell) {
         return '/index';
       }
 
@@ -220,6 +222,11 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
         },
       ),
       GoRoute(
+        path: '/guide/application/submit',
+        name: 'guideApplicationSubmit',
+        builder: (context, state) => const GuideApplicationSubmitPage(),
+      ),
+      GoRoute(
         path: '/guide/:guideId',
         name: 'guideDetail',
         builder: (context, state) {
@@ -282,11 +289,6 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
                   : '알 수 없는 오류가 발생했습니다.';
           return CustomError(message: msg);
         },
-      ),
-      GoRoute(
-        path: '/guide/application/submit',
-        name: 'guideApplicationSubmit',
-        builder: (context, state) => const GuideApplicationSubmitPage(),
       ),
 
       // 가이드 전용 라우팅
