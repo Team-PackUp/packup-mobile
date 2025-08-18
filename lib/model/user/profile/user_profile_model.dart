@@ -1,17 +1,17 @@
 class UserProfileModel {
   final String? profileImagePath;
+  final String? language;
   final String nickName;
   final String birth;
   final String gender;
-  final String language;
   final List<String> preference;
 
   UserProfileModel({
     this.profileImagePath,
+    this.language,
     required this.nickName,
     required this.birth,
     required this.gender,
-    required this.language,
     required this.preference,
   });
 

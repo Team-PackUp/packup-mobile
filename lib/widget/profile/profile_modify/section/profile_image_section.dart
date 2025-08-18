@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../../../provider/user/user_provider.dart';
-import '../../common/circle_profile_image.dart';
+import '../../../../provider/user/user_provider.dart';
+import '../../../common/circle_profile_image.dart';
 
 class ProfileImageSection extends StatefulWidget {
   final void Function(String imagePath) onImageChanged;
