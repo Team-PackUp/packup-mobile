@@ -28,11 +28,16 @@ class ChatMessageProvider extends LoadingProvider {
   int _lastReadMessageSeq = 0;
   int? get lastReadMessageSeq => _lastReadMessageSeq;
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   // 메시지 로딩
   Future<void> getMessage(int chatRoomSeq) async {
     if (_totalPage <= _curPage) return;
 
-    await LoadingService.run(() async {
+    _isLoading = true;
+
+    // await LoadingService.run(() async {
       final response = await _chatService.getMessage(chatRoomSeq, _curPage);
       final page = PageModel<ChatMessageModel>.fromJson(response.response,
             (e) => ChatMessageModel.fromJson(e),
@@ -43,8 +48,10 @@ class ChatMessageProvider extends LoadingProvider {
 
       _curPage++;
 
+    _isLoading = false;
+
       notifyListeners();
-    });
+    // });
   }
 
   Future<void> addMessage(ChatMessageModel message) async {

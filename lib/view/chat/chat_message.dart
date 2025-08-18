@@ -77,11 +77,27 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
     });
   }
 
-  _scrollListener() {
-    if (_scrollController.position.maxScrollExtent ==
-        _scrollController.position.pixels) {
-      if (_chatMessageProvider.isLoading) return;
-      getChatMessageMore();
+  static const double _threshold = 200.0;
+  bool _isPaginating = false;
+
+  void _scrollListener() async {
+    if (!_scrollController.hasClients) return;
+
+    final pos = _scrollController.position;
+
+    final bool nearTop = pos.pixels >= (pos.maxScrollExtent - _threshold);
+
+    if (!nearTop ||
+        _isPaginating ||
+        _chatMessageProvider.isLoading) {
+      return;
+    }
+
+    _isPaginating = true;
+    try {
+      await _chatMessageProvider.getMessage(widget.chatRoomSeq);
+    } finally {
+      _isPaginating = false;
     }
   }
 
