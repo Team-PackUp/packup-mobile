@@ -26,9 +26,6 @@ class _SettingLanguageState extends State<SettingLanguage> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final w = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: CustomAppbar(
         title: "국가/지역 설정",

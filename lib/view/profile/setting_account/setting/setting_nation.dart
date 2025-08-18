@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/user/user_provider.dart';
 
@@ -9,31 +10,14 @@ class SettingNation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<UserProvider>().userModel;
-    final initialCode = user?.userNation ?? '030001';
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('국가/지역 설정', style: TextStyle(fontWeight: FontWeight.w700)),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () => Navigator.pop(context),
-        ),
+      appBar: CustomAppbar(
+        title: '국가/지역 설정',
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-          child: SettingNationSection(
-            initialCountryCode: initialCode,
-            onSaved: (code) {
-              // 필요시 페이지 레벨 후처리
-            },
-          ),
-        ),
+      body: SettingNationSection(
+        onSaved: (code) {
+          // 필요시 페이지 레벨 후처리
+        },
       ),
     );
   }

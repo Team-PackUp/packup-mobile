@@ -110,10 +110,6 @@ class UserProvider extends LoadingProvider {
       socialLogin = null;
     }
 
-    // if (_userModel!.joinType.trim() == SocialLoginType.google.codeNumber) {
-    //   socialLogin = GoogleLogin();
-    // }
-
     isInitialized = true;
     notifyListeners();
   }
@@ -178,8 +174,8 @@ class UserProvider extends LoadingProvider {
     await deleteToken(REFRESH_TOKEN);
 
     _userModel = null;
-    accessToken = null;
-    refreshToken = null;
+    accessToken = '';
+    refreshToken = '';
     socialLogin = null;
     isInitialized = false;
   }
@@ -220,6 +216,26 @@ class UserProvider extends LoadingProvider {
     String strMarketingFLag = booleanToString(marketingFLag);
 
     await _userService.updateSettingPush(strPushFlag, strMarketingFLag);
+    if (_resultModel!.resultFlag!) {
+      await getMyInfo();
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> updateSettingLanguage(String languageCode) async {
+
+    await _userService.updateSettingLanguage(languageCode);
+    if (_resultModel!.resultFlag!) {
+      await getMyInfo();
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> updateSettingNation(String nationCode) async {
+
+    await _userService.updateSettingNation(nationCode);
     if (_resultModel!.resultFlag!) {
       await getMyInfo();
     }

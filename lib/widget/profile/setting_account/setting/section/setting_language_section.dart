@@ -8,7 +8,7 @@ import 'package:packup/widget/profile/setting_account/setting/setting_language_l
 class SettingLanguageSection extends StatefulWidget {
   const SettingLanguageSection({
     super.key,
-    this.onSaved, // 저장 완료 콜백(선택)
+    this.onSaved,
   });
 
   final ValueChanged<String>? onSaved;
@@ -27,14 +27,34 @@ class _SettingLanguageSectionState extends State<SettingLanguageSection> {
 
   late String _selectedCode;
   late String _initialCode;
+  bool _syncedOnce = false; // userModel이 늦게 들어올 때 1회 동기화용
+  bool _submitting = false;
 
   @override
   void initState() {
     super.initState();
-    final user = context.read<UserProvider>().userModel!;
-    final language = user.userLanguage;
-    _initialCode = language;
+    final user = context.read<UserProvider>().userModel;
+    _initialCode = user?.userLanguage ?? '030101';
     _selectedCode = _initialCode;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_syncedOnce) {
+      final user = context.read<UserProvider>().userModel;
+      final lang = user?.userLanguage;
+      if (lang != null && lang != _initialCode) {
+        _syncedOnce = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          setState(() {
+            _initialCode = lang;
+            _selectedCode = lang;
+          });
+        });
+      }
+    }
   }
 
   @override
@@ -48,10 +68,8 @@ class _SettingLanguageSectionState extends State<SettingLanguageSection> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
-                '언어 선택',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-              ),
+              const Text('언어 선택',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
               const SizedBox(height: 10),
 
               SettingLanguageList(
@@ -69,23 +87,35 @@ class _SettingLanguageSectionState extends State<SettingLanguageSection> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: cs.primary,
                     foregroundColor: cs.onPrimary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  onPressed: _selectedCode == _initialCode
+                  onPressed: (_selectedCode == _initialCode || _submitting)
                       ? null
                       : () async {
+                    setState(() => _submitting = true);
                     try {
-                      // await context.read<UserProvider>().updateSettingLanguage(_selectedCode);
+                      await context
+                          .read<UserProvider>()
+                          .updateSettingLanguage(_selectedCode);
 
-                      CustomSnackBar.showResult(context, '언어가 변경되었습니다.');
-                      widget.onSaved?.call(_selectedCode);
                       if (!mounted) return;
-                        Navigator.pop(context);
+                      CustomSnackBar.showResult(context, '국가/지역이 변경되었습니다.');
+
+                      setState(() => _initialCode = _selectedCode);
+
+                      widget.onSaved?.call(_selectedCode);
                     } catch (e) {
+                      if (!mounted) return;
                       CustomErrorHandler.run(context, e);
+                    } finally {
+                      if (!mounted) return;
+                      setState(() => _submitting = false);
                     }
                   },
-                  child: const Text('적용', style: TextStyle(fontWeight: FontWeight.w700)),
+                  child: const Text('적용',
+                      style: TextStyle(fontWeight: FontWeight.w700)),
                 ),
               ),
             ],

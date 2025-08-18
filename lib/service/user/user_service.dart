@@ -36,7 +36,21 @@ class UserService {
     String marketingFLag,
   ) async {
     final data = {'pushFlag': pushFlg, 'marketingFlag': marketingFLag};
-    return await DioService().putRequest('/user/setting-push', data);
+    return await DioService().putRequest('/user/update/setting-push', data);
+  }
+
+  Future<ResultModel> updateSettingLanguage(
+      String languageCode,
+      ) async {
+    final data = {'languageCode': languageCode};
+    return await DioService().putRequest('/user/update/setting-language', data);
+  }
+
+  Future<ResultModel> updateSettingNation(
+      String nationCode,
+      ) async {
+    final data = {'nationCode': nationCode};
+    return await DioService().putRequest('/user/update/setting-nation', data);
   }
 
   Future<void> withDraw(UserWithDrawLogModel model) async {

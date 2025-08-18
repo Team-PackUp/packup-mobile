@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class NormalSettingCard extends StatelessWidget {
   const NormalSettingCard({
+    super.key,
     required this.title,
     required this.valueText,
     required this.onTap,

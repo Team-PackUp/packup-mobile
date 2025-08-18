@@ -44,7 +44,8 @@ class SettingNormalList extends StatelessWidget {
       }
     }
 
-    final user = context.watch<UserProvider>().userModel!;
+    final user = context.watch<UserProvider>().userModel;
+    if (user == null) return const SizedBox.shrink();
 
     final currentLangLabel    = langLabelFromCode(user.userLanguage);
     final currentNationLabel = countryLabelFromCode(user.userNation);
