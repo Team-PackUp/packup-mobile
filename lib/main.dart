@@ -21,6 +21,7 @@ import 'package:packup/theme/colors/app_colors_dark.dart';
 import 'package:packup/theme/colors/app_colors_light.dart';
 import 'package:packup/theme/theme.dart';
 import 'package:packup/widget/common/loading_progress.dart';
+import 'package:packup/provider/common/app_mode_provider.dart';
 import 'package:provider/provider.dart';
 
 late final GoRouter globalRouter;
@@ -92,7 +93,10 @@ void main() async {
   final userProvider = UserProvider();
   await userProvider.initLoginStatus();
 
-  globalRouter = createRouter(userProvider);
+  final appModeProvider = AppModeProvider();
+  await appModeProvider.load();
+
+  globalRouter = createRouter(appModeProvider, userProvider);
 
   runApp(
     MultiProvider(
