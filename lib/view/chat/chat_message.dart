@@ -87,12 +87,11 @@ class _ChatMessageContentState extends State<ChatMessageContent> {
 
     _isPaginating = true;
     try {
-      await _chatMessageProvider.getMessage(widget.chatRoomSeq);
+      await getChatMessageMore();
     } finally {
       _isPaginating = false;
     }
   }
-
   getChatMessageMore() async {
     _chatMessageProvider.getMessage(widget.chatRoomSeq);
   }

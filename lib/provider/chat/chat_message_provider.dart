@@ -36,6 +36,7 @@ class ChatMessageProvider extends LoadingProvider {
     if (_totalPage <= _curPage) return;
 
     _isLoading = true;
+    notifyListeners();
 
     // await LoadingService.run(() async {
       final response = await _chatService.getMessage(chatRoomSeq, _curPage);
@@ -49,7 +50,6 @@ class ChatMessageProvider extends LoadingProvider {
       _curPage++;
 
     _isLoading = false;
-
       notifyListeners();
     // });
   }

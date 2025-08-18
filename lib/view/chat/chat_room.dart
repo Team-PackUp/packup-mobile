@@ -50,8 +50,9 @@ class _ChatRoomContentState extends State<ChatRoomContent> with WidgetsBindingOb
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final seq = await decodeTokenInfo();
       _chatRoomProvider = context.read<ChatRoomProvider>();
-      await _chatRoomProvider.getRoom();
-      await _chatRoomProvider.subscribeChatRoom();
+      await _chatRoomProvider
+          .getRoom()
+          .subscribeChatRoom();
       if (!mounted) return;
       setState(() => userSeq = seq);
       _maybeNavigateToChatDetail();
