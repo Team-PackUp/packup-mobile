@@ -11,9 +11,7 @@ class AppModeProvider extends ChangeNotifier {
   bool get ready => _bootstrapped;
 
   Future<void> load() async {
-    final sp = await SharedPreferences.getInstance();
-    final s = sp.getString(_k);
-    _mode = s == 'guide' ? AppMode.guide : AppMode.user;
+    _mode = AppMode.user;
     _bootstrapped = true;
     notifyListeners();
   }
