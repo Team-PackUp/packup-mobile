@@ -1,7 +1,9 @@
-import 'package:packup/common/toast.dart';
+import 'package:packup/model/common/app_mode.dart';
+import 'package:packup/provider/common/app_mode_provider.dart';
 import 'package:packup/service/user/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class ProfileSection extends StatelessWidget {
   final String userName;
@@ -80,16 +82,23 @@ class ProfileSection extends StatelessWidget {
                           final status =
                               await UserService().fetchMyGuideStatus();
 
-                          if (status.isGuide) {
+                          if (status.isGuide ||
+                              status.application.statusName == 'APPROVED') {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text("승인된 가이드입니다. 가이드 모드로 전환합니다!"),
                               ),
                             );
+
+                            await context.read<AppModeProvider>().setMode(
+                              AppMode.guide,
+                            );
+                            if (context.mounted) context.go('/g');
                             return;
                           }
 
                           final app = status.application;
+
                           if (!app.exists) {
                             if (context.mounted) {
                               context.push('/guide/application/submit');
@@ -106,28 +115,20 @@ class ProfileSection extends StatelessWidget {
                               );
                               break;
 
-                            case 'APPROVED':
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("승인된 가이드입니다. 가이드 모드로 전환합니다!"),
-                                ),
-                              );
-                              break;
-
                             case 'REJECTED':
-                              final reason =
-                                  (app.rejectReason?.isNotEmpty ?? false)
-                                      ? '반려 사유: ${app.rejectReason}'
-                                      : '반려되었습니다. 내용을 보완해 다시 신청해주세요.';
-
-                              ScaffoldMessenger.of(
-                                context,
-                              ).showSnackBar(SnackBar(content: Text(reason)));
-
-                              if (app.canReapply && context.mounted) {
-                                context.push('/guide/application/submit');
+                              {
+                                final reason =
+                                    (app.rejectReason?.isNotEmpty ?? false)
+                                        ? '반려 사유: ${app.rejectReason}'
+                                        : '반려되었습니다. 내용을 보완해 다시 신청해주세요.';
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).showSnackBar(SnackBar(content: Text(reason)));
+                                if (app.canReapply && context.mounted) {
+                                  context.push('/guide/application/submit');
+                                }
+                                break;
                               }
-                              break;
 
                             case 'CANCELED':
                               if (app.canReapply && context.mounted) {
@@ -145,6 +146,8 @@ class ProfileSection extends StatelessWidget {
                               break;
                           }
                         } catch (e) {
+                          print('시발 ㅋㅋ');
+                          print(e);
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("가이드 상태 확인에 실패했습니다.")),
                           );

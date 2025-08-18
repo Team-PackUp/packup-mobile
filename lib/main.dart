@@ -106,6 +106,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ChatRoomProvider()),
         ChangeNotifierProvider(create: (_) => AlertCenterProvider()),
         ChangeNotifierProvider.value(value: userProvider),
+        ChangeNotifierProvider.value(value: appModeProvider),
         ChangeNotifierProvider.value(
           value: loadingNotifier,
         ), // value / create 차이ㄹ
