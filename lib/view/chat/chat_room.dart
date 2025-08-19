@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:packup/common/util.dart';
+import 'package:packup/provider/chat/chat_room_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../common/deep_link/handle_router.dart';
-import '../../model/ai_recommend/ai_recommend_category_model.dart';
 import '../../widget/chat/section/chat_room_section.dart';
 import '../../widget/common/category_filter.dart';
 import '../../widget/common/custom_appbar.dart';
@@ -24,14 +23,14 @@ class ChatRoom extends StatelessWidget {
 
 class ChatRoomContent extends StatefulWidget {
   final int? chatRoomId;
-
   const ChatRoomContent({super.key, this.chatRoomId});
 
   @override
   State<ChatRoomContent> createState() => _ChatRoomContentState();
 }
 
-class _ChatRoomContentState extends State<ChatRoomContent> with WidgetsBindingObserver {
+class _ChatRoomContentState extends State<ChatRoomContent>
+    with WidgetsBindingObserver, AutomaticKeepAliveClientMixin {
   final ScrollController _scrollController = ScrollController();
   ChatRoomProvider? _chatRoomProvider;
   int userSeq = 0;
@@ -41,6 +40,7 @@ class _ChatRoomContentState extends State<ChatRoomContent> with WidgetsBindingOb
     1: '안읽은 채팅',
     2: '내가 가이드',
   };
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -64,9 +64,6 @@ class _ChatRoomContentState extends State<ChatRoomContent> with WidgetsBindingOb
 
   void _maybeNavigateToChatDetail() {
     if (!mounted || widget.chatRoomId == null || _chatRoomProvider == null) return;
-
-    logger("채팅내역으로 바로 이동합니다.", 'INFO');
-
     try {
       final room = _chatRoomProvider!.chatRoom.firstWhere(
             (e) => e.seq == widget.chatRoomId,
@@ -75,7 +72,7 @@ class _ChatRoomContentState extends State<ChatRoomContent> with WidgetsBindingOb
       DeepLinkRouter.clearPayload(3);
       context.push('/chat_message/${room.seq}/$encodedTitle/$userSeq');
     } catch (_) {
-      // 로드 전/미존재 시 무시
+
     }
   }
 
@@ -95,9 +92,9 @@ class _ChatRoomContentState extends State<ChatRoomContent> with WidgetsBindingOb
   }
 
   void _scrollListener() {
+    if (!_scrollController.hasClients) return;
     final atEnd = _scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 40;
-
     if (atEnd) {
       final p = _chatRoomProvider;
       if (p != null && !p.isLoading) {
@@ -106,10 +103,13 @@ class _ChatRoomContentState extends State<ChatRoomContent> with WidgetsBindingOb
     }
   }
 
-  final List<int> _selectedFilter = [0];
-
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
+    final activeIdx = context.select<ChatRoomProvider, int>(
+          (p) => p.activeFilterIdx,
+    );
 
     return Scaffold(
       appBar: CustomAppbar(
@@ -121,18 +121,20 @@ class _ChatRoomContentState extends State<ChatRoomContent> with WidgetsBindingOb
           const Divider(height: 1, thickness: 1),
 
           CategoryFilter<int>(
+            key: ValueKey('filter-$activeIdx'),
             items: _filterMap.keys.toList(growable: false),
-            initialSelectedItems: _selectedFilter,
+            initialSelectedItems: [activeIdx],
             labelBuilder: (i) => _filterMap[i] ?? '$i',
             mode: SelectionMode.single,
             onSelectionChanged: (selected) {
               final idx = selected.isNotEmpty ? selected.first : 0;
               context.read<ChatRoomProvider>().filterChatRoom(idx);
-            }
+            },
           ),
+
           const Divider(height: 1, thickness: 1),
           const SizedBox(height: 8),
-          // 채팅 목록
+
           Expanded(
             child: ChatRoomSection(
               scrollController: _scrollController,
