@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:packup/model/common/app_mode.dart';
+import 'package:packup/provider/common/app_mode_provider.dart';
 import 'package:packup/provider/user/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +32,20 @@ class MenuItemsList extends StatelessWidget {
             icon: Icons.logout_outlined,
             label: '로그아웃',
             isDestructive: true,
-            onTap: () => context.read<UserProvider>().logout(context),
+            onTap: () async {
+              final appMode = context.read<AppModeProvider>();
+              final user = context.read<UserProvider>();
+
+              try {
+                await appMode.setMode(AppMode.user);
+                await user.logout(context);
+              } catch (e) {
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('로그아웃 실패. 다시 시도해주세요.')),
+                );
+              }
+            },
           ),
         ],
       ),
