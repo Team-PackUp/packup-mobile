@@ -1,9 +1,6 @@
-import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:packup/widget/common/circle_profile_image.dart';
 import 'package:packup/widget/common/custom_network_image_ratio.dart';
-import 'package:path/path.dart';
-
 import '../../common/util.dart';
 import '../../const/color.dart';
 import '../common/image_viewer/image_viewer.dart';

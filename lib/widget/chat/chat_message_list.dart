@@ -66,7 +66,6 @@ class _ChatMessageListState extends State<ChatMessageList> {
     return ListView.builder(
       controller: widget.scrollController,
       reverse: true,
-      padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
       itemCount: _groupedCache.length,
       itemBuilder: (context, index) {
         final item = _groupedCache[index];

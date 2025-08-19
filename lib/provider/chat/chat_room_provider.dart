@@ -39,12 +39,6 @@ class ChatRoomProvider extends LoadingProvider {
   // 0=전체, 1=안읽은, 2=내가 가이드
   int _activeFilterIdx = 0;
 
-  bool Function(ChatRoomModel e)? _guideMatcher;
-  void setGuideMatcher(bool Function(ChatRoomModel e) matcher) {
-    _guideMatcher = matcher;
-    _applyFilter();
-  }
-
   Future<void> getRoom() async {
     if (_totalPage != 0 && _curPage >= _totalPage) return;
 
@@ -80,12 +74,7 @@ class ChatRoomProvider extends LoadingProvider {
         break;
 
       case 2: // 내가 가이드
-        final mySeq = _mySeq;
-        base = base.where((e) {
-          final seqInUser = _extractUserSeq(e);
-          final matchMine = (seqInUser != null && mySeq != null && seqInUser == mySeq);
-          return _guideMatcher != null ? (_guideMatcher!(e) && matchMine) : matchMine;
-        });
+        base = base.where((e) => _extractUserSeq(e) == _mySeq);
         break;
 
       case 0: // 전체
@@ -93,6 +82,8 @@ class ChatRoomProvider extends LoadingProvider {
         base = _allChatRooms;
         break;
     }
+
+    print(base.toString());
 
     _chatRoom = List<ChatRoomModel>.unmodifiable(base.toList());
     notifyListeners();
