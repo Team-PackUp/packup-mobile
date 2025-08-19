@@ -34,8 +34,8 @@ class _GuideMenuPageState extends State<GuideMenuPage> {
     final screenH = MediaQuery.of(context).size.height;
     final screenW = MediaQuery.of(context).size.width;
 
-    final profileUrl =
-        context.watch<UserProvider>().userModel?.profileImagePath;
+    final profilePath =
+        context.read<UserProvider>().userModel?.profileImagePath ?? '';
 
     return Scaffold(
       body: SafeArea(
@@ -46,7 +46,10 @@ class _GuideMenuPageState extends State<GuideMenuPage> {
                   title: '메뉴',
                   arrowFlag: false,
                   alert: const AlertBell(),
-                  profile: CircleProfileImage(radius: screenH * 0.02),
+                  profile: CircleProfileImage(
+                    radius: screenH * 0.02,
+                    imagePath: profilePath,
+                  ),
                 ),
               ],
           body: ListView(
