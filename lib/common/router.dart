@@ -80,6 +80,11 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
         '/chat_message',
         '/preference',
         '/guide/application/submit',
+        '/g/todo',
+        '/g/schedule',
+        '/g/listing',
+        '/g/chat',
+        '/g/menu',
       ].any((path) => currentLoc.startsWith(path));
 
       if (!hasToken && isProtected) {
@@ -302,7 +307,7 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
           ),
           GoRoute(path: '/g/schedule', builder: (context, state) => ChatRoom()),
           GoRoute(path: '/g/listing', builder: (context, state) => ChatRoom()),
-          GoRoute(path: '/g/message', builder: (context, state) => ChatRoom()),
+          GoRoute(path: '/g/chat', builder: (context, state) => ChatRoom()),
           GoRoute(
             path: '/g/menu',
             builder: (context, state) => const GuideMenuPage(),
