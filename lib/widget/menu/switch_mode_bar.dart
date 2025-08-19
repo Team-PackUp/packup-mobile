@@ -22,6 +22,11 @@ class _SwitchModeBarState extends State<SwitchModeBar> {
       await context.read<AppModeProvider>().setMode(AppMode.user);
 
       if (!mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('투어 모드로 전환합니다!')));
+
       context.go('/');
     } catch (e) {
       if (!mounted) return;
