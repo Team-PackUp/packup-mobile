@@ -38,6 +38,7 @@ class ChatRoomProvider extends LoadingProvider {
 
   // 0=전체, 1=안읽은, 2=내가 가이드
   int _activeFilterIdx = 0;
+  int get activeFilterIdx => _activeFilterIdx;
 
   Future<void> getRoom() async {
     if (_totalPage != 0 && _curPage >= _totalPage) return;
@@ -97,16 +98,10 @@ class ChatRoomProvider extends LoadingProvider {
     if (i != -1) {
       final prev = _allChatRooms[i];
 
-      final preservedAvatar = prev.user?.profileImagePath;
-
       prev.lastMessage = incoming.lastMessage;
       prev.lastMessageDate = incoming.lastMessageDate;
       prev.unReadCount = incoming.unReadCount;
       prev.fileFlag = incoming.fileFlag;
-
-      // if (preservedAvatar != null) {
-      //   prev.user?.profileImagePath = preservedAvatar;
-      // }
 
       _allChatRooms
         ..removeAt(i)

@@ -28,8 +28,7 @@ class ChatRoomCard extends StatefulWidget {
   State<ChatRoomCard> createState() => _ChatRoomCardState();
 }
 
-class _ChatRoomCardState extends State<ChatRoomCard>
-    with AutomaticKeepAliveClientMixin {
+class _ChatRoomCardState extends State<ChatRoomCard> {
   String? _avatar;
 
   static const double _hPad = 12;
@@ -45,25 +44,7 @@ class _ChatRoomCardState extends State<ChatRoomCard>
   }
 
   @override
-  void didUpdateWidget(covariant ChatRoomCard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (!widget.freezeProfileImage) {
-      _avatar = widget.profileImagePath;
-      return;
-    }
-
-    if (_avatar == null && widget.profileImagePath != null) {
-      _avatar = widget.profileImagePath;
-    }
-  }
-
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
   Widget build(BuildContext context) {
-    super.build(context);
 
     return Column(
       children: [
