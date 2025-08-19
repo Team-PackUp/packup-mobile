@@ -43,7 +43,6 @@ class SettingNationCard extends StatelessWidget {
                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
-              Icon(Icons.chevron_right, size: w * 0.05, color: Colors.black45),
             ],
           ),
         ),
