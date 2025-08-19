@@ -82,9 +82,6 @@ class ChatRoomProvider extends LoadingProvider {
         base = _allChatRooms;
         break;
     }
-
-    print(base.toString());
-
     _chatRoom = List<ChatRoomModel>.unmodifiable(base.toList());
     notifyListeners();
   }
