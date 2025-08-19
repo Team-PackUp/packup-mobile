@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
+import 'package:packup/widget/common/custom_appbar.dart';
+import 'package:packup/widget/common/alert_bell.dart';
 
 import 'package:packup/widget/menu/section/menu_intro_section.dart';
 import 'package:packup/widget/menu/section/menu_items_section.dart';
 import 'package:packup/widget/menu/section/menu_switch_mode_section.dart';
 
-import 'package:packup/widget/common/custom_sliver_appbar.dart';
-import 'package:packup/widget/common/alert_bell.dart';
-import 'package:packup/widget/common/circle_profile_image.dart';
-
 import 'package:packup/provider/alert_center/alert_center_provider.dart';
-import 'package:packup/provider/user/user_provider.dart';
 
 class GuideMenuPage extends StatefulWidget {
   const GuideMenuPage({super.key});
@@ -31,47 +28,23 @@ class _GuideMenuPageState extends State<GuideMenuPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenH = MediaQuery.of(context).size.height;
-    final screenW = MediaQuery.of(context).size.width;
-
-    final profilePath =
-        context.read<UserProvider>().userModel?.profileImagePath ?? '';
+    final h = MediaQuery.of(context).size.height;
+    final w = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: SafeArea(
-        child: NestedScrollView(
-          headerSliverBuilder:
-              (context, _) => [
-                CustomSliverAppBar(
-                  title: '메뉴',
-                  arrowFlag: false,
-                  alert: const AlertBell(),
-                  profile: CircleProfileImage(
-                    radius: screenH * 0.02,
-                    imagePath: profilePath,
-                  ),
-                ),
-              ],
-          body: ListView(
-            padding: EdgeInsets.symmetric(
-              horizontal: screenW * 0.03,
-              vertical: screenH * 0.01,
-            ),
-            children: [
-              MenuIntroSection(),
-              SizedBox(height: screenH * 0.03),
-              MenuItemsSection(),
-              SizedBox(height: 120),
-            ],
-          ),
-        ),
+      appBar: CustomAppbar(title: '메뉴', alert: const AlertBell()),
+      body: ListView(
+        padding: EdgeInsets.fromLTRB(w * 0.03, h * 0.01, w * 0.03, 0),
+        children: const [
+          MenuIntroSection(),
+          SizedBox(height: 24),
+          MenuItemsSection(),
+          SizedBox(height: 120),
+        ],
       ),
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: screenW * 0.03,
-          vertical: screenH * 0.01,
-        ),
-        child: MenuSwitchModeSection(),
+        padding: EdgeInsets.fromLTRB(w * 0.03, 0, w * 0.03, h * 0.01),
+        child: const MenuSwitchModeSection(),
       ),
     );
   }

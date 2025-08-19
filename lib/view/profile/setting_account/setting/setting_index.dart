@@ -10,12 +10,8 @@ class SettingIndex extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppbar(
-        title: '앱 설정',
-        alert: AlertBell(),
-    ),
-    body: const SettingIndexSection()
+      appBar: CustomAppbar(title: '앱 설정', alert: AlertBell()),
+      body: const SettingIndexSection(),
     );
   }
-
 }

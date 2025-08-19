@@ -80,6 +80,7 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
         '/chat_message',
         '/preference',
         '/guide/application/submit',
+        '/g',
         '/g/todo',
         '/g/schedule',
         '/g/listing',

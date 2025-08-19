@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:packup/model/common/app_mode.dart';
 import 'package:packup/provider/common/app_mode_provider.dart';
 import 'package:packup/provider/user/user_provider.dart';
@@ -37,8 +38,9 @@ class MenuItemsList extends StatelessWidget {
               final user = context.read<UserProvider>();
 
               try {
-                await appMode.setMode(AppMode.user);
                 await user.logout(context);
+                await appMode.setMode(AppMode.user);
+                context.go('/');
               } catch (e) {
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
