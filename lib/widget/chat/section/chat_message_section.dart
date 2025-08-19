@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../../../model/chat/chat_message_model.dart';
 import '../../../provider/chat/chat_message_provider.dart';
-import '../../../provider/chat/chat_room_provider.dart';
-
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../../provider/chat/chat_message_provider.dart';
-import '../../../provider/chat/chat_room_provider.dart';
 import '../chat_message_list.dart';
 
 class ChatMessageSection extends StatefulWidget {
@@ -27,28 +21,33 @@ class ChatMessageSection extends StatefulWidget {
 }
 
 class _ChatMessageSectionState extends State<ChatMessageSection> {
-  late ChatMessageProvider _chatMessageProvider;
+  ChatMessageProvider? _chatMessageProvider;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _chatMessageProvider = context.read<ChatMessageProvider>();
+      if (!mounted) return;
+      final p = context.read<ChatMessageProvider>();
+      _chatMessageProvider = p;
 
-      await _chatMessageProvider.getMessage(widget.chatRoomSeq);
-      _chatMessageProvider.subscribeChatMessage(widget.chatRoomSeq);
+      await p.getMessage(widget.chatRoomSeq);
+      p.subscribeChatMessage(widget.chatRoomSeq);
     });
   }
 
   @override
   void dispose() {
-    _chatMessageProvider.unSubscribeChatMessage(widget.chatRoomSeq);
+    _chatMessageProvider?.unSubscribeChatMessage(widget.chatRoomSeq);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final messages = context.watch<ChatMessageProvider>().chatMessage;
+
+    final messages = context.select<ChatMessageProvider, List<ChatMessageModel>>(
+          (p) => List<ChatMessageModel>.unmodifiable(p.chatMessage),
+    );
 
     return ChatMessageList(
       messages: messages,

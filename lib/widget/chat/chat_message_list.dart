@@ -1,17 +1,18 @@
+// chat_message_list.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import '../../../common/util.dart';
+import 'package:provider/provider.dart';
+
 import '../../../model/chat/chat_message_model.dart';
 import '../../../model/chat/chat_read_model.dart';
 import '../../../provider/chat/chat_message_provider.dart';
 import '../../../provider/chat/chat_room_provider.dart';
-import 'package:provider/provider.dart';
-
+import '../../../common/util.dart';
 import 'chat_message_card.dart';
 import 'chat_message_separator.dart';
 
-class ChatMessageList extends StatelessWidget {
+class ChatMessageList extends StatefulWidget {
   final List<ChatMessageModel> messages;
   final int userSeq;
   final int chatRoomSeq;
@@ -26,48 +27,69 @@ class ChatMessageList extends StatelessWidget {
   });
 
   @override
+  State<ChatMessageList> createState() => _ChatMessageListState();
+}
+
+class _ChatMessageListState extends State<ChatMessageList> {
+  List<dynamic> _groupedCache = const [];
+  int _sigLen = 0;
+  int? _sigLastSeq;
+
+  @override
+  void didUpdateWidget(covariant ChatMessageList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final len = widget.messages.length;
+    final lastSeq = len > 0 ? widget.messages.last.seq : null;
+    if (len != _sigLen || lastSeq != _sigLastSeq) {
+      _groupedCache = _buildGroupedMessagesWithDateSeparators(widget.messages);
+      _sigLen = len;
+      _sigLastSeq = lastSeq;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final len = widget.messages.length;
+    _groupedCache = _buildGroupedMessagesWithDateSeparators(widget.messages);
+    _sigLen = len;
+    _sigLastSeq = len > 0 ? widget.messages.last.seq : null;
+  }
+
+  @override
   Widget build(BuildContext context) {
-
-    final screenH = MediaQuery.of(context).size.height;
-    final screenW = MediaQuery.of(context).size.width;
-
-    final groupedList = _buildGroupedMessagesWithDateSeparators(messages);
-    final chatMessageProvider = context.watch<ChatMessageProvider>();
+    final lastReadSeq = context.select<ChatMessageProvider, int>(
+          (p) => p.lastReadMessageSeq ?? 0,
+    );
     final chatRoomProvider = context.read<ChatRoomProvider>();
 
     return ListView.builder(
-      controller: scrollController,
+      controller: widget.scrollController,
       reverse: true,
-      padding: EdgeInsets.only(
-        left: screenW * 0.02,
-        right: screenW * 0.02,
-        bottom: screenH * 0.02,
-      ),
-      itemCount: groupedList.length,
+      padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
+      itemCount: _groupedCache.length,
       itemBuilder: (context, index) {
-        final item = groupedList[index];
+        final item = _groupedCache[index];
 
         if (item is DateTime) {
-          return DateSeparator(
-            dateText: DateFormat('yyyy-MM-dd').format(item),
-          );
+          return DateSeparator(dateText: DateFormat('yyyy-MM-dd').format(item));
         }
 
         if (item is List<ChatMessageModel>) {
           return Column(
+            key: ValueKey('group-$index-${item.first.seq}-${item.length}'),
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: item.asMap().entries.map((entry) {
-              final i = entry.key;
-              final message = entry.value;
-
+            children: List.generate(item.length, (i) {
+              final message = item[i];
               final isFirstInGroup = i == 0;
               final isLatestMessage = index == 0 && isFirstInGroup;
 
               Widget messageWidget = ChatMessageCard(
+                key: ValueKey('msg-${message.seq}'),
                 showProfile: isFirstInGroup,
                 message: message.message ?? '',
                 createTime: convertToHm(message.createdAt!),
-                userSeq: userSeq,
+                userSeq: widget.userSeq,
                 sender: message.userSeq!,
                 profileImagePath: message.profileImagePath,
                 fileFlag: message.fileFlag ?? 'N',
@@ -77,13 +99,15 @@ class ChatMessageList extends StatelessWidget {
                 messageWidget = VisibilityDetector(
                   key: Key('last-message-${message.seq}'),
                   onVisibilityChanged: (info) {
-                    final isUnread = chatMessageProvider.lastReadMessageSeq! < message.seq!;
+                    final isUnread = lastReadSeq < (message.seq ?? 0);
                     if (info.visibleFraction > 0.8 && isUnread) {
-                      chatMessageProvider.readChatMessage(ChatReadModel(
-                        chatRoomSeq: chatRoomSeq,
-                        lastReadMessageSeq: message.seq!,
-                      ));
-                      chatRoomProvider.readMessageThisRoom(chatRoomSeq);
+                      context.read<ChatMessageProvider>().readChatMessage(
+                        ChatReadModel(
+                          chatRoomSeq: widget.chatRoomSeq,
+                          lastReadMessageSeq: message.seq!,
+                        ),
+                      );
+                      chatRoomProvider.readMessageThisRoom(widget.chatRoomSeq);
                     }
                   },
                   child: messageWidget,
@@ -91,7 +115,7 @@ class ChatMessageList extends StatelessWidget {
               }
 
               return messageWidget;
-            }).toList(),
+            }),
           );
         }
 
@@ -99,6 +123,8 @@ class ChatMessageList extends StatelessWidget {
       },
     );
   }
+
+  // ───── helper ─────
 
   List<dynamic> _buildGroupedMessagesWithDateSeparators(List<ChatMessageModel> messages) {
     final List<dynamic> result = [];
@@ -129,19 +155,14 @@ class ChatMessageList extends StatelessWidget {
         }
         lastSender = message.userSeq;
       }
-
       currentGroup.add(message);
     }
-
     if (currentGroup.isNotEmpty) {
       result.insert(0, currentGroup);
     }
-
     return result;
   }
 
-
-  bool isSameDate(DateTime a, DateTime b) {
-    return a.year == b.year && a.month == b.month && a.day == b.day;
-  }
+  bool isSameDate(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
 }

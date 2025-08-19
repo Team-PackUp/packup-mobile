@@ -1,19 +1,31 @@
 import 'package:packup/model/common/page_model.dart';
 import 'package:packup/service/chat/chat_service.dart';
-
 import 'package:packup/model/chat/chat_room_model.dart';
 import 'package:packup/provider/common/loading_provider.dart';
-
 import 'package:packup/service/common/loading_service.dart';
-
 import 'package:packup/service/common/socket_service.dart';
 
-class ChatRoomProvider extends LoadingProvider {
+import '../../Common/util.dart';
 
+class ChatRoomProvider extends LoadingProvider {
   final ChatService _chatService = ChatService();
   final SocketService _socketService = SocketService();
 
+  int? _mySeq;
+  Future<int> _ensureMySeq() async {
+    final seq = await decodeTokenInfo();
+    _mySeq = seq;
+    return seq;
+  }
+
+  int? _extractUserSeq(ChatRoomModel e) {
+    return e.user?.userId;
+  }
+
+  // 원본/표시 리스트 분리
+  final List<ChatRoomModel> _allChatRooms = [];
   List<ChatRoomModel> _chatRoom = [];
+
   int _totalPage = 0;
   int _curPage = 0;
 
@@ -24,43 +36,104 @@ class ChatRoomProvider extends LoadingProvider {
   final String _lastMessage = '';
   String get lastMessage => _lastMessage;
 
-  // 채팅방 리스트
-  getRoom() async {
-    if(_totalPage < _curPage) return;
+  // 0=전체, 1=안읽은, 2=내가 가이드
+  int _activeFilterIdx = 0;
+
+  bool Function(ChatRoomModel e)? _guideMatcher;
+  void setGuideMatcher(bool Function(ChatRoomModel e) matcher) {
+    _guideMatcher = matcher;
+    _applyFilter();
+  }
+
+  Future<void> getRoom() async {
+    if (_totalPage != 0 && _curPage >= _totalPage) return;
 
     await LoadingService.run(() async {
       final response = await _chatService.getRoom(_curPage);
-      final page = PageModel<ChatRoomModel>.fromJson(response.response,
+      final page = PageModel<ChatRoomModel>.fromJson(
+        response.response,
             (e) => ChatRoomModel.fromJson(e),
       );
 
-      _chatRoom.addAll(page.objectList);
-      _totalPage = totalPage;
+      _allChatRooms.addAll(page.objectList);
 
+      _totalPage = page.totalPage;
       _curPage++;
 
-      notifyListeners();
+      await _applyFilter();
     });
   }
 
-  void updateFirstChatRoom(ChatRoomModel chatRoomModel) {
-    // 이미 있는 채팅방인지 확인
-    int existingIndex = _chatRoom.indexWhere((room) => room.seq == chatRoomModel.seq);
+  Future<void> _applyFilter() async {
+    if (_activeFilterIdx == 2 && _mySeq == null) {
+      await _ensureMySeq();
+    }
+    _applyFilterSync();
+  }
 
-    if (existingIndex != -1) {
-      _chatRoom.removeAt(existingIndex);
+  void _applyFilterSync() {
+    Iterable<ChatRoomModel> base = _allChatRooms;
+
+    switch (_activeFilterIdx) {
+      case 1: // 안읽은
+        base = base.where((e) => (e.unReadCount ?? 0) > 0);
+        break;
+
+      case 2: // 내가 가이드
+        final mySeq = _mySeq;
+        base = base.where((e) {
+          final seqInUser = _extractUserSeq(e);
+          final matchMine = (seqInUser != null && mySeq != null && seqInUser == mySeq);
+          return _guideMatcher != null ? (_guideMatcher!(e) && matchMine) : matchMine;
+        });
+        break;
+
+      case 0: // 전체
+      default:
+        base = _allChatRooms;
+        break;
     }
 
-    _chatRoom.insert(0, chatRoomModel);
-
+    _chatRoom = List<ChatRoomModel>.unmodifiable(base.toList());
     notifyListeners();
   }
 
-  subscribeChatRoom() async {
+  Future<void> filterChatRoom(int idx) async {
+    _activeFilterIdx = idx;
+    await _applyFilter();
+  }
+
+  void updateFirstChatRoom(ChatRoomModel incoming) {
+    final i = _allChatRooms.indexWhere((r) => r.seq == incoming.seq);
+
+    if (i != -1) {
+      final prev = _allChatRooms[i];
+
+      final preservedAvatar = prev.user?.profileImagePath;
+
+      prev.lastMessage = incoming.lastMessage;
+      prev.lastMessageDate = incoming.lastMessageDate;
+      prev.unReadCount = incoming.unReadCount;
+      prev.fileFlag = incoming.fileFlag;
+
+      // if (preservedAvatar != null) {
+      //   prev.user?.profileImagePath = preservedAvatar;
+      // }
+
+      _allChatRooms
+        ..removeAt(i)
+        ..insert(0, prev);
+    } else {
+      _allChatRooms.insert(0, incoming);
+    }
+
+    _applyFilterSync();
+  }
+
+  /// 소켓 구독
+  Future<void> subscribeChatRoom() async {
     const destination = '/user/queue/chatroom-refresh';
-
     _socketService.registerCallback(destination, (data) {});
-
     _socketService.subscribe(destination, (data) {
       final newFirstChatRoom = ChatRoomModel.fromJson(data);
       updateFirstChatRoom(newFirstChatRoom);
@@ -68,26 +141,28 @@ class ChatRoomProvider extends LoadingProvider {
   }
 
   void unSubscribeChatRoom() {
-    final destination = '/user/queue/chatroom-refresh';
-
+    const destination = '/user/queue/chatroom-refresh';
     _socketService.unsubscribe(destination);
     _socketService.unregisterCallback(destination);
   }
 
-  // 채팅 방 진입시 읽음 처리 > 상태만 바꿀 함수
+  /// 채팅 방 진입 시 읽음 처리(상태만 변경)
   void readMessageThisRoom(int chatRoomSeq) {
-    final index = _chatRoom.indexWhere((room) => room.seq == chatRoomSeq);
-    if (index != -1 && _chatRoom[index].unReadCount! > 0) {
-      _chatRoom[index].unReadCount = 0;
-
-      notifyListeners();
-    } 
+    final idx = _allChatRooms.indexWhere((room) => room.seq == chatRoomSeq);
+    if (idx != -1 && (_allChatRooms[idx].unReadCount ?? 0) > 0) {
+      _allChatRooms[idx].unReadCount = 0;
+      _applyFilterSync();
+    }
   }
 
+  /// 목록 초기화
   void clearChatRooms() {
-    _chatRoom.clear();
+    _allChatRooms.clear();
+    _chatRoom = const [];
     _totalPage = 0;
     _curPage = 0;
+    _activeFilterIdx = 0;
+    _mySeq = null;
     notifyListeners();
   }
 }

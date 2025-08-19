@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:packup/const/color.dart';
-import 'package:packup/model/common/user_model.dart';
+import 'package:packup/common/util.dart';
 import 'package:packup/widget/common/circle_profile_image.dart';
 
-import '../../common/util.dart';
-
-class ChatRoomCard extends StatelessWidget {
+class ChatRoomCard extends StatefulWidget {
   final String title;
   final String unReadCount;
   final String? profileImagePath;
   final String? lastMessage;
   final DateTime? lastMessageDate;
   final String fileFlag;
+
+  final bool freezeProfileImage;
 
   const ChatRoomCard({
     super.key,
@@ -21,28 +21,61 @@ class ChatRoomCard extends StatelessWidget {
     this.lastMessage,
     this.lastMessageDate,
     required this.fileFlag,
+    this.freezeProfileImage = true,
   });
 
   @override
-  Widget build(BuildContext context) {
+  State<ChatRoomCard> createState() => _ChatRoomCardState();
+}
 
-    final screenH = MediaQuery.of(context).size.height;
-    final screenW = MediaQuery.of(context).size.width;
+class _ChatRoomCardState extends State<ChatRoomCard>
+    with AutomaticKeepAliveClientMixin {
+  String? _avatar;
+
+  static const double _hPad = 12;
+  static const double _vPad = 10;
+  static const double _avatarRadius = 24;
+  static const double _gap = 12;
+  static const double _badgeRadius = 14;
+
+  @override
+  void initState() {
+    super.initState();
+    _avatar = widget.profileImagePath;
+  }
+
+  @override
+  void didUpdateWidget(covariant ChatRoomCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (!widget.freezeProfileImage) {
+      _avatar = widget.profileImagePath;
+      return;
+    }
+
+    if (_avatar == null && widget.profileImagePath != null) {
+      _avatar = widget.profileImagePath;
+    }
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
 
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: screenW * 0.02,
-              vertical: screenH * 0.015
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: _hPad, vertical: _vPad),
           child: Row(
             children: [
               CircleProfileImage(
-                radius: screenW * 0.065,
-                imagePath: profileImagePath,
+                radius: _avatarRadius,
+                imagePath: _avatar,
               ),
-              SizedBox(width: screenW * 0.05),
+              const SizedBox(width: _gap),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +84,7 @@ class ChatRoomCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            title,
+                            widget.title,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -59,26 +92,26 @@ class ChatRoomCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        if (lastMessageDate != null)
-                          SizedBox(width: screenW * 0.05),
+                        if (widget.lastMessageDate != null) ...[
+                          const SizedBox(width: 12),
                           Text(
-                            convertToChatRoomDate(lastMessageDate!),
+                            convertToChatRoomDate(widget.lastMessageDate!),
                             style: const TextStyle(
                               color: Colors.grey,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        if (unReadCount != "0") ...[
-                          SizedBox(width: screenW * 0.02),
+                        ],
+                        if (widget.unReadCount != "0") ...[
+                          const SizedBox(width: 8),
                           CircleAvatar(
                             backgroundColor: SELECTED,
-                            radius: screenW * 0.04,
+                            radius: _badgeRadius,
                             child: Text(
-                              unReadCount,
-                              style: TextStyle(
+                              widget.unReadCount,
+                              style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: screenW * 0.04,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -86,11 +119,13 @@ class ChatRoomCard extends StatelessWidget {
                         ],
                       ],
                     ),
-                    SizedBox(height: screenW * 0.01),
+                    const SizedBox(height: 6),
                     Text(
-                      fileFlag == 'Y'
+                      widget.fileFlag == 'Y'
                           ? '사진'
-                          : (lastMessage?.trim().isNotEmpty ?? false ? lastMessage! : ''),
+                          : ((widget.lastMessage?.trim().isNotEmpty ?? false)
+                          ? widget.lastMessage!
+                          : ''),
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 14,
@@ -107,7 +142,6 @@ class ChatRoomCard extends StatelessWidget {
       ],
     );
   }
-
 
   String convertToChatRoomDate(DateTime date) {
     final type = getDateType(date);

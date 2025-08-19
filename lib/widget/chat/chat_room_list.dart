@@ -36,12 +36,14 @@ class ChatRoomList extends StatelessWidget {
               context.push('/chat_message/${room.seq}/$encodedTitle/$userSeq');
             },
             child: ChatRoomCard(
+              key: ValueKey(room.seq),
               title: room.title ?? '',
               unReadCount: unReadCount,
-              profileImagePath: room.user!.profileImagePath,
+              profileImagePath: room.user?.profileImagePath,
               lastMessage: room.lastMessage,
               lastMessageDate: room.lastMessageDate,
               fileFlag: room.fileFlag ?? 'N',
+              // freezeProfileImage: true, // 기본값
             ),
           ),
         );
