@@ -9,7 +9,7 @@ class GuideShell extends StatelessWidget {
     if (loc.startsWith('/g/todo')) return 0;
     if (loc.startsWith('/g/schedule')) return 1;
     if (loc.startsWith('/g/listing')) return 2;
-    if (loc.startsWith('/g/message')) return 3;
+    if (loc.startsWith('/g/chat')) return 3;
     if (loc.startsWith('/g/menu')) return 4;
     return 0;
   }
@@ -66,7 +66,7 @@ class GuideShell extends StatelessWidget {
                   context.go('/g/listing');
                   break;
                 case 3:
-                  context.go('/g/message');
+                  context.go('/g/chat');
                   break;
                 case 4:
                   context.go('/g/menu');
