@@ -13,8 +13,6 @@ class UserModel {
   late final String? profileImagePath;
   final List<String>? preferCategorySeqJson;
 
-
-
   UserModel({
     required this.userId,
     required this.userBirth,
@@ -29,7 +27,6 @@ class UserModel {
     this.pushFlag,
     this.profileImagePath,
     this.preferCategorySeqJson,
-
   });
 
   Map<String, dynamic> toJson() {
@@ -46,7 +43,7 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      userId: json['userId'] ?? '',
+      userId: json['userId'] ?? 0,
       userBirth: json['birth']?.toString() ?? '',
       userNation: json['nation'] ?? '',
       joinType: json['joinType'] ?? '',
