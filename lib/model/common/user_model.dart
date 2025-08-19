@@ -1,5 +1,5 @@
 class UserModel {
-  final String userId;
+  final int userId;
   final String userBirth;
   final String userNation;
   final String joinType;
