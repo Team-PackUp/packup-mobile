@@ -58,6 +58,7 @@ class _ChatMessageListState extends State<ChatMessageList> {
 
   @override
   Widget build(BuildContext context) {
+
     final lastReadSeq = context.select<ChatMessageProvider, int>(
           (p) => p.lastReadMessageSeq ?? 0,
     );
@@ -66,6 +67,7 @@ class _ChatMessageListState extends State<ChatMessageList> {
     return ListView.builder(
       controller: widget.scrollController,
       reverse: true,
+      padding: EdgeInsets.zero,
       itemCount: _groupedCache.length,
       itemBuilder: (context, index) {
         final item = _groupedCache[index];

@@ -51,7 +51,7 @@ class ChatMessageCard extends StatelessWidget {
 
       final imageWidget = InkWell(
         onTap: () async {
-          final resultIndex = await Navigator.push<int>(
+          await Navigator.push<int>(
             context,
             PageRouteBuilder(
               opaque: false,
@@ -165,7 +165,7 @@ class ChatMessageCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
           horizontal: screenW * 0.03,
-          vertical: screenH * 0.01,
+          vertical: screenH * 0.005,
       ),
       child: Row(
         mainAxisAlignment: isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
