@@ -146,8 +146,6 @@ class ProfileSection extends StatelessWidget {
                               break;
                           }
                         } catch (e) {
-                          print('시발 ㅋㅋ');
-                          print(e);
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("가이드 상태 확인에 실패했습니다.")),
                           );
