@@ -36,11 +36,10 @@ class _ProfileModifyState extends State<ProfileModify> {
 
     final user = context.read<UserProvider>().userModel!;
     newNickName = user.nickname ?? '';
-    newLanguage = user.userLanguage ?? '';   // ✅ 언어 초기값도 채워둠
-    newGender   = user.userGender ?? '';         // 있으면 채우기
-    newBirth    = user.userBirth  ?? '';         // 있으면 채우기
+    newLanguage = user.userLanguage ?? '';
+    newGender   = user.userGender ?? '';
+    newBirth    = user.userBirth  ?? '';
     selectedCategories = List<String>.from(user.preferCategorySeqJson ?? []);
-    // setState() 필요 없음: 첫 build 전에 값만 준비
   }
 
   @override
