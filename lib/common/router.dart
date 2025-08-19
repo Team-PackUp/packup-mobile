@@ -295,10 +295,15 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
       ShellRoute(
         builder: (context, state, child) => GuideShell(child: child),
         routes: [
-          GoRoute(path: '/g', builder: (context, state) => const AIRecommend()),
+          GoRoute(
+            path: '/g/todo',
+            builder: (context, state) => const AIRecommend(),
+          ),
+          GoRoute(path: '/g/schedule', builder: (context, state) => ChatRoom()),
+          GoRoute(path: '/g/listing', builder: (context, state) => ChatRoom()),
           GoRoute(path: '/g/message', builder: (context, state) => ChatRoom()),
           GoRoute(
-            path: '/g/profile',
+            path: '/g/menu',
             builder: (context, state) => const ProfileIndex(),
           ),
         ],
