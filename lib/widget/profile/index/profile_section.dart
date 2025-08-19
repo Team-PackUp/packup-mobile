@@ -93,7 +93,7 @@ class ProfileSection extends StatelessWidget {
                             await context.read<AppModeProvider>().setMode(
                               AppMode.guide,
                             );
-                            if (context.mounted) context.go('/g');
+                            if (context.mounted) context.go('/g/todo');
                             return;
                           }
 
