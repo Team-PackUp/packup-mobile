@@ -11,6 +11,7 @@ import 'package:packup/view/guide/detail/guide_detail.dart';
 import 'package:get/get.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
+import 'package:packup/view/menu/guide_menu.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
 import 'package:packup/view/profile/profile_index.dart';
 import 'package:packup/view/profile/profile_modify/profile_modify.dart';
@@ -79,6 +80,12 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
         '/chat_message',
         '/preference',
         '/guide/application/submit',
+        '/g',
+        '/g/todo',
+        '/g/schedule',
+        '/g/listing',
+        '/g/chat',
+        '/g/menu',
       ].any((path) => currentLoc.startsWith(path));
 
       if (!hasToken && isProtected) {
@@ -295,11 +302,16 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
       ShellRoute(
         builder: (context, state, child) => GuideShell(child: child),
         routes: [
-          GoRoute(path: '/g', builder: (context, state) => const AIRecommend()),
-          GoRoute(path: '/g/message', builder: (context, state) => ChatRoom()),
           GoRoute(
-            path: '/g/profile',
-            builder: (context, state) => const ProfileIndex(),
+            path: '/g/todo',
+            builder: (context, state) => const AIRecommend(),
+          ),
+          GoRoute(path: '/g/schedule', builder: (context, state) => ChatRoom()),
+          GoRoute(path: '/g/listing', builder: (context, state) => ChatRoom()),
+          GoRoute(path: '/g/chat', builder: (context, state) => ChatRoom()),
+          GoRoute(
+            path: '/g/menu',
+            builder: (context, state) => const GuideMenuPage(),
           ),
         ],
       ),
