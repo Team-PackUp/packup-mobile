@@ -96,7 +96,6 @@ class _ReplyFormSectionState extends State<ReplyFormSection> {
 
     setState(() => _isSubmitting = true);
     try {
-      // TODO: 사진 업로드가 필요하면 _photos 전달 로직을 ReplyProvider에 맞춰 추가
       await _replyProvider.upsertReply(
         _contentController.text.trim(),
         _point,
