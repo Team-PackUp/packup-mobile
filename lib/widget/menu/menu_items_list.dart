@@ -41,6 +41,9 @@ class MenuItemsList extends StatelessWidget {
                 await user.logout(context);
                 await appMode.setMode(AppMode.user);
                 context.go('/');
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('로그아웃 되었습니다!')));
               } catch (e) {
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
