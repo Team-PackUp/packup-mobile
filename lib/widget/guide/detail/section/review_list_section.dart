@@ -4,7 +4,8 @@ import 'package:packup/model/reply/reply_model.dart';
 import 'package:packup/provider/reply/reply_provider.dart';
 import 'package:packup/widget/common/util_widget.dart';
 
-import '../../../review/reply_list_view.dart';
+import '../../../reply/reply_list_view.dart';
+
 
 // 상세보기 페이지의 댓글(리뷰) 일부 보여주는 섹션
 class ReviewListSection extends StatefulWidget {

@@ -150,6 +150,7 @@ class _ProfileModifyState extends State<ProfileModify> {
       CustomSnackBar.showResult(context, "닉네임을 입력해주세요");
       return false;
     }
+
     if (newBirth.isEmpty) {
       CustomSnackBar.showResult(context, "나이를 입력해주세요");
       return false;

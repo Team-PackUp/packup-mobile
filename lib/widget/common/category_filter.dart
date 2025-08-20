@@ -18,10 +18,10 @@ class CategoryFilter<T> extends StatefulWidget {
     super.key,
     required this.items,
     required this.labelBuilder,
-    this.emojiBuilder,
-    this.mode = SelectionMode.multiple,
     required this.onSelectionChanged,
+    this.emojiBuilder,
     this.initialSelectedItems,
+    this.mode = SelectionMode.multiple,
     this.readOnly = false,
     this.allowDeselectInSingle = true,
   });
