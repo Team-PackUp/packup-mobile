@@ -32,7 +32,7 @@ class ChatMessageCard extends StatelessWidget {
 
     final isMine = sender == userSeq;
     final imagePath = profileImagePath ?? 'assets/image/logo/logo.png';
-    final avatarRadius = screenW * 0.08;
+    final avatarRadius = screenW * 0.06;
 
     final profileWidget = Visibility(
       visible: showProfile == true,
