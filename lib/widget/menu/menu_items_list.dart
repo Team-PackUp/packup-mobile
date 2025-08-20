@@ -19,10 +19,13 @@ class MenuItemsList extends StatelessWidget {
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: Column(
         children: [
-          const _MenuItem(
+          _MenuItem(
             icon: Icons.edit_note_outlined,
             label: '가이드 자기소개 입력',
             dividerAfter: true,
+            onTap: () async {
+              context.push('/g/intro');
+            },
           ),
           const _MenuItem(
             icon: Icons.balance_outlined,
