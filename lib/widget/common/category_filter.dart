@@ -10,6 +10,7 @@ class CategoryFilter<T> extends StatefulWidget {
   final Widget? Function(T item)? emojiBuilder;
   final SelectionMode mode;
   final void Function(List<T> selectedItems) onSelectionChanged;
+  final bool allowDeselectInSingle;
 
   final bool readOnly;
 
@@ -22,6 +23,7 @@ class CategoryFilter<T> extends StatefulWidget {
     required this.onSelectionChanged,
     this.initialSelectedItems,
     this.readOnly = false,
+    this.allowDeselectInSingle = true,
   });
 
   @override
@@ -44,19 +46,37 @@ class _CategoryFilterState<T> extends State<CategoryFilter<T>> {
     }
   }
 
-  void _onTap(int idx, bool selected) {
+  void _onTap(int idx, bool nextSelected) {
     if (widget.readOnly) return;
-    setState(() {
-      if (widget.mode == SelectionMode.single) {
-        _selected
-          ..clear()
-          ..addAll(selected ? {idx} : {});
-      } else {
-        if (selected) {
-          _selected.add(idx);
+
+    // 싱글 모드 로직
+    if (widget.mode == SelectionMode.single) {
+      final isCurrentlySelected = _selected.contains(idx);
+
+      if (!widget.allowDeselectInSingle && !nextSelected && isCurrentlySelected) {
+        return;
+      }
+
+      setState(() {
+        if (nextSelected) {
+          _selected
+            ..clear()
+            ..add(idx);
         } else {
-          _selected.remove(idx);
+          _selected.clear();
         }
+      });
+
+      final chosen = _selected.map((i) => widget.items[i]).toList();
+      widget.onSelectionChanged(chosen);
+      return;
+    }
+
+    setState(() {
+      if (nextSelected) {
+        _selected.add(idx);
+      } else {
+        _selected.remove(idx);
       }
     });
 
@@ -117,8 +137,7 @@ class _CategoryFilterState<T> extends State<CategoryFilter<T>> {
                 color: isSelected ? PRIMARY_COLOR : TEXT_COLOR_B,
               ),
               checkmarkColor: PRIMARY_COLOR,
-            )
-
+            ),
           );
         }),
       ),

@@ -121,11 +121,11 @@ class _ChatRoomContentState extends State<ChatRoomContent>
           const Divider(height: 1, thickness: 1),
 
           CategoryFilter<int>(
-            key: ValueKey('filter-$activeIdx'),
-            items: _filterMap.keys.toList(growable: false),
-            initialSelectedItems: [activeIdx],
+            items: _filterMap.keys.toList(growable: true),
             labelBuilder: (i) => _filterMap[i] ?? '$i',
             mode: SelectionMode.single,
+            initialSelectedItems: [activeIdx],
+            allowDeselectInSingle: false,
             onSelectionChanged: (selected) {
               final idx = selected.isNotEmpty ? selected.first : 0;
               context.read<ChatRoomProvider>().filterChatRoom(idx);
