@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:packup/model/guide/guide_intro_model.dart';
+import 'package:packup/widget/guide/intro/section/guide_intro_expertise_section.dart';
 import 'package:packup/widget/guide/intro/section/guide_intro_role_section.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/guide/guide_intro_provider.dart';
@@ -45,6 +46,7 @@ class _GuideIntroScaffold extends StatelessWidget {
       case IntroStep.roleSummary:
         return const GuideIntroRoleSection();
       case IntroStep.expertise:
+        return const GuideIntroExpertiseSection();
       case IntroStep.achievement:
       case IntroStep.summary:
       case IntroStep.review:
