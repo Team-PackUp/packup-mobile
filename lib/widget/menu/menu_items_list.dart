@@ -20,8 +20,8 @@ class MenuItemsList extends StatelessWidget {
       child: Column(
         children: [
           const _MenuItem(
-            icon: Icons.settings_suggest_outlined,
-            label: '가이드 계정 관리',
+            icon: Icons.edit_note_outlined,
+            label: '가이드 자기소개 입력',
             dividerAfter: true,
           ),
           const _MenuItem(
