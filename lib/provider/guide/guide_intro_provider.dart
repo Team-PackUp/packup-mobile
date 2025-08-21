@@ -3,7 +3,7 @@ import 'package:packup/model/common/result_model.dart';
 import 'package:packup/model/guide/guide_intro_model.dart';
 import 'package:packup/service/guide/guide_service.dart';
 
-enum IntroStep { years, roleSummary, expertise, achievement, summary, review }
+enum IntroStep { years, roleSummary, expertise, achievement, review }
 
 class GuideIntroProvider extends ChangeNotifier {
   final GuideService _service;
@@ -92,8 +92,6 @@ class GuideIntroProvider extends ChangeNotifier {
         return _nonEmptyMax(_data.expertise, 90);
       case IntroStep.achievement:
         return _maxLen(_data.achievement, 90);
-      case IntroStep.summary:
-        return _nonEmptyMax(_data.summary, 90);
       case IntroStep.review:
         return _validYears(_data.years) &&
             _nonEmptyMax(_data.roleSummary, 90) &&

@@ -60,7 +60,6 @@ class _GuideIntroRoleSectionState extends State<GuideIntroRoleSection> {
           ),
           const SizedBox(height: 24),
 
-          // 큰 입력 박스
           Expanded(
             child: SingleChildScrollView(
               child: ConstrainedBox(

@@ -34,8 +34,6 @@ class _GuideIntroScaffold extends StatelessWidget {
         return '경력을 소개해 주세요';
       case IntroStep.achievement:
         return '직업적 성취를 입력해 주세요';
-      case IntroStep.summary:
-        return '요약을 입력해 주세요';
       case IntroStep.review:
         return '자격 사항 정보 입력하기';
     }
@@ -51,7 +49,6 @@ class _GuideIntroScaffold extends StatelessWidget {
         return const GuideIntroExpertiseSection();
       case IntroStep.achievement:
         return const GuideIntroAchievementSection();
-      case IntroStep.summary:
       case IntroStep.review:
         return const GuideIntroReviewSection();
     }
