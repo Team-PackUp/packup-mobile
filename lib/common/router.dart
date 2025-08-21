@@ -9,6 +9,7 @@ import 'package:packup/view/chat/chat_message.dart';
 import 'package:packup/view/chat/chat_room.dart';
 import 'package:packup/view/guide/detail/guide_detail.dart';
 import 'package:get/get.dart';
+import 'package:packup/view/guide/intro/guide_intro.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
 import 'package:packup/view/menu/guide_menu.dart';
@@ -312,6 +313,10 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
           GoRoute(
             path: '/g/menu',
             builder: (context, state) => const GuideMenuPage(),
+          ),
+          GoRoute(
+            path: '/g/intro',
+            builder: (context, state) => const GuideIntroPage(),
           ),
         ],
       ),

@@ -21,7 +21,10 @@ class SettingIndexSection extends StatelessWidget {
         SizedBox(height: screenH * 0.015),
 
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenW * 0.04, vertical: screenH * 0.01),
+          padding: EdgeInsets.symmetric(
+            horizontal: screenW * 0.04,
+            vertical: screenH * 0.01,
+          ),
           child: Text(
             '일반설정',
             style: TextStyle(
@@ -40,7 +43,10 @@ class SettingIndexSection extends StatelessWidget {
         SizedBox(height: screenH * 0.03),
 
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenW * 0.04, vertical: screenH * 0.01),
+          padding: EdgeInsets.symmetric(
+            horizontal: screenW * 0.04,
+            vertical: screenH * 0.01,
+          ),
           child: Text(
             '기타',
             style: TextStyle(
@@ -54,7 +60,12 @@ class SettingIndexSection extends StatelessWidget {
           context: context,
           icon: Icons.logout,
           label: '로그아웃',
-          onPressed: () => context.read<UserProvider>().logout(context),
+          onPressed: () {
+            context.read<UserProvider>().logout(context);
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text('로그아웃 되었습니다!')));
+          },
         ),
         CustomButton.textIconButton(
           context: context,

@@ -19,10 +19,13 @@ class MenuItemsList extends StatelessWidget {
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: Column(
         children: [
-          const _MenuItem(
-            icon: Icons.settings_suggest_outlined,
-            label: '가이드 계정 관리',
+          _MenuItem(
+            icon: Icons.edit_note_outlined,
+            label: '가이드 자기소개 입력',
             dividerAfter: true,
+            onTap: () async {
+              context.push('/g/intro');
+            },
           ),
           const _MenuItem(
             icon: Icons.balance_outlined,
@@ -41,6 +44,9 @@ class MenuItemsList extends StatelessWidget {
                 await user.logout(context);
                 await appMode.setMode(AppMode.user);
                 context.go('/');
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('로그아웃 되었습니다!')));
               } catch (e) {
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
