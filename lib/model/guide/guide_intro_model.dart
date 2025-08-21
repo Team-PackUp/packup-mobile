@@ -22,15 +22,15 @@ class GuideIntroModel {
   );
 
   factory GuideIntroModel.fromJson(Map<String, dynamic> j) => GuideIntroModel(
-    years: j['years'] ?? '',
-    roleSummary: j['roleSummary'] ?? '',
-    expertise: j['expertise'] ?? '',
-    achievement: j['achievement'] ?? '',
-    summary: j['summary'] ?? '',
+    years: (j['years'] ?? '').toString(),
+    roleSummary: (j['roleSummary'] ?? '').toString(),
+    expertise: (j['expertise'] ?? '').toString(),
+    achievement: (j['achievement'] ?? '').toString(),
+    summary: (j['summary'] ?? '').toString(),
   );
 
   Map<String, dynamic> toJson() => {
-    'years': years,
+    'years': int.tryParse(years.trim()) ?? 0,
     'roleSummary': roleSummary,
     'expertise': expertise,
     'achievement': achievement,
