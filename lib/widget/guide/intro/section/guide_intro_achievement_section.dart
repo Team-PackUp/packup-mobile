@@ -2,34 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/guide/guide_intro_provider.dart';
 
-class GuideIntroExpertiseSection extends StatefulWidget {
-  const GuideIntroExpertiseSection({super.key});
+class GuideIntroAchievementSection extends StatefulWidget {
+  const GuideIntroAchievementSection({super.key});
 
   @override
-  State<GuideIntroExpertiseSection> createState() =>
-      _GuideIntroExpertiseSectionState();
+  State<GuideIntroAchievementSection> createState() =>
+      _GuideIntroAchievementSectionState();
 }
 
-class _GuideIntroExpertiseSectionState
-    extends State<GuideIntroExpertiseSection> {
+class _GuideIntroAchievementSectionState
+    extends State<GuideIntroAchievementSection> {
   late final TextEditingController _controller;
   static const int _maxLen = 90;
 
   final List<String> _suggestions = const [
-    '한식조리자격증 보유',
-    '국내여행안내사 자격증 보유',
-    '국외여행안내사 자격증 보유',
-    '서울 도보투어 5년 진행',
-    '영어/일본어 가능',
+    '누적 게스트 500+명',
+    '트립어드바이저 수상 경력',
+    '월간 만족도 4.9/5.0',
+    '서울시 공식 해설사 활동',
+    '언론 인터뷰/출연 경력',
   ];
 
   @override
   void initState() {
     super.initState();
     final p = context.read<GuideIntroProvider>();
-    _controller = TextEditingController(text: p.data.expertise);
+    _controller = TextEditingController(text: p.data.achievement);
     _controller.addListener(() {
-      context.read<GuideIntroProvider>().setExpertise(_controller.text);
+      context.read<GuideIntroProvider>().setAchievement(_controller.text);
       setState(() {});
     });
   }
@@ -37,8 +37,8 @@ class _GuideIntroExpertiseSectionState
   @override
   void didChangeDependencies() {
     final p = context.read<GuideIntroProvider>();
-    if (_controller.text != p.data.expertise) {
-      _controller.text = p.data.expertise;
+    if (_controller.text != p.data.achievement) {
+      _controller.text = p.data.achievement;
       _controller.selection = TextSelection.collapsed(
         offset: _controller.text.length,
       );
@@ -52,20 +52,18 @@ class _GuideIntroExpertiseSectionState
     super.dispose();
   }
 
-  String get _placeholder => '한식조리자격증 보유\n국내여행안내사 자격증 보유\n국외여행안내사 자격증 보유';
+  String get _placeholder => '트립어드바이저 수상 경력\n누적 게스트 500+명\n언론 인터뷰/출연 경력';
 
   void _appendSuggestion(String text) {
     final cur = _controller.text;
     final sep = (cur.isEmpty || cur.endsWith('\n')) ? '' : '\n';
     final next = '$cur$sep$text';
-
     if (next.characters.length <= _maxLen) {
       _controller.text = next;
       _controller.selection = TextSelection.collapsed(
         offset: _controller.text.length,
       );
     } else {
-      // 초과 시 토스트/스낵바는 필요시 추가
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('90자를 초과할 수 없습니다.')));
@@ -83,12 +81,11 @@ class _GuideIntroExpertiseSectionState
         children: [
           const SizedBox(height: 8),
           const Text(
-            '경력을 소개해 주세요',
+            '직업적 성취를 입력해 주세요 (선택)',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 16),
 
-          // 추천 문구 칩
           // Align(
           //   alignment: Alignment.centerLeft,
           //   child: Wrap(
@@ -109,7 +106,6 @@ class _GuideIntroExpertiseSectionState
           // ),
           const SizedBox(height: 16),
 
-          // 큰 입력 박스
           Expanded(
             child: SingleChildScrollView(
               child: ConstrainedBox(
@@ -140,14 +136,26 @@ class _GuideIntroExpertiseSectionState
             ),
           ),
 
-          // 하단 카운터
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
-            child: Text(
-              '$curLen/$_maxLen자 입력 가능',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: Colors.black.withOpacity(.45),
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '$curLen/$_maxLen자 입력 가능',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: Colors.black.withOpacity(.45),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                TextButton.icon(
+                  onPressed: () {
+                    _controller.clear();
+                  },
+                  icon: const Icon(Icons.clear, size: 16),
+                  label: const Text('지우기'),
+                ),
+              ],
             ),
           ),
         ],
