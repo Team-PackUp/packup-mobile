@@ -102,21 +102,15 @@ class GuideIntroProvider extends ChangeNotifier {
   }
 
   Future<bool> submit() async {
-    if (!validateCurrent()) return false;
     _setLoading(true);
     _error = null;
     try {
-      final ResultModel res = await _service.upsertIntro(_data);
+      final res = await _service.upsertIntro(_data);
       final ok = (res.resultFlag == true);
-      if (ok) {
-        _dirty = false;
-        notifyListeners();
-        return true;
-      } else {
-        _error = res.message ?? '저장에 실패했습니다.';
-        notifyListeners();
-        return false;
-      }
+      if (!ok) _error = res.message ?? '저장에 실패했습니다.';
+      if (ok) _dirty = false;
+      notifyListeners();
+      return ok;
     } catch (e) {
       _error = '저장 중 오류가 발생했습니다.';
       notifyListeners();
