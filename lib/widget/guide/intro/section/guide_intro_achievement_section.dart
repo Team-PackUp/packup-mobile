@@ -148,13 +148,13 @@ class _GuideIntroAchievementSectionState
                   ),
                 ),
                 const SizedBox(width: 16),
-                TextButton.icon(
-                  onPressed: () {
-                    _controller.clear();
-                  },
-                  icon: const Icon(Icons.clear, size: 16),
-                  label: const Text('지우기'),
-                ),
+                // TextButton.icon(
+                //   onPressed: () {
+                //     _controller.clear();
+                //   },
+                //   icon: const Icon(Icons.clear, size: 16),
+                //   label: const Text('지우기'),
+                // ),
               ],
             ),
           ),
