@@ -90,23 +90,22 @@ class _GuideIntroScaffold extends StatelessWidget {
           child: SizedBox(
             height: 52,
             child: ElevatedButton(
-              onPressed:
-                  p.validateCurrent()
-                      ? () {
-                        if (p.step == IntroStep.review) {
-                          p.submit().then((ok) {
-                            if (ok) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('저장되었습니다.')),
-                              );
-                              Navigator.pop(context);
-                            }
-                          });
-                        } else {
-                          p.next();
-                        }
-                      }
-                      : null,
+              onPressed: () {
+                if (p.step == IntroStep.review) {
+                  p.submit().then((ok) {
+                    if (ok) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(const SnackBar(content: Text('저장되었습니다.')));
+                      Navigator.pop(context);
+                    }
+                  });
+                } else {
+                  if (p.validateCurrent()) {
+                    p.next();
+                  }
+                }
+              },
               child: Text(p.step == IntroStep.review ? '저장' : '다음'),
             ),
           ),

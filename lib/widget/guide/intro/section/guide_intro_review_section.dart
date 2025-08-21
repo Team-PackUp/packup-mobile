@@ -17,7 +17,7 @@ class GuideIntroReviewSection extends StatelessWidget {
     final d = p.data;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
       child: Column(
         children: [
           const SizedBox(height: 8),
@@ -27,20 +27,24 @@ class GuideIntroReviewSection extends StatelessWidget {
             child: const Icon(Icons.person, size: 32, color: Colors.white),
           ),
           const SizedBox(height: 16),
-          Text(
+          const Text(
             '자격 사항 정보 입력하기',
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 6),
           Text(
             '호스트님에 대해 소개해 주세요.',
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.black.withOpacity(.55),
-            ),
+            style: TextStyle(fontSize: 13, color: Colors.black54),
           ),
           const SizedBox(height: 20),
 
+          _ReviewItemCard(
+            leading: const Icon(Icons.timelapse_outlined, size: 24),
+            title: '경력 연차',
+            subtitle: '${(int.tryParse(d.years.trim()) ?? 0)}년',
+            onTap: () => p.goTo(IntroStep.years),
+          ),
+          const SizedBox(height: 12),
           _ReviewItemCard(
             leading: const Icon(Icons.star_border_rounded, size: 24),
             title: '소개',
@@ -64,9 +68,7 @@ class GuideIntroReviewSection extends StatelessWidget {
                     : _preview(d.achievement),
             onTap: () => p.goTo(IntroStep.achievement),
           ),
-          const SizedBox(height: 16),
-
-          const SizedBox(height: 80),
+          const SizedBox(height: 8),
         ],
       ),
     );
