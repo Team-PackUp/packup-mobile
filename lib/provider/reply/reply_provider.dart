@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:packup/model/common/page_model.dart';
 import 'package:packup/model/reply/reply_model.dart';
 import 'package:packup/provider/common/loading_provider.dart';
@@ -87,8 +88,8 @@ class ReplyProvider extends LoadingProvider {
     });
   }
 
-  Future<void> upsertReply(String content, int point, String title, String body) async {
-    await LoadingService.run(() async {
+  Future<void> upsertReply(BuildContext context, String content, int point, String title, String body) async {
+    await LoadingService.runHandled(context, () async {
       if (seq != null) {
         // 수정
         final reply = ReplyModel(
@@ -113,7 +114,7 @@ class ReplyProvider extends LoadingProvider {
 
         await _service.saveReply(replyModel: reply, fcmModel: fcm);
       }
-    });
+    }, successMessage: '리뷰가 등록되었습니다!');
   }
 
   Future<void> deleteReply() async {

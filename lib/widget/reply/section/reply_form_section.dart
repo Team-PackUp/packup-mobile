@@ -1,17 +1,14 @@
-import 'dart:io';
-import 'package:characters/characters.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:packup/provider/reply/reply_provider.dart';
 import 'package:packup/widget/common/util_widget.dart';
-import 'package:packup/widget/reply/reply_card.dart';
-import 'package:packup/widget/reply/reply_content_field.dart';
-import 'package:packup/widget/reply/reply_intro_card.dart';
-import 'package:packup/widget/reply/reply_photo_grid.dart';
-import 'package:packup/widget/reply/reply_section_title.dart';
-import 'package:packup/widget/reply/reply_star_rating.dart';
 import 'package:packup/widget/reply/reply_submit_bar.dart';
+import 'package:packup/widget/reply/section/reply_rating_section.dart';
+import 'package:packup/widget/reply/section/reply_content_section.dart';
+import 'package:packup/widget/reply/section/reply_photo_section.dart';
+
+import '../../../http/api_exception.dart';
 
 class ReplyFormSection extends StatefulWidget {
   final ReplyProvider replyProvider;
@@ -57,7 +54,7 @@ class _ReplyFormSectionState extends State<ReplyFormSection> {
     _contentController.text = model.content ?? '';
     _point = model.point ?? 0;
 
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   @override
@@ -95,18 +92,16 @@ class _ReplyFormSectionState extends State<ReplyFormSection> {
     }
 
     setState(() => _isSubmitting = true);
-    try {
       await _replyProvider.upsertReply(
+        context,
         _contentController.text.trim(),
         _point,
         'notice',
         'advertise',
       );
-      if (mounted) Navigator.pop(context, true);
-    } finally {
       if (mounted) setState(() => _isSubmitting = false);
-    }
   }
+
 
   Future<void> _deleteReply() async {
     final confirm = await showDialog<bool>(
@@ -136,53 +131,40 @@ class _ReplyFormSectionState extends State<ReplyFormSection> {
     final isEdit = _replyProvider.seq != null;
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(), // 터치 시 키보드 내림,
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Form(
         key: _formKey,
-        child: SingleChildScrollView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const ReplyCard(child: ReplyIntroCard()),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
 
-              const ReplySectionTitle('평점 주기'),
-              ReplyCard(
-                child: ReplyStarRating(
-                  value: _point,
-                  onChanged: (v) => setState(() => _point = v),
-                ),
-              ),
+            ReplyRatingSection(
+              value: _point,
+              onChanged: (v) => setState(() => _point = v),
+            ),
 
-              const ReplySectionTitle('리뷰 작성'),
-              ReplyCard(
-                child: ReplyContentField(
-                  controller: _contentController,
-                  maxChars: _maxChars,
-                ),
-              ),
+            ReplyContentSection(
+              controller: _contentController,
+              maxChars: _maxChars,
+            ),
 
-              const ReplySectionTitle('사진 추가 (선택 사항 최대 5장)'),
-              ReplyCard(
-                child: ReplyPhotoGrid(
-                  photos: _photos,
-                  maxPhotos: _maxPhotos,
-                  onAddPressed: _pickPhotos,
-                  onRemoveAt: (i) => setState(() => _photos.removeAt(i)),
-                ),
-              ),
+            ReplyPhotoSection(
+              photos: _photos,
+              maxPhotos: _maxPhotos,
+              onAddPressed: _pickPhotos,
+              onRemoveAt: (i) => setState(() => _photos.removeAt(i)),
+            ),
 
-              const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-              ReplySubmitBar(
-                enabled: _canSubmit,
-                isEdit: isEdit,
-                isSubmitting: _isSubmitting,
-                onSubmit: _upsertReply,
-                onDelete: _deleteReply,
-              ),
-            ],
-          ),
+            ReplySubmitBar(
+              enabled: _canSubmit,
+              isEdit: isEdit,
+              isSubmitting: _isSubmitting,
+              onSubmit: _upsertReply,
+              onDelete: _deleteReply,
+            ),
+          ],
         ),
       ),
     );

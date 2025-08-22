@@ -6,6 +6,7 @@ import 'package:packup/widget/common/custom_appbar.dart';
 
 import '../../model/reply/reply_model.dart';
 import '../../widget/reply/section/reply_form_section.dart';
+import '../../widget/reply/section/reply_greeting_section.dart';
 
 class ReplyWrite extends StatelessWidget {
   const ReplyWrite({
@@ -66,7 +67,12 @@ class _ReplyWriteContentState extends State<ReplyWriteContent> {
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
-        child: ReplyFormSection(replyProvider: replyProvider),
+        child: ListView(
+          children: [
+            const ReplyGreetingSection(),
+            ReplyFormSection(replyProvider: replyProvider),
+          ],
+        )
       ),
     );
   }
