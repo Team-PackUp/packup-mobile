@@ -18,6 +18,8 @@ class GuideListingPage extends StatelessWidget {
           onPressed: () {
             // 신규 등록 라우팅
           },
+          backgroundColor: const Color(0xFF111827),
+          foregroundColor: Colors.white,
           child: const Icon(Icons.add),
         ),
       ),
