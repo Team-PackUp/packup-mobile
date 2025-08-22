@@ -4,6 +4,8 @@ import 'package:packup/common/util.dart';
 import 'package:packup/const/const.dart';
 import 'package:packup/const/const.dart';
 
+import 'api_exception.dart';
+
 class CustomInterceptor extends Interceptor {
   String httpPrefix = dotenv.env['HTTP_URL']!;
   String refreshTokenKey = dotenv.env['REFRESH_TOKEN_KEY']!;
@@ -116,6 +118,37 @@ class CustomInterceptor extends Interceptor {
         break;
     }
 
-    return handler.reject(err);
+    final data = err.response?.data;
+    String? msg;
+    String? code;
+    int? status;
+
+    if (data is Map) {
+      msg = (data['message'] as String?)?.trim();
+      code = data['code'] as String?;
+      status = err.response?.statusCode ?? (data['status'] as int?);
+    } else if (data is String && data.trim().isNotEmpty) {
+      msg = data.trim();
+      status = err.response?.statusCode;
+    }
+
+    msg ??= _fallbackMessage(status ?? err.response?.statusCode);
+
+    return handler.reject(err.copyWith(
+      error: ApiException(msg, status: status ?? err.response?.statusCode, code: code),
+    ));
+  }
+  }
+
+String _fallbackMessage(int? status) {
+  switch (status) {
+    case 400: return '잘못된 요청입니다.';
+    case 401: return '로그인이 필요합니다.';
+    case 403: return '접근 권한이 없습니다.';
+    case 404: return '요청한 자원을 찾을 수 없습니다.';
+    case 409: return '요청이 충돌했습니다.';
+    case 422: return '입력값을 확인해주세요.';
+    case 500: return '서버 오류가 발생했습니다.';
+    default:  return '요청 처리 중 오류가 발생했습니다.';
   }
 }
