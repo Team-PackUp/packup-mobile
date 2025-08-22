@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:packup/widget/profile/setting_account/setting/setting_push_list.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../Common/util.dart';
-import '../../../../provider/user/user_provider.dart';
-import 'normal_setting_card.dart';
+import '../../../../../Common/util.dart';
+import '../../../../../provider/user/user_provider.dart';
+import '../normal_setting_card.dart';
 
-class SettingNormalList extends StatelessWidget {
-  const SettingNormalList({
+class SettingNormalSection extends StatelessWidget {
+  const SettingNormalSection({
     super.key,
     required this.onTapNation,
     required this.onTapLanguage,
