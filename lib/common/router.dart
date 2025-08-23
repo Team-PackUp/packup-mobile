@@ -24,6 +24,7 @@ import 'package:packup/view/profile/setting_account/setting/setting_withdraw.dar
 import 'package:packup/view/profile/setting_account/setting/setting_withdraw_confirm.dart';
 import 'package:packup/view/reply/reply_write.dart';
 import 'package:packup/view/search/search.dart';
+import 'package:packup/view/tour/guide/listing/guide_listing.dart';
 import 'package:packup/view/tour/user/tour_detail.dart';
 import 'package:packup/view/user/preference/preference.dart';
 import 'package:packup/view/user/register_detail/register_detail.dart';
@@ -308,7 +309,6 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
             builder: (context, state) => const AIRecommend(),
           ),
           GoRoute(path: '/g/schedule', builder: (context, state) => ChatRoom()),
-          GoRoute(path: '/g/listing', builder: (context, state) => ChatRoom()),
           GoRoute(path: '/g/chat', builder: (context, state) => ChatRoom()),
           GoRoute(
             path: '/g/menu',
@@ -318,9 +318,14 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
             path: '/g/intro',
             builder: (context, state) => const GuideIntroPage(),
           ),
+          GoRoute(
+            path: '/g/listing',
+            builder: (context, state) => const GuideListingPage(),
+          ),
         ],
       ),
     ],
+
     // 라우트 에러 방지
     errorBuilder: (context, state) {
       Future.microtask(
