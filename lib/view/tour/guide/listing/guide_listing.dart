@@ -15,9 +15,7 @@ class GuideListingPage extends StatelessWidget {
         appBar: const CustomAppbar(title: '리스팅'),
         body: const TourListingListSection(),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // 신규 등록 라우팅
-          },
+          onPressed: () {},
           backgroundColor: const Color(0xFF111827),
           foregroundColor: Colors.white,
           child: const Icon(Icons.add),
