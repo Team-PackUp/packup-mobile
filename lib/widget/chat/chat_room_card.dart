@@ -41,6 +41,7 @@ class _ChatRoomCardState extends State<ChatRoomCard> {
   void initState() {
     super.initState();
     _avatar = widget.profileImagePath;
+    print(_avatar);
   }
 
   @override
@@ -55,6 +56,7 @@ class _ChatRoomCardState extends State<ChatRoomCard> {
               CircleProfileImage(
                 radius: _avatarRadius,
                 imagePath: _avatar,
+                profileAvatar: false,
               ),
               const SizedBox(width: _gap),
               Expanded(

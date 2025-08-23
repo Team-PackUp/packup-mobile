@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import '../../common/size_config.dart';
 
 class CustomSliverAppBar extends StatelessWidget {
   const CustomSliverAppBar({
@@ -10,9 +11,9 @@ class CustomSliverAppBar extends StatelessWidget {
     this.alert,
     this.profile,
     this.bottom,
-    this.floating = true, // 스크롤에 따라 띄울지 말지 결정
-    this.snap = true,     // 살짝 스냅만 해도 동작할지 말지
-    this.pinned = false,  // 툴바(앱바의 구성요소)가 상단에 부딪혖을때 고정할지 말지
+    this.floating = true,
+    this.snap = true,
+    this.pinned = false,
     this.systemOverlayStyle,
   });
 
@@ -28,46 +29,74 @@ class CustomSliverAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenW = MediaQuery.of(context).size.width;
+    double _s(double dp, {double min = 0.1, double max = 1.15}) {
+      final s = context.scaleBalanced.clamp(min, max);
+      return dp * s;
+    }
+
+    final titleSize    = _s(18);
+    final actionBox    = _s(30);
+    final iconSize     = _s(2);
+    final actionGap    = _s(12);
+    final rightPad     = context.safe.right + _s(12);
+    final toolbarH     = _s(56, min: 0.95, max: 1.05);
 
     return SliverAppBar(
       scrolledUnderElevation: 0,
       backgroundColor: Colors.white,
-      titleTextStyle: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-        color: Colors.black,
-      ),
       elevation: 0,
       automaticallyImplyLeading: false,
       floating: floating,
       snap: snap,
       pinned: pinned,
+      centerTitle: true,
+      toolbarHeight: toolbarH,
       systemOverlayStyle: systemOverlayStyle,
+      titleTextStyle: TextStyle(
+        fontSize: titleSize,
+        fontWeight: FontWeight.w600,
+        color: Colors.black,
+      ),
       leading: (arrowFlag == null || arrowFlag == true)
           ? IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.black),
+        iconSize: iconSize,
+        padding: EdgeInsets.zero,
+        constraints: BoxConstraints.tightFor(width: actionBox, height: actionBox),
         onPressed: context.pop,
       )
           : null,
-      title: Text(title, style: const TextStyle(color: Colors.black)),
-      centerTitle: true,
+      title: Text(title),
       actions: [
-        if (alert != null)
-          Padding(
-            padding: EdgeInsets.only(right: screenW * 0.03),
-            child: alert!,
+        Padding(
+          padding: EdgeInsets.only(right: rightPad),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (alert != null)
+                SizedBox(
+                  width: actionBox,
+                  height: actionBox,
+                  child: Center(
+                    child: IconTheme(
+                      data: IconThemeData(size: iconSize, color: Colors.black),
+                      child: alert!,
+                    ),
+                  ),
+                ),
+              if (alert != null && profile != null) SizedBox(width: actionGap),
+              if (profile != null)
+                SizedBox(
+                  width: actionBox,
+                  height: actionBox,
+                  child: GestureDetector(
+                    onTap: () => context.push('/profile/profile_modify'),
+                    child: Center(child: profile!),
+                  ),
+                ),
+            ],
           ),
-        if (profile != null)
-          Padding(
-            padding: EdgeInsets.only(right: screenW * 0.05),
-            child: GestureDetector(
-              onTap: () {
-                context.push('/profile/profile_modify');
-              },
-              child: profile!,
-            ),
-          ),
+        ),
       ],
       bottom: bottom,
     );
