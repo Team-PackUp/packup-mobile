@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/widget/ai_recommend/section/ai_recommend_category_section.dart';
 import 'package:packup/widget/ai_recommend/section/ai_recommend_tour_section.dart';
@@ -7,9 +6,9 @@ import 'package:packup/widget/ai_recommend/section/ai_recommend_trend_section.da
 import 'package:provider/provider.dart';
 import 'package:packup/widget/search/search.dart';
 
+import '../../common/size_config.dart';
 import '../../provider/ai_recommend/ai_recommend_provider.dart';
 import '../../provider/alert_center/alert_center_provider.dart';
-import '../../provider/user/user_provider.dart';
 
 import '../../widget/common/alert_bell.dart';
 import '../../widget/common/circle_profile_image.dart';
@@ -40,19 +39,21 @@ class AIRecommendContent extends StatefulWidget {
 }
 
 class _AIRecommendContentState extends State<AIRecommendContent> {
-  late final AIRecommendProvider provider;
+  late final AIRecommendProvider _aiRecommendProvider;
   late final AlertCenterProvider _alertCenterProvider;
   bool _redirectHandled = false;
 
   @override
   void initState() {
     super.initState();
+
+    _aiRecommendProvider = context.read<AIRecommendProvider>();
+    _alertCenterProvider = context.read<AlertCenterProvider>();
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      provider = context.read<AIRecommendProvider>();
-      _alertCenterProvider = context.read<AlertCenterProvider>();
       _maybeRedirect();
-      provider.initTour(5);
-      provider.initPopular(5);
+      _aiRecommendProvider.initTour(5);
+      _aiRecommendProvider.initPopular(5);
       await _alertCenterProvider.initProvider();
     });
   }
@@ -68,38 +69,34 @@ class _AIRecommendContentState extends State<AIRecommendContent> {
 
   @override
   Widget build(BuildContext context) {
-    final profileUrl = context.watch<UserProvider>().userModel?.profileImagePath;
-    final screenH = MediaQuery.of(context).size.height;
-    final screenW = MediaQuery.of(context).size.width;
-
     return Scaffold(
       body: SafeArea(
-          child: NestedScrollView(
-            headerSliverBuilder: (context, _) => [
-              CustomSliverAppBar(
-                title: 'AI 추천',
-                arrowFlag: false,
-                alert: AlertBell(),
-                profile: CircleProfileImage(radius: screenH * 0.02),
-                bottom: CustomSearch(onTap: () => context.push('/search/all')),
-              ),
-            ],
-            body: ListView(
-              padding: EdgeInsets.symmetric(
-                horizontal: screenW * 0.03,
-                vertical: screenH * 0.01,
-              ),
-              children: [
-                SizedBox(height: screenH * 0.03),
-                AIRecommendTourSection(),
-                SizedBox(height: screenH * 0.03),
-                AIRecommendCategorySection(),
-                SizedBox(height: screenH * 0.03),
-                AiRecommendTrendSection(),
-                SizedBox(height: screenH * 0.03),
-              ],
+        child: NestedScrollView(
+          headerSliverBuilder: (context, _) => [
+            CustomSliverAppBar(
+              title: 'AI 추천',
+              arrowFlag: false,
+              alert: const AlertBell(),
+              profile: CircleProfileImage(radius: context.sY(14)),
+              bottom: CustomSearch(onTap: () => context.push('/search/all')),
             ),
+          ],
+          body: ListView(
+            padding: EdgeInsets.symmetric(
+              horizontal: context.sX(12),
+              vertical: context.sY(8),
+            ),
+            children: [
+              SizedBox(height: context.sY(12)),
+              const AIRecommendTourSection(),
+              SizedBox(height: context.sY(12)),
+              const AIRecommendCategorySection(),
+              SizedBox(height: context.sY(12)),
+              const AiRecommendTrendSection(),
+              SizedBox(height: context.sY(12)),
+            ],
           ),
+        ),
       ),
     );
   }

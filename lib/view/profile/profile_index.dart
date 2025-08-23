@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../common/size_config.dart'; // sX/sY, sw/sh 익스텐션
 import '../../model/guide/guide_model.dart';
 import '../../model/tour/tour_model.dart';
 import '../../provider/alert_center/alert_center_provider.dart';
@@ -32,7 +32,6 @@ class ProfileIndex extends StatelessWidget {
       child: const ProfileIndexContent(),
     );
   }
-
 }
 
 class ProfileIndexContent extends StatefulWidget {
@@ -58,77 +57,78 @@ class _ProfileIndexContentState extends State<ProfileIndexContent> {
   @override
   Widget build(BuildContext context) {
     final profile = context.watch<UserProvider>().userModel;
-    final screenW = MediaQuery.of(context).size.width;
-    final screenH = MediaQuery.of(context).size.height;
 
-    final List<TourModel> sampleTours = [
-      TourModel(
-        seq: 1,
-        guide: GuideModel.empty(),
-        minPeople: 2,
-        maxPeople: 5,
-        applyStartDate: DateTime.parse('2025-07-01'),
-        applyEndDate: DateTime.parse('2025-07-10'),
-        tourStartDate: DateTime.parse('2025-08-01'),
-        tourEndDate: DateTime.parse('2025-08-07'),
-        tourTitle: '부산 해안 투어',
-        tourPrice: 50000,
-        tourIntroduce: '부산의 아름다운 해안을 만끽하는 1박 2일 투어입니다.',
-        tourStatusCode: '100001',
-        tourStatusLabel: '모집중',
-        tourLocation: '부산',
-        titleImagePath: 'https://example.com/images/busan.jpg',
-        createdAt: DateTime.parse('2025-06-15T10:00:00'),
-        updatedAt: DateTime.parse('2025-06-20T15:30:00'),
-      ),
-      TourModel(
-        seq: 2,
-        guide: GuideModel.empty(),
-        minPeople: 1,
-        maxPeople: 10,
-        applyStartDate: DateTime.parse('2025-07-05'),
-        applyEndDate: DateTime.parse('2025-07-15'),
-        tourStartDate: DateTime.parse('2025-08-15'),
-        tourEndDate: DateTime.parse('2025-08-20'),
-        tourTitle: '제주 올레길 트레킹',
-        tourPrice: 100000,
-        tourIntroduce: '제주의 올레길을 따라 걷는 힐링 트레킹 투어입니다.',
-        tourStatusCode: '100002',
-        tourStatusLabel: '마감임박',
-        tourLocation: '제주도',
-        titleImagePath: 'https://example.com/images/jeju.jpg',
-        createdAt: DateTime.parse('2025-06-20T09:00:00'),
-        updatedAt: DateTime.parse('2025-06-25T18:45:00'),
-      ),
-    ];
+    // 필요 시 섹션 위젯들에 전달할 화면 크기(논리 px)
+    final screenW = context.sw;
+    final screenH = context.sh;
 
     return Scaffold(
       appBar: CustomAppbar(
         arrowFlag: false,
         title: '마이페이지',
-        alert: AlertBell(),
+        alert: const AlertBell(),
       ),
       body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: screenW * 0.04),
+        padding: EdgeInsets.symmetric(horizontal: context.sX(14.4)),
         children: [
-          SizedBox(height: screenH * 0.015),
+          SizedBox(height: context.sY(10)),
           ProfileSection(userName: profile?.nickname ?? '익명', w: screenW, h: screenH),
-          SizedBox(height: screenH * 0.03),
-          ActivitySummarySection(w: screenW, h: screenH),
-          SizedBox(height: screenH * 0.03),
-          RecentReservationSection(w: screenW, h: screenH, tourList: sampleTours),
-          SizedBox(height: screenH * 0.03),
+          SizedBox(height: context.sY(20)),
+          ActivitySummarySection(),
+          SizedBox(height: context.sY(20)),
+          RecentReservationSection(w: screenW, h: screenH, tourList: _sampleTours),
+          SizedBox(height: context.sY(20)),
           PointCouponSection(w: screenW, h: screenH),
-          SizedBox(height: screenH * 0.03),
-          SettingAccountSection(w: screenW, h: screenH),
-          SizedBox(height: screenH * 0.03),
+          SizedBox(height: context.sY(20)),
+          SettingAccountSection(),
+          SizedBox(height: context.sY(20)),
           SupportWaySection(w: screenW, h: screenH),
-          SizedBox(height: screenH * 0.04),
-          FaqSection(),
-          SizedBox(height: screenH * 0.04),
+          SizedBox(height: context.sY(28)),
+          const FaqSection(),
+          SizedBox(height: context.sY(28)),
         ],
       ),
     );
   }
-}
 
+  List<TourModel> get _sampleTours => [
+    TourModel(
+      seq: 1,
+      guide: GuideModel.empty(),
+      minPeople: 2,
+      maxPeople: 5,
+      applyStartDate: DateTime.parse('2025-07-01'),
+      applyEndDate: DateTime.parse('2025-07-10'),
+      tourStartDate: DateTime.parse('2025-08-01'),
+      tourEndDate: DateTime.parse('2025-08-07'),
+      tourTitle: '부산 해안 투어',
+      tourPrice: 50000,
+      tourIntroduce: '부산의 아름다운 해안을 만끽하는 1박 2일 투어입니다.',
+      tourStatusCode: '100001',
+      tourStatusLabel: '모집중',
+      tourLocation: '부산',
+      titleImagePath: 'https://example.com/images/busan.jpg',
+      createdAt: DateTime.parse('2025-06-15T10:00:00'),
+      updatedAt: DateTime.parse('2025-06-20T15:30:00'),
+    ),
+    TourModel(
+      seq: 2,
+      guide: GuideModel.empty(),
+      minPeople: 1,
+      maxPeople: 10,
+      applyStartDate: DateTime.parse('2025-07-05'),
+      applyEndDate: DateTime.parse('2025-07-15'),
+      tourStartDate: DateTime.parse('2025-08-15'),
+      tourEndDate: DateTime.parse('2025-08-20'),
+      tourTitle: '제주 올레길 트레킹',
+      tourPrice: 100000,
+      tourIntroduce: '제주의 올레길을 따라 걷는 힐링 트레킹 투어입니다.',
+      tourStatusCode: '100002',
+      tourStatusLabel: '마감임박',
+      tourLocation: '제주도',
+      titleImagePath: 'https://example.com/images/jeju.jpg',
+      createdAt: DateTime.parse('2025-06-20T09:00:00'),
+      updatedAt: DateTime.parse('2025-06-25T18:45:00'),
+    ),
+  ];
+}
