@@ -149,3 +149,21 @@ class ChatRoomProvider extends LoadingProvider {
     notifyListeners();
   }
 }
+
+extension Delta on ChatRoomProvider {
+  Future<void> refreshFirstPage() async {
+    final resp = await _chatService.getRoom(0);
+    final page = PageModel<ChatRoomModel>.fromJson(
+      resp.response, (e) => ChatRoomModel.fromJson(e),
+    );
+
+    _allChatRooms
+      ..removeWhere((_) => true)
+      ..addAll(page.objectList);
+    _totalPage = page.totalPage;
+    _curPage   = 1;
+
+    _applyFilterSync();
+  }
+}
+

@@ -41,6 +41,7 @@ class _ChatRoomContentState extends State<ChatRoomContent>
     2: '내가 가이드',
   };
   bool get wantKeepAlive => true;
+  bool _resumedSyncing = false;
 
   @override
   void initState() {
@@ -62,6 +63,28 @@ class _ChatRoomContentState extends State<ChatRoomContent>
     });
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (!mounted) return;
+    if (state == AppLifecycleState.resumed) {
+      if (_resumedSyncing) return;
+      _resumedSyncing = true;
+      try {
+        final p = context.read<ChatRoomProvider>();
+
+        // await p.unSubscribeChatRoom();
+        await p.subscribeChatRoom();
+
+        await p.refreshFirstPage();
+
+        _maybeNavigateToChatDetail();
+      } finally {
+        _resumedSyncing = false;
+      }
+    }
+  }
+
+
   void _maybeNavigateToChatDetail() {
     if (!mounted || widget.chatRoomId == null || _chatRoomProvider == null) return;
     try {
@@ -82,13 +105,6 @@ class _ChatRoomContentState extends State<ChatRoomContent>
     _scrollController.dispose();
     _chatRoomProvider?.unSubscribeChatRoom();
     super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      _maybeNavigateToChatDetail();
-    }
   }
 
   void _scrollListener() {
