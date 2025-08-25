@@ -109,6 +109,8 @@ class ChatMessageProvider extends LoadingProvider {
     _refreshing = true;
     try {
       await LoadingService.run(() async {
+        print("채팅 조회!!!");
+
         final resp = await _chatService.getMessage(chatRoomSeq, 0);
         final page = PageModel<ChatMessageModel>.fromJson(
           resp.response, (e) => ChatMessageModel.fromJson(e),
@@ -128,6 +130,7 @@ class ChatMessageProvider extends LoadingProvider {
     _isLoading = true;
     notifyListeners();
     try {
+      print("채팅 조회!!!");
       final response = await _chatService.getMessage(chatRoomSeq, _curPage);
       final page = PageModel<ChatMessageModel>.fromJson(
         response.response,

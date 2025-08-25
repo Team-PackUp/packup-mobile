@@ -235,15 +235,16 @@ class SocketService {
     final unsub = stompClient!.subscribe(
       destination: destination,
       callback: (frame) {
-        if (frame.body != null && _subscriptions.containsKey(destination)) {
+        if (_subscriptions.containsKey(destination)) {
           try {
-            final data = json.decode(frame.body!);
+            final data = frame.body != null ? json.decode(frame.body!) : null;
             _subscriptions[destination]!(data);
           } catch (e) {
             print("[$destination] 메시지 처리 오류: $e");
           }
         }
       },
+
     );
 
     _unsubscribeMap[destination] = unsub;

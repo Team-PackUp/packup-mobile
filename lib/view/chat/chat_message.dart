@@ -156,10 +156,8 @@ class _ChatMessageContentState extends State<ChatMessageContent>
                   chatRoomSeq: widget.chatRoomSeq,
                   lastReadSeq: lastReadSeq,
                   onReadLastVisible: (int seq) {
-                    print('읽기 처리 프로세스 시작');
                     final msgProvider = context.read<ChatMessageProvider>();
-                    print(seq);
-                    print(msgProvider.lastReadMessageSeq);
+
                     if (seq <= msgProvider.lastReadMessageSeq) return;
 
                     msgProvider.readChatMessage(ChatReadModel(

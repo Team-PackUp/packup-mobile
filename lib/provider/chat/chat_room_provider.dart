@@ -118,6 +118,7 @@ class ChatRoomProvider extends LoadingProvider {
     const destination = '/user/queue/chatroom-refresh';
     _socketService.registerCallback(destination, (data) {});
     _socketService.subscribe(destination, (data) {
+      print("구독 시작");
       final newFirstChatRoom = ChatRoomModel.fromJson(data);
       updateFirstChatRoom(newFirstChatRoom);
     });
