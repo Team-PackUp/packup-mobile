@@ -25,6 +25,7 @@ import 'package:packup/view/profile/setting_account/setting/setting_withdraw_con
 import 'package:packup/view/reply/reply_write.dart';
 import 'package:packup/view/search/search.dart';
 import 'package:packup/view/tour/guide/listing/guide_listing.dart';
+import 'package:packup/view/tour/guide/listing/listing_create.dart';
 import 'package:packup/view/tour/user/tour_detail.dart';
 import 'package:packup/view/user/preference/preference.dart';
 import 'package:packup/view/user/register_detail/register_detail.dart';
@@ -321,6 +322,10 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
           GoRoute(
             path: '/g/listing',
             builder: (context, state) => const GuideListingPage(),
+          ),
+          GoRoute(
+            path: '/g/listing/create',
+            builder: (context, state) => const ListingCreatePage(),
           ),
         ],
       ),
