@@ -2,12 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'package:provider/provider.dart';
 
 import '../../../model/chat/chat_message_model.dart';
-import '../../../model/chat/chat_read_model.dart';
-import '../../../provider/chat/chat_message_provider.dart';
-import '../../../provider/chat/chat_room_provider.dart';
 import '../../../common/util.dart';
 import 'chat_message_card.dart';
 import 'chat_message_separator.dart';
@@ -18,12 +14,18 @@ class ChatMessageList extends StatefulWidget {
   final int chatRoomSeq;
   final ScrollController scrollController;
 
+  final int lastReadSeq;
+
+  final ValueChanged<int> onReadLastVisible;
+
   const ChatMessageList({
     super.key,
     required this.messages,
     required this.userSeq,
     required this.chatRoomSeq,
     required this.scrollController,
+    required this.lastReadSeq,
+    required this.onReadLastVisible,
   });
 
   @override
@@ -36,20 +38,22 @@ class _ChatMessageListState extends State<ChatMessageList> {
   int? _sigLastSeq;
 
   @override
+  void initState() {
+    super.initState();
+    _rebuildCache();
+  }
+
+  @override
   void didUpdateWidget(covariant ChatMessageList oldWidget) {
     super.didUpdateWidget(oldWidget);
     final len = widget.messages.length;
     final lastSeq = len > 0 ? widget.messages.last.seq : null;
     if (len != _sigLen || lastSeq != _sigLastSeq) {
-      _groupedCache = _buildGroupedMessagesWithDateSeparators(widget.messages);
-      _sigLen = len;
-      _sigLastSeq = lastSeq;
+      _rebuildCache();
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
+  void _rebuildCache() {
     final len = widget.messages.length;
     _groupedCache = _buildGroupedMessagesWithDateSeparators(widget.messages);
     _sigLen = len;
@@ -58,11 +62,7 @@ class _ChatMessageListState extends State<ChatMessageList> {
 
   @override
   Widget build(BuildContext context) {
-
-    final lastReadSeq = context.select<ChatMessageProvider, int>(
-          (p) => p.lastReadMessageSeq ?? 0,
-    );
-    final chatRoomProvider = context.read<ChatRoomProvider>();
+    final lastReadSeq = widget.lastReadSeq;
 
     return ListView.builder(
       controller: widget.scrollController,
@@ -80,43 +80,43 @@ class _ChatMessageListState extends State<ChatMessageList> {
           return Column(
             key: ValueKey('group-$index-${item.first.seq}-${item.length}'),
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: List.generate(item.length, (i) {
-              final message = item[i];
-              final isFirstInGroup = i == 0;
-              final isLatestMessage = index == 0 && isFirstInGroup;
+              children: List.generate(item.length, (i) {
+                final message = item[i];
 
-              Widget messageWidget = ChatMessageCard(
-                key: ValueKey('msg-${message.seq}'),
-                showProfile: isFirstInGroup,
-                message: message.message ?? '',
-                createTime: convertToHm(message.createdAt!),
-                userSeq: widget.userSeq,
-                sender: message.userSeq!,
-                profileImagePath: message.profileImagePath,
-                fileFlag: message.fileFlag ?? 'N',
-              );
+                final isFirstInGroup = i == 0;
+                final isNewestGroup = index == 0;
+                final isNewestInGroup = i == item.length - 1;
+                final isLatestMessage = isNewestGroup && isNewestInGroup;
 
-              if (isLatestMessage) {
-                messageWidget = VisibilityDetector(
-                  key: Key('last-message-${message.seq}'),
-                  onVisibilityChanged: (info) {
-                    final isUnread = lastReadSeq < (message.seq ?? 0);
-                    if (info.visibleFraction > 0.8 && isUnread) {
-                      context.read<ChatMessageProvider>().readChatMessage(
-                        ChatReadModel(
-                          chatRoomSeq: widget.chatRoomSeq,
-                          lastReadMessageSeq: message.seq!,
-                        ),
-                      );
-                      chatRoomProvider.readMessageThisRoom(widget.chatRoomSeq);
-                    }
-                  },
-                  child: messageWidget,
+                Widget messageWidget = ChatMessageCard(
+                  key: ValueKey('msg-${message.seq ?? message.createdAt?.microsecondsSinceEpoch}'),
+                  showProfile: isFirstInGroup,
+                  message: message.message ?? '',
+                  createTime: convertToHm(message.createdAt!),
+                  userSeq: widget.userSeq,
+                  sender: message.userSeq!,
+                  profileImagePath: message.profileImagePath,
+                  fileFlag: message.fileFlag ?? 'N',
                 );
-              }
 
-              return messageWidget;
-            }),
+                if (isLatestMessage) {
+                  messageWidget = VisibilityDetector(
+                    key: Key('last-message-${message.seq ?? message.createdAt?.microsecondsSinceEpoch}'),
+                    onVisibilityChanged: (info) {
+                      final seq = message.seq ?? 0;
+                      if (seq == 0) return;
+                      final isUnread = lastReadSeq < seq;
+                      if (info.visibleFraction > 0.6 && isUnread) {
+                        widget.onReadLastVisible(seq);
+                      }
+                    },
+                    child: messageWidget,
+                  );
+                }
+
+                return messageWidget;
+              })
+
           );
         }
 
@@ -124,8 +124,6 @@ class _ChatMessageListState extends State<ChatMessageList> {
       },
     );
   }
-
-  // ───── helper ─────
 
   List<dynamic> _buildGroupedMessagesWithDateSeparators(List<ChatMessageModel> messages) {
     final List<dynamic> result = [];

@@ -51,25 +51,30 @@ class _ReplyListSectionState extends State<ReplyListSection> {
       value: _replyProvider,
       child: Consumer<ReplyProvider>(
         builder: (context, replyProvider, _) {
-          return Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('댓글 ${replyProvider.replyList.length}'),
-                  ],
-                ),
-                Expanded(
-                  child: ReplyListView(
-                    replyList: replyProvider.replyList,
-                    scrollController: widget.scrollController,
-                    useListView: true,
-                    refreshReply: () async {
-                      await replyProvider.getReplyList(reset: true);
-                    },
+          return GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus(); // 터치 시 키보드 내림
+            },
+            child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('댓글 ${replyProvider.replyList.length}'),
+                    ],
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: ReplyListView(
+                      replyList: replyProvider.replyList,
+                      scrollController: widget.scrollController,
+                      useListView: true,
+                      refreshReply: () async {
+                        await replyProvider.getReplyList(reset: true);
+                      },
+                    ),
+                  ),
+                ],
+            ),
           );
         },
       ),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:packup/const/color.dart';
 import 'package:packup/common/util.dart';
@@ -28,9 +29,11 @@ class ChatRoomCard extends StatefulWidget {
   State<ChatRoomCard> createState() => _ChatRoomCardState();
 }
 
-class _ChatRoomCardState extends State<ChatRoomCard>
-    with AutomaticKeepAliveClientMixin {
+class _ChatRoomCardState extends State<ChatRoomCard> {
   String? _avatar;
+
+  String _timeLabel = '';
+  Timer? _midnightTimer;
 
   static const double _hPad = 12;
   static const double _vPad = 10;
@@ -42,28 +45,73 @@ class _ChatRoomCardState extends State<ChatRoomCard>
   void initState() {
     super.initState();
     _avatar = widget.profileImagePath;
+
+    _refreshTimeLabelAndSchedule();
   }
 
   @override
   void didUpdateWidget(covariant ChatRoomCard oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (!widget.freezeProfileImage) {
-      _avatar = widget.profileImagePath;
-      return;
-    }
-
-    if (_avatar == null && widget.profileImagePath != null) {
-      _avatar = widget.profileImagePath;
+    if (oldWidget.lastMessageDate != widget.lastMessageDate) {
+      _refreshTimeLabelAndSchedule();
     }
   }
 
   @override
-  bool get wantKeepAlive => true;
+  void dispose() {
+    _midnightTimer?.cancel();
+    super.dispose();
+  }
+
+  void _refreshTimeLabelAndSchedule() {
+    _midnightTimer?.cancel();
+
+    final newLabel = (widget.lastMessageDate == null)
+        ? ''
+        : convertToChatRoomDate(widget.lastMessageDate!);
+
+    if (newLabel != _timeLabel) {
+      setState(() {
+        _timeLabel = newLabel;
+      });
+    }
+
+    if (widget.lastMessageDate != null) {
+      final now = DateTime.now();
+      final last = widget.lastMessageDate!;
+      final isToday = _isSameDay(last, now);
+      final isYesterday = _isSameDay(last, now.subtract(const Duration(days: 1)));
+
+      if (isToday || isYesterday) {
+        print("자정 테스트");
+        final nextMidnight = DateTime(now.year, now.month, now.day + 1);
+        final delay = nextMidnight.difference(now);
+        _midnightTimer = Timer(delay, () {
+          if (!mounted) return;
+          _refreshTimeLabelAndSchedule();
+        });
+      }
+    }
+  }
+
+  bool _isSameDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
+
+  String convertToChatRoomDate(DateTime date) {
+    final type = getDateType(date);
+    switch (type) {
+      case DateType.today:
+        return convertToHm(date);
+      case DateType.yesterday:
+        return '어제';
+      default:
+        return convertToYmd(date);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
 
     return Column(
       children: [
@@ -74,6 +122,7 @@ class _ChatRoomCardState extends State<ChatRoomCard>
               CircleProfileImage(
                 radius: _avatarRadius,
                 imagePath: _avatar,
+                profileAvatar: false,
               ),
               const SizedBox(width: _gap),
               Expanded(
@@ -95,7 +144,7 @@ class _ChatRoomCardState extends State<ChatRoomCard>
                         if (widget.lastMessageDate != null) ...[
                           const SizedBox(width: 12),
                           Text(
-                            convertToChatRoomDate(widget.lastMessageDate!),
+                            _timeLabel,
                             style: const TextStyle(
                               color: Colors.grey,
                               fontSize: 15,
@@ -141,17 +190,5 @@ class _ChatRoomCardState extends State<ChatRoomCard>
         const Divider(height: 1, thickness: 1),
       ],
     );
-  }
-
-  String convertToChatRoomDate(DateTime date) {
-    final type = getDateType(date);
-    switch (type) {
-      case DateType.today:
-        return convertToHm(date);
-      case DateType.yesterday:
-        return '어제';
-      default:
-        return convertToYmd(date);
-    }
   }
 }

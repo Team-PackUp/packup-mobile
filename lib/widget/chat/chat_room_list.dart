@@ -39,7 +39,7 @@ class ChatRoomList extends StatelessWidget {
               key: ValueKey(room.seq),
               title: room.title ?? '',
               unReadCount: unReadCount,
-              profileImagePath: room.user?.profileImagePath,
+              profileImagePath: room.profileImagePath,
               lastMessage: room.lastMessage,
               lastMessageDate: room.lastMessageDate,
               fileFlag: room.fileFlag ?? 'N',

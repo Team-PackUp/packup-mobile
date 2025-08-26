@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../model/reply/reply_model.dart';
 import '../../widget/common/custom_appbar.dart';
-import '../../widget/review/section/reply_list_section.dart';
+import '../../widget/reply/section/reply_list_section.dart';
 
 // 이 위젯은 댓글(리뷰) 전체 보기용
 class ReplyList extends StatefulWidget {

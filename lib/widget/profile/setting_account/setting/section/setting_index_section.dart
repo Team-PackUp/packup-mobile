@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/provider/user/user_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:packup/widget/profile/setting_account/setting/section/setting_etc_section.dart';
 
-import '../../../../common/util_widget.dart';
-import '../setting_normal_list.dart';
+import 'setting_normal_section.dart';
 
 class SettingIndexSection extends StatelessWidget {
   const SettingIndexSection({super.key});
@@ -35,13 +33,12 @@ class SettingIndexSection extends StatelessWidget {
           ),
         ),
 
-        SettingNormalList(
+        SettingNormalSection(
           onTapNation: () => context.push('/profile/setting-nation'),
           onTapLanguage: () => context.push('/profile/setting-language'),
         ),
 
         SizedBox(height: screenH * 0.03),
-
         Padding(
           padding: EdgeInsets.symmetric(
             horizontal: screenW * 0.04,
@@ -56,23 +53,7 @@ class SettingIndexSection extends StatelessWidget {
             ),
           ),
         ),
-        CustomButton.textIconButton(
-          context: context,
-          icon: Icons.logout,
-          label: '로그아웃',
-          onPressed: () {
-            context.read<UserProvider>().logout(context);
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(const SnackBar(content: Text('로그아웃 되었습니다!')));
-          },
-        ),
-        CustomButton.textIconButton(
-          context: context,
-          icon: Icons.delete_forever,
-          label: '탈퇴하기',
-          onPressed: () => context.push('/profile/withdraw'),
-        ),
+        EtcSection(screenW: screenW),
       ],
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/model/reply/reply_model.dart';
-import 'package:packup/widget/review/reply_card.dart';
+import 'package:packup/widget/reply/reply_read_card.dart';
 
 class ReplyListView extends StatelessWidget {
   final List<ReplyModel> replyList;
@@ -31,12 +31,12 @@ class ReplyListView extends StatelessWidget {
             final moved = await context.push<bool>('/reply_write/${reply.seq}');
             if (moved == true) refreshReply();
           },
-          child: ReplyCard(
-            nickName: reply.nickName!,
+          child: ReplyReadCard(
+            nickName: reply.nickName ?? '익명',
             avatarUrl: reply.profileImagePath,
-            content: reply.content!,
-            point: reply.point!,
-            createdAt: reply.createdAt!,
+            content: reply.content ?? '',
+            point: reply.point ?? 0,
+            createdAt: reply.createdAt is DateTime ? reply.createdAt as DateTime : null,
           ),
         ),
       );

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:packup/widget/profile/setting_account/setting/setting_push_list.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../Common/util.dart';
-import '../../../../provider/user/user_provider.dart';
-import 'normal_setting_card.dart';
+import '../../../../../Common/util.dart';
+import '../../../../../provider/user/user_provider.dart';
+import '../setting_normal_card.dart';
 
-class SettingNormalList extends StatelessWidget {
-  const SettingNormalList({
+class SettingNormalSection extends StatelessWidget {
+  const SettingNormalSection({
     super.key,
     required this.onTapNation,
     required this.onTapLanguage,
@@ -65,7 +65,7 @@ class SettingNormalList extends StatelessWidget {
 
         Padding(
           padding: EdgeInsets.symmetric(horizontal: screenW * 0.04, vertical: screenH * 0.01),
-          child: NormalSettingCard(
+          child: SettingNormalCard(
             title: '국가/지역',
             valueText: currentNationLabel,
             onTap: onTapNation,
@@ -75,7 +75,7 @@ class SettingNormalList extends StatelessWidget {
 
         Padding(
           padding: EdgeInsets.symmetric(horizontal: screenW * 0.04, vertical: screenH * 0.01),
-          child: NormalSettingCard(
+          child: SettingNormalCard(
             title: '언어 설정',
             valueText: currentLangLabel,
             onTap: onTapLanguage,

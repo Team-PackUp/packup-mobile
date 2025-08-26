@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class NormalSettingCard extends StatelessWidget {
-  const NormalSettingCard({
+class SettingNormalCard extends StatelessWidget {
+  const SettingNormalCard({
     super.key,
     required this.title,
     required this.valueText,

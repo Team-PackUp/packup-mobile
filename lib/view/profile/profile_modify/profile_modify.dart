@@ -36,11 +36,10 @@ class _ProfileModifyState extends State<ProfileModify> {
 
     final user = context.read<UserProvider>().userModel!;
     newNickName = user.nickname ?? '';
-    newLanguage = user.userLanguage ?? '';   // ✅ 언어 초기값도 채워둠
-    newGender   = user.userGender ?? '';         // 있으면 채우기
-    newBirth    = user.userBirth  ?? '';         // 있으면 채우기
+    newLanguage = user.userLanguage ?? '';
+    newGender   = user.userGender ?? '';
+    newBirth    = user.userBirth  ?? '';
     selectedCategories = List<String>.from(user.preferCategorySeqJson ?? []);
-    // setState() 필요 없음: 첫 build 전에 값만 준비
   }
 
   @override
@@ -126,6 +125,8 @@ class _ProfileModifyState extends State<ProfileModify> {
       if (newProfileImage != null) {
         final uploaded = await user.updateUserProfileImage(newProfileImage);
         imagePathToSave = '${uploaded.path!}/${uploaded.encodedName!}';
+      } else {
+        imagePathToSave = context.read<UserProvider>().userModel!.profileImagePath;
       }
 
       final model = UserProfileModel(
@@ -151,6 +152,7 @@ class _ProfileModifyState extends State<ProfileModify> {
       CustomSnackBar.showResult(context, "닉네임을 입력해주세요");
       return false;
     }
+
     if (newBirth.isEmpty) {
       CustomSnackBar.showResult(context, "나이를 입력해주세요");
       return false;

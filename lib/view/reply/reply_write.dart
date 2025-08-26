@@ -5,7 +5,8 @@ import 'package:packup/provider/reply/reply_provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 
 import '../../model/reply/reply_model.dart';
-import '../../widget/review/reply_form.dart';
+import '../../widget/reply/section/reply_form_section.dart';
+import '../../widget/reply/section/reply_greeting_section.dart';
 
 class ReplyWrite extends StatelessWidget {
   const ReplyWrite({
@@ -23,21 +24,24 @@ class ReplyWrite extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isEdit = seq != null;
     return ChangeNotifierProvider(
       create: (_) {
-        if (seq != null) {
+        if (isEdit) {
           return ReplyProvider.update(seq: seq!);
         }
         return ReplyProvider.create(
-          targetSeq : targetSeq!,
+          targetSeq: targetSeq!,
           targetType: targetType!,
         );
       },
-      child: const ReplyWriteContent(),
+      child: Scaffold(
+        appBar: CustomAppbar(title: isEdit ? '리뷰 수정' : '투어 리뷰'),
+        body: const ReplyWriteContent(),
+      ),
     );
   }
 }
-
 
 class ReplyWriteContent extends StatefulWidget {
   const ReplyWriteContent({super.key});
@@ -60,13 +64,15 @@ class _ReplyWriteContentState extends State<ReplyWriteContent> {
   Widget build(BuildContext context) {
     final replyProvider = context.watch<ReplyProvider>();
 
-    return Scaffold(
-      appBar: CustomAppbar(title: 'Edit Reply'),
-      body: Padding(
-        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
-        child: ReplyForm(
-          replyProvider: replyProvider,
-        ),
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
+        child: ListView(
+          children: [
+            const ReplyGreetingSection(),
+            ReplyFormSection(replyProvider: replyProvider),
+          ],
+        )
       ),
     );
   }

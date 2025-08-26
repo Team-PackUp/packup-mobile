@@ -4,6 +4,7 @@ class ChatRoomModel {
   final int? seq;
   final List<int>? partUserSeq;
   final UserModel? user;
+  final String? profileImagePath;
   final String? title;
   int? unReadCount;
   String? lastMessage;
@@ -17,6 +18,7 @@ class ChatRoomModel {
     this.seq,
     this.partUserSeq,
     this.user,
+    this.profileImagePath,
     this.title,
     this.unReadCount,
     this.lastMessage,
@@ -37,7 +39,9 @@ class ChatRoomModel {
           (json['partUserSeq'] as List? ?? [])
               .map((e) => (e as num).toInt())
               .toList(),
-      user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
+      // user: UserModel.fromJson(
+      //     json['user'] as Map<String, dynamic>),
+      profileImagePath: json['profileImagePath'] as String? ?? '',
       title: json['title'] as String? ?? '',
       unReadCount: (json['unReadCount'] as num?)?.toInt() ?? 0,
       lastMessage: json['lastMessage'] as String?,

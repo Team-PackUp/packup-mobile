@@ -89,7 +89,7 @@ class _IndexState extends State<Index> {
       case 0:
         return const AIRecommend(); // AI 추천
       case 1:
-        return CustomMap(); // 이건 Like인가? 아니면 Reservation?
+        return Like(); // 이건 Like인가? 아니면 Reservation?
       case 2:
         return const Home(); // 나중에 이름 Home 으로 바꾸는게 직관적
       case 3:

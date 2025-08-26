@@ -82,7 +82,7 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
         TextField(
           controller: nickNameController,
           decoration: const InputDecoration(
-            labelText: '이름',
+            labelText: '닉네임',
             border: OutlineInputBorder(),
           ),
           onChanged: (_) => _emitChange(),

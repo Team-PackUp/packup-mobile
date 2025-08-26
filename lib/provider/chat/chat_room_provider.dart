@@ -38,6 +38,7 @@ class ChatRoomProvider extends LoadingProvider {
 
   // 0=전체, 1=안읽은, 2=내가 가이드
   int _activeFilterIdx = 0;
+  int get activeFilterIdx => _activeFilterIdx;
 
   Future<void> getRoom() async {
     if (_totalPage != 0 && _curPage >= _totalPage) return;
@@ -82,9 +83,6 @@ class ChatRoomProvider extends LoadingProvider {
         base = _allChatRooms;
         break;
     }
-
-    print(base.toString());
-
     _chatRoom = List<ChatRoomModel>.unmodifiable(base.toList());
     notifyListeners();
   }
@@ -100,16 +98,10 @@ class ChatRoomProvider extends LoadingProvider {
     if (i != -1) {
       final prev = _allChatRooms[i];
 
-      final preservedAvatar = prev.user?.profileImagePath;
-
       prev.lastMessage = incoming.lastMessage;
       prev.lastMessageDate = incoming.lastMessageDate;
       prev.unReadCount = incoming.unReadCount;
       prev.fileFlag = incoming.fileFlag;
-
-      // if (preservedAvatar != null) {
-      //   prev.user?.profileImagePath = preservedAvatar;
-      // }
 
       _allChatRooms
         ..removeAt(i)
@@ -126,6 +118,7 @@ class ChatRoomProvider extends LoadingProvider {
     const destination = '/user/queue/chatroom-refresh';
     _socketService.registerCallback(destination, (data) {});
     _socketService.subscribe(destination, (data) {
+      print("구독 시작");
       final newFirstChatRoom = ChatRoomModel.fromJson(data);
       updateFirstChatRoom(newFirstChatRoom);
     });
@@ -157,3 +150,21 @@ class ChatRoomProvider extends LoadingProvider {
     notifyListeners();
   }
 }
+
+extension Delta on ChatRoomProvider {
+  Future<void> refreshFirstPage() async {
+    final resp = await _chatService.getRoom(0);
+    final page = PageModel<ChatRoomModel>.fromJson(
+      resp.response, (e) => ChatRoomModel.fromJson(e),
+    );
+
+    _allChatRooms
+      ..removeWhere((_) => true)
+      ..addAll(page.objectList);
+    _totalPage = page.totalPage;
+    _curPage   = 1;
+
+    _applyFilterSync();
+  }
+}
+

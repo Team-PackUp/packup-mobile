@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../../common/size_config.dart'; // context.sX / context.sY 확장 사용
 
 class ActivitySummarySection extends StatelessWidget {
-  final double w;
-  final double h;
-
-  const ActivitySummarySection({super.key, required this.w, required this.h});
+  const ActivitySummarySection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,18 +16,39 @@ class ActivitySummarySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('내 활동', style: TextStyle(fontWeight: FontWeight.bold, fontSize: w * 0.045)),
-        SizedBox(height: h * 0.015),
+        Text(
+          '내 활동',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: context.sX(16), // 디자인 기준 약 16dp
+          ),
+        ),
+        SizedBox(height: context.sY(10)), // 디자인 기준 약 10dp
         Row(
           children: items.map((item) {
             return Expanded(
               child: Column(
                 children: [
-                  Icon(item['icon'] as IconData, size: w * 0.07, color: Colors.pink),
-                  SizedBox(height: h * 0.005),
-                  Text(item['value'] as String,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: w * 0.04)),
-                  Text(item['label'] as String, style: TextStyle(fontSize: w * 0.03)),
+                  Icon(
+                    item['icon'] as IconData,
+                    size: context.sX(25), // 디자인 기준 약 25dp
+                    color: Colors.pink,
+                  ),
+                  SizedBox(height: context.sY(4)), // 디자인 기준 약 4dp
+                  Text(
+                    item['value'] as String,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.sX(14), // 약 14dp
+                    ),
+                  ),
+                  Text(
+                    item['label'] as String,
+                    style: TextStyle(
+                      fontSize: context.sX(11), // 약 11dp
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ],
               ),
             );
