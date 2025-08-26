@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:packup/widget/guide/listing/create/step_intro.dart';
+import 'package:packup/widget/guide/listing/create/step_location_search.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:packup/provider/tour/guide/listing_create_provider.dart';
@@ -17,6 +18,11 @@ class ListingCreatePage extends StatelessWidget {
                 id: 'intro',
                 title: '리스팅 등록',
                 builder: (ctx) => const StepIntro(),
+              ),
+              ListingStepConfig(
+                id: 'location',
+                title: '장소',
+                builder: (ctx) => const StepLocationSearch(),
               ),
             ],
             onStart: () {
