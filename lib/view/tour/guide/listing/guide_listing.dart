@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:packup/provider/tour/guide/tour_listing_provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:packup/widget/tour/guide/listing/section/tour_listing_list_section.dart';
@@ -15,9 +16,7 @@ class GuideListingPage extends StatelessWidget {
         appBar: const CustomAppbar(title: '리스팅'),
         body: const TourListingListSection(),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            context.push()
-          },
+          onPressed: () => context.push('/g/listing/create'),
           backgroundColor: const Color(0xFF111827),
           foregroundColor: Colors.white,
           child: const Icon(Icons.add),
