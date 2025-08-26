@@ -141,33 +141,6 @@ class _StepLocationSearchState extends State<StepLocationSearch> {
             },
           ),
         ),
-
-        // 하단 버튼(다음)
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed:
-                  (p.getField<String>('meet.placeName') != null)
-                      ? () {
-                        // 다음 단계 생기면 p.next() 호출 예정
-                        // 당장은 안내만
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('주소 확인 단계로 이동 예정입니다.')),
-                        );
-                      }
-                      : null,
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(56),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              child: const Text('다음'),
-            ),
-          ),
-        ),
       ],
     );
   }
