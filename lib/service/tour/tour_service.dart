@@ -25,4 +25,8 @@ class TourService {
     final data = {'page': page};
     return await DioService().getRequest('/tour/me/listings', data);
   }
+
+  //  Future<void> createListing(TourListingCreateRequest req) async {
+  //   await DioService().postRequest('/guide/tours', data: req.toJson());
+  // }
 }
