@@ -125,6 +125,8 @@ class _ProfileModifyState extends State<ProfileModify> {
       if (newProfileImage != null) {
         final uploaded = await user.updateUserProfileImage(newProfileImage);
         imagePathToSave = '${uploaded.path!}/${uploaded.encodedName!}';
+      } else {
+        imagePathToSave = context.read<UserProvider>().userModel!.profileImagePath;
       }
 
       final model = UserProfileModel(
