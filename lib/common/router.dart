@@ -89,6 +89,7 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
         '/g/listing',
         '/g/chat',
         '/g/menu',
+        '/g/listing/create',
       ].any((path) => currentLoc.startsWith(path));
 
       if (!hasToken && isProtected) {
