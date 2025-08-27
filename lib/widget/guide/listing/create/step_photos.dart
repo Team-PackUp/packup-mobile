@@ -137,10 +137,10 @@ class _StepPhotosState extends State<StepPhotos> {
               ),
             ),
 
-            Text(
-              '사진을 5장 이상 업로드하세요.',
-              style: TextStyle(color: Colors.black.withOpacity(0.5)),
-            ),
+            // Text(
+            //   '사진을 5장 이상 업로드하세요.',
+            //   style: TextStyle(color: Colors.black.withOpacity(0.5)),
+            // ),
             const SizedBox(height: 4),
           ],
         ),
