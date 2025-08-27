@@ -41,7 +41,12 @@ class ListingCreatePage extends StatelessWidget {
                 id: 'photos',
                 title: '사진',
                 builder: (_) => const StepPhotos(),
-              ), // ✅ NEW
+              ),
+              ListingStepConfig(
+                id: 'itinerary',
+                title: '일정표',
+                builder: (_) => const StepItinerary(),
+              ),
             ],
           ),
       child: const _Scaffold(),
@@ -86,9 +91,18 @@ class _BottomBar extends StatelessWidget {
     final photoCount = (photoFiles?.length ?? localPaths?.length ?? 0);
     final canNextOnPhotos = photoCount >= 5;
 
+    final itinCount = p.getField<int>('itinerary.count') ?? 0;
+    final itinIntro = p.getField<String>('itinerary.intro') ?? '';
+    final itinThumb = p.getField<String>('itinerary.thumbPath');
+    final canNextOnItinerary =
+        itinCount >= 1 &&
+        itinIntro.trim().isNotEmpty &&
+        (itinThumb != null && itinThumb.isNotEmpty);
+
     bool enabled = true;
     if (id == 'location') enabled = canNextOnLocation;
     if (id == 'photos') enabled = canNextOnPhotos;
+    if (id == 'itinerary') enabled = canNextOnItinerary;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
