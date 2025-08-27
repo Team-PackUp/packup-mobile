@@ -1,3 +1,4 @@
+// lib/widget/guide/listing/create/step_photos.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,8 +13,10 @@ class StepPhotos extends StatefulWidget {
 
 class _StepPhotosState extends State<StepPhotos> {
   final _picker = ImagePicker();
-  late ListingCreateProvider _p;
+
+  late ListingCreateProvider _p; // context 캐시
   bool _guardBound = false;
+  bool _initialized = false;
 
   final List<XFile> _files = [];
   int _coverIndex = 0;
@@ -23,16 +26,21 @@ class _StepPhotosState extends State<StepPhotos> {
     super.didChangeDependencies();
     _p = context.read<ListingCreateProvider>();
 
-    if (_files.isEmpty) {
+    if (!_initialized) {
       final savedPaths =
           _p.getField<List>('photos.localPaths')?.cast<String>() ?? [];
       final savedCover = _p.getField<int>('photos.coverIndex') ?? 0;
-      _files.addAll(savedPaths.map((e) => XFile(e)));
-      _coverIndex = (savedCover < _files.length) ? savedCover : 0;
-      setState(() {});
-    }
+      if (_files.isEmpty && savedPaths.isNotEmpty) {
+        _files.addAll(savedPaths.map((e) => XFile(e)));
+        _coverIndex =
+            (savedCover >= 0 && savedCover < _files.length) ? savedCover : 0;
+      }
 
-    if (!_guardBound) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _syncToProvider();
+      });
+
       _p.setNextGuard('photos', () async {
         if (_files.length < 5) {
           ScaffoldMessenger.of(
@@ -40,16 +48,10 @@ class _StepPhotosState extends State<StepPhotos> {
           ).showSnackBar(const SnackBar(content: Text('사진을 5장 이상 첨부해 주세요.')));
           return false;
         }
-        _p.setFields({
-          'photos.files': _files,
-          'photos.localPaths': _files.map((e) => e.path).toList(), // 경로 저장
-          'photos.coverIndex': _coverIndex,
-        });
-
-        // TODO: 업로드가 즉시 필요하다면 여기서 업로드 후 'photos.urls' 저장
         return true;
       });
       _guardBound = true;
+      _initialized = true;
     }
   }
 
@@ -59,25 +61,44 @@ class _StepPhotosState extends State<StepPhotos> {
     super.dispose();
   }
 
+  void _syncToProvider() {
+    _p.setFields({
+      'photos.localPaths': _files.map((e) => e.path).toList(),
+      'photos.coverIndex': _coverIndex,
+      'photos.count': _files.length, // 하단바 활성화 판정용
+    });
+  }
+
   Future<void> _pickMore() async {
     final picked = await _picker.pickMultiImage(
-      imageQuality: 85, // 용량 절감
+      imageQuality: 85,
       maxWidth: 2000,
     );
     if (picked.isEmpty) return;
-    setState(() => _files.addAll(picked));
+    setState(() {
+      _files.addAll(picked);
+    });
+    _syncToProvider();
   }
 
   void _removeAt(int index) {
     setState(() {
       _files.removeAt(index);
-      if (_coverIndex >= _files.length) _coverIndex = 0;
+      if (_files.isEmpty) {
+        _coverIndex = 0;
+      } else if (_coverIndex >= _files.length) {
+        _coverIndex = 0;
+      }
     });
+    _syncToProvider();
   }
 
   void _setCover(int index) {
     setState(() => _coverIndex = index);
+    _syncToProvider();
   }
+
+  // ---- UI -------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +108,7 @@ class _StepPhotosState extends State<StepPhotos> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _Header(),
+            const _Header(),
             const SizedBox(height: 16),
 
             Expanded(
@@ -99,7 +120,7 @@ class _StepPhotosState extends State<StepPhotos> {
                   mainAxisSpacing: 14,
                   childAspectRatio: 1.0,
                 ),
-                itemCount: _files.length + 1,
+                itemCount: _files.length + 1, // +1 = 추가 타일
                 itemBuilder: (context, index) {
                   if (index == _files.length) {
                     return _AddTile(onTap: _pickMore);
@@ -116,7 +137,6 @@ class _StepPhotosState extends State<StepPhotos> {
               ),
             ),
 
-            // 하단 안내 (선택)
             Text(
               '사진을 5장 이상 업로드하세요.',
               style: TextStyle(color: Colors.black.withOpacity(0.5)),
@@ -191,7 +211,6 @@ class _PhotoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // 썸네일
         ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: Image.file(
@@ -201,8 +220,6 @@ class _PhotoTile extends StatelessWidget {
             height: double.infinity,
           ),
         ),
-
-        // 커버 표시
         if (isCover)
           Positioned(
             left: 8,
@@ -219,8 +236,6 @@ class _PhotoTile extends StatelessWidget {
               ),
             ),
           ),
-
-        // 삭제 버튼
         Positioned(
           right: 6,
           top: 6,
@@ -237,8 +252,6 @@ class _PhotoTile extends StatelessWidget {
             ),
           ),
         ),
-
-        // 탭하여 커버 지정
         Positioned.fill(
           child: Material(
             color: Colors.transparent,
