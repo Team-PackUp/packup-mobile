@@ -1,3 +1,4 @@
+// lib/widget/guide/listing/create/step_itinerary.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,38 +22,38 @@ class _StepItineraryState extends State<StepItinerary> {
   final _introCtrl = TextEditingController();
   XFile? _thumb;
 
-  bool _reorderMode = false;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _p = context.read<ListingCreateProvider>();
 
     if (!_initialized) {
-      final saved = _p.getField<List>('itinerary.items')?.cast<Map>() ?? [];
-      _items.addAll(
-        saved.map((m) => _Activity.fromMap(m.cast<String, dynamic>())),
-      );
-      _introCtrl.text = _p.getField<String>('itinerary.intro') ?? '';
-      final thumbPath = _p.getField<String>('itinerary.thumbPath');
-      if (thumbPath != null && thumbPath.isNotEmpty) _thumb = XFile(thumbPath);
+      final raw = _p.getField<List>('itinerary.items') ?? const [];
+      final saved =
+          raw
+              .cast<Map>()
+              .map((m) => _Activity.fromMap(Map<String, dynamic>.from(m)))
+              .toList();
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        _syncToProvider();
-      });
+      _items
+        ..clear()
+        ..addAll(saved);
+
+      _introCtrl.text = _p.getField<String>('itinerary.intro') ?? '';
+      final tp = _p.getField<String>('itinerary.thumbPath');
+      _thumb = (tp != null && tp.isNotEmpty) ? XFile(tp) : null;
 
       _p.setNextGuard('itinerary', () async {
         if (_items.isEmpty) {
-          _showSnack('활동을 1개 이상 추가해 주세요.');
+          _snack('활동을 1개 이상 추가해 주세요.');
           return false;
         }
         if (_introCtrl.text.trim().isEmpty) {
-          _showSnack('체험 소개를 입력해 주세요.');
+          _snack('체험 소개를 입력해 주세요.');
           return false;
         }
         if (_thumb == null) {
-          _showSnack('썸네일 사진을 선택해 주세요.');
+          _snack('썸네일 사진을 선택해 주세요.');
           return false;
         }
         _p.setFields({
@@ -63,6 +64,7 @@ class _StepItineraryState extends State<StepItinerary> {
         });
         return true;
       });
+
       _guardBound = true;
       _initialized = true;
     }
@@ -84,8 +86,8 @@ class _StepItineraryState extends State<StepItinerary> {
     });
   }
 
-  void _showSnack(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+  void _snack(String m) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(m)));
   }
 
   Future<void> _pickThumb() async {
@@ -111,7 +113,7 @@ class _StepItineraryState extends State<StepItinerary> {
     setState(() {
       if (index == null) {
         if (_items.length >= 5) {
-          _showSnack('활동은 최대 5개까지 추가할 수 있어요.');
+          _snack('활동은 최대 5개까지 추가할 수 있어요.');
           return;
         }
         _items.add(res);
@@ -123,85 +125,68 @@ class _StepItineraryState extends State<StepItinerary> {
   }
 
   void _deleteAt(int index) {
-    setState(() => _items.removeAt(index));
+    setState(() {
+      _items.removeAt(index);
+      if (_items.isEmpty) {
+        _introCtrl.clear();
+        _thumb = null;
+      }
+    });
     _syncToProvider();
   }
 
   @override
   Widget build(BuildContext context) {
+    final isEmpty = _items.isEmpty;
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _Header(
-              title: '일정표',
-              subtitle: '활동을 5개까지 추가할 수 있습니다.',
-              trailing: TextButton(
-                onPressed: () => setState(() => _reorderMode = !_reorderMode),
-                child: Text(_reorderMode ? '완료' : '순서 변경'),
-              ),
-            ),
-            const SizedBox(height: 12),
+            const _Header(),
+            const SizedBox(height: 16),
 
-            _ThumbAndIntro(
-              thumb: _thumb,
-              onPickThumb: _pickThumb,
-              introController: _introCtrl,
-            ),
-            const SizedBox(height: 12),
+            if (isEmpty)
+              Expanded(
+                child: Center(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: _AddCardLarge(onTap: () => _openEditor()),
+                  ),
+                ),
+              )
+            else
+              Expanded(
+                child: ListView(
+                  children: [
+                    _ThumbAndIntroLarge(
+                      thumb: _thumb,
+                      onPickThumb: _pickThumb,
+                      introController: _introCtrl,
+                      onChanged: () => _syncToProvider(),
+                    ),
+                    const SizedBox(height: 16),
 
-            Expanded(
-              child:
-                  _reorderMode
-                      ? ReorderableListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: _items.length + 1,
-                        onReorder: (oldIndex, newIndex) {
-                          setState(() {
-                            if (oldIndex < newIndex) newIndex -= 1;
-                            if (oldIndex == _items.length) return;
-                            if (newIndex > _items.length)
-                              newIndex = _items.length;
-                            final item = _items.removeAt(oldIndex);
-                            _items.insert(newIndex, item);
-                          });
-                          _syncToProvider();
-                        },
-                        itemBuilder: (context, i) {
-                          if (i == _items.length) {
-                            return _AddCard(
-                              key: const ValueKey('add'),
-                              onTap: () => _openEditor(),
-                            );
-                          }
-                          final e = _items[i];
-                          return _ActivityCard(
-                            key: ValueKey(e.id),
-                            data: e,
-                            onTap: () => _openEditor(initial: e, index: i),
-                            onDelete: () => _deleteAt(i),
-                            reorderable: true,
-                          );
-                        },
-                      )
-                      : ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: _items.length + 1,
-                        itemBuilder: (context, i) {
-                          if (i == _items.length) {
-                            return _AddCard(onTap: () => _openEditor());
-                          }
-                          final e = _items[i];
-                          return _ActivityCard(
-                            data: e,
-                            onTap: () => _openEditor(initial: e, index: i),
-                            onDelete: () => _deleteAt(i),
-                          );
-                        },
+                    ...List.generate(
+                      _items.length,
+                      (i) => Padding(
+                        padding: const EdgeInsets.only(bottom: 14),
+                        child: _ActivityCardLarge(
+                          data: _items[i],
+                          onTap:
+                              () => _openEditor(initial: _items[i], index: i),
+                          onDelete: () => _deleteAt(i),
+                        ),
                       ),
-            ),
+                    ),
+
+                    _AddCardLarge(onTap: () => _openEditor()),
+                    const SizedBox(height: 8),
+                  ],
+                ),
+              ),
           ],
         ),
       ),
@@ -210,84 +195,76 @@ class _StepItineraryState extends State<StepItinerary> {
 }
 
 class _Header extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final Widget? trailing;
-  const _Header({required this.title, required this.subtitle, this.trailing});
+  const _Header();
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 4),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                subtitle,
-                style: TextStyle(color: Colors.black.withOpacity(0.6)),
-              ),
-            ],
-          ),
+        const SizedBox(height: 4),
+        const Text(
+          '일정표 만들기',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
         ),
-        if (trailing != null) trailing!,
+        const SizedBox(height: 6),
+        Text(
+          '게스트가 체험을 잘 파악할 수 있도록 활동을 최대 5개까지 추가하세요.',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+        ),
       ],
     );
   }
 }
 
-class _ThumbAndIntro extends StatelessWidget {
+class _ThumbAndIntroLarge extends StatelessWidget {
   final XFile? thumb;
   final VoidCallback onPickThumb;
   final TextEditingController introController;
-  const _ThumbAndIntro({
+  final VoidCallback onChanged;
+
+  const _ThumbAndIntroLarge({
     required this.thumb,
     required this.onPickThumb,
     required this.introController,
+    required this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: _boxDeco(),
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       child: Row(
         children: [
+          // 썸네일(큼)
           GestureDetector(
             onTap: onPickThumb,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(14),
               child: Container(
-                width: 72,
-                height: 72,
+                width: 96,
+                height: 96,
                 color: const Color(0xFFF1F2F5),
                 child:
                     thumb == null
-                        ? const Icon(Icons.add_a_photo_outlined)
+                        ? const Icon(Icons.add_a_photo_outlined, size: 28)
                         : Image.file(File(thumb!.path), fit: BoxFit.cover),
               ),
             ),
           ),
-          const SizedBox(width: 12),
-          // 소개 입력
+          const SizedBox(width: 14),
+          // 소개 입력(넓게)
           Expanded(
             child: TextField(
               controller: introController,
-              minLines: 2,
-              maxLines: 3,
+              minLines: 3,
+              maxLines: 5,
+              onChanged: (_) => onChanged(),
               decoration: const InputDecoration(
                 hintText: '체험에 대한 소개를 입력하세요',
-                border: OutlineInputBorder(borderSide: BorderSide.none),
                 filled: true,
+                border: OutlineInputBorder(borderSide: BorderSide.none),
               ),
             ),
           ),
@@ -297,87 +274,128 @@ class _ThumbAndIntro extends StatelessWidget {
   }
 }
 
-class _AddCard extends StatelessWidget {
+class _AddCardLarge extends StatelessWidget {
   final VoidCallback onTap;
-  const _AddCard({super.key, required this.onTap});
+  const _AddCardLarge({required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
       decoration: _boxDeco(),
-      child: ListTile(
-        leading: Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: const Color(0xFFF1F2F5),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Icon(Icons.add),
-        ),
-        title: const Text(
-          '활동 추가하기',
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
         onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Row(
+            children: [
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF1F2F5),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(Icons.add, size: 28),
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                '활동 추가하기',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+              const Spacer(),
+              const Icon(Icons.chevron_right),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
-class _ActivityCard extends StatelessWidget {
+class _ActivityCardLarge extends StatelessWidget {
   final _Activity data;
   final VoidCallback onTap;
   final VoidCallback onDelete;
-  final bool reorderable;
-  const _ActivityCard({
-    super.key,
+  const _ActivityCardLarge({
     required this.data,
     required this.onTap,
     required this.onDelete,
-    this.reorderable = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      key: key,
-      margin: const EdgeInsets.only(bottom: 12),
       decoration: _boxDeco(),
-      child: ListTile(
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child:
-              data.photoPath == null
-                  ? Container(
-                    width: 48,
-                    height: 48,
-                    color: const Color(0xFFF1F2F5),
-                  )
-                  : Image.file(
-                    File(data.photoPath!),
-                    width: 48,
-                    height: 48,
-                    fit: BoxFit.cover,
-                  ),
-        ),
-        title: Text(
-          '${data.title} · ${_minToText(data.minutes)}',
-          style: const TextStyle(fontWeight: FontWeight.w700),
-        ),
-        subtitle: (data.note?.isNotEmpty ?? false) ? Text(data.note!) : null,
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (reorderable) const Icon(Icons.drag_handle),
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
-              onPressed: onDelete,
-            ),
-          ],
-        ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
         onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              // 큰 썸네일
+              ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child:
+                    data.photoPath == null
+                        ? Container(
+                          width: 96,
+                          height: 96,
+                          color: const Color(0xFFF1F2F5),
+                        )
+                        : Image.file(
+                          File(data.photoPath!),
+                          width: 96,
+                          height: 96,
+                          fit: BoxFit.cover,
+                        ),
+              ),
+              const SizedBox(width: 14),
+
+              // 텍스트
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      data.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      _minToText(data.minutes),
+                      style: TextStyle(
+                        color: Colors.black.withOpacity(0.6),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    if ((data.note?.isNotEmpty ?? false)) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        data.note!,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.black.withOpacity(0.7)),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+
+              // 삭제
+              IconButton(
+                icon: const Icon(Icons.delete_outline),
+                onPressed: onDelete,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -445,6 +463,7 @@ class _ActivityEditorState extends State<_ActivityEditor> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 12),
+
               TextField(
                 controller: _title,
                 decoration: const InputDecoration(
@@ -452,7 +471,8 @@ class _ActivityEditorState extends State<_ActivityEditor> {
                   hintText: '예) 삼겹살 투어',
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
+
               Row(
                 children: [
                   const Text('소요 시간'),
@@ -478,13 +498,15 @@ class _ActivityEditorState extends State<_ActivityEditor> {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
+
               TextField(
                 controller: _note,
                 maxLines: 3,
                 decoration: const InputDecoration(labelText: '상세 설명 (선택)'),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
+
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -553,9 +575,9 @@ class _Activity {
 
 BoxDecoration _boxDeco() => BoxDecoration(
   color: Colors.white,
-  borderRadius: BorderRadius.circular(16),
+  borderRadius: BorderRadius.circular(18),
   boxShadow: const [
-    BoxShadow(color: Colors.black12, blurRadius: 20, offset: Offset(0, 10)),
+    BoxShadow(color: Colors.black12, blurRadius: 22, offset: Offset(0, 10)),
   ],
 );
 

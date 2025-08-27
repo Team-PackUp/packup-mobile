@@ -47,7 +47,7 @@ class _StepLocationSearchState extends State<StepLocationSearch> {
     final p = context.watch<ListingCreateProvider>();
     final selectedName = p.getField<String>('meet.placeName');
     final results = _fakeSearch(_query);
-    final canNext = (selectedName != null && selectedName.isNotEmpty);
+    // final canNext = (selectedName != null && selectedName.isNotEmpty);
 
     return SafeArea(
       child: Column(
