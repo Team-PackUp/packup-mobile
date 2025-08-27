@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:packup/widget/guide/listing/create/step_location_address.dart';
+import 'package:packup/widget/guide/listing/create/step_location_pin.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:packup/provider/tour/guide/listing_create_provider.dart';
@@ -11,7 +13,6 @@ class ListingCreatePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      // onStart 콜백 없이 스텝만 등록합니다.
       create:
           (_) => ListingCreateProvider(
             steps: [
@@ -24,6 +25,16 @@ class ListingCreatePage extends StatelessWidget {
                 id: 'location',
                 title: '장소',
                 builder: (ctx) => const StepLocationSearch(),
+              ),
+              ListingStepConfig(
+                id: 'addr',
+                title: '위치 확인',
+                builder: (_) => const StepLocationAddress(),
+              ),
+              ListingStepConfig(
+                id: 'pin',
+                title: '위치 확인',
+                builder: (_) => const StepLocationPin(),
               ),
             ],
           ),
@@ -61,8 +72,6 @@ class _BottomBar extends StatelessWidget {
     final p = context.watch<ListingCreateProvider>();
     final isIntro = p.current.id == 'intro';
     final isLocation = p.current.id == 'location';
-
-    // 장소 단계에서 "다음" 버튼 활성화 조건 (선택 여부)
     final canNextOnLocation =
         (p.getField<String>('meet.placeName')?.isNotEmpty ?? false);
 
@@ -70,7 +79,6 @@ class _BottomBar extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child:
           isIntro
-              // 1) 인트로: 시작하기 → 다음 스텝
               ? SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -84,7 +92,6 @@ class _BottomBar extends StatelessWidget {
                   child: const Text('시작하기'),
                 ),
               )
-              // 2) 그 외 스텝: 이전/다음
               : Row(
                 children: [
                   Expanded(
@@ -103,7 +110,9 @@ class _BottomBar extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                       onPressed:
-                          (isLocation && !canNextOnLocation) ? null : p.next,
+                          (isLocation && !canNextOnLocation)
+                              ? null
+                              : () => p.nextWithGuard(),
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(56),
                         shape: RoundedRectangleBorder(
