@@ -130,23 +130,29 @@ class _StepPhotosState extends State<StepPhotos> {
 }
 
 class _Header extends StatelessWidget {
+  const _Header();
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
-        SizedBox(height: 6),
-        Text(
-          '체험의 특징이 잘 드러나는 사진을\n추가하세요',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-        ),
-        SizedBox(height: 8),
-        Text(
-          '사진을 5장 이상 업로드하세요.',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.black54),
-        ),
-      ],
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: const [
+          SizedBox(height: 6),
+          Text(
+            '체험의 특징이 잘 드러나는 사진을\n추가하세요',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+          ),
+          SizedBox(height: 8),
+          Text(
+            '사진을 5장 이상 업로드하세요.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.black54),
+          ),
+        ],
+      ),
     );
   }
 }
