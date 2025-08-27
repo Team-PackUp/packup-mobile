@@ -92,13 +92,16 @@ class _BottomBar extends StatelessWidget {
     final photoCount = (photoFiles?.length ?? localPaths?.length ?? 0);
     final canNextOnPhotos = photoCount >= 5;
 
+    // final itinCount = p.getField<int>('itinerary.count') ?? 0;
+    // final itinIntro = p.getField<String>('itinerary.intro') ?? '';
+    // final itinThumb = p.getField<String>('itinerary.thumbPath');
+    // final canNextOnItinerary =
+    //     itinCount >= 1 &&
+    //     itinIntro.trim().isNotEmpty &&
+    //     (itinThumb != null && itinThumb.isNotEmpty);
+
     final itinCount = p.getField<int>('itinerary.count') ?? 0;
-    final itinIntro = p.getField<String>('itinerary.intro') ?? '';
-    final itinThumb = p.getField<String>('itinerary.thumbPath');
-    final canNextOnItinerary =
-        itinCount >= 1 &&
-        itinIntro.trim().isNotEmpty &&
-        (itinThumb != null && itinThumb.isNotEmpty);
+    final canNextOnItinerary = itinCount >= 1;
 
     bool enabled = true;
     if (id == 'location') enabled = canNextOnLocation;

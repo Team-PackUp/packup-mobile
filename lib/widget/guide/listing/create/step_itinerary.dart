@@ -18,9 +18,8 @@ class _StepItineraryState extends State<StepItinerary> {
 
   final _picker = ImagePicker();
 
+  // 활동 리스트만 관리 (소개/썸네일 제거)
   final List<_Activity> _items = [];
-  final _introCtrl = TextEditingController();
-  XFile? _thumb;
 
   @override
   void didChangeDependencies() {
@@ -28,6 +27,7 @@ class _StepItineraryState extends State<StepItinerary> {
     _p = context.read<ListingCreateProvider>();
 
     if (!_initialized) {
+      // 프리필: 중복 방지 위해 clear 후 addAll
       final raw = _p.getField<List>('itinerary.items') ?? const [];
       final saved =
           raw
@@ -39,28 +39,19 @@ class _StepItineraryState extends State<StepItinerary> {
         ..clear()
         ..addAll(saved);
 
-      _introCtrl.text = _p.getField<String>('itinerary.intro') ?? '';
-      final tp = _p.getField<String>('itinerary.thumbPath');
-      _thumb = (tp != null && tp.isNotEmpty) ? XFile(tp) : null;
-
+      // 컨테이너 가드: 활동 1개 이상만 통과
       _p.setNextGuard('itinerary', () async {
         if (_items.isEmpty) {
           _snack('활동을 1개 이상 추가해 주세요.');
           return false;
         }
-        if (_introCtrl.text.trim().isEmpty) {
-          _snack('체험 소개를 입력해 주세요.');
-          return false;
-        }
-        if (_thumb == null) {
-          _snack('썸네일 사진을 선택해 주세요.');
-          return false;
-        }
+        // 최종 저장
         _p.setFields({
           'itinerary.items': _items.map((e) => e.toMap()).toList(),
-          'itinerary.intro': _introCtrl.text.trim(),
-          'itinerary.thumbPath': _thumb!.path,
           'itinerary.count': _items.length,
+          // 소개/썸네일 키는 더 이상 사용 안 함. 필요시 완전히 비우고 싶으면 ↓ 주석 해제
+          // 'itinerary.intro': '',
+          // 'itinerary.thumbPath': '',
         });
         return true;
       });
@@ -73,32 +64,18 @@ class _StepItineraryState extends State<StepItinerary> {
   @override
   void dispose() {
     if (_guardBound) _p.setNextGuard('itinerary', null);
-    _introCtrl.dispose();
     super.dispose();
   }
 
   void _syncToProvider() {
     _p.setFields({
       'itinerary.items': _items.map((e) => e.toMap()).toList(),
-      'itinerary.intro': _introCtrl.text.trim(),
-      'itinerary.thumbPath': _thumb?.path ?? '',
       'itinerary.count': _items.length,
     });
   }
 
   void _snack(String m) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(m)));
-  }
-
-  Future<void> _pickThumb() async {
-    final x = await _picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 85,
-      maxWidth: 2000,
-    );
-    if (x == null) return;
-    setState(() => _thumb = x);
-    _syncToProvider();
   }
 
   Future<void> _openEditor({_Activity? initial, int? index}) async {
@@ -125,16 +102,11 @@ class _StepItineraryState extends State<StepItinerary> {
   }
 
   void _deleteAt(int index) {
-    setState(() {
-      _items.removeAt(index);
-      if (_items.isEmpty) {
-        _introCtrl.clear();
-        _thumb = null;
-      }
-    });
+    setState(() => _items.removeAt(index));
     _syncToProvider();
   }
 
+  // ---------------- UI ----------------
   @override
   Widget build(BuildContext context) {
     final isEmpty = _items.isEmpty;
@@ -149,6 +121,7 @@ class _StepItineraryState extends State<StepItinerary> {
             const SizedBox(height: 16),
 
             if (isEmpty)
+              // 아무 것도 없을 때는 “활동 추가하기”만
               Expanded(
                 child: Center(
                   child: SizedBox(
@@ -161,14 +134,7 @@ class _StepItineraryState extends State<StepItinerary> {
               Expanded(
                 child: ListView(
                   children: [
-                    _ThumbAndIntroLarge(
-                      thumb: _thumb,
-                      onPickThumb: _pickThumb,
-                      introController: _introCtrl,
-                      onChanged: () => _syncToProvider(),
-                    ),
-                    const SizedBox(height: 16),
-
+                    // 활동 큰 카드들
                     ...List.generate(
                       _items.length,
                       (i) => Padding(
@@ -181,7 +147,7 @@ class _StepItineraryState extends State<StepItinerary> {
                         ),
                       ),
                     ),
-
+                    // 하단 “활동 추가하기”
                     _AddCardLarge(onTap: () => _openEditor()),
                     const SizedBox(height: 8),
                   ],
@@ -213,63 +179,6 @@ class _Header extends StatelessWidget {
           style: TextStyle(color: Colors.black.withOpacity(0.6)),
         ),
       ],
-    );
-  }
-}
-
-class _ThumbAndIntroLarge extends StatelessWidget {
-  final XFile? thumb;
-  final VoidCallback onPickThumb;
-  final TextEditingController introController;
-  final VoidCallback onChanged;
-
-  const _ThumbAndIntroLarge({
-    required this.thumb,
-    required this.onPickThumb,
-    required this.introController,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: _boxDeco(),
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          // 썸네일(큼)
-          GestureDetector(
-            onTap: onPickThumb,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Container(
-                width: 96,
-                height: 96,
-                color: const Color(0xFFF1F2F5),
-                child:
-                    thumb == null
-                        ? const Icon(Icons.add_a_photo_outlined, size: 28)
-                        : Image.file(File(thumb!.path), fit: BoxFit.cover),
-              ),
-            ),
-          ),
-          const SizedBox(width: 14),
-          // 소개 입력(넓게)
-          Expanded(
-            child: TextField(
-              controller: introController,
-              minLines: 3,
-              maxLines: 5,
-              onChanged: (_) => onChanged(),
-              decoration: const InputDecoration(
-                hintText: '체험에 대한 소개를 입력하세요',
-                filled: true,
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -334,7 +243,6 @@ class _ActivityCardLarge extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              // 큰 썸네일
               ClipRRect(
                 borderRadius: BorderRadius.circular(14),
                 child:
@@ -352,8 +260,6 @@ class _ActivityCardLarge extends StatelessWidget {
                         ),
               ),
               const SizedBox(width: 14),
-
-              // 텍스트
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -387,8 +293,6 @@ class _ActivityCardLarge extends StatelessWidget {
                   ],
                 ),
               ),
-
-              // 삭제
               IconButton(
                 icon: const Icon(Icons.delete_outline),
                 onPressed: onDelete,
@@ -540,6 +444,8 @@ class _ActivityEditorState extends State<_ActivityEditor> {
     );
   }
 }
+
+// ---- model / utils ----
 
 class _Activity {
   final String id;
