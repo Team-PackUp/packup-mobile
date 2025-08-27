@@ -106,7 +106,6 @@ class _StepItineraryState extends State<StepItinerary> {
     _syncToProvider();
   }
 
-  // ---------------- UI ----------------
   @override
   Widget build(BuildContext context) {
     final isEmpty = _items.isEmpty;
@@ -120,39 +119,39 @@ class _StepItineraryState extends State<StepItinerary> {
             const _Header(),
             const SizedBox(height: 16),
 
-            if (isEmpty)
-              // 아무 것도 없을 때는 “활동 추가하기”만
-              Expanded(
-                child: Center(
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: _AddCardLarge(onTap: () => _openEditor()),
-                  ),
-                ),
-              )
-            else
-              Expanded(
-                child: ListView(
-                  children: [
-                    // 활동 큰 카드들
-                    ...List.generate(
-                      _items.length,
-                      (i) => Padding(
-                        padding: const EdgeInsets.only(bottom: 14),
-                        child: _ActivityCardLarge(
-                          data: _items[i],
-                          onTap:
-                              () => _openEditor(initial: _items[i], index: i),
-                          onDelete: () => _deleteAt(i),
-                        ),
+            Expanded(
+              child:
+                  isEmpty
+                      ? ListView(
+                        padding: EdgeInsets.zero,
+                        children: [
+                          _AddCardLarge(onTap: () => _openEditor()),
+                          const SizedBox(height: 8),
+                        ],
+                      )
+                      : ListView(
+                        padding: EdgeInsets.zero,
+                        children: [
+                          ...List.generate(
+                            _items.length,
+                            (i) => Padding(
+                              padding: const EdgeInsets.only(bottom: 14),
+                              child: _ActivityCardLarge(
+                                data: _items[i],
+                                onTap:
+                                    () => _openEditor(
+                                      initial: _items[i],
+                                      index: i,
+                                    ),
+                                onDelete: () => _deleteAt(i),
+                              ),
+                            ),
+                          ),
+                          _AddCardLarge(onTap: () => _openEditor()),
+                          const SizedBox(height: 8),
+                        ],
                       ),
-                    ),
-                    // 하단 “활동 추가하기”
-                    _AddCardLarge(onTap: () => _openEditor()),
-                    const SizedBox(height: 8),
-                  ],
-                ),
-              ),
+            ),
           ],
         ),
       ),
