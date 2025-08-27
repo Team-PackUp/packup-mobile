@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:packup/widget/guide/listing/create/step_location_address.dart';
 import 'package:packup/widget/guide/listing/create/step_location_pin.dart';
+import 'package:packup/widget/guide/listing/create/step_photos.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:packup/provider/tour/guide/listing_create_provider.dart';
@@ -36,6 +37,11 @@ class ListingCreatePage extends StatelessWidget {
                 title: '위치 확인',
                 builder: (_) => const StepLocationPin(),
               ),
+              ListingStepConfig(
+                id: 'photos',
+                title: '사진',
+                builder: (_) => const StepPhotos(),
+              ), // ✅ NEW
             ],
           ),
       child: const _Scaffold(),
@@ -66,19 +72,28 @@ class _Scaffold extends StatelessWidget {
 
 class _BottomBar extends StatelessWidget {
   const _BottomBar();
-
   @override
   Widget build(BuildContext context) {
     final p = context.watch<ListingCreateProvider>();
-    final isIntro = p.current.id == 'intro';
-    final isLocation = p.current.id == 'location';
+    final id = p.current.id;
+
     final canNextOnLocation =
         (p.getField<String>('meet.placeName')?.isNotEmpty ?? false);
+
+    final photoFiles = p.getField<List>('photos.files');
+    final localPaths = p.getField<List>('photos.localPaths');
+
+    final photoCount = (photoFiles?.length ?? localPaths?.length ?? 0);
+    final canNextOnPhotos = photoCount >= 5;
+
+    bool enabled = true;
+    if (id == 'location') enabled = canNextOnLocation;
+    if (id == 'photos') enabled = canNextOnPhotos;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child:
-          isIntro
+          id == 'intro'
               ? SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -109,10 +124,7 @@ class _BottomBar extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed:
-                          (isLocation && !canNextOnLocation)
-                              ? null
-                              : () => p.nextWithGuard(),
+                      onPressed: enabled ? () => p.nextWithGuard() : null,
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(56),
                         shape: RoundedRectangleBorder(
