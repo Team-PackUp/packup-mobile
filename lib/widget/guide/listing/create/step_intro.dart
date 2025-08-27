@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:packup/provider/tour/guide/listing_create_provider.dart';
 
 class StepIntro extends StatelessWidget {
   const StepIntro({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final p = context.read<ListingCreateProvider>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -18,7 +21,7 @@ class StepIntro extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black12,
                   blurRadius: 24,
-                  offset: const Offset(0, 12),
+                  offset: Offset(0, 12),
                 ),
               ],
             ),
@@ -42,12 +45,27 @@ class StepIntro extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            '제공하는 체험과 본인에 대해 소개해 주세요.\n'
-            'PACKUP 담당 팀에서 체험이 요건에 부합하는지 검토합니다.',
-            textAlign: TextAlign.center,
+            '제공하는 체험과 본인에 대해 소개해 주세요.\n PACKUP 담당 팀에서 요건 적합성을 검토합니다.',
             style: TextStyle(color: Colors.black.withOpacity(0.6)),
+            textAlign: TextAlign.center,
           ),
           const Spacer(),
+          // Padding(
+          //   padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          //   child: SizedBox(
+          //     width: double.infinity,
+          //     child: ElevatedButton(
+          //       onPressed: p.next,
+          //       style: ElevatedButton.styleFrom(
+          //         minimumSize: const Size.fromHeight(56),
+          //         shape: RoundedRectangleBorder(
+          //           borderRadius: BorderRadius.circular(16),
+          //         ),
+          //       ),
+          //       child: const Text('시작하기'),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
