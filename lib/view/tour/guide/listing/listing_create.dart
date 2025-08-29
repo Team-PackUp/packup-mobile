@@ -72,6 +72,16 @@ class ListingCreatePage extends StatelessWidget {
                 title: '일정표',
                 builder: (_) => const StepItinerary(),
               ),
+              ListingStepConfig(
+                id: 'price_basic',
+                title: '요금',
+                builder: (_) => const StepPriceBasic(),
+              ),
+              ListingStepConfig(
+                id: 'price_premium',
+                title: '요금',
+                builder: (_) => const StepPricePremium(),
+              ),
             ],
           ),
       child: const _Scaffold(),
@@ -107,6 +117,11 @@ class _BottomBar extends StatelessWidget {
     final p = context.watch<ListingCreateProvider>();
     final id = p.current.id;
 
+    int _int(String key) => p.getField<int>(key) ?? 0;
+    final basic = _int('pricing.basic');
+    final premium = _int('pricing.premiumMin');
+    final feeRate = p.getField<double>('pricing.feeRate') ?? 0.2; // 기본 20%
+
     final title = (p.getField<String>('basic.title') ?? '').trim();
     final desc = (p.getField<String>('basic.description') ?? '').trim();
 
@@ -130,6 +145,8 @@ class _BottomBar extends StatelessWidget {
     if (id == 'location') enabled = canNextOnLocation;
     if (id == 'photos') enabled = canNextOnPhotos;
     if (id == 'itinerary') enabled = canNextOnItinerary;
+    if (id == 'price_basic') enabled = basic > 0;
+    if (id == 'price_premium') enabled = true;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -138,7 +155,10 @@ class _BottomBar extends StatelessWidget {
               ? SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: p.next,
+                  onPressed: () {
+                    p.start();
+                    p.next();
+                  },
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(56),
                     shape: RoundedRectangleBorder(
@@ -152,14 +172,14 @@ class _BottomBar extends StatelessWidget {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: p.prev,
+                      onPressed: id == 'price_premium' ? p.next : p.prev,
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size.fromHeight(56),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      child: const Text('이전'),
+                      child: Text(id == 'price_premium' ? '건너뛰기' : '이전'),
                     ),
                   ),
                   const SizedBox(width: 12),
