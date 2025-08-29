@@ -103,27 +103,26 @@ class _BottomBar extends StatelessWidget {
     final p = context.watch<ListingCreateProvider>();
     final id = p.current.id;
 
+    final title = (p.getField<String>('basic.title') ?? '').trim();
+    final desc = (p.getField<String>('basic.description') ?? '').trim();
+
+    final canNextOnTitle = title.isNotEmpty && title.length <= 90;
+    final canNextOnDesc = desc.isNotEmpty && desc.length >= 10;
+
     final canNextOnLocation =
         (p.getField<String>('meet.placeName')?.isNotEmpty ?? false);
 
     final photoFiles = p.getField<List>('photos.files');
     final localPaths = p.getField<List>('photos.localPaths');
-
     final photoCount = (photoFiles?.length ?? localPaths?.length ?? 0);
     final canNextOnPhotos = photoCount >= 5;
-
-    // final itinCount = p.getField<int>('itinerary.count') ?? 0;
-    // final itinIntro = p.getField<String>('itinerary.intro') ?? '';
-    // final itinThumb = p.getField<String>('itinerary.thumbPath');
-    // final canNextOnItinerary =
-    //     itinCount >= 1 &&
-    //     itinIntro.trim().isNotEmpty &&
-    //     (itinThumb != null && itinThumb.isNotEmpty);
 
     final itinCount = p.getField<int>('itinerary.count') ?? 0;
     final canNextOnItinerary = itinCount >= 1;
 
     bool enabled = true;
+    if (id == 'title') enabled = canNextOnTitle;
+    if (id == 'desc') enabled = canNextOnDesc;
     if (id == 'location') enabled = canNextOnLocation;
     if (id == 'photos') enabled = canNextOnPhotos;
     if (id == 'itinerary') enabled = canNextOnItinerary;
