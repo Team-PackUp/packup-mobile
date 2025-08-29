@@ -8,6 +8,7 @@ import 'package:packup/widget/guide/listing/create/step_location_pin.dart';
 import 'package:packup/widget/guide/listing/create/step_photos.dart';
 import 'package:packup/widget/guide/listing/create/step_price_basic.dart';
 import 'package:packup/widget/guide/listing/create/step_price_premium.dart';
+import 'package:packup/widget/guide/listing/create/step_provision.dart';
 import 'package:packup/widget/guide/listing/create/step_title.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
@@ -88,6 +89,11 @@ class ListingCreatePage extends StatelessWidget {
                 id: 'provision',
                 title: '세부 정보',
                 builder: (_) => const StepProvision(),
+              ),
+              ListingStepConfig(
+                id: 'review',
+                title: '최종 검토',
+                builder: (_) => const StepReview(),
               ),
             ],
           ),
