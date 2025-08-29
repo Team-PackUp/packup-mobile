@@ -36,14 +36,6 @@ class _ProfileDetailSectionState extends State<ProfileDetailSection> {
     widget.preferenceChange(selectedPreference);
   }
 
-  String get _preferencePreview {
-    if (selectedPreference.isEmpty) return '선택된 선호 카테고리가 없습니다';
-    const maxShow = 3;
-    final shown = selectedPreference.take(maxShow).join(', ');
-    final remain = selectedPreference.length - maxShow;
-    return remain > 0 ? '$shown 외 $remain개' : shown;
-  }
-
   void _openPreferencePicker() {
     Navigator.push(
       context,
@@ -69,26 +61,10 @@ class _ProfileDetailSectionState extends State<ProfileDetailSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Align(alignment: Alignment.centerLeft, child: Text('관심사')),
-        // CategoryFilter<String>(
-        //   items: categories,
-        //   initialSelectedItems: selectedInterests,
-        //   labelBuilder: (c) => c,
-        //   mode: SelectionMode.multiple,
-        //   onSelectionChanged: (selectedCats) {
-        //     setState(() {
-        //       selectedInterests = selectedCats.map((c) => c.trim()).toList();
-        //       _emitPreference();
-        //     });
-        //   },
-        // ),
-
-        SizedBox(height: h * 0.02),
-
         ProfilePreferenceCard(
-          subtitle: _preferencePreview,
-          onTap: _openPreferencePicker,
-        ),
+            subtitle: selectedPreference,
+            onTap: _openPreferencePicker,
+          ),
       ],
     );
   }
