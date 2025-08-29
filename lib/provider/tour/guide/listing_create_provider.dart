@@ -71,6 +71,14 @@ class ListingCreateProvider extends ChangeNotifier {
     }
   }
 
+  void jumpTo(String stepId) {
+    final i = steps.indexWhere((e) => e.id == stepId);
+    if (i >= 0 && i != _index) {
+      _index = i;
+      notifyListeners();
+    }
+  }
+
   Future<void> nextWithGuard() async {
     final guard = _nextGuards[currentId];
     if (guard != null) {

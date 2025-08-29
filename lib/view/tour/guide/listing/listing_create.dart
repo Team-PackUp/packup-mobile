@@ -9,6 +9,7 @@ import 'package:packup/widget/guide/listing/create/step_photos.dart';
 import 'package:packup/widget/guide/listing/create/step_price_basic.dart';
 import 'package:packup/widget/guide/listing/create/step_price_premium.dart';
 import 'package:packup/widget/guide/listing/create/step_provision.dart';
+import 'package:packup/widget/guide/listing/create/step_review.dart';
 import 'package:packup/widget/guide/listing/create/step_title.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
@@ -125,6 +126,7 @@ class _Scaffold extends StatelessWidget {
 
 class _BottomBar extends StatelessWidget {
   const _BottomBar();
+
   @override
   Widget build(BuildContext context) {
     final p = context.watch<ListingCreateProvider>();
@@ -132,17 +134,14 @@ class _BottomBar extends StatelessWidget {
 
     int _int(String key) => p.getField<int>(key) ?? 0;
     final basic = _int('pricing.basic');
-    final premium = _int('pricing.premiumMin');
-    final feeRate = p.getField<double>('pricing.feeRate') ?? 0.2;
 
     bool? v1 = p.getField<bool>('provision.visitAttractions');
     bool? v2 = p.getField<bool>('provision.explainHistory');
     bool? v3 = p.getField<bool>('provision.driveGuests');
-    final canSubmit = v1 != null && v2 != null && v3 != null;
+    final canSubmitProvision = v1 != null && v2 != null && v3 != null;
 
     final title = (p.getField<String>('basic.title') ?? '').trim();
     final desc = (p.getField<String>('basic.description') ?? '').trim();
-
     final canNextOnTitle = title.isNotEmpty && title.length <= 90;
     final canNextOnDesc = desc.isNotEmpty && desc.length >= 10;
 
@@ -157,6 +156,15 @@ class _BottomBar extends StatelessWidget {
     final itinCount = p.getField<int>('itinerary.count') ?? 0;
     final canNextOnItinerary = itinCount >= 1;
 
+    final canSubmitReview =
+        canNextOnTitle &&
+        canNextOnDesc &&
+        canNextOnLocation &&
+        canNextOnPhotos &&
+        canNextOnItinerary &&
+        basic > 0 &&
+        canSubmitProvision;
+
     bool enabled = true;
     if (id == 'title') enabled = canNextOnTitle;
     if (id == 'desc') enabled = canNextOnDesc;
@@ -165,7 +173,13 @@ class _BottomBar extends StatelessWidget {
     if (id == 'itinerary') enabled = canNextOnItinerary;
     if (id == 'price_basic') enabled = basic > 0;
     if (id == 'price_premium') enabled = true;
-    if (id == 'provision') enabled = canSubmit;
+    if (id == 'provision') enabled = canSubmitProvision;
+    if (id == 'review') enabled = canSubmitReview;
+
+    Future<void> _handleSubmit() async {
+      // TODO: API 연동 (p.form 에 모든 데이터 존재)
+      if (context.mounted) Navigator.of(context).pop(true);
+    }
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -191,6 +205,7 @@ class _BottomBar extends StatelessWidget {
                 children: [
                   Expanded(
                     child: OutlinedButton(
+                      // 프리미엄 요금은 '건너뛰기'
                       onPressed: id == 'price_premium' ? p.next : p.prev,
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size.fromHeight(56),
@@ -204,14 +219,20 @@ class _BottomBar extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: enabled ? () => p.nextWithGuard() : null,
+                      onPressed:
+                          enabled
+                              ? () =>
+                                  (id == 'review'
+                                      ? _handleSubmit()
+                                      : p.nextWithGuard())
+                              : null,
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(56),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      child: Text(id == 'provision' ? '제출' : '다음'),
+                      child: Text(id == 'review' ? '검토를 위해 제출' : '다음'),
                     ),
                   ),
                 ],
