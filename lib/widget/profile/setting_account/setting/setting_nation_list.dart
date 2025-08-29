@@ -18,6 +18,7 @@ class SettingNationList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       itemCount: items.length,
       separatorBuilder: (_, __) => SizedBox(height: itemSpacing),
       itemBuilder: (context, i) {

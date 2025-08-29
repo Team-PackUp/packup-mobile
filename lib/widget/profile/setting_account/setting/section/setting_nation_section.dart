@@ -80,39 +80,42 @@ class _SettingNationSectionState extends State<SettingNationSection> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // 검색창
-              CustomSearch(
-                mode: SearchMode.input,
-                hint: '국가 또는 지역 검색…',
-                onChanged: (v) => setState(() => _query = v),
-              ),
-              const SizedBox(height: 12),
-
-              // 리스트
-              Expanded(
-                child: SettingNationList(
-                  items: _filtered,
-                  selectedCode: _selectedCode,
-                  onChanged: (code) => setState(() => _selectedCode = code),
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // 검색창
+                CustomSearch(
+                  mode: SearchMode.input,
+                  hint: '국가 또는 지역 검색…',
+                  onChanged: (v) => setState(() => _query = v),
                 ),
-              ),
+                const SizedBox(height: 12),
 
-              const SizedBox(height: 8),
-              SizedBox(
-                height: 48,
-                child: CustomButton.textButton(
-                  context: context,
-                  onPressed: () {
-                    _selectedCode == _initialCode ? null : updateNation();
-                  },
-                  label: '저장하기',
-                  backgroundColor: PRIMARY_COLOR,
+                // 리스트
+                Expanded(
+                  child: SettingNationList(
+                    items: _filtered,
+                    selectedCode: _selectedCode,
+                    onChanged: (code) => setState(() => _selectedCode = code),
+                  ),
                 ),
-              ),
-            ],
+
+                const SizedBox(height: 8),
+                SizedBox(
+                  height: 48,
+                  child: CustomButton.textButton(
+                    context: context,
+                    onPressed: () {
+                      _selectedCode == _initialCode ? null : updateNation();
+                    },
+                    label: '저장하기',
+                    backgroundColor: PRIMARY_COLOR,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
