@@ -14,7 +14,6 @@ import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
 import 'package:packup/view/menu/guide_menu.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
-import 'package:packup/view/profile/profile_index.dart';
 import 'package:packup/view/profile/profile_modify/profile_modify.dart';
 import 'package:packup/view/profile/setting_account/reservation_manage/reservation_manage.dart';
 import 'package:packup/view/profile/setting_account/setting/setting_index.dart';
