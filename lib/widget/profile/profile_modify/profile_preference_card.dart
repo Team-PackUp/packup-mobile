@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../common/category_filter.dart';
+
 class ProfilePreferenceCard extends StatelessWidget {
   const ProfilePreferenceCard({
     super.key,
@@ -9,47 +11,50 @@ class ProfilePreferenceCard extends StatelessWidget {
   });
 
   final VoidCallback onTap;
-  final String subtitle;
+  final List<String> subtitle;
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.black12),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.interests_outlined),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+        side: const BorderSide(color: Colors.black12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Row(
                   children: [
-                    const Text(
-                      '선호 카테고리 선택',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                    const Expanded(
+                      child: Text(
+                        '개인 취향',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(fontSize: 13, color: Colors.black54),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    const Icon(Icons.chevron_right_rounded),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded),
-            ],
-          ),
+            ),
+            const SizedBox(height: 12),
+            CategoryFilter<String>(
+              items: subtitle,
+              labelBuilder: (c) => c,
+              mode: SelectionMode.multiple,
+              readOnly: true,
+            ),
+          ],
         ),
       ),
     );

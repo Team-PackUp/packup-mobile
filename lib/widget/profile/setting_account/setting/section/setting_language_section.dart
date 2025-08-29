@@ -29,8 +29,7 @@ class _SettingLanguageSectionState extends State<SettingLanguageSection> {
 
   late String _selectedCode;
   late String _initialCode;
-  bool _syncedOnce = false; // userModel이 늦게 들어올 때 1회 동기화용
-  bool _submitting = false;
+  bool _syncedOnce = false;
 
   @override
   void initState() {

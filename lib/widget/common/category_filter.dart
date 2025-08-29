@@ -9,7 +9,7 @@ class CategoryFilter<T> extends StatefulWidget {
   final String Function(T item) labelBuilder;
   final Widget? Function(T item)? emojiBuilder;
   final SelectionMode mode;
-  final void Function(List<T> selectedItems) onSelectionChanged;
+  final void Function(List<T> selectedItems)? onSelectionChanged;
   final bool allowDeselectInSingle;
 
   final bool readOnly;
@@ -18,7 +18,7 @@ class CategoryFilter<T> extends StatefulWidget {
     super.key,
     required this.items,
     required this.labelBuilder,
-    required this.onSelectionChanged,
+    this.onSelectionChanged,
     this.emojiBuilder,
     this.initialSelectedItems,
     this.mode = SelectionMode.multiple,
@@ -68,7 +68,7 @@ class _CategoryFilterState<T> extends State<CategoryFilter<T>> {
       });
 
       final chosen = _selected.map((i) => widget.items[i]).toList();
-      widget.onSelectionChanged(chosen);
+      widget.onSelectionChanged!(chosen);
       return;
     }
 
@@ -81,7 +81,7 @@ class _CategoryFilterState<T> extends State<CategoryFilter<T>> {
     });
 
     final chosen = _selected.map((i) => widget.items[i]).toList();
-    widget.onSelectionChanged(chosen);
+    widget.onSelectionChanged!(chosen);
   }
 
   @override

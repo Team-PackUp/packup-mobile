@@ -76,61 +76,76 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
   Widget build(BuildContext context) {
     final screenH = MediaQuery.of(context).size.height;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextField(
-          controller: nickNameController,
-          decoration: const InputDecoration(
-            labelText: '닉네임',
-            border: OutlineInputBorder(),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300, width: 1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "기본 정보",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          onChanged: (_) => _emitChange(),
-        ),
-        SizedBox(height: screenH * 0.02),
+          SizedBox(height: 18),
+          TextField(
+            controller: nickNameController,
+            decoration: const InputDecoration(
+              labelText: '닉네임',
+              border: OutlineInputBorder(),
+            ),
+            onChanged: (_) => _emitChange(),
+          ),
+          SizedBox(height: 18),
 
-        const Text("생년월일"),
-        CustomBirthInput(
-          initialDate: birth,
-          onDateChanged: (val) {
-            setState(() {
-              birth = val;
-            });
-            _emitChange();
-          },
-        ),
+          const Text("생년월일"),
+          CustomBirthInput(
+            initialDate: birth,
+            onDateChanged: (val) {
+              setState(() {
+                birth = val;
+              });
+              _emitChange();
+            },
+          ),
 
-        SizedBox(height: screenH * 0.02),
-        GestureDetector(
-          onTap: () {
-            final initialIndex = genderOptions.indexWhere((e) => e.code == selectedGenderCode);
-            showCustomPicker(
-              context,
-              selectedIndex: initialIndex >= 0 ? initialIndex : 0,
-              options: genderOptions.map((e) => e.label).toList(),
-              onSelected: (index) {
-                setState(() {
-                  selectedGenderCode = genderOptions[index].code;
-                  genderController.text = genderOptions[index].label;
-                });
-                _emitChange();
-              },
-            );
-          },
-          child: AbsorbPointer(
-            child: TextFormField(
-              readOnly: true,
-              controller: genderController,
-              decoration: const InputDecoration(
-                labelText: '성별',
-                border: OutlineInputBorder(),
-                suffixIcon: Icon(Icons.arrow_drop_down),
+          SizedBox(height: 32),
+          GestureDetector(
+            onTap: () {
+              final initialIndex = genderOptions.indexWhere((e) => e.code == selectedGenderCode);
+              showCustomPicker(
+                context,
+                selectedIndex: initialIndex >= 0 ? initialIndex : 0,
+                options: genderOptions.map((e) => e.label).toList(),
+                onSelected: (index) {
+                  setState(() {
+                    selectedGenderCode = genderOptions[index].code;
+                    genderController.text = genderOptions[index].label;
+                  });
+                  _emitChange();
+                },
+              );
+            },
+            child: AbsorbPointer(
+              child: TextFormField(
+                readOnly: true,
+                controller: genderController,
+                decoration: const InputDecoration(
+                  labelText: '성별',
+                  border: OutlineInputBorder(),
+                  suffixIcon: Icon(Icons.arrow_drop_down),
+                ),
               ),
             ),
           ),
-        ),
-        SizedBox(height: screenH * 0.02),
-      ],
+          SizedBox(height: screenH * 0.02),
+        ],
+      ),
     );
   }
 }
