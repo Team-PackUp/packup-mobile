@@ -6,6 +6,8 @@ import 'package:packup/widget/guide/listing/create/step_itinerary.dart';
 import 'package:packup/widget/guide/listing/create/step_location_address.dart';
 import 'package:packup/widget/guide/listing/create/step_location_pin.dart';
 import 'package:packup/widget/guide/listing/create/step_photos.dart';
+import 'package:packup/widget/guide/listing/create/step_price_basic.dart';
+import 'package:packup/widget/guide/listing/create/step_price_premium.dart';
 import 'package:packup/widget/guide/listing/create/step_title.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
@@ -81,6 +83,11 @@ class ListingCreatePage extends StatelessWidget {
                 id: 'price_premium',
                 title: '요금',
                 builder: (_) => const StepPricePremium(),
+              ),
+              ListingStepConfig(
+                id: 'provision',
+                title: '세부 정보',
+                builder: (_) => const StepProvision(),
               ),
             ],
           ),
