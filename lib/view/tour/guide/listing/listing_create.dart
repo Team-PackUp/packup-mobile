@@ -24,6 +24,26 @@ class ListingCreatePage extends StatelessWidget {
                 builder: (ctx) => const StepIntro(),
               ),
               ListingStepConfig(
+                id: 'title',
+                title: '투어 제목',
+                builder: (_) => const StepTitle(),
+              ),
+              ListingStepConfig(
+                id: 'desc',
+                title: '투어 소개',
+                builder: (_) => const StepDesc(),
+              ),
+              ListingStepConfig(
+                id: 'include',
+                title: '포함되는 항목',
+                builder: (_) => const StepInclude(),
+              ),
+              ListingStepConfig(
+                id: 'exclude',
+                title: '포함되지 않는 항목',
+                builder: (_) => const StepExclude(),
+              ),
+              ListingStepConfig(
                 id: 'location',
                 title: '장소',
                 builder: (ctx) => const StepLocationSearch(),
