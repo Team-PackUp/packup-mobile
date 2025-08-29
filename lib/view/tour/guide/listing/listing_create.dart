@@ -127,7 +127,12 @@ class _BottomBar extends StatelessWidget {
     int _int(String key) => p.getField<int>(key) ?? 0;
     final basic = _int('pricing.basic');
     final premium = _int('pricing.premiumMin');
-    final feeRate = p.getField<double>('pricing.feeRate') ?? 0.2; // 기본 20%
+    final feeRate = p.getField<double>('pricing.feeRate') ?? 0.2;
+
+    bool? v1 = p.getField<bool>('provision.visitAttractions');
+    bool? v2 = p.getField<bool>('provision.explainHistory');
+    bool? v3 = p.getField<bool>('provision.driveGuests');
+    final canSubmit = v1 != null && v2 != null && v3 != null;
 
     final title = (p.getField<String>('basic.title') ?? '').trim();
     final desc = (p.getField<String>('basic.description') ?? '').trim();
@@ -154,6 +159,7 @@ class _BottomBar extends StatelessWidget {
     if (id == 'itinerary') enabled = canNextOnItinerary;
     if (id == 'price_basic') enabled = basic > 0;
     if (id == 'price_premium') enabled = true;
+    if (id == 'provision') enabled = canSubmit;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -199,7 +205,7 @@ class _BottomBar extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      child: const Text('다음'),
+                      child: Text(id == 'provision' ? '제출' : '다음'),
                     ),
                   ),
                 ],

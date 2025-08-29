@@ -1,4 +1,3 @@
-// lib/widget/guide/listing/create/step_itinerary.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,7 +17,6 @@ class _StepItineraryState extends State<StepItinerary> {
 
   final _picker = ImagePicker();
 
-  // 활동 리스트만 관리 (소개/썸네일 제거)
   final List<_Activity> _items = [];
 
   @override
@@ -27,7 +25,6 @@ class _StepItineraryState extends State<StepItinerary> {
     _p = context.read<ListingCreateProvider>();
 
     if (!_initialized) {
-      // 프리필: 중복 방지 위해 clear 후 addAll
       final raw = _p.getField<List>('itinerary.items') ?? const [];
       final saved =
           raw
@@ -39,19 +36,14 @@ class _StepItineraryState extends State<StepItinerary> {
         ..clear()
         ..addAll(saved);
 
-      // 컨테이너 가드: 활동 1개 이상만 통과
       _p.setNextGuard('itinerary', () async {
         if (_items.isEmpty) {
           _snack('활동을 1개 이상 추가해 주세요.');
           return false;
         }
-        // 최종 저장
         _p.setFields({
           'itinerary.items': _items.map((e) => e.toMap()).toList(),
           'itinerary.count': _items.length,
-          // 소개/썸네일 키는 더 이상 사용 안 함. 필요시 완전히 비우고 싶으면 ↓ 주석 해제
-          // 'itinerary.intro': '',
-          // 'itinerary.thumbPath': '',
         });
         return true;
       });

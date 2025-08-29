@@ -1,4 +1,3 @@
-// step_price_premium.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:packup/common/util.dart';
