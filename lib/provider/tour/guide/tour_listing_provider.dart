@@ -7,8 +7,8 @@ class TourListingProvider extends LoadingProvider {
   final TourService _tourService = TourService();
 
   final List<TourListingModel> _items = [];
-  int _totalPage = 1; // 서버 totalPages
-  int _curPage = 0; // 클라이언트가 마지막으로 받은 현재 페이지(1-based). 0 = 아직 없음.
+  int _totalPage = 1;
+  int _curPage = 0;
 
   List<TourListingModel> get items => _items;
   bool get loading => isLoading;
@@ -22,8 +22,15 @@ class TourListingProvider extends LoadingProvider {
     await handleLoading(() async {
       final res = await _tourService.getMyListings(page: nextPage, size: 20);
 
+      final Map<String, dynamic> raw = Map<String, dynamic>.from(res.response);
+      final adapted = <String, dynamic>{
+        'objectList': (raw['objectList'] ?? raw['content'] ?? []) as List,
+        'curPage': raw['curPage'] ?? raw['page'] ?? 1,
+        'totalPage': raw['totalPage'] ?? raw['totalPages'] ?? 1,
+      };
+
       final page = PageModel<TourListingModel>.fromJson(
-        res.response,
+        adapted,
         (e) => TourListingModel.fromJson(e),
       );
 
@@ -36,15 +43,28 @@ class TourListingProvider extends LoadingProvider {
   }
 
   Future<void> refresh() async {
+    print('refresh called');
     if (loading) return;
-    await handleLoading(() async {
-      _items.clear();
-      _curPage = 0;
-      _totalPage = 1;
-      notifyListeners();
-      await fetchNext();
-    });
+
+    _items.clear();
+    _curPage = 0;
+    _totalPage = 1;
+    notifyListeners();
+
+    await fetchNext();
   }
+
+  // Future<void> refresh() async {
+  //   if (loading) return;
+
+  //   await handleLoading(() async {
+  //     _items.clear();
+  //     _curPage = 0;
+  //     _totalPage = 1;
+  //     notifyListeners();
+  //     await fetchNext();
+  //   });
+  // }
 
   void reset() {
     _items.clear();
