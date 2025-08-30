@@ -6,8 +6,9 @@ class TourListingModel {
   final int id;
   final String titleKo;
   final String? titleEn;
-  final String categoryKo;
-  final String? categoryEn;
+  final List<String> tourKeywords;
+  // final String categoryKo;
+  // final String? categoryEn;
   final String? coverImagePath;
   final DateTime? startDate;
 
@@ -18,8 +19,9 @@ class TourListingModel {
     required this.id,
     required this.titleKo,
     this.titleEn,
-    required this.categoryKo,
-    this.categoryEn,
+    required this.tourKeywords,
+    // required this.categoryKo,
+    // this.categoryEn,
     this.coverImagePath,
     this.startDate,
     this.statusCode,
@@ -36,8 +38,12 @@ class TourListingModel {
       id: j['id'] as int,
       titleKo: (j['titleKo'] ?? j['title'] ?? '') as String,
       titleEn: j['titleEn'] as String?,
-      categoryKo: (j['categoryKo'] ?? j['categoryNameKo'] ?? '') as String,
-      categoryEn: j['categoryEn'] ?? j['categoryNameEn'] as String?,
+      tourKeywords:
+          (j['tourKeywords'] as List<dynamic>? ?? [])
+              .map((e) => e.toString())
+              .toList(),
+      // categoryKo: (j['categoryKo'] ?? j['categoryNameKo'] ?? '') as String,
+      // categoryEn: j['categoryEn'] ?? j['categoryNameEn'] as String?,
       coverImagePath: j['coverImagePath'] as String?,
       startDate: j['startDate'] != null ? DateTime.parse(j['startDate']) : null,
       statusCode: normalizedCode,
