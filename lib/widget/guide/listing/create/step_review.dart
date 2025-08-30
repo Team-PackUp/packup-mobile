@@ -12,7 +12,6 @@ class StepReview extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = context.watch<ListingCreateProvider>();
 
-    // ── 기본 데이터
     final title = (p.getField<String>('basic.title') ?? '').trim();
     final desc = (p.getField<String>('basic.description') ?? '').trim();
 
@@ -29,13 +28,15 @@ class StepReview extends StatelessWidget {
     final basicPrice = p.getField<int>('pricing.basic') ?? 0;
     final premiumMin = p.getField<int>('pricing.premiumMin') ?? 0;
 
+    final keywords =
+        (p.getField<List>('keywords.selected') ?? const []).cast<String>();
+
     bool? a = p.getField<bool>('provision.visitAttractions');
     bool? b = p.getField<bool>('provision.explainHistory');
     bool? c = p.getField<bool>('provision.driveGuests');
 
     String yn(bool? v) => v == null ? '미응답' : (v ? '예' : '아니요');
 
-    // ── UI
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
@@ -56,6 +57,16 @@ class StepReview extends StatelessWidget {
             _CoverCard(coverPath: cover, title: title, desc: desc),
 
             const SizedBox(height: 16),
+            _SectionDivider(),
+
+            _NavTile(
+              icon: Icons.tag_outlined,
+              title: '키워드',
+              subtitle: keywords.isEmpty ? '선택되지 않음' : keywords.join(', '),
+              onTap:
+                  () =>
+                      context.read<ListingCreateProvider>().jumpTo('keywords'),
+            ),
             _SectionDivider(),
 
             _NavTile(
@@ -145,7 +156,6 @@ class _CoverCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-          // 안전한 이미지 로딩 (초고해상도 디코딩 방지)
           if (hasImage)
             _SafeImage(path: coverPath as String)
           else
@@ -186,7 +196,6 @@ class _CoverCard extends StatelessWidget {
   }
 }
 
-// 아이템 섹션 타일
 class _NavTile extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -234,7 +243,6 @@ class _SectionDivider extends StatelessWidget {
       const Divider(height: 20, thickness: 1, color: Color(0xFFECECEC));
 }
 
-// ▷ 고해상도 로컬/네트워크 이미지 안전 로더
 class _SafeImage extends StatelessWidget {
   final String path;
   const _SafeImage({required this.path});
@@ -247,21 +255,16 @@ class _SafeImage extends StatelessWidget {
     if (isNetwork) {
       provider = NetworkImage(path);
     } else if (!kIsWeb && (path.startsWith('/') || path.startsWith('file:'))) {
-      // FileImage에 cacheWidth로 디코딩 부담 감소 (iOS/Android)
       provider = FileImage(File(path));
     } else {
-      // 혹시 모를 케이스 (asset 등) 대비
       provider = AssetImage(path);
     }
 
-    // SizedBox로 고정 높이, BoxFit.cover
     return Image(
       image: provider,
       height: 180,
       width: double.infinity,
       fit: BoxFit.cover,
-      // 큰 이미지를 바로 디코딩할 때 발생하는 멈춤을 줄이기 위해
-      // frameBuilder로 첫 프레임 전 상태를 부드럽게 처리
       frameBuilder: (ctx, child, frame, wasSync) {
         if (wasSync || frame != null) return child;
         return Container(

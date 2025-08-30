@@ -3,6 +3,7 @@ import 'package:packup/widget/guide/listing/create/step_desc.dart';
 import 'package:packup/widget/guide/listing/create/step_exclude.dart';
 import 'package:packup/widget/guide/listing/create/step_include.dart';
 import 'package:packup/widget/guide/listing/create/step_itinerary.dart';
+import 'package:packup/widget/guide/listing/create/step_keywords.dart';
 import 'package:packup/widget/guide/listing/create/step_location_address.dart';
 import 'package:packup/widget/guide/listing/create/step_location_pin.dart';
 import 'package:packup/widget/guide/listing/create/step_photos.dart';
@@ -30,6 +31,11 @@ class ListingCreatePage extends StatelessWidget {
                 id: 'intro',
                 title: '리스팅 등록',
                 builder: (ctx) => const StepIntro(),
+              ),
+              ListingStepConfig(
+                id: 'keywords',
+                title: '키워드',
+                builder: (_) => const StepKeywords(),
               ),
               ListingStepConfig(
                 id: 'title',
@@ -140,6 +146,9 @@ class _BottomBar extends StatelessWidget {
     bool? v3 = p.getField<bool>('provision.driveGuests');
     final canSubmitProvision = v1 != null && v2 != null && v3 != null;
 
+    final keywords = (p.getField<List>('keywords.selected') ?? const []);
+    final canNextOnKeywords = keywords.isNotEmpty;
+
     final title = (p.getField<String>('basic.title') ?? '').trim();
     final desc = (p.getField<String>('basic.description') ?? '').trim();
     final canNextOnTitle = title.isNotEmpty && title.length <= 90;
@@ -157,6 +166,7 @@ class _BottomBar extends StatelessWidget {
     final canNextOnItinerary = itinCount >= 1;
 
     final canSubmitReview =
+        canNextOnKeywords &&
         canNextOnTitle &&
         canNextOnDesc &&
         canNextOnLocation &&
@@ -166,6 +176,7 @@ class _BottomBar extends StatelessWidget {
         canSubmitProvision;
 
     bool enabled = true;
+    if (id == 'keywords') enabled = canNextOnKeywords;
     if (id == 'title') enabled = canNextOnTitle;
     if (id == 'desc') enabled = canNextOnDesc;
     if (id == 'location') enabled = canNextOnLocation;
@@ -175,11 +186,6 @@ class _BottomBar extends StatelessWidget {
     if (id == 'price_premium') enabled = true;
     if (id == 'provision') enabled = canSubmitProvision;
     if (id == 'review') enabled = canSubmitReview;
-
-    Future<void> _handleSubmit() async {
-      // TODO: API 연동 (p.form 에 모든 데이터 존재)
-      if (context.mounted) Navigator.of(context).pop(true);
-    }
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -221,10 +227,31 @@ class _BottomBar extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed:
                           enabled
-                              ? () =>
-                                  (id == 'review'
-                                      ? _handleSubmit()
-                                      : p.nextWithGuard())
+                              ? () async {
+                                if (id == 'review') {
+                                  final ok = await p.submit();
+                                  if (!context.mounted) return;
+
+                                  if (ok) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('리스팅이 제출되었습니다.'),
+                                      ),
+                                    );
+                                    Navigator.of(context).pop(true);
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          '제출 실패: ${p.submitError ?? '알 수 없는 오류'}',
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                } else {
+                                  await p.nextWithGuard();
+                                }
+                              }
                               : null,
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(56),

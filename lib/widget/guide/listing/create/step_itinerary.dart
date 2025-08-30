@@ -60,9 +60,13 @@ class _StepItineraryState extends State<StepItinerary> {
   }
 
   void _syncToProvider() {
+    final serialized = <Map<String, dynamic>>[];
+    for (var i = 0; i < _items.length; i++) {
+      serialized.add(_items[i].toMap(order: i + 1)); // ← order 부여
+    }
     _p.setFields({
-      'itinerary.items': _items.map((e) => e.toMap()).toList(),
-      'itinerary.count': _items.length,
+      'itinerary.items': serialized,
+      'itinerary.count': serialized.length,
     });
   }
 
@@ -453,21 +457,47 @@ class _Activity {
     this.photoPath,
   }) : id = id ?? UniqueKey().toString();
 
-  Map<String, dynamic> toMap() => {
-    'id': id,
-    'title': title,
-    'minutes': minutes,
-    'note': note,
-    'photoPath': photoPath,
-  };
+  Map<String, dynamic> toMap({int? order}) {
+    final map = <String, dynamic>{
+      'order': order,
+      'title': title,
+      'intro': note,
+      'durationMin': minutes,
+      'thumbs': photoPath == null ? <String>[] : <String>[photoPath!],
+      'id': id,
+      'minutes': minutes,
+      'note': note,
+      'photoPath': photoPath,
+    };
+    map.removeWhere((k, v) => v == null);
+    return map;
+  }
 
-  factory _Activity.fromMap(Map<String, dynamic> m) => _Activity(
-    id: m['id'] as String?,
-    title: m['title'] as String,
-    minutes: m['minutes'] as int,
-    note: m['note'] as String?,
-    photoPath: m['photoPath'] as String?,
-  );
+  factory _Activity.fromMap(Map<String, dynamic> m) {
+    final t = (m['title'] ?? m['activityTitle'])?.toString() ?? '';
+    final minutes =
+        (m['durationMin'] ?? m['activityDurationMinute'] ?? m['minutes'])
+            as int? ??
+        60;
+    final note =
+        (m['intro'] ?? m['activityIntroduce'] ?? m['note'])?.toString();
+    String? photo;
+
+    final thumbs = (m['thumbs'] ?? m['thumbnailUrls']) as List?;
+    if (thumbs != null && thumbs.isNotEmpty) {
+      photo = thumbs.first?.toString();
+    } else {
+      photo = m['photoPath']?.toString();
+    }
+
+    return _Activity(
+      id: m['id']?.toString(),
+      title: t,
+      minutes: minutes,
+      note: note,
+      photoPath: photo,
+    );
+  }
 }
 
 BoxDecoration _boxDeco() => BoxDecoration(
