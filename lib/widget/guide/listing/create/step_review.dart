@@ -196,7 +196,6 @@ class _CoverCard extends StatelessWidget {
   }
 }
 
-// 아이템 섹션 타일
 class _NavTile extends StatelessWidget {
   final IconData icon;
   final String title;

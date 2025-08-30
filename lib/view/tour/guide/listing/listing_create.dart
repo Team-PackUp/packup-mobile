@@ -187,11 +187,6 @@ class _BottomBar extends StatelessWidget {
     if (id == 'provision') enabled = canSubmitProvision;
     if (id == 'review') enabled = canSubmitReview;
 
-    Future<void> _handleSubmit() async {
-      // TODO: API 연동 (p.form 에 모든 데이터 존재)
-      if (context.mounted) Navigator.of(context).pop(true);
-    }
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child:
@@ -232,10 +227,31 @@ class _BottomBar extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed:
                           enabled
-                              ? () =>
-                                  (id == 'review'
-                                      ? _handleSubmit()
-                                      : p.nextWithGuard())
+                              ? () async {
+                                if (id == 'review') {
+                                  final ok = await p.submit();
+                                  if (!context.mounted) return;
+
+                                  if (ok) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('리스팅이 제출되었습니다.'),
+                                      ),
+                                    );
+                                    Navigator.of(context).pop(true);
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          '제출 실패: ${p.submitError ?? '알 수 없는 오류'}',
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                } else {
+                                  await p.nextWithGuard();
+                                }
+                              }
                               : null,
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(56),
