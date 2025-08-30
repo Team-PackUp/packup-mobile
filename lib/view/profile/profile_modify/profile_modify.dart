@@ -154,7 +154,7 @@ class _ProfileModifyState extends State<ProfileModify> {
     }
 
     if (newBirth.isEmpty) {
-      CustomSnackBar.showResult(context, "나이를 입력해주세요");
+      CustomSnackBar.showResult(context, "생년월일 입력해주세요");
       return false;
     }
     if (newGender.isEmpty) {

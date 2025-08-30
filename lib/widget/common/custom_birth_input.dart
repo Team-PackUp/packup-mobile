@@ -64,9 +64,26 @@ class _CustomBirthInputState extends State<CustomBirthInput> {
   }
 
   void _emitIfValid() {
-    final y = int.tryParse(yearController.text);
-    final m = int.tryParse(monthController.text);
-    final d = int.tryParse(dayController.text);
+    final yStr = yearController.text.trim();
+    final mStr = monthController.text.trim();
+    final dStr = dayController.text.trim();
+
+    if (yStr.isEmpty) {
+      widget.onDateChanged(null);
+      return;
+    }
+    if (mStr.isEmpty) {
+      widget.onDateChanged(null);
+      return;
+    }
+    if (dStr.isEmpty) {
+      widget.onDateChanged(null);
+      return;
+    }
+
+    final y = int.tryParse(yStr);
+    final m = int.tryParse(mStr);
+    final d = int.tryParse(dStr);
 
     DateTime? value;
 

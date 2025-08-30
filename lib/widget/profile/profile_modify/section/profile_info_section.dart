@@ -25,6 +25,8 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
   String selectedGenderCode = '';
   String selectedLanguageCode = '';
 
+  final FocusNode _noopFocus = FocusNode(debugLabel: 'noop');
+
   final List<CodeMappingModel> genderOptions = [
     CodeMappingModel(code: '020001', label: '남성'),
     CodeMappingModel(code: '020002', label: '여성'),
@@ -60,7 +62,7 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
     widget.detailInfoChange(
       nickNameController.text,
       selectedLanguageCode,
-      convertToYmd(birth!),
+      birth == null ? "" : convertToYmd(birth!),
       selectedGenderCode,
     );
   }
@@ -69,6 +71,7 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
   void dispose() {
     nickNameController.dispose();
     genderController.dispose();
+    _noopFocus.dispose();
     super.dispose();
   }
 
@@ -85,6 +88,12 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Focus(
+            focusNode: _noopFocus,
+            skipTraversal: true,
+            descendantsAreFocusable: false,
+            child: const SizedBox.shrink(),
+          ),
           Text(
             "기본 정보",
             style: TextStyle(
@@ -130,6 +139,9 @@ class _ProfileInfoSectionState extends State<ProfileInfoSection> {
                   _emitChange();
                 },
               );
+              if (!mounted) return;
+              FocusScope.of(context).requestFocus(_noopFocus);
+
             },
             child: AbsorbPointer(
               child: TextFormField(
