@@ -36,9 +36,9 @@ class _ProfileModifyState extends State<ProfileModify> {
 
     final user = context.read<UserProvider>().userModel!;
     newNickName = user.nickname ?? '';
-    newLanguage = user.userLanguage ?? '';
-    newGender   = user.userGender ?? '';
-    newBirth    = user.userBirth  ?? '';
+    newLanguage = user.userLanguage;
+    newGender   = user.userGender;
+    newBirth    = user.userBirth;
     selectedCategories = List<String>.from(user.preferCategorySeqJson ?? []);
   }
 

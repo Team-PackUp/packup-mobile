@@ -71,7 +71,6 @@ class _SettingNationSectionState extends State<SettingNationSection> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
 
     final user = context.watch<UserProvider>().userModel;
     if (user == null) return const SizedBox.shrink();
