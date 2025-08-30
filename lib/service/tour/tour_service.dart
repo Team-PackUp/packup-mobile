@@ -22,9 +22,10 @@ class TourService {
     await DioService().postRequest(url, body);
   }
 
-  Future<ResultModel> getMyListings(int page) async {
-    final data = {'page': page};
-    return await DioService().getRequest('/tour/me/listings', data);
+  Future<ResultModel> getMyListings({required int page, int size = 20}) async {
+    final params = {'page': page, 'size': size};
+
+    return await DioService().getRequest('/tour/me/listings', params);
   }
 
   Future<void> createTourReq(TourCreateRequest req) async {
