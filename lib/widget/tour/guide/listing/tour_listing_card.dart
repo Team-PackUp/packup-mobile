@@ -76,20 +76,37 @@ class TourListingCard extends StatelessWidget {
             const SizedBox(height: 8),
 
             // 카테고리
-            if (item.categoryKo.isNotEmpty ||
-                (item.categoryEn?.isNotEmpty ?? false))
+            if (item.tourKeywords.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  '${item.categoryKo}${item.categoryEn != null ? ' (${item.categoryEn})' : ''}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Color(0xFF4B5563),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    height: 1.1,
-                  ),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 6,
+                  children:
+                      item.tourKeywords.map((k) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF3F4F6), // bg-gray-100
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: const Color(0xFFE5E7EB),
+                            ), // gray-200
+                          ),
+                          child: Text(
+                            k,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF374151), // gray-700
+                              height: 1.1,
+                            ),
+                          ),
+                        );
+                      }).toList(),
                 ),
               ),
 
