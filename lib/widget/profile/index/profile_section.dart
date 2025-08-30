@@ -33,7 +33,7 @@ class ProfileSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '대전 킹카 $userName',
+                userName,
                 style: TextStyle(
                   fontSize: w * 0.045,
                   fontWeight: FontWeight.bold,

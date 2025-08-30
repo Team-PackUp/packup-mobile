@@ -78,9 +78,7 @@ class _SettingNationSectionState extends State<SettingNationSection> {
 
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-          child: GestureDetector(
+        child: GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -95,10 +93,13 @@ class _SettingNationSectionState extends State<SettingNationSection> {
 
                 // 리스트
                 Expanded(
-                  child: SettingNationList(
-                    items: _filtered,
-                    selectedCode: _selectedCode,
-                    onChanged: (code) => setState(() => _selectedCode = code),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    child: SettingNationList(
+                      items: _filtered,
+                      selectedCode: _selectedCode,
+                      onChanged: (code) => setState(() => _selectedCode = code),
+                    ),
                   ),
                 ),
 
@@ -118,7 +119,6 @@ class _SettingNationSectionState extends State<SettingNationSection> {
             ),
           ),
         ),
-      ),
     );
   }
 
