@@ -3,6 +3,7 @@ import 'package:packup/widget/guide/listing/create/step_desc.dart';
 import 'package:packup/widget/guide/listing/create/step_exclude.dart';
 import 'package:packup/widget/guide/listing/create/step_include.dart';
 import 'package:packup/widget/guide/listing/create/step_itinerary.dart';
+import 'package:packup/widget/guide/listing/create/step_keywords.dart';
 import 'package:packup/widget/guide/listing/create/step_location_address.dart';
 import 'package:packup/widget/guide/listing/create/step_location_pin.dart';
 import 'package:packup/widget/guide/listing/create/step_photos.dart';
@@ -30,6 +31,11 @@ class ListingCreatePage extends StatelessWidget {
                 id: 'intro',
                 title: '리스팅 등록',
                 builder: (ctx) => const StepIntro(),
+              ),
+              ListingStepConfig(
+                id: 'keywords',
+                title: '키워드',
+                builder: (_) => const StepKeywords(),
               ),
               ListingStepConfig(
                 id: 'title',
@@ -140,6 +146,9 @@ class _BottomBar extends StatelessWidget {
     bool? v3 = p.getField<bool>('provision.driveGuests');
     final canSubmitProvision = v1 != null && v2 != null && v3 != null;
 
+    final keywords = (p.getField<List>('keywords.selected') ?? const []);
+    final canNextOnKeywords = keywords.isNotEmpty;
+
     final title = (p.getField<String>('basic.title') ?? '').trim();
     final desc = (p.getField<String>('basic.description') ?? '').trim();
     final canNextOnTitle = title.isNotEmpty && title.length <= 90;
@@ -157,6 +166,7 @@ class _BottomBar extends StatelessWidget {
     final canNextOnItinerary = itinCount >= 1;
 
     final canSubmitReview =
+        canNextOnKeywords &&
         canNextOnTitle &&
         canNextOnDesc &&
         canNextOnLocation &&
@@ -166,6 +176,7 @@ class _BottomBar extends StatelessWidget {
         canSubmitProvision;
 
     bool enabled = true;
+    if (id == 'keywords') enabled = canNextOnKeywords;
     if (id == 'title') enabled = canNextOnTitle;
     if (id == 'desc') enabled = canNextOnDesc;
     if (id == 'location') enabled = canNextOnLocation;
