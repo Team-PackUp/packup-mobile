@@ -121,17 +121,15 @@ class ListingCreateProvider extends ChangeNotifier {
   TourCreateRequest _buildRequestFromForm() {
     String yn(bool? v) => (v ?? false) ? 'Y' : 'N';
 
-    // 키워드
+    // 1) 키워드/기본정보
     final keywords =
         (getField<List>('keywords.selected') ?? const <dynamic>[])
             .map((e) => e.toString())
             .toList();
 
-    // 기본 정보
     final title = (getField<String>('basic.title') ?? '').trim();
     final introduce = (getField<String>('basic.description') ?? '').trim();
 
-    // 포함/불포함 텍스트 (list가 있으면 줄바꿈으로 합침)
     String _mergeLines(String? textKey, String? listKey) {
       final t = (getField<String>(textKey ?? '') ?? '').trim();
       final list =
@@ -147,26 +145,34 @@ class ListingCreateProvider extends ChangeNotifier {
     final includedText = _mergeLines('includes.text', 'includes.list');
     final excludedText = _mergeLines('excludes.text', 'excludes.list');
 
-    // 위치
+    // 2) 위치
     final meetAddr =
         getField<String>('meet.address') ?? getField<String>('meet.placeName');
     final lat = getField<double>('meet.lat');
     final lng = getField<double>('meet.lng');
     final locCode = getField<int>('meet.locationCode');
 
-    // 사진 (URL 우선)
-    final photoUrls =
-        (getField<List>('photos.urls') ?? const <dynamic>[])
-            .map((e) => e.toString())
-            .toList();
+    // 3) 사진: URL 우선, 없으면 로컬 경로도 사용 (업로드 전이라도 비지니스 진행가능)
+    final photoUrls = <String>[
+      ...(getField<List>('photos.urls') ?? const <dynamic>[]).map(
+        (e) => e.toString(),
+      ),
+    ];
+    if (photoUrls.isEmpty) {
+      photoUrls.addAll(
+        (getField<List>('photos.localPaths') ?? const <dynamic>[]).map(
+          (e) => e.toString(),
+        ),
+      );
+    }
     final thumbnail = photoUrls.isNotEmpty ? photoUrls.first : null;
 
-    // 가격
+    // 4) 가격
     final basic = getField<int>('pricing.basic') ?? 0;
     final premium = getField<int>('pricing.premiumMin');
     final hasPrivate = premium != null && premium > 0;
 
-    // 세부 정보
+    // 5) 세부 정보
     final drive = getField<bool>('provision.driveGuests');
     final visit = getField<bool>('provision.visitAttractions');
     final explain = getField<bool>('provision.explainHistory');
@@ -174,38 +180,55 @@ class ListingCreateProvider extends ChangeNotifier {
         '관광명소 방문:${visit == null ? '미응답' : (visit ? '예' : '아니요')} '
         '역사 설명:${explain == null ? '미응답' : (explain ? '예' : '아니요')}';
 
-    // 일정표
-    final rawItems =
-        (getField<List>('itinerary.items') ?? const <dynamic>[]).cast<Map>();
+    // 6) 일정표 → activities: 저장 키가 제각각이어도 흡수
+    final rawList = getField<List>('itinerary.items');
     final activities = <ActivityCreateReq>[];
-    for (final m in rawItems) {
-      final order = (m['order'] ?? m['activityOrder']) as int?;
-      final aTitle = (m['title'] ?? m['activityTitle'])?.toString();
-      final aIntro = (m['intro'] ?? m['activityIntroduce'])?.toString();
-      final dur = (m['durationMin'] ?? m['activityDurationMinute']) as int?;
-      final thumbs =
-          ((m['thumbs'] ?? m['thumbnailUrls']) as List? ?? const [])
-              .map((e) => e.toString())
-              .toList();
+    if (rawList != null) {
+      for (var i = 0; i < rawList.length; i++) {
+        final m = Map<String, dynamic>.from(rawList[i] as Map);
 
-      if (order == null || aTitle == null) continue;
+        // order: 없으면 index + 1 사용
+        final order = (m['order'] ?? m['activityOrder'] ?? (i + 1)) as int;
 
-      activities.add(
-        ActivityCreateReq(
-          activityOrder: order,
-          activityTitle: aTitle,
-          activityIntroduce: aIntro,
-          activityDurationMinute: dur,
-          thumbnails: List.generate(
-            thumbs.length,
-            (i) => ActivityThumbCreateReq(
-              thumbnailOrder: i + 1,
-              thumbnailImageUrl: thumbs[i],
+        final aTitle = (m['title'] ?? m['activityTitle'])?.toString();
+        final aIntro =
+            (m['intro'] ?? m['activityIntroduce'] ?? m['note'])?.toString();
+
+        final dur =
+            (m['durationMin'] ?? m['activityDurationMinute'] ?? m['minutes'])
+                as int?;
+
+        // thumbs: 표준/대체 키 모두 수용, 없으면 photoPath를 단일 썸네일로 사용
+        final rawThumbs =
+            (m['thumbs'] ??
+                    m['thumbnailUrls'] ??
+                    (m['photoPath'] != null ? [m['photoPath']] : const []))
+                as List?;
+        final thumbs =
+            (rawThumbs ?? const []).map((e) => e.toString()).toList();
+
+        if (aTitle == null) continue;
+
+        activities.add(
+          ActivityCreateReq(
+            activityOrder: order,
+            activityTitle: aTitle,
+            activityIntroduce: aIntro,
+            activityDurationMinute: dur,
+            thumbnails: List.generate(
+              thumbs.length,
+              (idx) => ActivityThumbCreateReq(
+                thumbnailOrder: idx + 1,
+                thumbnailImageUrl: thumbs[idx],
+              ),
             ),
           ),
-        ),
-      );
+        );
+      }
     }
+
+    // 디버깅용 (원인 파악 끝나면 제거해도 OK)
+    // debugPrint('[submit] items=${rawList?.length ?? 0}, activities=${activities.length}, photos=${photoUrls.length}');
 
     return TourCreateRequest(
       tourKeywords: keywords,
