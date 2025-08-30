@@ -47,7 +47,7 @@ class _TourListingListSectionState extends State<TourListingListSection> {
           onRefresh: p.refresh,
           child: ListView.separated(
             controller: _controller,
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
             itemCount: p.items.length + (p.loading ? 1 : 0),
             separatorBuilder: (_, __) => const SizedBox(height: 12),
             itemBuilder: (_, i) {

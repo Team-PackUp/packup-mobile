@@ -25,7 +25,6 @@ class TourListingCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 이미지 + 상태 배지
             Stack(
               children: [
                 CustomNetworkImageRatio(imageUrl: imageUrl),
@@ -116,7 +115,6 @@ class TourListingCard extends StatelessWidget {
     );
   }
 
-  /// 상태코드 매핑 (대소문자 무시)
   _StatusMeta? _statusMeta(String? raw) {
     final code = (raw ?? '').toUpperCase();
     switch (code) {
