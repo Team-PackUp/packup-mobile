@@ -1,5 +1,6 @@
 import 'package:packup/http/dio_service.dart';
 import 'package:packup/model/common/result_model.dart';
+import 'package:packup/model/tour/tour_create_request.dart';
 
 class TourService {
   Future<ResultModel> getTourList({
@@ -26,7 +27,7 @@ class TourService {
     return await DioService().getRequest('/tour/me/listings', data);
   }
 
-  //  Future<void> createListing(TourListingCreateRequest req) async {
-  //   await DioService().postRequest('/guide/tours', data: req.toJson());
-  // }
+  Future<void> createTourReq(TourCreateRequest req) async {
+    await DioService().postRequest('/tour/guide', req.toJson());
+  }
 }
