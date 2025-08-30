@@ -28,6 +28,6 @@ class TourService {
   }
 
   Future<void> createTourReq(TourCreateRequest req) async {
-    await DioService().postRequest('/tour/guide', req.toJson());
+    await DioService().postRequest('/tour/listing', req.toJson());
   }
 }
