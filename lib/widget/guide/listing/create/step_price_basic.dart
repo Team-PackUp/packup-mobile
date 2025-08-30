@@ -19,7 +19,6 @@ class _StepPriceBasicState extends State<StepPriceBasic> {
     final p = context.read<ListingCreateProvider>();
     final v = p.getField<int>('pricing.basic') ?? 0;
     _c = TextEditingController(text: v == 0 ? '' : v.toString());
-    // 기본 수수료율 없으면 20% 저장
     p.form.putIfAbsent('pricing.feeRate', () => 0.2);
   }
 
