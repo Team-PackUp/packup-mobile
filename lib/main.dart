@@ -109,7 +109,7 @@ void main() async {
         ChangeNotifierProvider.value(value: appModeProvider),
         ChangeNotifierProvider.value(
           value: loadingNotifier,
-        ), // value / create 차이ㄹ
+        ), // value / create 차이
       ],
       child: PackUp(),
     ),
@@ -121,7 +121,7 @@ void main() async {
 }
 
 class PackUp extends StatelessWidget {
-  const PackUp({Key? key}) : super(key: key);
+  const PackUp({super.key});
 
   static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(
     ThemeMode.light,
@@ -132,6 +132,8 @@ class PackUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = context.watch<UserProvider>();
+
     return ValueListenableBuilder(
       valueListenable: PackUp.themeNotifier,
       builder: (context, value, child) {
@@ -146,13 +148,7 @@ class PackUp extends StatelessWidget {
             Locale('ko', ''),
             Locale('ja', ''),
           ],
-          localeResolutionCallback: (locale, supportedLocales) {
-            if (locale == null) return const Locale('en');
-            return supportedLocales.firstWhere(
-              (l) => l.languageCode == locale.languageCode,
-              orElse: () => const Locale('en'),
-            );
-          },
+          locale: _listeningLanguage(userProvider.userModel?.userLanguage),
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -166,5 +162,18 @@ class PackUp extends StatelessWidget {
         );
       },
     );
+
+  }
+  Locale? _listeningLanguage(String? code) {
+    switch (code) {
+      case '030101':
+        return const Locale('ko');
+      case '030102':
+        return const Locale('en');
+      case '030104':
+        return const Locale('ja');
+      default:
+        return null;
+    }
   }
 }
