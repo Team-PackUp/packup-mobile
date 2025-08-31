@@ -68,6 +68,7 @@ class _ReplyWriteContentState extends State<ReplyWriteContent> {
       child: Padding(
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
         child: ListView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           children: [
             const ReplyGreetingSection(),
             ReplyFormSection(replyProvider: replyProvider),
