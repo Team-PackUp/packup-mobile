@@ -57,7 +57,6 @@ class TourListingCard extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            // 제목
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
@@ -75,7 +74,6 @@ class TourListingCard extends StatelessWidget {
 
             const SizedBox(height: 8),
 
-            // 카테고리
             if (item.tourKeywords.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
@@ -90,18 +88,16 @@ class TourListingCard extends StatelessWidget {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF3F4F6), // bg-gray-100
+                            color: const Color(0xFFF3F4F6),
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: const Color(0xFFE5E7EB),
-                            ), // gray-200
+                            border: Border.all(color: const Color(0xFFE5E7EB)),
                           ),
                           child: Text(
                             k,
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: Color(0xFF374151), // gray-700
+                              color: Color(0xFF374151),
                               height: 1.1,
                             ),
                           ),
