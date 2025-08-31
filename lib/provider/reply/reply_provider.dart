@@ -89,6 +89,11 @@ class ReplyProvider extends LoadingProvider {
   }
 
   Future<void> upsertReply(BuildContext context, String content, int point, String title, String body) async {
+    String message = "리뷰가 등록 되었습니다!";
+
+    if(seq != null) {
+      message = "리뷰가 수정 되었습니다!";
+    }
     await LoadingService.runHandled(context, () async {
       if (seq != null) {
         // 수정
@@ -97,6 +102,8 @@ class ReplyProvider extends LoadingProvider {
             point: point,
         );
         await _service.updateReply(seq: seq!, replyModel: reply);
+
+
       } else {
         // 작성
         final reply = ReplyModel(
@@ -106,15 +113,11 @@ class ReplyProvider extends LoadingProvider {
             point   : point,
         );
 
-        // 테스트
-        final fcm = FcmModel(
-          body: title,
-          title: body
-        );
-
-        await _service.saveReply(replyModel: reply, fcmModel: fcm);
+        await _service.saveReply(replyModel: reply);
       }
-    }, successMessage: '리뷰가 등록되었습니다!');
+    }, successMessage: message);
+
+    notifyListeners();
   }
 
   Future<void> deleteReply() async {

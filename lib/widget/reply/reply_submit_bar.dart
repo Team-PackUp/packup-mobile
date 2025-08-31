@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ReplySubmitBar extends StatelessWidget {
-  final bool enabled;
   final bool isEdit;
   final bool isSubmitting;
   final VoidCallback onSubmit;
@@ -9,7 +8,6 @@ class ReplySubmitBar extends StatelessWidget {
 
   const ReplySubmitBar({
     super.key,
-    required this.enabled,
     required this.isEdit,
     required this.isSubmitting,
     required this.onSubmit,
@@ -22,7 +20,7 @@ class ReplySubmitBar extends StatelessWidget {
       children: [
         Expanded(
           child: ElevatedButton(
-            onPressed: enabled ? onSubmit : null,
+            onPressed: onSubmit,
             style: ElevatedButton.styleFrom(
               minimumSize: const Size.fromHeight(52),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -43,7 +41,7 @@ class ReplySubmitBar extends StatelessWidget {
               minimumSize: const Size(52, 52),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            onPressed: isSubmitting ? null : onDelete,
+            onPressed: isSubmitting ? onSubmit : onDelete,
             icon: const Icon(Icons.delete_forever),
             label: const Text('삭제'),
           ),

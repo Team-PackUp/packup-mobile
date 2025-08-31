@@ -23,24 +23,11 @@ class ReplyService {
     return await DioService().getRequest('/reply/view/$seq');
   }
 
-  // Future<ResultModel> saveReply({
-  //   required ReplyModel replyModel
-  // }) async {
-  //
-  //   return DioService().postRequest('/reply/save', replyModel.toMap());
-  // }
-
   Future<ResultModel> saveReply({
     required ReplyModel replyModel,
-    required FcmModel  fcmModel,
   }) async {
 
-    final payload = {
-      ...replyModel.toMap(),
-      'fcmPushRequest': fcmModel.toMap(),
-    };
-
-    return DioService().postRequest('/reply/save', payload);
+    return DioService().postRequest('/reply/save', replyModel.toMap());
   }
 
   Future<ResultModel> updateReply({

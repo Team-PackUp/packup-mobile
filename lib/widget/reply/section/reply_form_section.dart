@@ -42,27 +42,39 @@ class _ReplyFormSectionState extends State<ReplyFormSection> {
     super.initState();
     _replyProvider = widget.replyProvider;
     _contentController = TextEditingController(text: '');
+    _contentController.addListener(_onContentChanged);
 
     _initData();
     _replyProvider.addListener(_initData);
   }
 
+  void _onContentChanged() {
+    if (!mounted) return;
+    setState(() {});
+  }
+
+  bool _hydrated = false;
+
   void _initData() {
     final model = _replyProvider.replyModel;
     if (model == null) return;
 
-    _contentController.text = model.content ?? '';
-    _point = model.point ?? 0;
-
-    if (mounted) setState(() {});
+    if (!_hydrated) {
+      _contentController.text = model.content ?? '';
+      _point = model.point ?? 0;
+      _hydrated = true;
+      if (mounted) setState(() {});
+    }
   }
 
   @override
   void dispose() {
-    _contentController.dispose();
+    _contentController.removeListener(_onContentChanged);
     _replyProvider.removeListener(_initData);
+    _contentController.dispose();
     super.dispose();
   }
+
 
   Future<void> _pickPhotos() async {
     final canAdd = _maxPhotos - _photos.length;
@@ -158,7 +170,6 @@ class _ReplyFormSectionState extends State<ReplyFormSection> {
             const SizedBox(height: 24),
 
             ReplySubmitBar(
-              enabled: _canSubmit,
               isEdit: isEdit,
               isSubmitting: _isSubmitting,
               onSubmit: _upsertReply,
