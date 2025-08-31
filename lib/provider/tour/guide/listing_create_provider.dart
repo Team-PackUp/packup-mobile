@@ -236,7 +236,7 @@ class ListingCreateProvider extends ChangeNotifier {
       tourIntroduce: introduce,
       tourIncludedContent: includedText,
       tourExcludedContent: excludedText,
-      tourNotes: getField<String>('notes'),
+      tourNotes: getField<String>('meet.placeLabel'),
       tourLocationCode: locCode,
       tourThumbnailUrl: thumbnail,
       tourPrice: basic,
