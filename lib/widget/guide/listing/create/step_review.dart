@@ -15,8 +15,19 @@ class StepReview extends StatelessWidget {
     final title = (p.getField<String>('basic.title') ?? '').trim();
     final desc = (p.getField<String>('basic.description') ?? '').trim();
 
-    final place = p.getField<String>('meet.placeName') ?? '';
-    final address = p.getField<String>('meet.address') ?? '';
+    // final place = p.getField<String>('meet.placeName') ?? '';
+    // final address = p.getField<String>('meet.address') ?? '';
+
+    final state = p.getField<String>('meet.state') ?? '';
+    final road = p.getField<String>('meet.road') ?? '';
+    final detail = p.getField<String>('meet.detail') ?? '';
+    final placeLabel = p.getField<String>('meet.placeLabel') ?? '';
+
+    final fullAddress = [
+      state,
+      road,
+      detail,
+    ].where((e) => e.trim().isNotEmpty).join(' ');
 
     final files =
         p.getField<List>('photos.localPaths') ??
@@ -80,12 +91,18 @@ class StepReview extends StatelessWidget {
 
             _NavTile(
               icon: Icons.place_outlined,
-              title: place.isEmpty ? '장소 미선택' : place,
-              subtitle: address.isEmpty ? null : address,
-              onTap:
-                  () =>
-                      context.read<ListingCreateProvider>().jumpTo('location'),
+              title: placeLabel.isEmpty ? '장소 설명 미입력' : placeLabel,
+              subtitle: fullAddress.isEmpty ? null : fullAddress,
+              onTap: () => context.read<ListingCreateProvider>().jumpTo('addr'),
             ),
+            // _NavTile(
+            //   icon: Icons.place_outlined,
+            //   title: place.isEmpty ? '장소 미선택' : place,
+            //   subtitle: address.isEmpty ? null : address,
+            //   onTap:
+            //       () =>
+            //           context.read<ListingCreateProvider>().jumpTo('location'),
+            // ),
             _SectionDivider(),
 
             _NavTile(
