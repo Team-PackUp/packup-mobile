@@ -225,23 +225,27 @@ class UserProvider extends LoadingProvider {
 
   Future<void> updateSettingLanguage(String languageCode) async {
 
-    await _userService.updateSettingLanguage(languageCode);
-    if (_resultModel!.resultFlag!) {
-      await getMyInfo();
-    }
+    await LoadingService.run(() async {
+      await _userService.updateSettingLanguage(languageCode);
+      if (_resultModel!.resultFlag!) {
+        await getMyInfo();
+      }
+    });
 
     notifyListeners();
   }
 
   Future<void> updateSettingNation(String nationCode) async {
-
-    await _userService.updateSettingNation(nationCode);
-    if (_resultModel!.resultFlag!) {
-      await getMyInfo();
-    }
+    await LoadingService.run(() async {
+      await _userService.updateSettingNation(nationCode);
+      if (_resultModel!.resultFlag!) {
+        await getMyInfo();
+      }
+    });
 
     notifyListeners();
   }
+
 
   Future<void> userWithDraw(UserWithDrawLogModel model) async {
     await LoadingService.run(() async {
