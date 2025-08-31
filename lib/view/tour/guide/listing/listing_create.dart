@@ -57,11 +57,11 @@ class ListingCreatePage extends StatelessWidget {
                 title: '포함되지 않는 항목',
                 builder: (_) => const StepExclude(),
               ),
-              ListingStepConfig(
-                id: 'location',
-                title: '장소',
-                builder: (ctx) => const StepLocationSearch(),
-              ),
+              // ListingStepConfig(
+              //   id: 'location',
+              //   title: '장소',
+              //   builder: (ctx) => const StepLocationSearch(),
+              // ),
               ListingStepConfig(
                 id: 'addr',
                 title: '위치 확인',
@@ -155,7 +155,8 @@ class _BottomBar extends StatelessWidget {
     final canNextOnDesc = desc.isNotEmpty && desc.length >= 10;
 
     final canNextOnLocation =
-        (p.getField<String>('meet.placeName')?.isNotEmpty ?? false);
+        (p.getField<String>('meet.state')?.isNotEmpty ?? false) &&
+        (p.getField<String>('meet.placeLabel')?.isNotEmpty ?? false);
 
     final photoFiles = p.getField<List>('photos.files');
     final localPaths = p.getField<List>('photos.localPaths');
@@ -179,7 +180,7 @@ class _BottomBar extends StatelessWidget {
     if (id == 'keywords') enabled = canNextOnKeywords;
     if (id == 'title') enabled = canNextOnTitle;
     if (id == 'desc') enabled = canNextOnDesc;
-    if (id == 'location') enabled = canNextOnLocation;
+    // if (id == 'addr') enabled = canNextOnLocation;
     if (id == 'photos') enabled = canNextOnPhotos;
     if (id == 'itinerary') enabled = canNextOnItinerary;
     if (id == 'price_basic') enabled = basic > 0;
