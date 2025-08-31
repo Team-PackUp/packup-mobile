@@ -24,7 +24,7 @@ class TourCreateRequest {
   final String? memo;
 
   final List<ActivityCreateReq> activities;
-  final List<String> photos; // 선택 전송용
+  final List<String> photos;
 
   const TourCreateRequest({
     required this.tourKeywords,
