@@ -16,7 +16,6 @@ import 'package:provider/provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:packup/provider/tour/guide/listing_create_provider.dart';
 import 'package:packup/widget/guide/listing/create/step_intro.dart';
-import 'package:packup/widget/guide/listing/create/step_location_search.dart';
 
 class ListingCreatePage extends StatelessWidget {
   const ListingCreatePage({super.key});
