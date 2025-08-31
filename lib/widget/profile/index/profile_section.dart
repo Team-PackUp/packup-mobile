@@ -59,8 +59,12 @@ class ProfileSection extends StatelessWidget {
                       },
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: h * 0.014),
+                        foregroundColor: Theme.of(context).colorScheme.primary,
+                        side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      ).copyWith(
+                        overlayColor: WidgetStateProperty.all(Colors.transparent),
                       ),
-                    ),
+                    )
                   ),
                   SizedBox(width: w * 0.02),
                   Expanded(

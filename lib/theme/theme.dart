@@ -16,6 +16,10 @@ ThemeData buildTheme(AppColors colors) {
     useMaterial3: true,
     scaffoldBackgroundColor: colors.surface,
 
+    splashColor: Colors.transparent,
+    highlightColor: Colors.transparent,
+    hoverColor: Colors.transparent,
+
     textTheme: TextTheme(
       displayLarge: AppTypographies.get(size: AppFontSize.x4l, weight: AppFontWeight.bold, color: colors.onSurface),
       displayMedium: AppTypographies.get(size: AppFontSize.x3l, weight: AppFontWeight.bold, color: colors.onSurface),
