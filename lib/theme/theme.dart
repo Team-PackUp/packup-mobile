@@ -59,8 +59,16 @@ ThemeData buildTheme(AppColors colors) {
       backgroundColor: colors.surface,
       selectedItemColor: colors.primary,
       unselectedItemColor: colors.onSurface.withOpacity(0.6),
-      selectedLabelStyle: AppTypographies.get(size: AppFontSize.sm, weight: AppFontWeight.semiBold, color: colors.primary),
-      unselectedLabelStyle: AppTypographies.get(size: AppFontSize.sm, weight: AppFontWeight.normal, color: colors.onSurface.withOpacity(0.6)),
+      selectedLabelStyle: AppTypographies.get(
+        size: AppFontSize.sm,
+        weight: AppFontWeight.semiBold,
+        color: colors.primary,
+      ),
+      unselectedLabelStyle: AppTypographies.get(
+        size: AppFontSize.xs,
+        weight: AppFontWeight.normal,
+        color: colors.onSurface.withOpacity(0.6),
+      ),
       type: BottomNavigationBarType.fixed,
       elevation: AppShapes.elevationMd,
     ),
