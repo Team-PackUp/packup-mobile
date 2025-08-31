@@ -37,11 +37,11 @@ class AlertBell extends StatelessWidget {
           // 기본 제약 제거한 IconButton
           IconButton(
             onPressed: () => context.push('/alert_center'),
-            icon: const Icon(Icons.notifications_none, color: Colors.black),
-            iconSize: iconSize,
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(), // 최소 48 제약 해제
+            icon: const Icon(Icons.notifications_none),
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
           ),
+
 
           // 옵티컬 보정(아이콘 살짝 위로)
           Positioned.fill(

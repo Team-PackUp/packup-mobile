@@ -19,6 +19,7 @@ ThemeData buildTheme(AppColors colors) {
     splashColor: Colors.transparent,
     highlightColor: Colors.transparent,
     hoverColor: Colors.transparent,
+    splashFactory: NoSplash.splashFactory,
 
     textTheme: TextTheme(
       displayLarge: AppTypographies.get(size: AppFontSize.x4l, weight: AppFontWeight.bold, color: colors.onSurface),
@@ -113,6 +114,15 @@ ThemeData buildTheme(AppColors colors) {
       elevation: AppShapes.elevationMd,
       titleTextStyle: AppTypographies.get(size: AppFontSize.lg, weight: AppFontWeight.bold, color: colors.onSurface),
       contentTextStyle: AppTypographies.body.copyWith(color: colors.onSurface),
+    ),
+
+    iconButtonTheme: IconButtonThemeData(
+      style: ButtonStyle(
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
+        splashFactory: NoSplash.splashFactory,
+        backgroundColor: WidgetStateProperty.all(Colors.transparent),
+        shadowColor: WidgetStateProperty.all(Colors.transparent),
+      ),
     ),
   );
 }

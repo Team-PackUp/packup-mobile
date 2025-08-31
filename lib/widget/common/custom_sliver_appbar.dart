@@ -63,6 +63,8 @@ class CustomSliverAppBar extends StatelessWidget {
         iconSize: iconSize,
         padding: EdgeInsets.zero,
         constraints: BoxConstraints.tightFor(width: actionBox, height: actionBox),
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
         onPressed: context.pop,
       )
           : null,
@@ -78,12 +80,8 @@ class CustomSliverAppBar extends StatelessWidget {
                   width: actionBox,
                   height: actionBox,
                   child: Center(
-                    child: IconTheme(
-                      data: IconThemeData(size: iconSize, color: Colors.black),
-                      child: alert!,
-                    ),
-                  ),
-                ),
+                    child:  alert!,
+                )),
               if (alert != null && profile != null) SizedBox(width: actionGap),
               if (profile != null)
                 SizedBox(

@@ -36,6 +36,8 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       leading: (arrowFlag == null || arrowFlag == true)
           ? IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.black),
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
         onPressed: context.pop,
       )
           : null,

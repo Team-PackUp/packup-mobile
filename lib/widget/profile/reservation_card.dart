@@ -118,7 +118,8 @@ class ReservationCard extends StatelessWidget {
     );
   }
 
-  Widget _actionButton(BuildContext context, IconData icon, String label, VoidCallback onPressed) {
+  Widget _actionButton(
+      BuildContext context, IconData icon, String label, VoidCallback onPressed) {
     return OutlinedButton.icon(
       onPressed: onPressed,
       icon: Icon(icon, size: w * 0.035),
@@ -129,6 +130,8 @@ class ReservationCard extends StatelessWidget {
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         visualDensity: VisualDensity.compact,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ).copyWith(
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
       ),
     );
   }
