@@ -23,17 +23,14 @@ class _StepLocationPinState extends State<StepLocationPin> {
     lat = _p.getField<double>('meet.lat') ?? lat;
     lng = _p.getField<double>('meet.lng') ?? lng;
 
-    // ✅ 컨테이너 하단 "다음" 눌릴 때 실행될 가드 등록
     _p.setNextGuard('pin', () async {
-      // 필요 시 검증/비즈 로직 추가
       _p.setFields({'meet.lat': lat, 'meet.lng': lng});
-      return true; // 통과하면 컨테이너가 다음 스텝으로 이동
+      return true;
     });
   }
 
   @override
   void dispose() {
-    // ✅ context 쓰지 말고, 저장해둔 _p 사용
     _p.setNextGuard('pin', null);
     super.dispose();
   }
@@ -56,7 +53,7 @@ class _StepLocationPinState extends State<StepLocationPin> {
           ),
           const SizedBox(height: 16),
 
-          // ✅ TODO: 실제 지도 위젯으로 교체
+          // 지도 api 연동
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: Container(

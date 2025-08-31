@@ -18,12 +18,12 @@ class _StepLocationAddressState extends State<StepLocationAddress> {
   final _zip = TextEditingController();
   final _placeLabel = TextEditingController();
 
-  late final ListingCreateProvider _p; // ✅ context 대신 보관
+  late final ListingCreateProvider _p;
 
   @override
   void initState() {
     super.initState();
-    _p = context.read<ListingCreateProvider>(); // ✅ 여기서만 읽기
+    _p = context.read<ListingCreateProvider>();
 
     _road.text = _p.getField<String>('meet.road') ?? '';
     _city.text = _p.getField<String>('meet.city') ?? '';
@@ -31,9 +31,7 @@ class _StepLocationAddressState extends State<StepLocationAddress> {
     _zip.text = _p.getField<String>('meet.zip') ?? '';
     _placeLabel.text = _p.getField<String>('meet.placeLabel') ?? '';
 
-    // ✅ 컨테이너 '다음' 가드 등록 (context 의존 제거)
     _p.setNextGuard('addr', () async {
-      // 키보드 닫기 (context 미사용)
       FocusManager.instance.primaryFocus?.unfocus();
 
       if (!_formKey.currentState!.validate()) return false;
@@ -53,7 +51,6 @@ class _StepLocationAddressState extends State<StepLocationAddress> {
 
   @override
   void dispose() {
-    // ✅ context 쓰지 말고, 저장해둔 _p 사용
     _p.setNextGuard('addr', null);
 
     _country.dispose();
