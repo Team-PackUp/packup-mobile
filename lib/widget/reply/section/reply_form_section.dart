@@ -108,8 +108,6 @@ class _ReplyFormSectionState extends State<ReplyFormSection> {
         context,
         _contentController.text.trim(),
         _point,
-        'notice',
-        'advertise',
       );
       if (mounted) setState(() => _isSubmitting = false);
   }

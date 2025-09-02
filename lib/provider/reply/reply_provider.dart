@@ -88,7 +88,7 @@ class ReplyProvider extends LoadingProvider {
     });
   }
 
-  Future<void> upsertReply(BuildContext context, String content, int point, String title, String body) async {
+  Future<void> upsertReply(BuildContext context, String content, int point) async {
     String message = "리뷰가 등록 되었습니다!";
 
     if(seq != null) {
