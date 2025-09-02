@@ -5,23 +5,17 @@ import 'package:packup/widget/common/custom_network_image_ratio.dart';
 
 class TourListingCard extends StatelessWidget {
   const TourListingCard({super.key, required this.item, this.onTap});
+
   final TourListingModel item;
   final VoidCallback? onTap;
-
-  Color _badgeColor() {
-    switch (item.status) {
-      case TourListingStatus.published:
-        return const Color(0xFF22C55E);
-      case TourListingStatus.paused:
-        return const Color(0xFFF59E0B);
-      case TourListingStatus.inProgress:
-        return const Color(0xFFF472B6);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final imageUrl = fullFileUrl(item.coverImagePath ?? '');
+
+    final rawCode = (item.statusCode ?? item.legacyStatus?.name) ?? '';
+    final status = _statusMeta(rawCode);
+
     return Card(
       elevation: 1.5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -34,73 +28,136 @@ class TourListingCard extends StatelessWidget {
             Stack(
               children: [
                 CustomNetworkImageRatio(imageUrl: imageUrl),
-                Positioned(
-                  left: 12,
-                  top: 12,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _badgeColor(),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      '${item.statusKo} (In Progress)',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
+                if (status != null)
+                  Positioned(
+                    left: 12,
+                    top: 12,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: status.color,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        status.label,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                          height: 1.0,
+                        ),
                       ),
                     ),
                   ),
-                ),
               ],
             ),
+
             const SizedBox(height: 12),
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 '${item.titleKo}${item.titleEn != null ? ' (${item.titleEn})' : ''}',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: Color(0xFF111827),
                   height: 1.2,
                 ),
               ),
             ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Row(
-                children: [
-                  Text(
-                    '${item.categoryKo}${item.categoryEn != null ? ' (${item.categoryEn})' : ''}',
-                    style: const TextStyle(
-                      color: Color(0xFF111827),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const Text(' • ', style: TextStyle(color: Color(0xFF6B7280))),
-                  Text(
-                    item.startDate != null
-                        ? '${item.formattedStartKo()} ~'
-                        : '',
-                    style: const TextStyle(
-                      color: Color(0xFF6B7280),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
+
+            const SizedBox(height: 8),
+
+            if (item.tourKeywords.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 6,
+                  children:
+                      item.tourKeywords.map((k) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF3F4F6),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: const Color(0xFFE5E7EB)),
+                          ),
+                          child: Text(
+                            k,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF374151),
+                              height: 1.1,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                ),
               ),
-            ),
+
+            const SizedBox(height: 4),
+
+            // 날짜
+            if (item.startDate != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+                child: Text(
+                  '${item.formattedStartKo()} ~',
+                  style: const TextStyle(
+                    color: Color(0xFF6B7280),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    height: 1.1,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
     );
   }
+
+  _StatusMeta? _statusMeta(String? raw) {
+    final code = (raw ?? '').toUpperCase();
+    switch (code) {
+      case 'TEMP':
+        return const _StatusMeta('임시저장', Color(0xFF9CA3AF));
+      case 'RECRUITING':
+        return const _StatusMeta('모집중', Color(0xFF22C55E));
+      case 'RECRUITED':
+        return const _StatusMeta('모집완료', Color(0xFFF59E0B));
+      case 'READY':
+        return const _StatusMeta('출발대기', Color(0xFF3B82F6));
+      case 'ONGOING':
+        return const _StatusMeta('투어중', Color(0xFFA855F7));
+      case 'FINISHED':
+        return const _StatusMeta('종료', Color(0xFF111827));
+
+      case 'PUBLISHED':
+        return const _StatusMeta('게시 중', Color(0xFF22C55E));
+      case 'PAUSED':
+        return const _StatusMeta('일시중지', Color(0xFFF59E0B));
+      case 'INPROGRESS':
+        return const _StatusMeta('진행 중', Color(0xFFA855F7));
+      default:
+        return null;
+    }
+  }
+}
+
+class _StatusMeta {
+  final String label;
+  final Color color;
+  const _StatusMeta(this.label, this.color);
 }

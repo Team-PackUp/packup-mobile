@@ -12,37 +12,59 @@ class TourListingProvider extends LoadingProvider {
 
   List<TourListingModel> get items => _items;
   bool get loading => isLoading;
-  int get totalPage => _totalPage;
-  int get curPage => _curPage;
+  bool get hasMore => _curPage < _totalPage;
 
   Future<void> fetchNext() async {
-    if (_curPage >= _totalPage) return;
+    if (!hasMore || loading) return;
+
+    final nextPage = _curPage + 1;
 
     await handleLoading(() async {
-      final res = await _tourService.getMyListings(_curPage);
+      final res = await _tourService.getMyListings(page: nextPage, size: 20);
+
+      final Map<String, dynamic> raw = Map<String, dynamic>.from(res.response);
+      final adapted = <String, dynamic>{
+        'objectList': (raw['objectList'] ?? raw['content'] ?? []) as List,
+        'curPage': raw['curPage'] ?? raw['page'] ?? 1,
+        'totalPage': raw['totalPage'] ?? raw['totalPages'] ?? 1,
+      };
 
       final page = PageModel<TourListingModel>.fromJson(
-        res.response,
+        adapted,
         (e) => TourListingModel.fromJson(e),
       );
 
       _items.addAll(page.objectList);
       _totalPage = page.totalPage;
-      _curPage += 1;
+      _curPage = page.curPage;
 
       notifyListeners();
     });
   }
 
   Future<void> refresh() async {
-    await handleLoading(() async {
-      _items.clear();
-      _curPage = 0;
-      _totalPage = 1;
-      notifyListeners();
-      await fetchNext();
-    });
+    print('refresh called');
+    if (loading) return;
+
+    _items.clear();
+    _curPage = 0;
+    _totalPage = 1;
+    notifyListeners();
+
+    await fetchNext();
   }
+
+  // Future<void> refresh() async {
+  //   if (loading) return;
+
+  //   await handleLoading(() async {
+  //     _items.clear();
+  //     _curPage = 0;
+  //     _totalPage = 1;
+  //     notifyListeners();
+  //     await fetchNext();
+  //   });
+  // }
 
   void reset() {
     _items.clear();

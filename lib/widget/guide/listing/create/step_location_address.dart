@@ -18,12 +18,12 @@ class _StepLocationAddressState extends State<StepLocationAddress> {
   final _zip = TextEditingController();
   final _placeLabel = TextEditingController();
 
-  late final ListingCreateProvider _p; // ✅ context 대신 보관
+  late final ListingCreateProvider _p;
 
   @override
   void initState() {
     super.initState();
-    _p = context.read<ListingCreateProvider>(); // ✅ 여기서만 읽기
+    _p = context.read<ListingCreateProvider>();
 
     _road.text = _p.getField<String>('meet.road') ?? '';
     _city.text = _p.getField<String>('meet.city') ?? '';
@@ -31,11 +31,9 @@ class _StepLocationAddressState extends State<StepLocationAddress> {
     _zip.text = _p.getField<String>('meet.zip') ?? '';
     _placeLabel.text = _p.getField<String>('meet.placeLabel') ?? '';
 
-    // ✅ 컨테이너 '다음' 가드 등록 (context 의존 제거)
+    // ✅ 다음으로 가기 전에 필수값 검증
     _p.setNextGuard('addr', () async {
-      // 키보드 닫기 (context 미사용)
       FocusManager.instance.primaryFocus?.unfocus();
-
       if (!_formKey.currentState!.validate()) return false;
 
       _p.setFields({
@@ -53,9 +51,7 @@ class _StepLocationAddressState extends State<StepLocationAddress> {
 
   @override
   void dispose() {
-    // ✅ context 쓰지 말고, 저장해둔 _p 사용
     _p.setNextGuard('addr', null);
-
     _country.dispose();
     _road.dispose();
     _detail.dispose();
@@ -68,6 +64,8 @@ class _StepLocationAddressState extends State<StepLocationAddress> {
 
   @override
   Widget build(BuildContext context) {
+    final hintStyle = TextStyle(color: Colors.black.withOpacity(0.35));
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
@@ -81,7 +79,7 @@ class _StepLocationAddressState extends State<StepLocationAddress> {
             ),
             const SizedBox(height: 6),
             Text(
-              '주소가 정확하게 입력되었는지 확인해 주세요.\n리스팅 등록 후에는 변경할 수 없습니다.',
+              '게스트와 만나는 위치를 입력해주세요.\n리스팅 등록 후에는 변경할 수 없습니다.',
               style: TextStyle(color: Colors.black.withOpacity(0.6)),
             ),
             const SizedBox(height: 20),
@@ -90,71 +88,52 @@ class _StepLocationAddressState extends State<StepLocationAddress> {
                 key: _formKey,
                 child: ListView(
                   children: [
+                    // 필요 시 다른 필드 복구
                     _LabeledField(
-                      label: '국가/지역',
-                      child: _buildReadOnly(_country.text),
-                    ),
-                    _LabeledField(
-                      label: '도로명 주소',
+                      label: '시/도 *',
                       child: TextFormField(
-                        controller: _road,
+                        controller: _state,
+                        textInputAction: TextInputAction.next,
                         decoration: const InputDecoration(
-                          hintText: '예) 동교동 172-82',
+                          hintText: '예) 서울특별시 / 경기도 / 부산광역시',
                         ),
-                        validator:
-                            (v) =>
-                                (v == null || v.trim().isEmpty)
-                                    ? '도로명 주소를 입력해주세요.'
-                                    : null,
+                        validator: (v) {
+                          if (v == null || v.trim().isEmpty) {
+                            return '시/도를 입력해주세요.';
+                          }
+                          if (v.trim().length < 2) {
+                            return '시/도를 정확히 입력해주세요.';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     _LabeledField(
-                      label: '아파트 층수/호수, 건물명(해당하는 경우)',
-                      child: TextFormField(controller: _detail),
-                    ),
-                    _LabeledField(
-                      label: '시/군/구',
+                      label: '장소에 대한 설명 *',
                       child: TextFormField(
-                        controller: _city,
-                        validator:
-                            (v) =>
-                                (v == null || v.trim().isEmpty)
-                                    ? '시/군/구를 입력해주세요.'
-                                    : null,
+                        controller: _placeLabel,
+                        keyboardType: TextInputType.multiline,
+                        textInputAction: TextInputAction.newline,
+                        minLines: 3, // ✅ 높이 키움
+                        maxLines: 5, // ✅ 최대 높이
+                        decoration: InputDecoration(
+                          hintText: '예) 홍대입구역 2번 출구 앞, XX카페 입구',
+                          hintStyle: hintStyle,
+                        ),
+                        validator: (v) {
+                          final t = (v ?? '').trim();
+                          if (t.isEmpty) return '장소에 대한 설명을 입력해주세요.';
+                          if (t.length < 6) return '설명을 조금 더 구체적으로 적어주세요.';
+                          return null;
+                        },
                       ),
-                    ),
-                    _LabeledField(
-                      label: '주/도/군주(해당하는 경우)',
-                      child: TextFormField(controller: _state),
-                    ),
-                    _LabeledField(
-                      label: '우편번호(해당하는 경우)',
-                      child: TextFormField(
-                        controller: _zip,
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    _LabeledField(
-                      label: '장소 이름(선택 사항)',
-                      child: TextFormField(controller: _placeLabel),
                     ),
                   ],
                 ),
               ),
             ),
-            // 하단 버튼 없음 — 컨테이너에서만 렌더링
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildReadOnly(String value) {
-    return TextFormField(
-      initialValue: value,
-      readOnly: true,
-      decoration: const InputDecoration(
-        suffixIcon: Icon(Icons.arrow_drop_down),
       ),
     );
   }
