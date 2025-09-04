@@ -7,7 +7,7 @@ import 'package:packup/const/color.dart';
 import 'package:packup/model/user/register_detail/register_detail_model.dart';
 import 'package:packup/provider/user/user_provider.dart';
 import 'package:packup/service/user/register_detail_service.dart';
-import 'package:packup/provider/common/code_mapping_model.dart';
+import 'package:packup/model/common/code_mapping_model.dart';
 
 import '../../../Common/util.dart';
 

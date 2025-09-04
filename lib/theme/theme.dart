@@ -12,6 +12,7 @@ import 'colors/app_colors.dart';
 // ────────────────────────────────────────────────────────────────
 ThemeData buildTheme(AppColors colors) {
   return ThemeData(
+
     fontFamily: 'Aggro',
     useMaterial3: true,
     scaffoldBackgroundColor: colors.surface,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../Common/util.dart';
-import '../../../../provider/common/code_mapping_model.dart';
+import '../../../../model/common/code_mapping_model.dart';
 import '../../../../provider/user/user_provider.dart';
 import '../../../common/custom_birth_input.dart';
 import '../../../common/custom_show_picker.dart';

@@ -19,9 +19,7 @@ class CategorySection extends StatelessWidget {
     final screenH = MediaQuery.of(context).size.height;
     final screenW = MediaQuery.of(context).size.width;
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: screenH * 0.02),
-      child: CategoryFilter<Map<String, String>>(
+    return CategoryFilter<Map<String, String>>(
         items: categories,
         labelBuilder: (cat) => cat['label']!,
         emojiBuilder: (cat) => Text(cat['emoji']!),
@@ -29,8 +27,7 @@ class CategorySection extends StatelessWidget {
         onSelectionChanged: (selectedCats) {
           final labels = selectedCats.map((c) => c['label']!).toList();
           print('선택된 카테고리: $labels');
-        },
-      ),
+        }
     );
   }
 }
