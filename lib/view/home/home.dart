@@ -40,7 +40,9 @@ class _HomeContentState extends State<HomeContent> {
   // 선택 지역은 변경 가능하므로 state로 유지
   String? _selectedCode;
 
-  // 초기 세팅을 한 번에 수행하는 Future
+  late final TourProvider tourProvider;
+  late final AlertCenterProvider alertProvider;
+
   late final Future<String> _initFuture;
 
   final List<CodeMappingModel> regionList = [
@@ -71,13 +73,17 @@ class _HomeContentState extends State<HomeContent> {
   Future<String> _initData() async {
     final selectedCode = await getDefaultRegion();
 
-    final tourProvider = context.read<TourProvider>();
-    final alertProvider = context.read<AlertCenterProvider>();
+    tourProvider = context.read<TourProvider>();
+    alertProvider = context.read<AlertCenterProvider>();
 
     await alertProvider.initProvider();
-    await tourProvider.getTourList();
+    await tourProvider.getTourList(regionCode: selectedCode);
 
     return selectedCode;
+  }
+
+  Future<void> getTourByRegion({required String regionCode}) async {
+    await tourProvider.getTourList(refresh: true, regionCode: regionCode);
   }
 
   @override
@@ -119,9 +125,10 @@ class _HomeContentState extends State<HomeContent> {
                           }).toList(),
                           onChanged: (code) {
                             if (code != null && code != _selectedCode) {
-                              print(_selectedCode);
                               setState(() => _selectedCode = code);
                               saveDefaultRegion(_selectedCode!);
+
+                              getTourByRegion(regionCode: code);
                             }
                           },
                         ),
@@ -144,7 +151,7 @@ class _HomeContentState extends State<HomeContent> {
                   SizedBox(height: screenH * 0.02),
                   const CategorySection(),
                   SizedBox(height: screenH * 0.02),
-                  const HotTourSection(),
+                  HotTourSection(regionCode: regionCode,),
                   SizedBox(height: screenH * 0.02),
                   const GuideSection(),
                   SizedBox(height: screenH * 0.02),

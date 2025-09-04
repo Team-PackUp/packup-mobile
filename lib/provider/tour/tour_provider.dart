@@ -1,4 +1,5 @@
 import 'package:packup/model/common/page_response.dart';
+import 'package:packup/model/common/result_model.dart';
 import 'package:packup/model/tour/tour_model.dart';
 import 'package:packup/provider/common/loading_provider.dart';
 import 'package:packup/service/common/loading_service.dart';
@@ -39,7 +40,8 @@ class TourProvider extends LoadingProvider {
 
   /// 투어 목록을 가져옵니다.
   /// [refresh]가 true일 경우, 목록을 초기화하고 첫 페이지부터 다시 요청합니다.
-  Future<void> getTourList({bool refresh = false}) async {
+  Future<void> getTourList({bool refresh = false, String? regionCode}) async {
+
     // 중복 호출 방지 또는 마지막 페이지까지 도달한 경우
     if (_isFetching || (!_hasNextPage && !refresh)) return;
 
@@ -58,11 +60,22 @@ class TourProvider extends LoadingProvider {
     // 공통 로딩 처리
     await LoadingService.run(() async {
       try {
-        // 투어 리스트 API 호출
-        final response = await _tourService.getTourList(
-          page: _currentPage,
-          size: _size,
-        );
+
+        final ResultModel response;
+
+        if (regionCode != null && regionCode.isNotEmpty) {
+          response = await _tourService.getTourListByRegion(
+            regionCode: regionCode,
+            page: _currentPage,
+            size: _size,
+          );
+        } else {
+          response = await _tourService.getTourList(
+            page: _currentPage,
+            size: _size,
+          );
+        }
+
         final data = response.response;
 
         // 페이지 응답 파싱

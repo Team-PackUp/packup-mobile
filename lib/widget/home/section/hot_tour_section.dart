@@ -7,7 +7,8 @@ import 'package:provider/provider.dart';
 import '../../common/section_header.dart';
 
 class HotTourSection extends StatefulWidget {
-  const HotTourSection({super.key});
+  final String regionCode;
+  const HotTourSection({super.key, required this.regionCode});
 
   @override
   State<HotTourSection> createState() => _HotTourSectionState();
@@ -26,12 +27,7 @@ class _HotTourSectionState extends State<HotTourSection> {
     _scrollController.addListener(() {
       final provider = context.read<TourProvider>();
 
-      if (_scrollController.position.pixels >=
-              _scrollController.position.maxScrollExtent - 100 &&
-          provider.hasNextPage &&
-          !provider.isLoading) {
-        provider.getTourList();
-      }
+        provider.getTourList(regionCode: widget.regionCode);
     });
   }
 
