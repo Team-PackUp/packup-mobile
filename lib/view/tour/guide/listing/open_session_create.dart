@@ -37,7 +37,10 @@ class _OpenSessionCreateView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 경고문구
+              // 경고문구 (중앙정렬)
               Container(
+                alignment: Alignment.center,
+                width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.pink.withOpacity(.08),
@@ -45,6 +48,7 @@ class _OpenSessionCreateView extends StatelessWidget {
                 ),
                 child: Text(
                   '1명이상 투어 신청 후 예약 취소는 패널티 부여\n정산 시 금액차감 및 가이드 활동 제재',
+                  textAlign: TextAlign.center, // ⬅️ 중앙 정렬
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: Colors.pink.shade600,
                     fontWeight: FontWeight.w700,
