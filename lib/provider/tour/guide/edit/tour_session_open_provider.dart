@@ -78,6 +78,7 @@ class TourSessionOpenProvider extends ChangeNotifier {
     notifyListeners();
     try {
       final req = TourSessionCreateRequest(
+        tourSeq: _tourSeq!,
         sessionStartTime: _selectedStart!,
         sessionEndTime: _selectedStart!.add(_duration),
       );
