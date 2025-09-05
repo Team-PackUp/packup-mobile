@@ -25,6 +25,8 @@ import 'package:packup/view/reply/reply_write.dart';
 import 'package:packup/view/search/search.dart';
 import 'package:packup/view/tour/guide/listing/guide_listing.dart';
 import 'package:packup/view/tour/guide/listing/listing_create.dart';
+import 'package:packup/view/tour/guide/listing/open_session.dart';
+import 'package:packup/view/tour/guide/listing/open_session_create.dart';
 import 'package:packup/view/tour/user/tour_detail.dart';
 import 'package:packup/view/user/preference/preference.dart';
 import 'package:packup/view/user/register_detail/register_detail.dart';
@@ -326,6 +328,28 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
           GoRoute(
             path: '/g/listing/create',
             builder: (context, state) => const ListingCreatePage(),
+          ),
+          GoRoute(
+            path: '/g/listing/:tourSeq/open',
+            name: 'gListingOpen',
+            builder: (context, state) {
+              final tourSeq = int.parse(state.pathParameters['tourSeq']!);
+              final title =
+                  state.extra is String ? state.extra as String : null; // 선택
+              return OpenSessionPage(tourSeq: tourSeq, tourTitle: title);
+            },
+          ),
+
+          // ShellRoute 내부에 추가
+          GoRoute(
+            path: '/g/listing/:tourSeq/open/new',
+            name: 'gListingOpenNew',
+            builder: (context, state) {
+              final tourSeq = int.parse(state.pathParameters['tourSeq']!);
+              final title =
+                  state.extra is String ? state.extra as String : null;
+              return OpenSessionCreatePage(tourSeq: tourSeq, tourTitle: title);
+            },
           ),
         ],
       ),
