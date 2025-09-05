@@ -1,6 +1,7 @@
 import 'package:packup/http/dio_service.dart';
 import 'package:packup/model/common/result_model.dart';
 import 'package:packup/model/tour/tour_create_request.dart';
+import 'package:packup/model/tour/tour_session_create_request.dart';
 import 'package:packup/model/tour/tour_session_model.dart';
 
 class TourService {
@@ -49,5 +50,17 @@ class TourService {
     return list
         .map((e) => TourSessionModel.fromJson(e as Map<String, dynamic>))
         .toList();
+  }
+
+  Future<ResultModel> createSession({
+    required int tourSeq,
+    required TourSessionCreateRequest req,
+  }) async {
+    final url = '/tour/guide/$tourSeq/sessions';
+    return await DioService().postRequest(url, req.toJson());
+  }
+
+  Future<void> deleteSession(int sessionSeq) async {
+    await DioService().deleteRequest('/tour/guide/sessions/$sessionSeq');
   }
 }
