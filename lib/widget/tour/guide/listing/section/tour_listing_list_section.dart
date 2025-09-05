@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:packup/provider/tour/guide/tour_listing_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/widget/tour/guide/listing/tour_listing_card.dart';
@@ -67,8 +68,7 @@ class _TourListingListSectionState extends State<TourListingListSection> {
               return TourListingCard(
                 item: item,
                 onTap: () {
-                  // 상세/편집 라우팅
-                  // context.push('/g/listing/${item.id}');
+                  context.push('/g/listing/${item.id}/open');
                 },
               );
             },
