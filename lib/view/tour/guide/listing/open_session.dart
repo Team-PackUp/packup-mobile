@@ -35,7 +35,7 @@ class _OpenSessionListView extends StatelessWidget {
       appBar: AppBar(title: const Text('투어 시간 열기')),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 96),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
