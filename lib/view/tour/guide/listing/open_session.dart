@@ -96,7 +96,6 @@ class _OpenSessionListView extends StatelessWidget {
   }
 }
 
-/* --- 날짜별 그룹 목록 --- */
 class _OpenedSessionsList extends StatelessWidget {
   final List<TourSessionModel> sessions;
   const _OpenedSessionsList({required this.sessions});
@@ -117,24 +116,34 @@ class _OpenedSessionsList extends StatelessWidget {
         final items =
             grouped[day]!..sort((a, b) => a.startTime.compareTo(b.startTime));
         return Padding(
-          padding: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.only(bottom: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${day.month}/${day.day}',
+                _md(day),
                 style: const TextStyle(
                   color: Colors.pink,
                   fontWeight: FontWeight.w800,
                 ),
               ),
-              const SizedBox(height: 8),
-              ...items.map((s) => _SessionTile(s: s)),
+              const SizedBox(height: 6),
+              ...items.map(
+                (s) => Padding(
+                  padding: const EdgeInsets.only(bottom: 0),
+                  child: _SessionTile(s: s),
+                ),
+              ),
             ],
           ),
         );
       },
     );
+  }
+
+  String _md(DateTime d) {
+    String two(int n) => n.toString().padLeft(2, '0');
+    return '${two(d.month)}/${two(d.day)}';
   }
 }
 
@@ -157,23 +166,29 @@ class _SessionTile extends StatelessWidget {
             : null;
 
     return Card(
+      elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
+        dense: true,
+        visualDensity: const VisualDensity(horizontal: -2, vertical: -2),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        minLeadingWidth: 0,
         leading: CircleAvatar(radius: 6, backgroundColor: color),
         title: Text(
-          '${_t(s.startTime)} - ${_t(s.endTime)}',
-          style: const TextStyle(fontWeight: FontWeight.w700),
+          '${_dt(s.startTime)} - \n${_dt(s.endTime)}',
+          maxLines: 2,
+          style: const TextStyle(fontWeight: FontWeight.w700, height: 1.2),
         ),
         subtitle: Text(cap ?? label),
-        trailing: const Icon(Icons.expand_more),
+        trailing: const Icon(Icons.expand_more, size: 20),
         onTap: () {
-          // TODO: 상세/수정 바텀시트 오픈(필요 시)
+          // TODO..
         },
       ),
     );
   }
 
-  String _t(DateTime d) {
+  String _dt(DateTime d) {
     final l = d.toLocal();
     String two(int n) => n.toString().padLeft(2, '0');
     return '${two(l.month)}/${two(l.day)} ${two(l.hour)}:${two(l.minute)}';
