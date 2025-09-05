@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:packup/common/size_config.dart';
 import 'package:packup/provider/alert_center/alert_center_provider.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 import 'package:provider/provider.dart';
@@ -136,7 +137,7 @@ class _HomeContentState extends State<HomeContent> {
                     ],
                   ),
                   alert: const AlertBell(),
-                  profile: CircleProfileImage(radius: 24),
+                  profile: CircleProfileImage(radius: context.sY(14)),
                   bottom: CustomSearch(onTap: () => context.push('/search/all')),
                 ),
               ],

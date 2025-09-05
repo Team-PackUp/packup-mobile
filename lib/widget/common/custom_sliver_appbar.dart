@@ -84,8 +84,8 @@ class CustomSliverAppBar extends StatelessWidget {
             children: [
               if (alert != null)
                 SizedBox(
-                  width: actionBox,
-                  height: actionBox,
+                  width: actionBox * 1.5,
+                  height: actionBox * 2,
                   child: Center(child: alert!),
                 ),
               if (alert != null && profile != null) SizedBox(width: actionGap),
