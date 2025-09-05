@@ -7,7 +7,7 @@ class RecommendList extends StatelessWidget {
   final List<RecommendTourModel> tours;
   final ValueChanged<RecommendTourModel> onTap;
 
-  const RecommendList({required this.tours, required this.onTap});
+  const RecommendList({super.key, required this.tours, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

@@ -16,10 +16,12 @@ class HotTourSection extends StatefulWidget {
 
 class _HotTourSectionState extends State<HotTourSection> {
   late final ScrollController _scrollController;
+  late final String regionCode;
 
   @override
   void initState() {
     super.initState();
+    regionCode = widget.regionCode;
 
     // 무한스크롤의 책임을 섹션에게 전가
     _scrollController = ScrollController();
@@ -48,6 +50,8 @@ class _HotTourSectionState extends State<HotTourSection> {
           icon: '🔥',
           title: '인기 급상승 투어!',
           subTitle: '여러 사람들이 신청하고 있어요',
+          callBackText: "더보기",
+          onSeeMore: () => context.push('/home_hot_tour_detail/$regionCode'),
         ),
         HotTourList(
           tours: tourList,

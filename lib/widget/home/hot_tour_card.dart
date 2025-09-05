@@ -3,6 +3,7 @@ import 'package:packup/Const/color.dart';
 import 'package:packup/model/tour/tour_model.dart';
 import '../../common/util.dart';
 import '../common/slide_text.dart';
+import '../../common/size_config.dart'; // <- SizeConfig & ContextSizeX 확장
 
 class HotTourCard extends StatelessWidget {
   const HotTourCard({super.key, required this.tour});
@@ -10,12 +11,22 @@ class HotTourCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenW = MediaQuery.of(context).size.width;
-    final screenH = MediaQuery.of(context).size.height;
+    final hPad = context.sX(16, minScale: .85, maxScale: 1.2);
+    final vPad = context.sY(20, minScale: .85, maxScale: 1.2);
+    final chipHPad = context.sX(8, minScale: .85, maxScale: 1.2);
+    final chipVPad = context.sY(6, minScale: .85, maxScale: 1.2);
+    final gapXs = context.sX(6, minScale: .85, maxScale: 1.2);
+    final gapSm = context.sY(4, minScale: .85, maxScale: 1.2);
+    final gapMd = context.sY(5, minScale: .85, maxScale: 1.2);
+    final avatarR = context.sX(18, minScale: .9, maxScale: 1.15);
+    final iconSize = context.sX(14, minScale: .9, maxScale: 1.2);
+    final corner = context.sX(12, minScale: .9, maxScale: 1.2);
+
+    double f(double base) => (base * context.textScale.clamp(1.0, 1.2));
 
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(corner)),
       clipBehavior: Clip.hardEdge,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -24,25 +35,24 @@ class HotTourCard extends StatelessWidget {
           Stack(
             children: [
               AspectRatio(
-                aspectRatio: 5 / 3,
+                aspectRatio: 6 / 3,
                 child: Image.network(
                   fullFileUrl(tour.titleImagePath ?? ''),
                   fit: BoxFit.cover,
-                  errorBuilder:
-                      (_, __, ___) => Image.asset(
-                        'assets/image/logo/logo.png',
-                        fit: BoxFit.cover,
-                      ),
+                  errorBuilder: (_, __, ___) => Image.asset(
+                    'assets/image/logo/logo.png',
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               if (tour.remainPeople <= 3)
                 Positioned(
-                  top: 8,
-                  right: 8,
+                  top: gapSm,
+                  right: gapSm,
                   child: Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: screenW * 0.02,
-                      vertical: screenH * 0.01,
+                      horizontal: chipHPad,
+                      vertical: chipVPad,
                     ),
                     decoration: BoxDecoration(
                       color: PRIMARY_COLOR,
@@ -50,10 +60,10 @@ class HotTourCard extends StatelessWidget {
                     ),
                     child: Text(
                       '마감 임박! (${tour.remainPeople}자리 남음)',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
+                        fontSize: f(10),
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
@@ -61,57 +71,80 @@ class HotTourCard extends StatelessWidget {
             ],
           ),
 
+          // 본문
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            padding: EdgeInsets.symmetric(horizontal: hPad, vertical: vPad),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SlideText(title: tour.tourTitle ?? ''),
-                SizedBox(height: screenH * 0.01),
+                DefaultTextStyle.merge(
+                  style: TextStyle(
+                    fontSize: f(14), // 제목 기본 크기
+                    fontWeight: FontWeight.w600,
+                    height: 1.2,
+                  ),
+                  child: SlideText(title: tour.tourTitle ?? ''),
+                ),
+
+                SizedBox(height: gapMd),
+
+                // 장소
                 Row(
                   children: [
-                    const Icon(Icons.place, size: 12, color: Colors.grey),
-                    SizedBox(width: screenW * 0.01),
+                    Icon(Icons.place, size: iconSize, color: Colors.grey),
+                    SizedBox(width: gapXs),
                     Expanded(
                       child: Text(
                         tour.tourLocation ?? '',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey,
+                        style: TextStyle(
+                          fontSize: f(11),
+                          color: Colors.grey[700],
+                          height: 1.2,
                         ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: screenH * 0.003),
+
+                SizedBox(height: gapSm),
+
+                // 가격
                 Text(
-                  formatPrice(tour.tourPrice!),
-                  style: const TextStyle(
-                    fontSize: 14,
+                  tour.tourPrice != null
+                      ? formatPrice(tour.tourPrice!)
+                      : '가격 문의',
+                  style: TextStyle(
+                    fontSize: f(15),
                     fontWeight: FontWeight.bold,
-                    color: Colors.red,
+                    color: Colors.red[600],
+                    height: 1.2,
                   ),
                 ),
-                SizedBox(height: screenH * 0.003),
+
+                SizedBox(height: gapSm),
+
+                // 가이드
                 Row(
                   children: [
                     CircleAvatar(
-                      radius: screenW * 0.03,
+                      radius: avatarR,
                       backgroundImage: NetworkImage(
                         fullFileUrl(tour.guideModel?.guideAvatarPath ?? ''),
                       ),
                       onBackgroundImageError: (_, __) {},
+                      backgroundColor: Colors.grey[200],
                     ),
-                    SizedBox(width: screenW * 0.02),
+                    SizedBox(width: gapMd),
                     Expanded(
                       child: Text(
                         tour.guideModel?.guideName ?? '',
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey,
+                        style: TextStyle(
+                          fontSize: f(11),
+                          color: Colors.grey[700],
+                          height: 1.2,
                         ),
                       ),
                     ),

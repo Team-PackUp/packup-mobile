@@ -19,8 +19,8 @@ class ReservationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final image = tour.titleImagePath ?? 'assets/image/logo/logo.png';
-    final title = tour.tourTitle!;
-    final date = tour.tourStartDate!;
+    final title = tour.tourTitle ?? "";
+    final date = tour.tourStartDate;
     final guide = tour.guide?.guideName ?? '가이드 미지정';
     final people = tour.remainPeople.toString();
 
@@ -73,7 +73,7 @@ class ReservationCard extends StatelessWidget {
                               children: [
                                 const Icon(Icons.calendar_today, size: 16),
                                 SizedBox(height: h * 0.01),
-                                Text(convertToYmd(date), style: TextStyle(fontSize: w * 0.035)),
+                                // Text(convertToYmd(date!), style: TextStyle(fontSize: w * 0.035)),
                               ],
                             ),
                             SizedBox(height: h * 0.01),
