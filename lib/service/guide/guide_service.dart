@@ -29,4 +29,9 @@ class GuideService {
   Future<ResultModel> upsertIntro(GuideIntroModel model) async {
     return await _dio.putRequest('/guide/intro/me', model.toJson());
   }
+
+  Future<ResultModel> getGuideList({required int page, required size}) async {
+    final data = {'size' : size, 'page' : page};
+    return await _dio.getRequest('/guide/list', data);
+  }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/common/size_config.dart';
 import 'package:packup/provider/alert_center/alert_center_provider.dart';
+import 'package:packup/provider/guide/guide_provider.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -24,9 +25,12 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => TourProvider(),
-      child: const HomeContent(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => GuideProvider()),
+        ChangeNotifierProvider(create: (_) => TourProvider()),
+      ],
+    child: const HomeContent(),
     );
   }
 }

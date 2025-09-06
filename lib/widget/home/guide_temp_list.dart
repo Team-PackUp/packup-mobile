@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:packup/model/guide/guide_model_temp.dart';
 import 'package:packup/widget/home/guide_card.dart';
 import '../../common/size_config.dart';
-import '../../model/guide/guide_model.dart';
+import 'guide_temp_card.dart';
 
-class GuideList extends StatelessWidget {
-  const GuideList({super.key, required this.guides, required this.onTap});
-  final List<GuideModel> guides;
-  final ValueChanged<GuideModel> onTap;
+class GuideTempList extends StatelessWidget {
+  const GuideTempList({super.key, required this.guides, required this.onTap});
+  final List<GuideModelTemp> guides;
+  final ValueChanged<GuideModelTemp> onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class GuideList extends StatelessWidget {
                 width: cardWidth,
                 child: InkWell(
                   onTap: () => onTap(guide),
-                  child: GuideCard(guide: guide),
+                  child: GuideTempCard(guide: guide),
                 ),
               );
             },
