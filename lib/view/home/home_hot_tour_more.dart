@@ -60,7 +60,6 @@ class _HomeHotTourMoreContentState extends State<HomeHotTourMoreContent> {
       backgroundColor: Colors.white,
       appBar: CustomAppbar(
         title: '인기 급상승 투어',
-        arrowFlag: false,
         alert: AlertBell(),
         bottom: CustomSearch(
           mode: SearchMode.input,
