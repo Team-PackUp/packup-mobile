@@ -108,4 +108,37 @@ class TourProvider extends LoadingProvider {
     }
     notifyListeners();
   }
+
+  // Home 탭에서 사용할 투어 조회 함수
+  Future<void> getTourListNoProgress({required String regionCode}) async {
+
+    if (_isFetching) return;
+
+    _isFetching = true;
+      try {
+
+        final ResultModel response;
+
+        response = await _tourService.getTourListByRegion(
+          regionCode: regionCode,
+          page: _currentPage,
+          size: _size,
+        );
+
+        final data = response.response;
+
+        final page = PageResponse.fromJson(data, (e) => TourModel.fromJson(e));
+
+        _tourList.addAll(page.content);
+        _originalList.addAll(_tourList);
+        _hasNextPage = !page.last;
+        _currentPage++;
+
+        notifyListeners();
+      } catch (e, stack) {
+        print('[TourProvider] 예외 발생: $e\n$stack');
+      } finally {
+        _isFetching = false;
+      }
+  }
 }

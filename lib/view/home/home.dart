@@ -17,6 +17,7 @@ import 'package:packup/widget/common/custom_sliver_appbar.dart';
 
 import '../../common/util.dart';
 import '../../model/common/code_mapping_model.dart';
+import '../../provider/home/home_provider.dart';
 import '../../widget/common/circle_profile_image.dart';
 import '../../widget/common/custom_dropdown_button.dart';
 
@@ -29,8 +30,17 @@ class Home extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => GuideProvider()),
         ChangeNotifierProvider(create: (_) => TourProvider()),
+        // Tour/Guide를 HomeProvider에 주입
+        ChangeNotifierProxyProvider2<TourProvider, GuideProvider, HomeProvider>(
+          create: (_) => HomeProvider(),
+          update: (_, tours, guides, home) {
+            home ??= HomeProvider();
+            home.bind(tours: tours, guides: guides);
+            return home;
+          },
+        ),
       ],
-    child: const HomeContent(),
+      child: const HomeContent(),
     );
   }
 }

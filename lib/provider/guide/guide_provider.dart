@@ -27,7 +27,6 @@ class GuideProvider extends LoadingProvider {
     loadingGuide = true;
     notifyListeners();
 
-    await LoadingService.run(() async {
       final response  = await _service.getGuideList(page: _curPage, size: count);
       final page = PageModel<GuideModel>.fromJson(
         response.response,
@@ -37,7 +36,6 @@ class GuideProvider extends LoadingProvider {
       _guideList   = page.objectList;
       _totalPage = page.totalPage;
       _curPage   = page.curPage + 1;
-    });
 
     loadingGuide = false;
     notifyListeners();
