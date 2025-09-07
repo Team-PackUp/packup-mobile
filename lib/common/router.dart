@@ -255,11 +255,11 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
         builder: (context, state) => const GuideApplicationSubmitPage(),
       ),
       GoRoute(
-        path: '/guide/:guideId',
+        path: '/guide/:guideSeq',
         name: 'guideDetail',
         builder: (context, state) {
-          final guideId = int.parse(state.pathParameters['guideId']!);
-          return GuideDetailPage(guideId: guideId);
+          final guideSeq = int.parse(state.pathParameters['guideSeq']!);
+          return GuideDetailPage(guideSeq: guideSeq);
         },
       ),
       GoRoute(

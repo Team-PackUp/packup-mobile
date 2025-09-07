@@ -19,10 +19,15 @@ class TourService {
     required int page,
     required int size,
   }) async {
-    print(regionCode);
     final query = {'page': page, 'size': size};
 
-    return await DioService().getRequest('/tour/$regionCode', query);
+    return await DioService().getRequest('/tour/proxy/$regionCode', query);
+  }
+
+  Future<ResultModel> getTourListByGuide({
+    required int guideSeq,
+  }) async {
+    return await DioService().getRequest('/tour/guide/$guideSeq');
   }
 
   Future<void> updateTour(int seq, Map<String, dynamic> body) async {

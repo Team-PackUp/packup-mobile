@@ -1,20 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:packup/model/guide/guide_model_temp.dart';
+import 'package:packup/provider/guide/guide_provider.dart';
 import 'package:packup/widget/guide/detail/guide_profile_card.dart';
+import 'package:provider/provider.dart';
 
-class GuideProfileSection extends StatelessWidget {
-  const GuideProfileSection({super.key});
+class GuideProfileSection extends StatefulWidget {
+  final int guideSeq;
+  const GuideProfileSection({super.key, required this.guideSeq});
+
+  @override
+  State<GuideProfileSection> createState() => _GuideProfileSectionState();
+}
+
+class _GuideProfileSectionState extends State<GuideProfileSection> {
+  late final GuideProvider _provider;
+  bool _loaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _provider = GuideProvider.create(guideSeq: widget.guideSeq);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted || _loaded) return;
+      _loaded = true;
+      await _provider.getGuideDetail();
+      if (!mounted) return;
+    });
+  }
+
+  @override
+  void dispose() {
+    _provider.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final guide = GuideModelTemp(
-      guideName: 'Juna Im',
-      guideRating: 4.8,
-      guideIntroduce: '전주 플러터1등 운전1등 PHP1등 임준아입니다. 고려샹크스라는 별명으로 활동하고 있습니다.',
-      guideAvatarPath: 'https://i.imgur.com/2qLxayi.jpeg',
-      languages: ['English', 'Japanese', 'Flutter'],
+    return ChangeNotifierProvider<GuideProvider>.value(
+      value: _provider,
+      child: Consumer<GuideProvider>(
+        builder: (_, p, __) {
+          if (p.guideModel == null) return const SizedBox.shrink();
+          return GuideProfileCard(guide: p.guideModel!);
+        },
+      ),
     );
-
-    return GuideProfileCard(guide: guide);
   }
 }

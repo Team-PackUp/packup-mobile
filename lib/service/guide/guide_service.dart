@@ -34,4 +34,8 @@ class GuideService {
     final data = {'size' : size, 'page' : page};
     return await _dio.getRequest('/guide/list', data);
   }
+
+  Future<ResultModel> getGuideDetail({required int guideSeq}) async {
+    return await _dio.getRequest('/guide/detail/$guideSeq');
+  }
 }

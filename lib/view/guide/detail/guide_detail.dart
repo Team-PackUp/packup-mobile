@@ -1,45 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:packup/provider/tour/tour_provider.dart';
 import 'package:packup/widget/guide/detail/section/guide_profile_section.dart';
-import 'package:packup/widget/guide/detail/section/guide_review_summary_section.dart';
 import 'package:packup/widget/guide/detail/section/guide_tour_section.dart';
-import 'package:packup/widget/guide/detail/section/review_list_section.dart';
-import 'package:provider/provider.dart';
 
 import '../../../widget/common/custom_appbar.dart';
 
 class GuideDetailPage extends StatelessWidget {
-  final int guideId;
-
-  const GuideDetailPage({super.key, required this.guideId});
+  final int guideSeq;
+  const GuideDetailPage({super.key, required this.guideSeq});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => TourProvider(),
-      child: GuideDetailContent(),
-    );
+    return GuideDetailContent(guideSeq: guideSeq);
   }
 }
 
-class GuideDetailContent extends StatefulWidget {
-  const GuideDetailContent({super.key});
-
-  @override
-  State<GuideDetailContent> createState() => _GuideDetailContentState();
-}
-
-class _GuideDetailContentState extends State<GuideDetailContent> {
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final tourProvider = context.read<TourProvider>();
-
-      tourProvider.getTourList();
-    });
-  }
+class GuideDetailContent extends StatelessWidget {
+  final int guideSeq;
+  const GuideDetailContent({super.key, required this.guideSeq});
 
   @override
   Widget build(BuildContext context) {
@@ -55,13 +32,13 @@ class _GuideDetailContentState extends State<GuideDetailContent> {
             vertical: screenH * 0.01,
           ),
           children: [
-            const GuideProfileSection(),
+            GuideProfileSection(guideSeq: guideSeq),
             SizedBox(height: screenH * 0.03),
-            const GuideTourSection(),
+            GuideTourSection(guideSeq: guideSeq),
             SizedBox(height: screenH * 0.03),
-            const GuideReviewSummarySection(),
+            // GuideReviewSummarySection(guideSeq: guideSeq),
             SizedBox(height: screenH * 0.03),
-            const ReviewListSection(seq: 4),
+            // ReviewListSection(seq: guideSeq),
             SizedBox(height: screenH * 0.03),
           ],
         ),

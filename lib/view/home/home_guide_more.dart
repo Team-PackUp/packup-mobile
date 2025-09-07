@@ -17,7 +17,7 @@ class HomeGuideMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => GuideProvider(),
+      create: (_) => GuideProvider.create(),
       child: HomeGuideMoreContent(),
     );
   }

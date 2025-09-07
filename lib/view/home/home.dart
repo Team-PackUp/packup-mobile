@@ -28,7 +28,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => GuideProvider()),
+        ChangeNotifierProvider(create: (_) => GuideProvider.create()),
         ChangeNotifierProvider(create: (_) => TourProvider()),
         // Tour/Guide를 HomeProvider에 주입
         ChangeNotifierProxyProvider2<TourProvider, GuideProvider, HomeProvider>(

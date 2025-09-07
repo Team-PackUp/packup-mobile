@@ -3,8 +3,10 @@ import 'package:packup/model/guide/guide_model_temp.dart';
 import 'package:packup/widget/tour/user/rating.dart';
 import 'package:packup/widget/tour/user/tag.dart';
 
+import '../../../model/guide/guide_model.dart';
+
 class GuideProfileCard extends StatelessWidget {
-  final GuideModelTemp guide;
+  final GuideModel guide;
 
   const GuideProfileCard({super.key, required this.guide});
 
@@ -29,8 +31,8 @@ class GuideProfileCard extends StatelessWidget {
               CircleAvatar(
                 radius: screenH * 0.035,
                 backgroundImage: NetworkImage(
-                  guide.guideAvatarPath?.isNotEmpty == true
-                      ? guide.guideAvatarPath!
+                  guide.user?.profileImagePath?.isNotEmpty == true
+                      ? guide.user!.profileImagePath!
                       : 'https://i.imgur.com/BoN9kdC.png',
                 ),
               ),
@@ -40,7 +42,7 @@ class GuideProfileCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      guide.guideName ?? '가이드 이름 없음',
+                      guide.user?.nickname ?? '가이드 이름 없음',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,

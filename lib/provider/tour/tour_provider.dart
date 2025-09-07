@@ -16,8 +16,11 @@ class TourProvider extends LoadingProvider {
   // 검색용
   List<TourModel> _originalList = [];
 
+  List<TourModel> _tourListByGuide = [];
+
   /// 현재 불러온 전체 투어 목록
   List<TourModel> get tourList => _tourList;
+  List<TourModel> get tourListByGuide => _tourListByGuide;
 
   // 페이징 관련 변수
   final int _size = 20; // 페이지당 항목 수
@@ -141,4 +144,16 @@ class TourProvider extends LoadingProvider {
         _isFetching = false;
       }
   }
+
+  Future<void> getTourListByGuide({required int guideSeq}) async {
+    final res = await _tourService.getTourListByGuide(guideSeq: guideSeq);
+
+    final List<dynamic> raw = res.response as List<dynamic>;
+    _tourListByGuide = raw
+        .map((e) => TourModel.fromJson(e as Map<String, dynamic>))
+        .toList(growable: false);
+
+    notifyListeners();
+  }
+
 }

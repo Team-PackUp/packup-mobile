@@ -26,14 +26,14 @@ class _ReviewListSectionState extends State<ReviewListSection> {
   }
 
   Future<void> _loadTopReplies() async {
-    final _replyProvider = ReplyProvider.create(
+    final replyProvider = ReplyProvider.create(
       targetSeq: widget.seq,
       targetType: TargetType.replyTour,
     );
 
-    await _replyProvider.getReplyList();
+    await replyProvider.getReplyList();
     setState(() {
-      _replyList = _replyProvider.replyList.take(10).toList();
+      _replyList = replyProvider.replyList.take(10).toList();
     });
   }
 
