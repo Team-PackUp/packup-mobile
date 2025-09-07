@@ -56,7 +56,7 @@ class GuideProvider extends LoadingProvider {
       _guideList = List.from(_originalList);
     } else {
       _guideList = _originalList.where((guide) {
-        final name = guide.guideName ?? '';
+        final name = guide.user?.nickname ?? '';
         return name.contains(keyword);
       }).toList();
     }
