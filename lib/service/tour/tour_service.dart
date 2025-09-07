@@ -74,4 +74,20 @@ class TourService {
   Future<void> deleteSession(int sessionSeq) async {
     await DioService().deleteRequest('/tour/guide/sessions/$sessionSeq');
   }
+
+  Future<void> updateListing(String id, TourCreateRequest req) async {
+    await DioService().putRequest('/tour/listing/$id', req.toJson());
+  }
+
+  Future<Map<String, dynamic>> fetchListingDetail(String id) async {
+    final ResultModel res = await DioService().getRequest('/tour/listing/$id');
+    final dynamic payload = res.response;
+    if (payload is Map<String, dynamic>) return payload;
+    if (payload is List &&
+        payload.isNotEmpty &&
+        payload.first is Map<String, dynamic>) {
+      return payload.first as Map<String, dynamic>;
+    }
+    return <String, dynamic>{};
+  }
 }

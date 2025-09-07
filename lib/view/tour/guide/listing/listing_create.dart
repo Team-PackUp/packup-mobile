@@ -17,92 +17,86 @@ import 'package:packup/widget/common/custom_appbar.dart';
 import 'package:packup/provider/tour/guide/listing_create_provider.dart';
 import 'package:packup/widget/guide/listing/create/step_intro.dart';
 
+final List<ListingStepConfig> guideListingSteps = [
+  ListingStepConfig(
+    id: 'intro',
+    title: '리스팅 등록',
+    builder: (ctx) => const StepIntro(),
+  ),
+  ListingStepConfig(
+    id: 'keywords',
+    title: '키워드',
+    builder: (_) => const StepKeywords(),
+  ),
+  ListingStepConfig(
+    id: 'title',
+    title: '투어 제목',
+    builder: (_) => const StepTitle(),
+  ),
+  ListingStepConfig(
+    id: 'desc',
+    title: '투어 소개',
+    builder: (_) => const StepDesc(),
+  ),
+  ListingStepConfig(
+    id: 'include',
+    title: '포함되는 항목',
+    builder: (_) => const StepInclude(),
+  ),
+  ListingStepConfig(
+    id: 'exclude',
+    title: '포함되지 않는 항목',
+    builder: (_) => const StepExclude(),
+  ),
+  ListingStepConfig(
+    id: 'addr',
+    title: '위치 확인',
+    builder: (_) => const StepLocationAddress(),
+  ),
+  ListingStepConfig(
+    id: 'pin',
+    title: '위치 확인',
+    builder: (_) => const StepLocationPin(),
+  ),
+  ListingStepConfig(
+    id: 'photos',
+    title: '사진',
+    builder: (_) => const StepPhotos(),
+  ),
+  ListingStepConfig(
+    id: 'itinerary',
+    title: '일정표',
+    builder: (_) => const StepItinerary(),
+  ),
+  ListingStepConfig(
+    id: 'price_basic',
+    title: '요금',
+    builder: (_) => const StepPriceBasic(),
+  ),
+  ListingStepConfig(
+    id: 'price_premium',
+    title: '요금',
+    builder: (_) => const StepPricePremium(),
+  ),
+  ListingStepConfig(
+    id: 'provision',
+    title: '세부 정보',
+    builder: (_) => const StepProvision(),
+  ),
+  ListingStepConfig(
+    id: 'review',
+    title: '최종 검토',
+    builder: (_) => const StepReview(),
+  ),
+];
+
 class ListingCreatePage extends StatelessWidget {
-  const ListingCreatePage({super.key});
+  ListingCreatePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create:
-          (_) => ListingCreateProvider(
-            steps: [
-              ListingStepConfig(
-                id: 'intro',
-                title: '리스팅 등록',
-                builder: (ctx) => const StepIntro(),
-              ),
-              ListingStepConfig(
-                id: 'keywords',
-                title: '키워드',
-                builder: (_) => const StepKeywords(),
-              ),
-              ListingStepConfig(
-                id: 'title',
-                title: '투어 제목',
-                builder: (_) => const StepTitle(),
-              ),
-              ListingStepConfig(
-                id: 'desc',
-                title: '투어 소개',
-                builder: (_) => const StepDesc(),
-              ),
-              ListingStepConfig(
-                id: 'include',
-                title: '포함되는 항목',
-                builder: (_) => const StepInclude(),
-              ),
-              ListingStepConfig(
-                id: 'exclude',
-                title: '포함되지 않는 항목',
-                builder: (_) => const StepExclude(),
-              ),
-              // ListingStepConfig(
-              //   id: 'location',
-              //   title: '장소',
-              //   builder: (ctx) => const StepLocationSearch(),
-              // ),
-              ListingStepConfig(
-                id: 'addr',
-                title: '위치 확인',
-                builder: (_) => const StepLocationAddress(),
-              ),
-              ListingStepConfig(
-                id: 'pin',
-                title: '위치 확인',
-                builder: (_) => const StepLocationPin(),
-              ),
-              ListingStepConfig(
-                id: 'photos',
-                title: '사진',
-                builder: (_) => const StepPhotos(),
-              ),
-              ListingStepConfig(
-                id: 'itinerary',
-                title: '일정표',
-                builder: (_) => const StepItinerary(),
-              ),
-              ListingStepConfig(
-                id: 'price_basic',
-                title: '요금',
-                builder: (_) => const StepPriceBasic(),
-              ),
-              ListingStepConfig(
-                id: 'price_premium',
-                title: '요금',
-                builder: (_) => const StepPricePremium(),
-              ),
-              ListingStepConfig(
-                id: 'provision',
-                title: '세부 정보',
-                builder: (_) => const StepProvision(),
-              ),
-              ListingStepConfig(
-                id: 'review',
-                title: '최종 검토',
-                builder: (_) => const StepReview(),
-              ),
-            ],
-          ),
+      create: (_) => ListingCreateProvider(steps: guideListingSteps),
       child: const _Scaffold(),
     );
   }

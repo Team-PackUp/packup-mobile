@@ -13,7 +13,7 @@ class GuideListingPage extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => TourListingProvider()..refresh(),
       child: Scaffold(
-        appBar: const CustomAppbar(title: '리스팅', arrowFlag: false),
+        appBar: const CustomAppbar(title: '일정', arrowFlag: false),
         body: const TourListingListSection(),
         floatingActionButton: FloatingActionButton(
           onPressed: () => context.push('/g/listing/create'),
