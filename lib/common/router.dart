@@ -25,6 +25,7 @@ import 'package:packup/view/reply/reply_write.dart';
 import 'package:packup/view/search/search.dart';
 import 'package:packup/view/tour/guide/listing/guide_listing.dart';
 import 'package:packup/view/tour/guide/listing/guide_listing_info.dart';
+import 'package:packup/view/tour/guide/listing/guide_listing_info_detail.dart';
 import 'package:packup/view/tour/guide/listing/listing_create.dart';
 import 'package:packup/view/tour/guide/listing/open_session.dart';
 import 'package:packup/view/tour/guide/listing/open_session_create.dart';
@@ -331,7 +332,15 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
           ),
           GoRoute(
             path: '/g/listing/create',
-            builder: (context, state) => const ListingCreatePage(),
+            builder: (context, state) => ListingCreatePage(),
+          ),
+          GoRoute(
+            path: '/g/listing/:id/info',
+            name: 'gListingInfoDetail',
+            builder: (context, state) {
+              final id = state.pathParameters['id']!;
+              return GuideListingInfoDetailPage(listingId: id);
+            },
           ),
           GoRoute(
             path: '/g/listing/:tourSeq/open',
