@@ -17,7 +17,6 @@ class ListingStepConfig {
 }
 
 class ListingCreateProvider extends ChangeNotifier {
-  // ----------------- 안전 접근 헬퍼 -----------------
   String? _gs(Map<String, dynamic> m, String key) => (m[key])?.toString();
 
   int? _gi(Map<String, dynamic> m, String key) {
