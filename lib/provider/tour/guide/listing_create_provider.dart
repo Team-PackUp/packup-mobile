@@ -225,6 +225,10 @@ class ListingCreateProvider extends ChangeNotifier {
       detailError = e;
     } finally {
       loadingDetail = false;
+
+      final i = steps.indexWhere((e) => e.id == 'review');
+      if (i >= 0) _index = i;
+
       notifyListeners();
     }
   }

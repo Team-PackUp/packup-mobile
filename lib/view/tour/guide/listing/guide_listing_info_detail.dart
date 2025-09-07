@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:packup/provider/tour/guide/listing_create_provider.dart';
 import 'package:packup/widget/common/custom_appbar.dart';
-import 'package:packup/widget/guide/listing/create/step_review.dart';
 import 'package:provider/provider.dart';
-import 'package:packup/view/tour/guide/listing/listing_create.dart';
+import 'package:packup/view/tour/guide/listing/listing_create.dart'; // guideListingSteps
 
 class GuideListingInfoDetailPage extends StatelessWidget {
   const GuideListingInfoDetailPage({super.key, required this.listingId});
@@ -30,16 +29,18 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = context.watch<ListingCreateProvider>();
 
-    final title = (p.getField<String>('basic.title') ?? '');
-    final desc = (p.getField<String>('basic.description') ?? '');
-
     return Scaffold(
-      appBar: const CustomAppbar(title: '리스팅 상세', arrowFlag: true),
+      appBar: CustomAppbar(title: p.current.title, arrowFlag: true),
       body: SafeArea(
         child:
-            (title.isEmpty && desc.isEmpty)
+            p.loadingDetail
                 ? const Center(child: CircularProgressIndicator())
-                : const StepReview(),
+                : Column(
+                  children: [
+                    // 🔑 현재 선택된 스텝 위젯을 그대로 렌더링
+                    Expanded(child: p.current.builder(context)),
+                  ],
+                ),
       ),
       bottomNavigationBar: SafeArea(
         top: false,
