@@ -1,68 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/model/guide/guide_model_temp.dart';
-import 'package:packup/widget/home/guide_card.dart';
+import 'package:packup/provider/guide/guide_provider.dart';
+import 'package:packup/widget/common/custom_empty_list.dart';
 import 'package:packup/widget/home/guide_list.dart';
+import 'package:provider/provider.dart';
 
 import '../../common/section_header.dart';
 
-class GuideSection extends StatelessWidget {
+class GuideSection extends StatefulWidget {
   const GuideSection({super.key});
+  @override
+  State<GuideSection> createState() => _GuideSectionState();
+}
+
+class _GuideSectionState extends State<GuideSection> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<GuideProvider>().getGuideList(5);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final guides = [
-      {
-        'name': 'Juna Im',
-        'desc': 'Flutter / PHP print("GOAT")',
-        'tours': 15,
-        'image':
-            'https://i.imgur.com/kHJ7CsJ_d.webp?maxwidth=520&shape=thumb&fidelity=high',
-      },
-      {
-        'name': '박민석',
-        'desc': 'Chungbuk telecommunication master',
-        'tours': 12,
-        'image':
-            'https://i.imgur.com/uLfUuwk_d.webp?maxwidth=520&shape=thumb&fidelity=high',
-      },
-      {
-        'name': '정준모',
-        'desc': 'Samsung Kakao Naver Lets go',
-        'tours': 10,
-        'image':
-            'https://i.imgur.com/HVkGsb9_d.webp?maxwidth=520&shape=thumb&fidelity=high',
-      },
-    ];
+    return Consumer<GuideProvider>(
+      builder: (context, provider, _) {
+        if (provider.isLoading) return const SizedBox.shrink();
 
-    final guideModels =
-        guides.map((e) {
-          return GuideModelTemp(
-            name: e['name'] as String,
-            desc: e['desc'] as String,
-            tours: e['tours'] as int,
-            image: e['image'] as String,
+        final guides = provider.guideList;
+        if (guides.isEmpty) {
+          return
+          const CustomEmptyList(
+              message: "추천 가능한 가이드가 존재하지 않습니다.", icon: Icons.question_mark
           );
-        }).toList();
+        }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionHeader(
-          icon: '🌟',
-          title: '전문 가이드를 만나보세요!',
-          subTitle: '믿을 수 있는 가이드와 함께해요',
-          callBackText: '더보기',
-          onSeeMore: () => context.push('/index'),
-        ),
-
-        GuideList(
-          guides: guideModels,
-          onTap: (_) {
-            context.push('/guide/123');
-          },
-        ),
-      ],
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SectionHeader(
+              icon: '🌟',
+              title: '전문 가이드를 만나보세요!',
+              subTitle: '믿을 수 있는 가이드와 함께해요',
+              callBackText: '더보기',
+              onSeeMore: () => context.push('/home_guide_more'),
+            ),
+            GuideList(
+              guides: guides,
+              onTap: (g) => context.push('/guide/${g.seq}'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -10,6 +10,8 @@ import 'package:packup/view/chat/chat_room.dart';
 import 'package:packup/view/guide/detail/guide_detail.dart';
 import 'package:get/get.dart';
 import 'package:packup/view/guide/intro/guide_intro.dart';
+import 'package:packup/view/home/home_guide_more.dart';
+import 'package:packup/view/home/home_hot_tour_more.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
 import 'package:packup/view/menu/guide_menu.dart';
@@ -42,6 +44,7 @@ import '../view/profile/setting_account/notice/notice_list.dart';
 import '../view/profile/setting_account/notice/notice_view.dart';
 import '../view/reply/reply_list.dart';
 import '../view/home/home.dart';
+import '../widget/home/section/home_hot_tour_more_section.dart';
 
 GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
   return GoRouter(
@@ -122,6 +125,19 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
       GoRoute(path: '/', builder: (context, state) => const Login()),
       GoRoute(path: '/index', builder: (context, state) => const Index()),
       GoRoute(path: '/home', builder: (context, state) => const Home()),
+      GoRoute(
+        path: '/home_hot_tour_more/:regionCode',
+        builder: (context, state) {
+          final regionCode = state.pathParameters['regionCode']!;
+          return HomeHotTourMore(regionCode: regionCode);
+        },
+      ),
+      GoRoute(
+        path: '/home_guide_more',
+        builder: (context, state) {
+          return HomeGuideMore();
+        },
+      ),
       GoRoute(
         path: '/chat_room',
         builder: (context, state) {

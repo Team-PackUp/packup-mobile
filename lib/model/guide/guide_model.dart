@@ -1,6 +1,9 @@
+import 'package:packup/model/common/user_model.dart';
+
 class GuideModel {
   final int? seq;
   final int? userSeq;
+  final UserModel? user;
   final String? guideName;
   final String? telNumber;
   final String? telNumber2;
@@ -8,12 +11,14 @@ class GuideModel {
   final String? guideIntroduce;
   final double? guideRating;
   final String? guideAvatarPath;
+  final String? expertise;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
   GuideModel({
     this.seq,
     this.userSeq,
+    this.user,
     this.guideName,
     this.telNumber,
     this.telNumber2,
@@ -21,6 +26,7 @@ class GuideModel {
     this.guideIntroduce,
     this.guideRating,
     this.guideAvatarPath,
+    this.expertise,
     this.createdAt,
     this.updatedAt,
   });
@@ -29,6 +35,8 @@ class GuideModel {
     return GuideModel(
       seq: json['seq'],
       userSeq: json['userSeq'],
+      user: UserModel.fromJson(
+          json['user'] as Map<String, dynamic>),
       guideName: json['guideName'],
       telNumber: json['telNumber'],
       telNumber2: json['telNumber2'],
@@ -36,6 +44,7 @@ class GuideModel {
       guideIntroduce: json['guideIntroduce'],
       guideRating: (json['guideRating'] as num?)?.toDouble(),
       guideAvatarPath: json['guideAvatarPath'],
+      expertise: json['expertise'],
       createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
     );

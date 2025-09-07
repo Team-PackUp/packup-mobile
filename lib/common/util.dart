@@ -24,6 +24,18 @@ Future<bool> saveSystemTheme(String theme) async {
   return pref.setString('theme', theme);
 }
 
+// 투어 default 지역 조회
+Future<String> getDefaultRegion() async {
+  final pref = await SharedPreferences.getInstance();
+  return pref.getString('region') ?? "11";
+}
+
+// 투어 default 지역 저장
+Future<bool> saveDefaultRegion(String region) async {
+  final pref = await SharedPreferences.getInstance();
+  return pref.setString('region', region);
+}
+
 /// ################### Secure Storage ################### ///
 
 // 토큰 저장

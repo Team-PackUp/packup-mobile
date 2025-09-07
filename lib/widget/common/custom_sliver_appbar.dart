@@ -6,18 +6,21 @@ import '../../common/size_config.dart';
 class CustomSliverAppBar extends StatelessWidget {
   const CustomSliverAppBar({
     super.key,
-    required this.title,
+    this.title,               // <- String을 optional로
+    this.titleWidget,         // <- 새로 추가
     this.arrowFlag,
     this.alert,
     this.profile,
     this.bottom,
     this.floating = true,
+    this.centerTitle = true,
     this.snap = true,
     this.pinned = false,
     this.systemOverlayStyle,
   });
 
-  final String title;
+  final String? title;
+  final Widget? titleWidget;
   final bool? arrowFlag;
   final Widget? alert;
   final Widget? profile;
@@ -26,6 +29,7 @@ class CustomSliverAppBar extends StatelessWidget {
   final bool snap;
   final bool pinned;
   final SystemUiOverlayStyle? systemOverlayStyle;
+  final bool centerTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +53,7 @@ class CustomSliverAppBar extends StatelessWidget {
       floating: floating,
       snap: snap,
       pinned: pinned,
-      centerTitle: true,
+      centerTitle: centerTitle,
       toolbarHeight: toolbarH,
       systemOverlayStyle: systemOverlayStyle,
       titleTextStyle: TextStyle(
@@ -68,7 +72,10 @@ class CustomSliverAppBar extends StatelessWidget {
         onPressed: context.pop,
       )
           : null,
-      title: Text(title),
+
+      // 핵심: titleWidget이 있으면 그걸 쓰고, 아니면 기존처럼 Text(title)
+      title: titleWidget ?? Text(title ?? ''),
+
       actions: [
         Padding(
           padding: EdgeInsets.only(right: rightPad),
@@ -77,11 +84,10 @@ class CustomSliverAppBar extends StatelessWidget {
             children: [
               if (alert != null)
                 SizedBox(
-                  width: actionBox,
-                  height: actionBox,
-                  child: Center(
-                    child:  alert!,
-                )),
+                  width: actionBox * 1.5,
+                  height: actionBox * 2,
+                  child: Center(child: alert!),
+                ),
               if (alert != null && profile != null) SizedBox(width: actionGap),
               if (profile != null)
                 SizedBox(

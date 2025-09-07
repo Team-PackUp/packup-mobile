@@ -6,7 +6,7 @@ class HotTourList extends StatelessWidget {
   final List<TourModel> tours;
   final ValueChanged<TourModel> onTap;
 
-  const HotTourList({required this.tours, required this.onTap});
+  const HotTourList({super.key, required this.tours, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

@@ -22,22 +22,22 @@ class RewardSection extends StatelessWidget {
       children: [
         SectionHeader(
           icon: '🎁',
-          title: '혜택 및 포인트',
-          subTitle: '적립된 포인트로 다양한 혜택을 누리세요',
+          title: '쿠폰',
+          subTitle: '적립된 쿠폰으로 다양한 혜택을 누리세요',
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: screenH * 0.02),
           child: Row(
             children: [
-              Expanded(
-                child: RewardCard(
-                  icon: Icons.monetization_on_outlined,
-                  title: '$point',
-                  subtitle: '포인트',
-                  description: '현재 보유 포인트',
-                ),
-              ),
-              SizedBox(width: screenW * 0.03),
+              // Expanded(
+              //   child: RewardCard(
+              //     icon: Icons.monetization_on_outlined,
+              //     title: '$point',
+              //     subtitle: '포인트',
+              //     description: '현재 보유 포인트',
+              //   ),
+              // ),
+              SizedBox(height: screenH * 0.03),
               Expanded(
                 child: RewardCard(
                   icon: Icons.percent,

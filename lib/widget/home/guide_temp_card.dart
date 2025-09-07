@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:packup/Const/color.dart';
 import 'package:packup/model/guide/guide_model_temp.dart';
 import 'package:packup/theme/typographies/app_typographies.dart';
-import 'package:packup/widget/common/slide_text.dart';
-import '../../common/size_config.dart';
-import '../../model/guide/guide_model.dart';
-import '../common/circle_profile_image.dart'; // sX/sY
+import '../../common/size_config.dart'; // sX/sY
 
-class GuideCard extends StatelessWidget {
-  const GuideCard({super.key, required this.guide, this.width});
-  final GuideModel guide;
+class GuideTempCard extends StatelessWidget {
+  const GuideTempCard({super.key, required this.guide, this.width});
+  final GuideModelTemp guide;
   final double? width;
 
   @override
@@ -54,38 +51,58 @@ class GuideCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CircleProfileImage(imagePath: guide.user?.profileImagePath ?? '', radius: avatarR * 0.8),
+                  CircleAvatar(
+                    radius: avatarR,
+                    backgroundImage: NetworkImage(guide.image ?? ''),
+                  ),
                   SizedBox(height: vGapM),
                   // 이름: 필요시 줄바꿈 허용
-                  Flexible(
-                      child: SlideText(title: guide.user?.nickname ?? '')
+                  Text(
+                    guide.name ?? '',
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypographies.get(
+                      size: AppFontSize.base,
+                      weight: AppFontWeight.bold,
+                    ),
                   ),
                   SizedBox(height: vGapS),
                   Flexible(
-                    child: SlideText(title: guide.expertise ?? '')
+                    child: Text(
+                      guide.desc ?? '',
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypographies.get(
+                        size: AppFontSize.xs,
+                        weight: AppFontWeight.normal,
+                        color: TEXT_COLOR_B2,
+                      ),
+                    ),
                   ),
                   SizedBox(height: vGapM),
-                  // FittedBox(
-                  //   fit: BoxFit.scaleDown,
-                  //   child: Container(
-                  //     padding: EdgeInsets.symmetric(
-                  //       horizontal: chipHPad,
-                  //       vertical: chipVPad,
-                  //     ),
-                  //     decoration: BoxDecoration(
-                  //       color: SELECTED,
-                  //       borderRadius: BorderRadius.circular(chipBR),
-                  //     ),
-                  //     child: Text(
-                  //       '${0}개 투어 진행중',
-                  //       style: AppTypographies.get(
-                  //         size: AppFontSize.xs,
-                  //         weight: AppFontWeight.medium,
-                  //         color: TEXT_COLOR_W,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: chipHPad,
+                        vertical: chipVPad,
+                      ),
+                      decoration: BoxDecoration(
+                        color: SELECTED,
+                        borderRadius: BorderRadius.circular(chipBR),
+                      ),
+                      child: Text(
+                        '${guide.tours ?? 0}개 투어 진행중',
+                        style: AppTypographies.get(
+                          size: AppFontSize.xs,
+                          weight: AppFontWeight.medium,
+                          color: TEXT_COLOR_W,
+                        ),
+                      ),
+                    ),
+                  ),
                   SizedBox(height: vGapS),
                   TextButton(
                     onPressed: () {},

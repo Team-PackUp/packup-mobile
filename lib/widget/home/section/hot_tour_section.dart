@@ -7,7 +7,8 @@ import 'package:provider/provider.dart';
 import '../../common/section_header.dart';
 
 class HotTourSection extends StatefulWidget {
-  const HotTourSection({super.key});
+  final String regionCode;
+  const HotTourSection({super.key, required this.regionCode});
 
   @override
   State<HotTourSection> createState() => _HotTourSectionState();
@@ -15,10 +16,12 @@ class HotTourSection extends StatefulWidget {
 
 class _HotTourSectionState extends State<HotTourSection> {
   late final ScrollController _scrollController;
+  late final String regionCode;
 
   @override
   void initState() {
     super.initState();
+    regionCode = widget.regionCode;
 
     // 무한스크롤의 책임을 섹션에게 전가
     _scrollController = ScrollController();
@@ -26,12 +29,7 @@ class _HotTourSectionState extends State<HotTourSection> {
     _scrollController.addListener(() {
       final provider = context.read<TourProvider>();
 
-      if (_scrollController.position.pixels >=
-              _scrollController.position.maxScrollExtent - 100 &&
-          provider.hasNextPage &&
-          !provider.isLoading) {
-        provider.getTourList();
-      }
+        provider.getTourList(regionCode: widget.regionCode);
     });
   }
 
@@ -52,6 +50,8 @@ class _HotTourSectionState extends State<HotTourSection> {
           icon: '🔥',
           title: '인기 급상승 투어!',
           subTitle: '여러 사람들이 신청하고 있어요',
+          callBackText: "더보기",
+          onSeeMore: () => context.push('/home_hot_tour_more/$regionCode'),
         ),
         HotTourList(
           tours: tourList,

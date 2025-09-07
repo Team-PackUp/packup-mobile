@@ -14,6 +14,17 @@ class TourService {
     return await DioService().getRequest('/tour/user', query);
   }
 
+  Future<ResultModel> getTourListByRegion({
+    required String regionCode,
+    required int page,
+    required int size,
+  }) async {
+    print(regionCode);
+    final query = {'page': page, 'size': size};
+
+    return await DioService().getRequest('/tour/$regionCode', query);
+  }
+
   Future<void> updateTour(int seq, Map<String, dynamic> body) async {
     final url = '/tour/guide/$seq';
     await DioService().putRequest(url, body);

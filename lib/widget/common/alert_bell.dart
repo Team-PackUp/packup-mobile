@@ -12,16 +12,16 @@ class AlertBell extends StatelessWidget {
     final count = context.watch<AlertCenterProvider>().alertCount;
 
     // 균형 스케일 + 상/하한 (앱바 액션 규격과 동일)
-    double _s(double dp, {double min = 0.95, double max = 1.15}) {
+    double s0(double dp, {double min = 0.95, double max = 1.15}) {
       final s = context.scaleBalanced.clamp(min, max);
       return dp * s;
     }
 
-    final box      = _s(44);   // 액션 터치 영역(정사각)
-    final iconSize = _s(25);   // 아이콘 크기
-    final badgeHP  = _s(4);    // 배지 내부 좌우 패딩
-    final badgeVP  = _s(2);    // 배지 내부 상하 패딩
-    final badgeR   = _s(10);   // 배지 라운드
+    final box      = s0(44);   // 액션 터치 영역(정사각)
+    final iconSize = s0(25);   // 아이콘 크기
+    final badgeHP  = s0(4);    // 배지 내부 좌우 패딩
+    final badgeVP  = s0(2);    // 배지 내부 상하 패딩
+    final badgeR   = s0(10);   // 배지 라운드
     // 종 아이콘은 시각 중심이 아래라 살짝 올려 보정
     final bellYOffset = -context.sY(1, minScale: 1, maxScale: 1);
     // 배지 위치(슬롯 기준 상대값)
@@ -63,14 +63,14 @@ class AlertBell extends StatelessWidget {
                   color: Colors.red,
                   borderRadius: BorderRadius.circular(badgeR),
                 ),
-                constraints: BoxConstraints(minWidth: _s(18), minHeight: _s(16)),
+                constraints: BoxConstraints(minWidth: s0(18), minHeight: s0(16)),
                 alignment: Alignment.center,
                 child: Text(
                   count > 99 ? '99+' : '$count',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: _s(10),
+                    fontSize: s0(10),
                     fontWeight: FontWeight.w700,
                     height: 1.0,
                   ),
