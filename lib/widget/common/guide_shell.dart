@@ -6,11 +6,10 @@ class GuideShell extends StatelessWidget {
   final Widget child;
 
   int _indexFrom(String loc) {
-    if (loc.startsWith('/g/todo')) return 0;
-    if (loc.startsWith('/g/schedule')) return 1;
-    if (loc.startsWith('/g/listing')) return 2;
-    if (loc.startsWith('/g/chat')) return 3;
-    if (loc.startsWith('/g/menu')) return 4;
+    if (loc.startsWith('/g/schedule')) return 0;
+    if (loc.startsWith('/g/listing')) return 1;
+    if (loc.startsWith('/g/chat')) return 2;
+    if (loc.startsWith('/g/menu')) return 3;
     return 0;
   }
 
@@ -57,28 +56,20 @@ class GuideShell extends StatelessWidget {
             onTap: (i) {
               switch (i) {
                 case 0:
-                  context.go('/g/todo');
-                  break;
-                case 1:
                   context.go('/g/schedule');
                   break;
-                case 2:
+                case 1:
                   context.go('/g/listing');
                   break;
-                case 3:
+                case 2:
                   context.go('/g/chat');
                   break;
-                case 4:
+                case 3:
                   context.go('/g/menu');
                   break;
               }
             },
             items: [
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.bookmark_border),
-                activeIcon: Icon(Icons.bookmark),
-                label: 'TO DO',
-              ),
               const BottomNavigationBarItem(
                 icon: Icon(Icons.calendar_today_outlined),
                 activeIcon: Icon(Icons.calendar_today),

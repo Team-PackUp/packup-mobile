@@ -311,7 +311,10 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
             path: '/g/todo',
             builder: (context, state) => const AIRecommend(),
           ),
-          GoRoute(path: '/g/schedule', builder: (context, state) => ChatRoom()),
+          GoRoute(
+            path: '/g/schedule',
+            builder: (context, state) => GuideListingPage(),
+          ),
           GoRoute(path: '/g/chat', builder: (context, state) => ChatRoom()),
           GoRoute(
             path: '/g/menu',
