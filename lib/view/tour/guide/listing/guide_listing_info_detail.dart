@@ -34,7 +34,7 @@ class _Body extends StatelessWidget {
     final desc = (p.getField<String>('basic.description') ?? '');
 
     return Scaffold(
-      appBar: const CustomAppbar(title: '리스팅 상세(수정 가능)', arrowFlag: true),
+      appBar: const CustomAppbar(title: '리스팅 상세', arrowFlag: true),
       body: SafeArea(
         child:
             (title.isEmpty && desc.isEmpty)
