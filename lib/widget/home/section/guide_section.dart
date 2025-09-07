@@ -39,11 +39,12 @@ class _GuideSectionState extends State<GuideSection> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SectionHeader(
+            SectionHeader(
               icon: '🌟',
               title: '전문 가이드를 만나보세요!',
               subTitle: '믿을 수 있는 가이드와 함께해요',
               callBackText: '더보기',
+              onSeeMore: () => context.push('/home_guide_more'),
             ),
             GuideList(
               guides: guides,

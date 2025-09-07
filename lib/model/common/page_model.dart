@@ -3,12 +3,14 @@ class PageModel<T> {
   final int totalPage;
   final int totalElements;
   final int curPage;
+  final bool nextPageFlag;
 
   PageModel({
     required this.objectList,
     required this.totalPage,
     required this.totalElements,
     required this.curPage,
+    required this.nextPageFlag,
   });
 
   factory PageModel.fromJson(
@@ -24,6 +26,7 @@ class PageModel<T> {
       totalPage: json['totalPage'] ?? 0,
       totalElements: json['totalElements'] ?? 0,
       curPage: json['curPage'] ?? 0,
+      nextPageFlag: json['nextPageFlag'] ?? 0,
     );
   }
 }

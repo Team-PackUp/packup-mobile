@@ -61,6 +61,7 @@ class _HomeContentState extends State<HomeContent> {
   late final Future<String> _initFuture;
 
   final List<CodeMappingModel> regionList = [
+    CodeMappingModel(code: '11', label: '서울특별시'),
     CodeMappingModel(code: '26', label: '부산광역시'),
     CodeMappingModel(code: '27', label: '대구광역시'),
     CodeMappingModel(code: '30', label: '대전광역시'),
@@ -72,7 +73,6 @@ class _HomeContentState extends State<HomeContent> {
     CodeMappingModel(code: '45', label: '전북특별자치도'),
     CodeMappingModel(code: '46', label: '전라남도'),
     CodeMappingModel(code: '47', label: '경상북도'),
-    CodeMappingModel(code: '11', label: '서울특별시'),
     CodeMappingModel(code: '28', label: '인천광역시'),
     CodeMappingModel(code: '29', label: '광주광역시'),
     CodeMappingModel(code: '48', label: '경상남도'),

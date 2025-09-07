@@ -3,42 +3,63 @@ import 'package:packup/provider/common/loading_provider.dart';
 import 'package:packup/service/guide/guide_service.dart';
 
 import '../../model/common/page_model.dart';
-import '../../service/common/loading_service.dart';
 
 class GuideProvider extends LoadingProvider {
   final _service = GuideService();
 
-  late List<GuideModel> _guideList = [];
-  late List<GuideModel> _guideListAll = [];
+  List<GuideModel> _guideList = [];
+  List<GuideModel> _originalList = [];
+
   bool loadingGuide = false;
 
-  get guideList => _guideList;
-  get guideListAll => _guideListAll;
+  List<GuideModel> get guideList => _guideList;
 
   int _totalPage = 1;
   int _curPage = 0;
+  bool _nextPageFlag = true;
 
   int get totalPage => _totalPage;
   int get curPage => _curPage;
 
   Future<void> getGuideList(int count) async {
-    if (_totalPage <= _curPage) return;
+    if (_totalPage <= _curPage || !_nextPageFlag) return;
 
     loadingGuide = true;
     notifyListeners();
 
-      final response  = await _service.getGuideList(page: _curPage, size: count);
-      final page = PageModel<GuideModel>.fromJson(
-        response.response,
-            (e) => GuideModel.fromJson(e),
-      );
+    final response = await _service.getGuideList(page: _curPage, size: count);
+    final page = PageModel<GuideModel>.fromJson(
+      response.response,
+          (e) => GuideModel.fromJson(e),
+    );
 
-      _guideList   = page.objectList;
-      _totalPage = page.totalPage;
-      _curPage   = page.curPage + 1;
+    if (_curPage == 0) {
+      _guideList = page.objectList;
+      _originalList = List.from(page.objectList);
+    } else {
+      _guideList.addAll(page.objectList);
+      _originalList.addAll(page.objectList);
+    }
+
+    _totalPage = page.totalPage;
+    _nextPageFlag = page.nextPageFlag;
+    if(_nextPageFlag) {
+      _curPage = page.curPage + 1;
+    }
 
     loadingGuide = false;
     notifyListeners();
   }
 
+  void filterGuideList(String keyword) {
+    if (keyword.isEmpty) {
+      _guideList = List.from(_originalList);
+    } else {
+      _guideList = _originalList.where((guide) {
+        final name = guide.guideName ?? '';
+        return name.contains(keyword);
+      }).toList();
+    }
+    notifyListeners();
+  }
 }

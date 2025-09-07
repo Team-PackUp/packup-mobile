@@ -51,7 +51,7 @@ class _HotTourSectionState extends State<HotTourSection> {
           title: '인기 급상승 투어!',
           subTitle: '여러 사람들이 신청하고 있어요',
           callBackText: "더보기",
-          onSeeMore: () => context.push('/home_hot_tour_detail/$regionCode'),
+          onSeeMore: () => context.push('/home_hot_tour_more/$regionCode'),
         ),
         HotTourList(
           tours: tourList,
