@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:packup/provider/tour/guide/tour_listing_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:packup/widget/tour/guide/listing/tour_listing_card.dart';
+import 'package:packup/widget/tour/guide/listing/section/tour_listing_empty_section.dart';
+
+class TourInfoListingListSection extends StatefulWidget {
+  const TourInfoListingListSection({super.key});
+
+  @override
+  State<TourInfoListingListSection> createState() =>
+      _TourInfoListingListSectionState();
+}
+
+class _TourInfoListingListSectionState
+    extends State<TourInfoListingListSection> {
+  final _controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      final p = context.read<TourListingProvider>();
+      if (!p.loading &&
+          p.hasMore &&
+          _controller.position.pixels >
+              _controller.position.maxScrollExtent - 200) {
+        p.fetchNext();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<TourListingProvider>(
+      builder: (_, p, __) {
+        if (p.loading && p.items.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (p.items.isEmpty) return const TourListingEmptySection();
+
+        return RefreshIndicator(
+          onRefresh: p.refresh,
+          child: ListView.separated(
+            controller: _controller,
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
+            itemCount: p.items.length + (p.loading ? 1 : 0),
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            itemBuilder: (_, i) {
+              if (i >= p.items.length) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 24),
+                  child: Center(
+                    child: SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                );
+              }
+              final item = p.items[i];
+              return TourListingCard(
+                item: item,
+                onTap: () => context.push('/g/listing/${item.id}/info'),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+}
