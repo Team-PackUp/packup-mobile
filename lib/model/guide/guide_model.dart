@@ -40,7 +40,7 @@ class GuideModel {
       guideName: json['guideName'],
       telNumber: json['telNumber'],
       telNumber2: json['telNumber2'],
-      languages: (json['languages'] as List?)?.cast<String>(),
+      languages: (json['guideLanguage'] as List?)?.cast<String>(),
       guideIntroduce: json['guideIntroduce'],
       guideRating: (json['guideRating'] as num?)?.toDouble(),
       guideAvatarPath: json['guideAvatarPath'],

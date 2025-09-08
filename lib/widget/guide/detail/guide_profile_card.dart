@@ -48,7 +48,7 @@ class GuideProfileCard extends StatelessWidget {
                         fontSize: 18,
                       ),
                     ),
-                    Rating(rating: guide.guideRating ?? 0.0, reviewCount: 37),
+                    Rating(rating: guide.guideRating ?? 0.0),
                   ],
                 ),
               ),
@@ -73,6 +73,17 @@ class GuideProfileCard extends StatelessWidget {
             runSpacing: screenW * 0.01,
             children:
                 guide.languages?.map((lang) => Tag(label: lang)).toList() ?? [],
+          ),
+
+          SizedBox(height: screenH * 0.02),
+
+          Text(
+            guide.expertise ?? '',
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black87,
+              height: 1.4,
+            ),
           ),
         ],
       ),
