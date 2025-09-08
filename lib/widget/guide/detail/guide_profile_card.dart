@@ -4,6 +4,7 @@ import 'package:packup/widget/tour/user/rating.dart';
 import 'package:packup/widget/tour/user/tag.dart';
 
 import '../../../model/guide/guide_model.dart';
+import '../../common/section_header.dart';
 
 class GuideProfileCard extends StatelessWidget {
   final GuideModel guide;
@@ -56,7 +57,10 @@ class GuideProfileCard extends StatelessWidget {
           ),
 
           SizedBox(height: screenH * 0.02),
-
+          SectionHeader(
+            icon: '👤',
+            title: '소개',
+          ),
           Text(
             guide.guideIntroduce ?? '',
             style: const TextStyle(
@@ -66,8 +70,11 @@ class GuideProfileCard extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: screenH * 0.02),
-
+          SizedBox(height: screenH * 0.05),
+          SectionHeader(
+            icon: '🌐',
+            title: '가능 언어',
+          ),
           Wrap(
             spacing: screenW * 0.01,
             runSpacing: screenW * 0.01,
@@ -75,8 +82,12 @@ class GuideProfileCard extends StatelessWidget {
                 guide.languages?.map((lang) => Tag(label: lang)).toList() ?? [],
           ),
 
-          SizedBox(height: screenH * 0.02),
+          SizedBox(height: screenH * 0.05),
 
+          SectionHeader(
+            icon: '⭐',
+            title: '특기',
+          ),
           Text(
             guide.expertise ?? '',
             style: const TextStyle(
