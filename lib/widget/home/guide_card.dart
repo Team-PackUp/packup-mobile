@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:packup/Const/color.dart';
-import 'package:packup/model/guide/guide_model_temp.dart';
-import 'package:packup/theme/typographies/app_typographies.dart';
 import 'package:packup/widget/common/slide_text.dart';
 import '../../common/size_config.dart';
 import '../../model/guide/guide_model.dart';
@@ -32,10 +29,6 @@ class GuideCard extends StatelessWidget {
         final vGapM   = sY(10);
         double avatarR = sX(52).clamp(24, 52); // 너무 크면 줄임
         final br      = sX(16);
-
-        final chipHPad = sX(12);
-        final chipVPad = sY(6);
-        final chipBR   = sX(12);
 
         return SizedBox(
           width: width,

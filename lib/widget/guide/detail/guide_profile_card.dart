@@ -61,6 +61,7 @@ class GuideProfileCard extends StatelessWidget {
             icon: '👤',
             title: '소개',
           ),
+          SizedBox(height: screenH * 0.01),
           Text(
             guide.guideIntroduce ?? '',
             style: const TextStyle(
@@ -75,6 +76,7 @@ class GuideProfileCard extends StatelessWidget {
             icon: '🌐',
             title: '가능 언어',
           ),
+          SizedBox(height: screenH * 0.01),
           Wrap(
             spacing: screenW * 0.01,
             runSpacing: screenW * 0.01,
@@ -88,6 +90,7 @@ class GuideProfileCard extends StatelessWidget {
             icon: '⭐',
             title: '특기',
           ),
+          SizedBox(height: screenH * 0.01),
           Text(
             guide.expertise ?? '',
             style: const TextStyle(
