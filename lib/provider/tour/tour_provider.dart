@@ -5,6 +5,8 @@ import 'package:packup/provider/common/loading_provider.dart';
 import 'package:packup/service/common/loading_service.dart';
 import 'package:packup/service/tour/tour_service.dart';
 
+import '../../model/tour/tour_detail_model.dart';
+
 /// 투어 목록 관련 상태를 관리하는 Provider 클래스입니다.
 /// 무한 스크롤, 선택된 투어 정보, 로딩 상태 등을 포함합니다.
 class TourProvider extends LoadingProvider {
@@ -17,6 +19,10 @@ class TourProvider extends LoadingProvider {
   List<TourModel> _originalList = [];
 
   List<TourModel> _tourListByGuide = [];
+
+  // tour detail
+  TourDetailModel? _tour;
+  TourDetailModel? get tour => _tour;
 
   /// 현재 불러온 전체 투어 목록
   List<TourModel> get tourList => _tourList;
@@ -154,6 +160,17 @@ class TourProvider extends LoadingProvider {
         .toList(growable: false);
 
     notifyListeners();
+  }
+
+  Future<void> getTourDetail({required tourSeq}) async {
+
+    await LoadingService.run(() async {
+      final response = await _tourService.getTourDetail(tourSeq: tourSeq);
+      _tour = TourDetailModel.fromJson(response.response);
+
+    });
+    notifyListeners();
+
   }
 
 }

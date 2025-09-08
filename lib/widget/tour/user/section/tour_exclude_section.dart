@@ -3,11 +3,11 @@ import 'package:packup/model/tour/tour_detail_model.dart';
 import 'package:packup/widget/tour/user/tour_exclude.dart';
 
 class TourExcludeSection extends StatelessWidget {
-  const TourExcludeSection({super.key});
+  final TourDetailModel tour;
+  const TourExcludeSection({super.key, required this.tour});
 
   @override
   Widget build(BuildContext context) {
-    final tour = TourDetailModel.mock();
     final screenH = MediaQuery.of(context).size.height;
 
     return Column(

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:packup/model/tour/tour_detail_model.dart';
+import 'package:packup/model/tour/tour_model.dart';
 import 'package:packup/widget/tour/user/include_item.dart';
 
 class TourIncludeSection extends StatelessWidget {
-  const TourIncludeSection({super.key});
+  final TourDetailModel tour;
+  const TourIncludeSection({super.key, required this.tour});
 
   @override
   Widget build(BuildContext context) {
-    final tour = TourDetailModel.mock();
     final screenH = MediaQuery.of(context).size.height;
 
     return Column(

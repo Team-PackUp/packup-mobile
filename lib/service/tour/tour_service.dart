@@ -24,6 +24,12 @@ class TourService {
     return await DioService().getRequest('/tour/proxy/$regionCode', query);
   }
 
+  Future<ResultModel> getTourDetail({
+    required int tourSeq,
+  }) async {
+    return await DioService().getRequest('/tour/detail/$tourSeq');
+  }
+
   Future<ResultModel> getTourListByGuide({
     required int guideSeq,
   }) async {

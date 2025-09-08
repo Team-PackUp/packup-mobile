@@ -237,11 +237,11 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
         },
       ),
       GoRoute(
-        path: '/tour/:id',
+        path: '/tour/detail/:seq',
         name: 'tourDetail',
         builder: (context, state) {
-          final id = state.pathParameters['id'];
-          return const TourDetailPage();
+          int seq = int.parse(state.pathParameters['seq']!);
+          return TourDetail(tourSeq: seq,);
         },
       ),
       GoRoute(

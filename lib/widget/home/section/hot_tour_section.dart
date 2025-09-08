@@ -55,8 +55,8 @@ class _HotTourSectionState extends State<HotTourSection> {
         ),
         HotTourList(
           tours: tourList,
-          onTap: (_) {
-            context.push("/tour/123");
+          onTap: (tour) {
+            context.push("/tour/detail/${tour.seq}");
           },
         ),
       ],

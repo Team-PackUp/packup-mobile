@@ -23,8 +23,45 @@ class TourDetailModel {
     required this.excludeItems,
   });
 
-  static TourDetailModel mock() {
+  factory TourDetailModel.fromJson(Map<String, dynamic> r) {
+    final guide = (r['guide'] as Map?) ?? const {};
+    final String? thumbnail = r['tourThumbnailUrl'] as String?;
+
+    final List<String> languages = _splitToList(guide['guideLanguage']);
+
+    final List<String> includeItems = _splitToList(r['tourIncludedContent']);
+    final List<String> excludeItems = _splitToList(r['tourExcludedContent']);
+
+    final List<String> tags = <String>[
+      if (_toStringSafe(r['tourStatusLabel']).isNotEmpty)
+        _toStringSafe(r['tourStatusLabel']),
+      if (_isYes(r['transportServiceFlag'])) 'Transport',
+      if (_isYes(r['privateFlag'])) 'Private',
+      if (_isYes(r['adultContentFlag'])) 'Adult',
+      if (r['tourLocationCode'] != null) 'Loc:${r['tourLocationCode']}',
+    ];
+
+    final String notes = _toStringSafe(r['tourNotes']);
+    final String duration = _extractDuration(notes);
+
     return TourDetailModel(
+      title: _toStringSafe(r['tourTitle']),
+      imageUrl: [
+        if (thumbnail != null && thumbnail.trim().isNotEmpty) thumbnail,
+      ],
+      rating: 0.0,
+      reviewCount: 0,
+      tags: tags,
+      description: _toStringSafe(r['tourIntroduce']),
+      duration: duration,
+      languages: languages,
+      includeItems: includeItems,
+      excludeItems: excludeItems,
+    );
+  }
+
+  static TourDetailModel mock() {
+    return const TourDetailModel(
       title: '인사동 & 북촌 걷기 투어',
       imageUrl: [
         'assets/image/background/jeonju.jpg',
@@ -36,7 +73,7 @@ class TourDetailModel {
       reviewCount: 150,
       tags: ['Culture', 'History', 'Walking Tour', 'Seoul'],
       description:
-          '돈벌고싶어? 대기업가고싶어? 뭐해? PACK-UP 안하고? 완벽한 프로젝트 팩업 지금바로 시작 - PlayStore',
+      '돈벌고싶어? 대기업가고싶어? 뭐해? PACK-UP 안하고? 완벽한 프로젝트 팩업 지금바로 시작 - PlayStore',
       duration: '1년',
       languages: ['영어', '준모어', '중국어'],
       includeItems: [
@@ -48,4 +85,40 @@ class TourDetailModel {
       excludeItems: ['개발자 월급', '개발자 워라밸', '잠자는 시간'],
     );
   }
+}
+
+String _toStringSafe(dynamic v) => (v == null) ? '' : v.toString();
+
+bool _isYes(dynamic v) {
+  if (v == null) return false;
+  final s = v.toString().toUpperCase();
+  return s == 'Y' || s == 'YES' || s == 'TRUE' || s == 'T' || s == '1';
+}
+
+/// "a,b\nc • d; e | f" 같은 문자열을 항목 리스트로 변환
+List<String> _splitToList(dynamic raw) {
+  final s = _toStringSafe(raw);
+  if (s.isEmpty) return const [];
+  final parts = s.split(RegExp(r'[,;\n•|]'))
+      .map((e) => e.trim())
+      .where((e) => e.isNotEmpty)
+      .toList();
+  return parts.toSet().toList();
+}
+
+/// notes에서 "소요시간: 3시간", "Duration: 2h", "약 90분" 등 간단 추출
+String _extractDuration(String notes) {
+  if (notes.isEmpty) return '';
+  final candidates = <RegExp>[
+    RegExp(r'(소요\s*시간|소요시간)\s*[:：]?\s*([0-9]+(?:\.[0-9]+)?\s*(?:시간|분))'),
+    RegExp(r'(Duration)\s*[:：]?\s*([0-9]+(?:\.[0-9]+)?\s*(?:h|hr|hours|mins|minutes))', caseSensitive: false),
+    RegExp(r'약?\s*([0-9]+(?:\.[0-9]+)?\s*(?:시간|분))'),
+  ];
+  for (final re in candidates) {
+    final m = re.firstMatch(notes);
+    if (m != null) {
+      return m.group(m.groupCount) ?? '';
+    }
+  }
+  return '';
 }
