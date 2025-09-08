@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:packup/model/guide/guide_model.dart';
 import 'package:packup/provider/guide/guide_provider.dart';
 import 'package:packup/widget/home/guide_card.dart';
@@ -80,7 +81,11 @@ class _HomeGuideMoreSectionState extends State<HomeGuideMoreSection> {
               childAspectRatio: childAspectRatio,
             ),
             delegate: SliverChildBuilderDelegate(
-                  (ctx, i) => GuideCard(guide: guides[i]),
+                  (ctx, i) => InkWell(
+                onTap: () => context.push('/guide/${guides[i].seq}'),
+                borderRadius: BorderRadius.circular(12),
+                child: GuideCard(guide: guides[i]),
+              ),
               childCount: guides.length,
             ),
           ),
@@ -95,7 +100,6 @@ class _HomeGuideMoreSectionState extends State<HomeGuideMoreSection> {
               )
                   : Padding(
                 padding: EdgeInsets.only(top: context.sY(16), bottom: context.sY(8)),
-                child: const Center(child: Text('모두 확인했어요 완료')),
               )
             ),
           ),

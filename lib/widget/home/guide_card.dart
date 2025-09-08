@@ -65,44 +65,22 @@ class GuideCard extends StatelessWidget {
                     child: SlideText(title: guide.expertise ?? '')
                   ),
                   SizedBox(height: vGapM),
-                  // FittedBox(
-                  //   fit: BoxFit.scaleDown,
-                  //   child: Container(
-                  //     padding: EdgeInsets.symmetric(
-                  //       horizontal: chipHPad,
-                  //       vertical: chipVPad,
-                  //     ),
-                  //     decoration: BoxDecoration(
+                  // TextButton(
+                  //   onPressed: () {},
+                  //   style: TextButton.styleFrom(
+                  //     padding: EdgeInsets.zero,
+                  //     minimumSize: const Size(0, 0),
+                  //     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  //   ),
+                  //   child: Text(
+                  //     '프로필 보기',
+                  //     style: AppTypographies.get(
+                  //       size: AppFontSize.sm,
+                  //       weight: AppFontWeight.medium,
                   //       color: SELECTED,
-                  //       borderRadius: BorderRadius.circular(chipBR),
-                  //     ),
-                  //     child: Text(
-                  //       '${0}개 투어 진행중',
-                  //       style: AppTypographies.get(
-                  //         size: AppFontSize.xs,
-                  //         weight: AppFontWeight.medium,
-                  //         color: TEXT_COLOR_W,
-                  //       ),
                   //     ),
                   //   ),
                   // ),
-                  SizedBox(height: vGapS),
-                  TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      minimumSize: const Size(0, 0),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    child: Text(
-                      '프로필 보기',
-                      style: AppTypographies.get(
-                        size: AppFontSize.sm,
-                        weight: AppFontWeight.medium,
-                        color: SELECTED,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

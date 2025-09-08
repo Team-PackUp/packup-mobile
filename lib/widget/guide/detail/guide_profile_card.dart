@@ -3,8 +3,11 @@ import 'package:packup/model/guide/guide_model_temp.dart';
 import 'package:packup/widget/tour/user/rating.dart';
 import 'package:packup/widget/tour/user/tag.dart';
 
+import '../../../model/guide/guide_model.dart';
+import '../../common/section_header.dart';
+
 class GuideProfileCard extends StatelessWidget {
-  final GuideModelTemp guide;
+  final GuideModel guide;
 
   const GuideProfileCard({super.key, required this.guide});
 
@@ -29,8 +32,8 @@ class GuideProfileCard extends StatelessWidget {
               CircleAvatar(
                 radius: screenH * 0.035,
                 backgroundImage: NetworkImage(
-                  guide.guideAvatarPath?.isNotEmpty == true
-                      ? guide.guideAvatarPath!
+                  guide.user?.profileImagePath?.isNotEmpty == true
+                      ? guide.user!.profileImagePath!
                       : 'https://i.imgur.com/BoN9kdC.png',
                 ),
               ),
@@ -40,13 +43,13 @@ class GuideProfileCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      guide.guideName ?? '가이드 이름 없음',
+                      guide.user?.nickname ?? '가이드 이름 없음',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
                     ),
-                    Rating(rating: guide.guideRating ?? 0.0, reviewCount: 37),
+                    Rating(rating: guide.guideRating ?? 0.0),
                   ],
                 ),
               ),
@@ -54,7 +57,10 @@ class GuideProfileCard extends StatelessWidget {
           ),
 
           SizedBox(height: screenH * 0.02),
-
+          SectionHeader(
+            icon: '👤',
+            title: '소개',
+          ),
           Text(
             guide.guideIntroduce ?? '',
             style: const TextStyle(
@@ -64,13 +70,31 @@ class GuideProfileCard extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: screenH * 0.02),
-
+          SizedBox(height: screenH * 0.05),
+          SectionHeader(
+            icon: '🌐',
+            title: '가능 언어',
+          ),
           Wrap(
             spacing: screenW * 0.01,
             runSpacing: screenW * 0.01,
             children:
                 guide.languages?.map((lang) => Tag(label: lang)).toList() ?? [],
+          ),
+
+          SizedBox(height: screenH * 0.05),
+
+          SectionHeader(
+            icon: '⭐',
+            title: '특기',
+          ),
+          Text(
+            guide.expertise ?? '',
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black87,
+              height: 1.4,
+            ),
           ),
         ],
       ),

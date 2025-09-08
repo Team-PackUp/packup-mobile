@@ -3,6 +3,7 @@ import 'package:packup/provider/common/loading_provider.dart';
 import 'package:packup/service/guide/guide_service.dart';
 
 import '../../model/common/page_model.dart';
+import '../../service/common/loading_service.dart';
 
 class GuideProvider extends LoadingProvider {
   final _service = GuideService();
@@ -14,12 +15,19 @@ class GuideProvider extends LoadingProvider {
 
   List<GuideModel> get guideList => _guideList;
 
+  int? guideSeq;
+  GuideModel? guideModel;
+
   int _totalPage = 1;
   int _curPage = 0;
   bool _nextPageFlag = true;
 
   int get totalPage => _totalPage;
   int get curPage => _curPage;
+
+  GuideProvider.create({
+    this.guideSeq,
+  });
 
   Future<void> getGuideList(int count) async {
     if (_totalPage <= _curPage || !_nextPageFlag) return;
@@ -61,5 +69,16 @@ class GuideProvider extends LoadingProvider {
       }).toList();
     }
     notifyListeners();
+  }
+
+  Future<void> getGuideDetail() async {
+    if(guideSeq == null) return;
+
+    await LoadingService.run(() async {
+      final response = await _service.getGuideDetail(guideSeq: guideSeq!);
+      guideModel = GuideModel.fromJson(response.response);
+
+      notifyListeners();
+    });
   }
 }
