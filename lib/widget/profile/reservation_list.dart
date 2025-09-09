@@ -40,7 +40,7 @@ class ReservationList extends StatelessWidget {
           return Padding(
             padding: EdgeInsets.only(bottom: h * 0.012),
             child: GestureDetector(
-              onTap: () => context.push('/tour/${tour.seq}'),
+              onTap: () => context.push('/tour/detail/${tour.seq}'),
               child: ReservationCard(tour: tour, w: w, h: h),
             ),
           );
@@ -52,7 +52,7 @@ class ReservationList extends StatelessWidget {
           return Padding(
             padding: EdgeInsets.only(bottom: h * 0.001),
             child: GestureDetector(
-              onTap: () => context.push('/tour/${tour.seq}'),
+              onTap: () => context.push('/tour/detail/${tour.seq}'),
               child: ReservationCard(tour: tour, w: w, h: h),
             ),
           );
