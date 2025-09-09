@@ -30,6 +30,12 @@ class TourService {
     return await DioService().getRequest('/tour/detail/$tourSeq');
   }
 
+  Future<ResultModel> getGuideByTour({
+    required int tourSeq,
+  }) async {
+    return await DioService().getRequest('/tour/detail/guide/$tourSeq');
+  }
+
   Future<ResultModel> getTourListByGuide({
     required int guideSeq,
   }) async {

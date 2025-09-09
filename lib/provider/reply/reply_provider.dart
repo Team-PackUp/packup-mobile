@@ -1,67 +1,62 @@
 import 'package:flutter/cupertino.dart';
 import 'package:packup/model/common/page_model.dart';
 import 'package:packup/model/reply/reply_model.dart';
-import 'package:packup/provider/common/loading_provider.dart';
 import 'package:packup/service/common/loading_service.dart';
 import 'package:packup/service/reply/reply_service.dart';
-import 'package:path/path.dart';
 
-import '../../model/common/fcm_model.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-class ReplyProvider extends LoadingProvider {
+class ReplyProvider extends ChangeNotifier {
   final ReplyService _service = ReplyService();
 
-  final int? targetSeq;
-  final TargetType? targetType;
+  int? targetSeq;
+  TargetType? targetType;
+  int? replySeq;
 
-  final int? seq;
-
-  late List<ReplyModel> _replyList;
-
-  // 리스트 OR 신규 작성 페이지
-  ReplyProvider.create({
-    required this.targetSeq,
-    required this.targetType,
-  }) : seq = null, _replyList = [];
-
-  // 수정 페이지
-  ReplyProvider.update({
-    required this.seq,
-  })  : targetSeq = null,
-        targetType = null;
-
+  List<ReplyModel> _replyList = [];
   ReplyModel? replyModel;
 
   int _totalPage = 1;
   int _curPage = 0;
+  int _totalElement = 0;
   bool _isLoading = false;
 
   List<ReplyModel> get replyList => _replyList;
   ReplyModel? get currentReply   => replyModel;
   int get totalPage              => _totalPage;
   int get curPage                => _curPage;
+  int get totalElement           => _totalElement;
+  bool get isLoading             => _isLoading;
 
-  Future<void> getReplyList({bool reset = false}) async {
+  void setEditMode({required int seq}) {
+    replySeq = seq;
+  }
+
+  void setTarget({required int targetSeq, required TargetType targetType}) {
+    this.targetSeq  = targetSeq;
+    this.targetType = targetType;
+  }
+
+  Future<void> getReplyList({
+    bool reset = false,
+    required int targetSeq,
+    required TargetType targetType,
+  }) async {
     if (_isLoading) return;
     if (!reset && _totalPage <= _curPage) return;
-
     _isLoading = true;
 
     if (reset) {
       _replyList = [];
       _curPage = 0;
       _totalPage = 1;
+      notifyListeners();
     }
-
-    await LoadingService.run(() async {
+    // await LoadingService.run(() async {
       final reply = ReplyModel(
-        targetSeq: targetSeq!,
-        targetType: targetType!,
+        targetSeq : targetSeq,
+        targetType: targetType,
       );
 
       final response = await _service.getReplyList(_curPage, replyModel: reply);
-
       final page = PageModel<ReplyModel>.fromJson(
         response.response,
             (e) => ReplyModel.fromJson(e),
@@ -69,50 +64,40 @@ class ReplyProvider extends LoadingProvider {
 
       _replyList.addAll(page.objectList);
       _curPage++;
-      _totalPage = page.totalPage;
-
-      notifyListeners();
-    });
+      _totalPage    = page.totalPage;
+      _totalElement = page.totalElement;
+    // });
 
     _isLoading = false;
+
+    notifyListeners();
+
   }
-
-
 
   Future<void> getReply(int seq) async {
     await LoadingService.run(() async {
       final response = await _service.getReply(seq: seq);
       replyModel = ReplyModel.fromJson(response.response);
-
       notifyListeners();
     });
   }
 
   Future<void> upsertReply(BuildContext context, String content, int point) async {
-    String message = "리뷰가 등록 되었습니다!";
+    String message = (replySeq != null) ? "리뷰가 수정 되었습니다!" : "리뷰가 등록 되었습니다!";
 
-    if(seq != null) {
-      message = "리뷰가 수정 되었습니다!";
-    }
     await LoadingService.runHandled(context, () async {
-      if (seq != null) {
+      if (replySeq != null) {
         // 수정
-        final reply = ReplyModel(
-            content: content,
-            point: point,
-        );
-        await _service.updateReply(seq: seq!, replyModel: reply);
-
-
+        final reply = ReplyModel(content: content, point: point);
+        await _service.updateReply(seq: replySeq!, replyModel: reply);
       } else {
         // 작성
         final reply = ReplyModel(
-            targetSeq: targetSeq,
-            targetType: targetType,
-            content   : content,
-            point   : point,
+          targetSeq : targetSeq,
+          targetType: targetType,
+          content   : content,
+          point     : point,
         );
-
         await _service.saveReply(replyModel: reply);
       }
     }, successMessage: message);
@@ -122,7 +107,7 @@ class ReplyProvider extends LoadingProvider {
 
   Future<void> deleteReply() async {
     await LoadingService.run(() async {
-      await _service.deleteReply(seq: seq!);
+      await _service.deleteReply(seq: replySeq!);
     });
   }
 }

@@ -1,5 +1,6 @@
 import 'package:packup/model/common/page_response.dart';
 import 'package:packup/model/common/result_model.dart';
+import 'package:packup/model/guide/guide_model.dart';
 import 'package:packup/model/tour/tour_model.dart';
 import 'package:packup/provider/common/loading_provider.dart';
 import 'package:packup/service/common/loading_service.dart';
@@ -163,14 +164,11 @@ class TourProvider extends LoadingProvider {
   }
 
   Future<void> getTourDetail({required tourSeq}) async {
-
     await LoadingService.run(() async {
       final response = await _tourService.getTourDetail(tourSeq: tourSeq);
       _tour = TourDetailModel.fromJson(response.response);
-
     });
+
     notifyListeners();
-
   }
-
 }

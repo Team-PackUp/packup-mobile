@@ -1,5 +1,9 @@
+import 'package:packup/model/guide/guide_model.dart';
+
 class TourDetailModel {
+  final int seq;
   final String title;
+  final GuideModel? guide;
   final List<String> imageUrl;
   final double rating;
   final int reviewCount;
@@ -11,8 +15,10 @@ class TourDetailModel {
   final List<String> excludeItems;
 
   const TourDetailModel({
+    required this.seq,
     required this.title,
     required this.imageUrl,
+    this.guide,
     required this.rating,
     required this.reviewCount,
     required this.tags,
@@ -24,10 +30,16 @@ class TourDetailModel {
   });
 
   factory TourDetailModel.fromJson(Map<String, dynamic> r) {
-    final guide = (r['guide'] as Map?) ?? const {};
+    final seq = r['seq'];
+    final guideMap = r['guide'];
+
+    final GuideModel? guide = guideMap is Map<String, dynamic>
+        ? GuideModel.fromJson(guideMap)
+        : null;
+
     final String? thumbnail = r['tourThumbnailUrl'] as String?;
 
-    final List<String> languages = _splitToList(guide['guideLanguage']);
+    final List<String> languages = _splitToList(guide?.languages);
 
     final List<String> includeItems = _splitToList(r['tourIncludedContent']);
     final List<String> excludeItems = _splitToList(r['tourExcludedContent']);
@@ -45,7 +57,9 @@ class TourDetailModel {
     final String duration = _extractDuration(notes);
 
     return TourDetailModel(
+      seq: seq,
       title: _toStringSafe(r['tourTitle']),
+      guide: guide,
       imageUrl: [
         if (thumbnail != null && thumbnail.trim().isNotEmpty) thumbnail,
       ],
@@ -62,6 +76,7 @@ class TourDetailModel {
 
   static TourDetailModel mock() {
     return const TourDetailModel(
+      seq: 9,
       title: '인사동 & 북촌 걷기 투어',
       imageUrl: [
         'assets/image/background/jeonju.jpg',

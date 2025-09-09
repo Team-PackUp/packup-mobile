@@ -138,7 +138,7 @@ class _ReplyFormSectionState extends State<ReplyFormSection> {
 
   @override
   Widget build(BuildContext context) {
-    final isEdit = _replyProvider.seq != null;
+    final isEdit = _replyProvider.replySeq != null;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),

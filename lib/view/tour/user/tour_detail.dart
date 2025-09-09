@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:packup/widget/common/custom_empty_list.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 import 'package:packup/widget/tour/user/section/tour_description_section.dart';
@@ -7,6 +9,8 @@ import 'package:packup/widget/tour/user/section/tour_header_section.dart';
 import 'package:packup/widget/tour/user/section/tour_include_section.dart';
 
 import '../../../widget/common/custom_appbar.dart';
+import '../../../widget/guide/detail/section/review_list_section.dart';
+import '../../../widget/tour/user/section/tour_guide_section.dart';
 
 class TourDetail extends StatefulWidget {
   final int tourSeq;
@@ -42,7 +46,6 @@ class _TourDetailState extends State<TourDetail> {
   Widget build(BuildContext context) {
     final screenH = MediaQuery.of(context).size.height;
 
-    // 🔹 먼저 Provider를 트리에 주입
     return ChangeNotifierProvider<TourProvider>.value(
       value: _provider,
       child: Consumer<TourProvider>(
@@ -51,14 +54,13 @@ class _TourDetailState extends State<TourDetail> {
 
           if (tour == null) {
             return const Scaffold(
-              appBar: CustomAppbar(title: '투어가 존재하지 않습니다.'),
-              body: SizedBox.shrink(),
+              body: CustomEmptyList(message: "투어가 존재하지 않습니다.", icon: CupertinoIcons.question),
             );
           }
 
           return Scaffold(
             backgroundColor: Colors.white,
-            appBar: CustomAppbar(title: tour.title),
+            appBar: CustomAppbar(title: "여행 떠나기"),
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,7 +70,7 @@ class _TourDetailState extends State<TourDetail> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: [
-                        // const TourGuideSection(),
+                        TourGuideSection(guide: tour.guide!,),
                         SizedBox(height: screenH * 0.03),
                         TourDescriptionSection(tour: tour),
                         SizedBox(height: screenH * 0.03),
@@ -76,7 +78,7 @@ class _TourDetailState extends State<TourDetail> {
                         SizedBox(height: screenH * 0.03),
                         TourExcludeSection(tour: tour),
                         SizedBox(height: screenH * 0.03),
-                        // const ReviewListSection(seq: 4),
+                        ReviewListSection(tourSeq: tour.seq),
                         SizedBox(height: screenH * 0.03),
                       ],
                     ),

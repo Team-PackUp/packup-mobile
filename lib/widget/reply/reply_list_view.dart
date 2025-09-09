@@ -32,8 +32,8 @@ class ReplyListView extends StatelessWidget {
             if (moved == true) refreshReply();
           },
           child: ReplyReadCard(
-            nickName: reply.nickName ?? '익명',
-            avatarUrl: reply.profileImagePath,
+            nickName: reply.user!.nickname ?? '익명',
+            avatarUrl: reply.user!.profileImagePath,
             content: reply.content ?? '',
             point: reply.point ?? 0,
             createdAt: reply.createdAt is DateTime ? reply.createdAt as DateTime : null,
@@ -54,7 +54,6 @@ class ReplyListView extends StatelessWidget {
       return Column(
         children: replyList.asMap().entries.map((entry) {
           final index = entry.key;
-          final reply = entry.value;
           return itemBuilder(context, index);
         }).toList(),
       );

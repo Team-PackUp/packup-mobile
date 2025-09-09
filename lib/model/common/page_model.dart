@@ -1,14 +1,14 @@
 class PageModel<T> {
   final List<T> objectList;
   final int totalPage;
-  final int totalElements;
+  final int totalElement;
   final int curPage;
   final bool nextPageFlag;
 
   PageModel({
     required this.objectList,
     required this.totalPage,
-    required this.totalElements,
+    required this.totalElement,
     required this.curPage,
     required this.nextPageFlag,
   });
@@ -24,7 +24,7 @@ class PageModel<T> {
     return PageModel<T>(
       objectList: list,
       totalPage: json['totalPage'] ?? 0,
-      totalElements: json['totalElements'] ?? 0,
+      totalElement: json['totalElement'] ?? 0,
       curPage: json['curPage'] ?? 0,
       nextPageFlag: json['nextPageFlag'] ?? 0,
     );

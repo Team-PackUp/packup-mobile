@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:packup/model/common/user_model.dart';
+
 
 enum TargetType {
   replyTour(seq: '040001', code: 'REPLY_TOUR', label: '관광'),
@@ -39,30 +41,26 @@ extension ReplyMap on ReplyModel {
 
 class ReplyModel {
   final int? seq;
-  final int? userSeq;
+  final UserModel? user;
   final int? targetSeq;
   final TargetType? targetType;
   final String? content;
   final int? point;
-  final String? nickName;
-  final String? profileImagePath;
   final DateTime? createdAt;
 
   ReplyModel({
     this.seq,
-    this.userSeq,
+    this.user,
     this.targetSeq,
     this.targetType,
     this.content,
     this.point,
-    this.nickName,
-    this.profileImagePath,
     this.createdAt,
   });
 
   String toJson() => jsonEncode({
     'seq'        : seq,
-    'userSeq'    : userSeq,
+    'user'       : user,
     'target_seq' : targetSeq,
     'target_type': targetType?.code,
     'content'    : content,
@@ -71,15 +69,13 @@ class ReplyModel {
 
   factory ReplyModel.fromJson(Map<String, dynamic> json) => ReplyModel(
     seq       : json['seq'],
-    userSeq   : json['userSeq'],
+    user   : UserModel.fromJson(json['user']),
     targetSeq : json['targetSeq'],
     targetType: json['targetType'] != null
         ? TargetType.fromSeq(json['targetType'])
         : null,
     content   : json['content'] ?? '',
     point   : json['point'] ?? 0,
-    nickName   : json['nickName'] ?? '',
-    profileImagePath   : json['profileImagePath'] ?? '',
     createdAt : json['createdAt'] != null
         ? DateTime.parse(json['createdAt'])
         : DateTime.now(),

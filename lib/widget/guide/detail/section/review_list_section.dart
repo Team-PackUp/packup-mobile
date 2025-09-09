@@ -1,69 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:packup/model/reply/reply_model.dart';
 import 'package:packup/provider/reply/reply_provider.dart';
 import 'package:packup/widget/common/util_widget.dart';
-
 import '../../../reply/reply_list_view.dart';
 
-// 상세보기 페이지의 댓글(리뷰) 일부 보여주는 섹션
 class ReviewListSection extends StatefulWidget {
-  final int seq;
-
-  const ReviewListSection({super.key, required this.seq});
+  final int tourSeq;
+  const ReviewListSection({super.key, required this.tourSeq});
 
   @override
   State<ReviewListSection> createState() => _ReviewListSectionState();
 }
 
 class _ReviewListSectionState extends State<ReviewListSection> {
-  List<ReplyModel> _replyList = [];
+  late final ReplyProvider _provider;
+  bool _loaded = false;
 
   @override
   void initState() {
     super.initState();
-    _loadTopReplies();
-  }
+    _provider = ReplyProvider();
 
-  Future<void> _loadTopReplies() async {
-    final replyProvider = ReplyProvider.create(
-      targetSeq: widget.seq,
-      targetType: TargetType.replyTour,
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted || _loaded) return;
+      _loaded = true;
 
-    await replyProvider.getReplyList();
-    setState(() {
-      _replyList = replyProvider.replyList.take(10).toList();
+      await _provider.getReplyList(
+        targetSeq: widget.tourSeq,
+        targetType: TargetType.replyTour,
+      );
+
+      if (!mounted) return;
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (_replyList.isEmpty) {
-      return const SizedBox.shrink();
-    }
+  void dispose() {
+    _provider.dispose();
+    super.dispose();
+  }
 
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('댓글 ${_replyList.length}'),
-            CustomButton.textGestureDetector(
-              context: context,
-              onTap: () {
-                context.push('/reply_list/${widget.seq}/REPLY_TOUR');
-              },
-              label: '모두 보기',
-            ),
-          ],
-        ),
-        ReplyListView(
-          replyList: _replyList,
-          useListView: false,
-          refreshReply: _loadTopReplies,
-        ),
-      ],
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<ReplyProvider>.value(
+      value: _provider,
+      child: Consumer<ReplyProvider>(
+        builder: (_, p, __) {
+          final List<ReplyModel> replies = p.replyList;
+
+          if (p.isLoading && replies.isEmpty) {
+            return const SizedBox.shrink();
+          }
+          if (replies.isEmpty) {
+            return const SizedBox.shrink();
+          }
+
+          final countLabel = '댓글 ${replies.length}';
+
+          return Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(countLabel),
+                  CustomButton.textGestureDetector(
+                    context: context,
+                    onTap: () {
+                      context.push('/reply_list/${widget.tourSeq}/REPLY_TOUR');
+                    },
+                    label: '모두 보기',
+                  ),
+                ],
+              ),
+              ReplyListView(
+                replyList: replies,     // 미리보기 10개
+                useListView: false,
+                refreshReply: () => _provider.getReplyList(
+                  targetSeq: widget.tourSeq,
+                  targetType: TargetType.replyTour,
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

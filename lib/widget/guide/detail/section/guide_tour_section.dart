@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 import 'package:packup/widget/guide/detail/guide_tour_list.dart';
@@ -56,7 +57,9 @@ class _GuideTourSectionState extends State<GuideTourSection> {
               else
                 GuideTourList(
                   tours: tourList,
-                  onTap: (_) {},
+                  onTap: (tour) {
+                    context.push("/tour/detail/${tour.seq}");
+                  },
                 ),
             ],
           );

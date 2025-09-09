@@ -22,16 +22,16 @@ class ReplyListSection extends StatefulWidget {
 }
 
 class _ReplyListSectionState extends State<ReplyListSection> {
-  late final ReplyProvider _replyProvider;
+  final ReplyProvider _replyProvider = ReplyProvider();
 
   @override
   void initState() {
     super.initState();
-    _replyProvider = ReplyProvider.create(
+
+    _replyProvider.getReplyList(
       targetSeq: widget.targetSeq,
       targetType: widget.targetType,
     );
-    _replyProvider.getReplyList();
 
     widget.scrollController?.addListener(_onScroll);
   }
@@ -41,7 +41,10 @@ class _ReplyListSectionState extends State<ReplyListSection> {
     if (controller == null) return;
 
     if (controller.position.pixels >= controller.position.maxScrollExtent - 100) {
-      await _replyProvider.getReplyList();
+      await _replyProvider.getReplyList(
+        targetSeq: widget.targetSeq,
+        targetType: widget.targetType,
+      );
     }
   }
 
@@ -60,7 +63,7 @@ class _ReplyListSectionState extends State<ReplyListSection> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('댓글 ${replyProvider.replyList.length}'),
+                      Text('댓글 ${replyProvider.totalElement}'),
                     ],
                   ),
                   Expanded(
@@ -69,7 +72,11 @@ class _ReplyListSectionState extends State<ReplyListSection> {
                       scrollController: widget.scrollController,
                       useListView: true,
                       refreshReply: () async {
-                        await replyProvider.getReplyList(reset: true);
+                        await replyProvider.getReplyList(
+                            reset: true,
+                            targetSeq: widget.targetSeq,
+                          targetType: widget.targetType,
+                        );
                       },
                     ),
                   ),

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:packup/model/guide/guide_model_temp.dart';
 import 'package:packup/widget/tour/user/rating.dart';
 import 'package:packup/widget/tour/user/tag.dart';
 
-import '../../../model/guide/guide_model.dart';
-
 class GuideCard extends StatelessWidget {
-  final GuideModel guide;
+  final GuideModelTemp guide;
 
   const GuideCard({super.key, required this.guide});
 
@@ -31,7 +30,7 @@ class GuideCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CircleAvatar(
-              backgroundImage: NetworkImage(guide.user!.profileImagePath ?? ''),
+              backgroundImage: NetworkImage(guide.image ?? ''),
               radius: 30,
             ),
             SizedBox(width: screenW * 0.03),
@@ -40,7 +39,7 @@ class GuideCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    guide.user!.nickname ?? '이름 없음',
+                    guide.name ?? '이름 없음',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -49,10 +48,10 @@ class GuideCard extends StatelessWidget {
                   SizedBox(height: screenH * 0.01),
                   Rating(
                     rating: guide.guideRating ?? 0.0,
-                    // reviewCount: guide.tours ?? 0,
+                    reviewCount: guide.tours ?? 0,
                   ),
                   SizedBox(height: screenH * 0.01),
-                  Text(guide.guideIntroduce ?? '', style: const TextStyle(fontSize: 13)),
+                  Text(guide.desc ?? '', style: const TextStyle(fontSize: 13)),
                   SizedBox(height: screenH * 0.02),
                   Wrap(
                     spacing: screenW * 0.01,

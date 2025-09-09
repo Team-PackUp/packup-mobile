@@ -14,26 +14,31 @@ class ReplyWrite extends StatelessWidget {
     this.seq,
     this.targetSeq,
     this.targetType,
-  });
+  }) : assert(
+  (seq != null) ^ (targetSeq != null && targetType != null),
+  'Either provide seq (edit) OR targetSeq & targetType (create).',
+  );
 
-  final int? seq;
-
-  // 작성 모드
-  final int? targetSeq;
-  final TargetType? targetType;
+  final int? seq;               // 편집 모드
+  final int? targetSeq;         // 작성 모드
+  final TargetType? targetType; // 작성 모드
 
   @override
   Widget build(BuildContext context) {
     final isEdit = seq != null;
-    return ChangeNotifierProvider(
+
+    return ChangeNotifierProvider<ReplyProvider>(
       create: (_) {
+        final p = ReplyProvider();
         if (isEdit) {
-          return ReplyProvider.update(seq: seq!);
+          p.setEditMode(seq: seq!);
+        } else {
+          p.setTarget(
+            targetSeq : targetSeq!,
+            targetType: targetType!,
+          );
         }
-        return ReplyProvider.create(
-          targetSeq: targetSeq!,
-          targetType: targetType!,
-        );
+        return p;
       },
       child: Scaffold(
         appBar: CustomAppbar(title: isEdit ? '리뷰 수정' : '투어 리뷰'),
@@ -42,6 +47,8 @@ class ReplyWrite extends StatelessWidget {
     );
   }
 }
+
+
 
 class ReplyWriteContent extends StatefulWidget {
   const ReplyWriteContent({super.key});
@@ -56,7 +63,7 @@ class _ReplyWriteContentState extends State<ReplyWriteContent> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final prov = context.read<ReplyProvider>();
-      if (prov.seq != null) prov.getReply(prov.seq!);
+      if (prov.replySeq != null) prov.getReply(prov.replySeq!);
     });
   }
 
