@@ -91,8 +91,6 @@ class _ProfileIndexContentState extends State<ProfileIndexContent> {
     );
   }
 
-
-  // 후기 등록 여부를 tour_inf에 flag로 기록 or 댓글 테이블에서 exist 확인할지 선택
   List<TourModel> get _sampleTours => [
     TourModel(
       seq: 1,

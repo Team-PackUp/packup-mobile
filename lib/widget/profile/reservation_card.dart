@@ -25,7 +25,7 @@ class ReservationCard extends StatelessWidget {
     final people = tour.remainPeople.toString();
     final statusCode = tour.tourStatusCode;
     final statusLabel = tour.tourStatusLabel;
-    final reviewFlag = tour.reviewFlag;
+    final reviewFlag = tour.reviewFlag ?? false;
 
     return Container(
         margin: EdgeInsets.only(bottom: h * 0.02),
@@ -107,28 +107,22 @@ class ReservationCard extends StatelessWidget {
                 ),
               ],
             ),
-            if ((statusCode ?? '') == '100003' && !reviewFlag!) ...[
-              // 이미 후기 등록 했는지 추가 검증 필요
+
+            if ((statusCode ?? '') == '100003') ...[
               SizedBox(height: h * 0.015),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: () {
+              _reviewActionButton(
+                context,
+                w: w,
+                h: h,
+                label: reviewFlag ? '후기 삭제' : '후기 작성',
+                icon: reviewFlag ? Icons.delete_outline : Icons.edit,
+                onPressed: () {
+                  if (reviewFlag) {
+                    // 삭제 요청
+                  } else {
                     context.push('/reply_write/${tour.seq}/REPLY_TOUR');
-                  },
-                  icon: Icon(Icons.edit, size: w * 0.05),
-                  label: Text(
-                    '후기 작성',
-                    style: TextStyle(fontSize: w * 0.04, fontWeight: FontWeight.w600),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: h * 0.018),
-                    side: BorderSide(color: Theme.of(context).colorScheme.primary),
-                    foregroundColor: Theme.of(context).colorScheme.primary,
-                  ).copyWith(
-                    overlayColor: WidgetStateProperty.all(Colors.transparent),
-                  ),
-                ),
+                  }
+                },
               ),
             ]
           ],
@@ -191,6 +185,34 @@ class ReservationCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _reviewActionButton(
+      BuildContext context, {
+        required double w,
+        required double h,
+        required String label,
+        required IconData icon,
+        required VoidCallback onPressed,
+      }) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: onPressed,
+        icon: Icon(icon, size: w * 0.05),
+        label: Text(
+          label,
+          style: TextStyle(fontSize: w * 0.04, fontWeight: FontWeight.w600),
+        ),
+        style: OutlinedButton.styleFrom(
+          padding: EdgeInsets.symmetric(vertical: h * 0.018),
+          side: BorderSide(color: Theme.of(context).colorScheme.primary),
+          foregroundColor: Theme.of(context).colorScheme.primary,
+        ).copyWith(
+          overlayColor: WidgetStateProperty.all(Colors.transparent),
+        ),
       ),
     );
   }
