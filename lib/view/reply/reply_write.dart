@@ -14,10 +14,7 @@ class ReplyWrite extends StatelessWidget {
     this.seq,
     this.targetSeq,
     this.targetType,
-  }) : assert(
-  (seq != null) ^ (targetSeq != null && targetType != null),
-  'Either provide seq (edit) OR targetSeq & targetType (create).',
-  );
+  });
 
   final int? seq;               // 편집 모드
   final int? targetSeq;         // 작성 모드
