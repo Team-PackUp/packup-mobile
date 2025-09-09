@@ -26,11 +26,6 @@ class ReplyListView extends StatelessWidget {
 
       return Padding(
         padding: EdgeInsets.symmetric(vertical: screenH * 0.01),
-        child: GestureDetector(
-          onTap: () async {
-            final moved = await context.push<bool>('/reply_write/${reply.seq}');
-            if (moved == true) refreshReply();
-          },
           child: ReplyReadCard(
             nickName: reply.user!.nickname ?? '익명',
             avatarUrl: reply.user!.profileImagePath,
@@ -38,9 +33,7 @@ class ReplyListView extends StatelessWidget {
             point: reply.point ?? 0,
             createdAt: reply.createdAt is DateTime ? reply.createdAt as DateTime : null,
           ),
-        ),
       );
-
     }
 
     if (useListView) {

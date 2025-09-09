@@ -51,13 +51,13 @@ class TourModel {
   /// 대표 이미지 경로
   final String? titleImagePath;
 
+  final bool? reviewFlag;
+
   /// 생성일
   final DateTime? createdAt;
 
   /// 수정일
   final DateTime? updatedAt;
-
-  final GuideModel? guideModel;
 
   /// 기본 생성자
   TourModel({
@@ -76,7 +76,7 @@ class TourModel {
     this.tourStatusLabel,
     this.tourLocation,
     this.titleImagePath,
-    this.guideModel,
+    this.reviewFlag,
     this.createdAt,
     this.updatedAt,
   });
@@ -113,10 +113,7 @@ class TourModel {
       tourStatusLabel: json['tourStatusLabel'],
       tourLocation: json['tourLocation'],
       titleImagePath: json['titleImagePath'],
-      guideModel:
-          json['guide'] != null
-              ? GuideModel.fromJson(json['guide'] as Map<String, dynamic>)
-              : null,
+      reviewFlag: json['reviewFlag'],
       createdAt:
           json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       updatedAt:
@@ -142,6 +139,7 @@ class TourModel {
       'tourStatusLabel': tourStatusLabel,
       'tourLocation': tourLocation,
       'titleImagePath': titleImagePath,
+      'reviewFlag': reviewFlag,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
     };
@@ -166,6 +164,7 @@ class TourModel {
       tourStatusLabel: '',
       tourLocation: '',
       titleImagePath: '',
+      reviewFlag: false,
       createdAt: null,
       updatedAt: null,
     );

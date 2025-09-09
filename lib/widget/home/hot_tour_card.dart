@@ -131,7 +131,7 @@ class HotTourCard extends StatelessWidget {
                     CircleAvatar(
                       radius: avatarR,
                       backgroundImage: NetworkImage(
-                        fullFileUrl(tour.guideModel?.guideAvatarPath ?? ''),
+                        fullFileUrl(tour.guide?.guideAvatarPath ?? ''),
                       ),
                       onBackgroundImageError: (_, __) {},
                       backgroundColor: Colors.grey[200],
@@ -139,7 +139,7 @@ class HotTourCard extends StatelessWidget {
                     SizedBox(width: gapMd),
                     Expanded(
                       child: Text(
-                        tour.guideModel?.guideName ?? '',
+                        tour.guide?.guideName ?? '',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: f(11),

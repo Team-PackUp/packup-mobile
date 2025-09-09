@@ -75,7 +75,7 @@ class _ReviewListSectionState extends State<ReviewListSection> {
                 ],
               ),
               ReplyListView(
-                replyList: replies,     // 미리보기 10개
+                replyList: replies,
                 useListView: false,
                 refreshReply: () => _provider.getReplyList(
                   targetSeq: widget.tourSeq,

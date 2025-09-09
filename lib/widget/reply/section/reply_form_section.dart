@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:packup/provider/reply/reply_provider.dart';
@@ -104,13 +105,20 @@ class _ReplyFormSectionState extends State<ReplyFormSection> {
     }
 
     setState(() => _isSubmitting = true);
+    try {
       await _replyProvider.upsertReply(
         context,
         _contentController.text.trim(),
         _point,
       );
+      if (!mounted) return;
+      context.pop(true);
+    } catch (e) {
+    } finally {
       if (mounted) setState(() => _isSubmitting = false);
+    }
   }
+
 
 
   Future<void> _deleteReply() async {

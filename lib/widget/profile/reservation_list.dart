@@ -50,7 +50,7 @@ class ReservationList extends StatelessWidget {
       return Column(
         children: tourList.map((tour) {
           return Padding(
-            padding: EdgeInsets.only(bottom: h * 0.012),
+            padding: EdgeInsets.only(bottom: h * 0.001),
             child: GestureDetector(
               onTap: () => context.push('/tour/${tour.seq}'),
               child: ReservationCard(tour: tour, w: w, h: h),

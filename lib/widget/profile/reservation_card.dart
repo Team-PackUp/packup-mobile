@@ -23,10 +23,11 @@ class ReservationCard extends StatelessWidget {
     final date = tour.tourStartDate;
     final guide = tour.guide?.guideName ?? '가이드 미지정';
     final people = tour.remainPeople.toString();
+    final statusCode = tour.tourStatusCode;
+    final statusLabel = tour.tourStatusLabel;
+    final reviewFlag = tour.reviewFlag;
 
-    return GestureDetector(
-      onTap: () => context.push('/tour/${tour.seq}'),
-      child: Container(
+    return Container(
         margin: EdgeInsets.only(bottom: h * 0.02),
         padding: EdgeInsets.all(w * 0.04),
         decoration: BoxDecoration(
@@ -101,38 +102,97 @@ class ReservationCard extends StatelessWidget {
 
                 Column(
                   children: [
-                    _actionButton(context, Icons.close, '취소', () {
-                      // 취소 처리
-                    }),
-                    SizedBox(height: h * 0.01),
-                    _actionButton(context, Icons.chat_bubble_outline, '채팅', () {
-                      // 채팅 처리
-                    }),
+                    _statusLabel(context, statusCode!, statusLabel!),
                   ],
                 ),
               ],
             ),
+            if ((statusCode ?? '') == '100003' && !reviewFlag!) ...[
+              // 이미 후기 등록 했는지 추가 검증 필요
+              SizedBox(height: h * 0.015),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    context.push('/reply_write/${tour.seq}/REPLY_TOUR');
+                  },
+                  icon: Icon(Icons.edit, size: w * 0.05),
+                  label: Text(
+                    '후기 작성',
+                    style: TextStyle(fontSize: w * 0.04, fontWeight: FontWeight.w600),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: h * 0.018),
+                    side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                    foregroundColor: Theme.of(context).colorScheme.primary,
+                  ).copyWith(
+                    overlayColor: WidgetStateProperty.all(Colors.transparent),
+                  ),
+                ),
+              ),
+            ]
           ],
         ),
+    );
+  }
+
+  Widget _statusLabel(
+      BuildContext context,
+      String statusCode,
+      String statusLabel,
+      ) {
+
+    late Color bg;
+    late Color fg;
+    late Color bd;
+    late IconData statusIcon;
+
+    switch (statusCode) {
+      case '100001':
+        bg = Colors.green.withOpacity(0.10);
+        fg = Colors.green.shade700;
+        bd = Colors.green.shade300;
+        statusIcon = Icons.event_available;
+        break;
+
+      case '100002':
+        bg = Colors.orange.withOpacity(0.10);
+        fg = Colors.orange.shade800;
+        bd = Colors.orange.shade300;
+        statusIcon = Icons.hourglass_bottom;
+        break;
+
+      case '100003':
+        bg = Colors.grey.shade200;
+        fg = Colors.grey.shade600;
+        bd = Colors.grey.shade300;
+        statusIcon = Icons.event_busy;
+        break;
+    }
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: w * 0.025, vertical: h * 0.012),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: bd),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(statusIcon, size: w * 0.035, color: fg),
+          SizedBox(width: w * 0.01),
+          Text(
+            statusLabel,
+            style: TextStyle(
+              fontSize: w * 0.035,
+              color: fg,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _actionButton(
-      BuildContext context, IconData icon, String label, VoidCallback onPressed) {
-    return OutlinedButton.icon(
-      onPressed: onPressed,
-      icon: Icon(icon, size: w * 0.035),
-      label: Text(label, style: TextStyle(fontSize: w * 0.035)),
-      style: OutlinedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: w * 0.025, vertical: h * 0.02),
-        minimumSize: Size(w * 0.01, 0),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        visualDensity: VisualDensity.compact,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      ).copyWith(
-        overlayColor: WidgetStateProperty.all(Colors.transparent),
-      ),
-    );
-  }
 }

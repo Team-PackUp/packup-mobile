@@ -36,6 +36,12 @@ class _ReplyListSectionState extends State<ReplyListSection> {
     widget.scrollController?.addListener(_onScroll);
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _replyProvider.dispose();
+  }
+
   void _onScroll() async {
     final controller = widget.scrollController;
     if (controller == null) return;
@@ -48,17 +54,14 @@ class _ReplyListSectionState extends State<ReplyListSection> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ReplyProvider>.value(
       value: _replyProvider,
       child: Consumer<ReplyProvider>(
         builder: (context, replyProvider, _) {
-          return GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus(); // 터치 시 키보드 내림
-            },
-            child: Column(
+          return Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -81,7 +84,6 @@ class _ReplyListSectionState extends State<ReplyListSection> {
                     ),
                   ),
                 ],
-            ),
           );
         },
       ),

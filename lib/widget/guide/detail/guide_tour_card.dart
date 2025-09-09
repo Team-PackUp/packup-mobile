@@ -108,12 +108,12 @@ class GuideTourCard extends StatelessWidget {
                         children: [
                           CircleProfileImage(
                             radius: context.sY(14),
-                            imagePath: tour.guideModel?.guideAvatarPath ?? '',
+                            imagePath: tour.guide?.guideAvatarPath ?? '',
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              tour.guideModel?.guideName ?? '',
+                              tour.guide?.guideName ?? '',
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 11,
