@@ -25,7 +25,9 @@ class ReservationCard extends StatelessWidget {
     final people = tour.remainPeople.toString();
     final statusCode = tour.tourStatusCode;
     final statusLabel = tour.tourStatusLabel;
-    final reviewFlag = tour.reviewFlag ?? false;
+    var reviewFlag = tour.reviewFlag ?? false;
+
+    reviewFlag = false;
 
     return Container(
         margin: EdgeInsets.only(bottom: h * 0.02),
