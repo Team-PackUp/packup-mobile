@@ -52,28 +52,12 @@ class ReservationConfirmPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // 썸네일 + 타이틀 + 평점
-                          Row(
+                          const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                width: 72,
-                                height: 72,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFEDEEEF),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              const Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _TitleLine(),
-                                    SizedBox(height: 6),
-                                    _RatingLine(),
-                                  ],
-                                ),
-                              ),
+                              _TitleLine(),
+                              SizedBox(height: 6),
+                              _RatingLine(),
                             ],
                           ),
 
