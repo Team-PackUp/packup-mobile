@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/guide/edit/tour_session_open_provider.dart';
 
@@ -60,7 +61,7 @@ class _OpenSessionCreateView extends StatelessWidget {
               const _CalendarCard(),
               const SizedBox(height: 16),
 
-              // 시간 슬롯 + duration
+              // 시간 슬롯 + duration + 최대 인원
               const _TimeGrid(),
             ],
           ),
@@ -145,7 +146,7 @@ class _CalendarCard extends StatelessWidget {
   }
 }
 
-/* -------------------- Time Grid + Duration -------------------- */
+/* -------------------- Time Grid + Duration + Capacity -------------------- */
 class _TimeGrid extends StatelessWidget {
   const _TimeGrid();
 
@@ -173,6 +174,12 @@ class _TimeGrid extends StatelessWidget {
     final theme = Theme.of(context);
 
     final selected = prov.selectedStart;
+
+    // ⚠️ TextEditingController를 빌드마다 새로 만들면 커서가 튀긴 합니다.
+    // 간단 구현 우선: onSubmitted에서 Provider에 반영/클램프
+    final maxCtrl = TextEditingController(
+      text: prov.maxParticipants.toString(),
+    );
 
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -259,6 +266,70 @@ class _TimeGrid extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Text(
+                  '최대 인원',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(width: 12),
+
+                IconButton(
+                  onPressed:
+                      prov.maxParticipants >
+                              TourSessionOpenProvider.minParticipants
+                          ? prov.decreaseMax
+                          : null,
+                  icon: const Icon(Icons.remove),
+                  tooltip: '감소',
+                ),
+
+                SizedBox(
+                  width: 72,
+                  child: TextField(
+                    key: const ValueKey('maxParticipantsField'),
+                    textAlign: TextAlign.center,
+                    controller: maxCtrl,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    onSubmitted: (v) {
+                      final parsed = int.tryParse(v);
+                      if (parsed != null) {
+                        context
+                            .read<TourSessionOpenProvider>()
+                            .setMaxParticipants(parsed);
+                      } else {
+                        // 숫자 아님 → 기존 값 유지
+                        maxCtrl.text =
+                            context
+                                .read<TourSessionOpenProvider>()
+                                .maxParticipants
+                                .toString();
+                      }
+                    },
+                    decoration: const InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(vertical: 8),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+
+                IconButton(
+                  onPressed:
+                      prov.maxParticipants <
+                              TourSessionOpenProvider.maxParticipantsLimit
+                          ? prov.increaseMax
+                          : null,
+                  icon: const Icon(Icons.add),
+                  tooltip: '증가',
+                ),
               ],
             ),
           ],

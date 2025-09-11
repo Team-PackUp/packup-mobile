@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:packup/model/tour/tour_session_create_request.dart';
 import 'package:packup/model/tour/tour_session_model.dart';
 import 'package:packup/service/tour/tour_service.dart';
+import 'package:flutter/services.dart';
 
 class TourSessionOpenProvider extends ChangeNotifier {
   final _service = TourService();
@@ -15,6 +16,10 @@ class TourSessionOpenProvider extends ChangeNotifier {
   DateTime? _selectedStart;
   List<TourSessionModel> _sessions = [];
 
+  int _maxParticipants = 10;
+  static const int minParticipants = 1;
+  static const int maxParticipantsLimit = 99;
+
   bool get loading => _loading;
   Object? get error => _error;
   DateTime get selectedDate => _selectedDate;
@@ -23,6 +28,18 @@ class TourSessionOpenProvider extends ChangeNotifier {
   DateTime? get selectedEnd =>
       (_selectedStart == null) ? null : _selectedStart!.add(_duration);
   List<TourSessionModel> get sessions => _sessions;
+
+  int get maxParticipants => _maxParticipants;
+  void setMaxParticipants(int v) {
+    final clamped = v.clamp(minParticipants, maxParticipantsLimit);
+    if (clamped != _maxParticipants) {
+      _maxParticipants = clamped;
+      notifyListeners();
+    }
+  }
+
+  void increaseMax() => setMaxParticipants(_maxParticipants + 1);
+  void decreaseMax() => setMaxParticipants(_maxParticipants - 1);
 
   Future<void> init(int tourSeq) async {
     _tourSeq = tourSeq;
@@ -69,7 +86,10 @@ class TourSessionOpenProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get canSubmit => _tourSeq != null && _selectedStart != null;
+  bool get canSubmit =>
+      _tourSeq != null &&
+      _selectedStart != null &&
+      _maxParticipants >= minParticipants;
 
   Future<void> submit() async {
     if (!canSubmit) return;
@@ -81,6 +101,7 @@ class TourSessionOpenProvider extends ChangeNotifier {
         tourSeq: _tourSeq!,
         sessionStartTime: _selectedStart!,
         sessionEndTime: _selectedStart!.add(_duration),
+        maxParticipants: _maxParticipants,
       );
       await _service.createSession(tourSeq: _tourSeq!, req: req);
       await refresh();
