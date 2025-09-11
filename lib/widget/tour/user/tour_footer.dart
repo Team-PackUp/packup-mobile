@@ -3,7 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:packup/view/reservation/reservation.dart';
 
 class TourFooter extends StatelessWidget {
-  const TourFooter({super.key});
+  final int tourSeq;
+  final int pricePerPerson;
+
+  const TourFooter({
+    super.key,
+    required this.tourSeq,
+    required this.pricePerPerson,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +32,10 @@ class TourFooter extends StatelessWidget {
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
               builder: (context) {
-                return const _ReservationModalWrapper();
+                return _ReservationModalWrapper(
+                  tourSeq: tourSeq,
+                  pricePerPerson: pricePerPerson,
+                );
               },
             );
           },
@@ -51,7 +61,14 @@ class TourFooter extends StatelessWidget {
 }
 
 class _ReservationModalWrapper extends StatelessWidget {
-  const _ReservationModalWrapper({super.key});
+  final int tourSeq;
+  final int pricePerPerson;
+
+  const _ReservationModalWrapper({
+    super.key,
+    required this.tourSeq,
+    required this.pricePerPerson,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +78,6 @@ class _ReservationModalWrapper extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
           child: Container(color: Colors.black.withOpacity(0.3)),
         ),
-
         Align(
           alignment: Alignment.bottomCenter,
           child: ClipRRect(
@@ -71,7 +87,11 @@ class _ReservationModalWrapper extends StatelessWidget {
               child: SafeArea(
                 top: false,
                 bottom: true,
-                child: ReservationPage(scrollController: ScrollController()),
+                child: ReservationPage(
+                  scrollController: ScrollController(),
+                  tourSeq: tourSeq,
+                  pricePerPerson: pricePerPerson,
+                ),
               ),
             ),
           ),

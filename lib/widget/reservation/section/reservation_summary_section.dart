@@ -1,10 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:packup/provider/tour/reservation/reservation_provider.dart';
+import 'package:provider/provider.dart';
 
 class ReservationSummarySection extends StatelessWidget {
   const ReservationSummarySection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final p = context.watch<ReservationProvider>();
+    final selected = p.selected;
+    final enabled = selected != null && p.remaining > 0;
+
+    String titleText() {
+      if (selected == null) return '세션 선택 필요';
+      final d = selected.startTime;
+      final date = '${d.month}월 ${d.day}일';
+      final hh = _hhmm(d);
+      return '게스트 ${p.guestCount}명 • $date $hh';
+    }
+
+    String priceText() {
+      if (selected == null) return '-';
+      final s = p.totalPrice.toString().replaceAllMapped(
+        RegExp(r'\B(?=(\d{3})+(?!\d))'),
+        (m) => ',',
+      );
+      return '$s원';
+    }
+
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
       decoration: const BoxDecoration(
@@ -16,23 +39,26 @@ class ReservationSummarySection extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text('게스트 1명 • 7월 25일 12:00', style: TextStyle(fontSize: 14)),
+            children: [
+              Text(titleText(), style: const TextStyle(fontSize: 14)),
               Text(
-                '20,000원',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                priceText(),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 12),
-
           SizedBox(
             width: double.infinity,
             height: 48,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: enabled ? () => _goNext(context) : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
+                disabledBackgroundColor: Colors.black12,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -46,5 +72,22 @@ class ReservationSummarySection extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _hhmm(DateTime t) {
+    final ampm = t.hour < 12 ? '오전' : '오후';
+    final hh = t.hour % 12 == 0 ? 12 : t.hour % 12;
+    final mm = t.minute.toString().padLeft(2, '0');
+    return '$ampm $hh:$mm';
+  }
+
+  void _goNext(BuildContext context) {
+    final p = context.read<ReservationProvider>();
+    // TODO: 예약 상세/참가자 정보 입력 화면으로 전달
+    // Navigator.pushNamed(context, '/reservation/detail', arguments: {
+    //   'sessionSeq': p.selected!.seq,
+    //   'guestCount': p.guestCount,
+    //   'totalPrice': p.totalPrice,
+    // });
   }
 }
