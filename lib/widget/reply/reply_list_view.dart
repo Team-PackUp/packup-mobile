@@ -32,6 +32,11 @@ class ReplyListView extends StatelessWidget {
             content: reply.content ?? '',
             point: reply.point ?? 0,
             createdAt: reply.createdAt is DateTime ? reply.createdAt as DateTime : null,
+            imageUrls: [
+              'assets/image/background/jeonju.jpg',
+              'assets/image/background/busan.jpg',
+              'assets/image/background/daejeon.jpg',
+            ],
           ),
       );
     }
@@ -43,13 +48,13 @@ class ReplyListView extends StatelessWidget {
         itemCount: replyList.length,
         itemBuilder: itemBuilder,
       );
-    } else {
-      return Column(
-        children: replyList.asMap().entries.map((entry) {
-          final index = entry.key;
-          return itemBuilder(context, index);
-        }).toList(),
-      );
     }
+
+    return Column(
+      children: replyList.asMap().entries.map((entry) {
+        final index = entry.key;
+        return itemBuilder(context, index);
+      }).toList(),
+    );
   }
 }
