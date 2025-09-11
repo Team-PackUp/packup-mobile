@@ -14,6 +14,9 @@ class TourDetailModel {
   final List<String> includeItems;
   final List<String> excludeItems;
 
+  final int price;
+  final int? privatePrice;
+
   const TourDetailModel({
     required this.seq,
     required this.title,
@@ -27,20 +30,19 @@ class TourDetailModel {
     required this.languages,
     required this.includeItems,
     required this.excludeItems,
+    required this.price,
+    this.privatePrice,
   });
 
   factory TourDetailModel.fromJson(Map<String, dynamic> r) {
     final seq = r['seq'];
     final guideMap = r['guide'];
 
-    final GuideModel? guide = guideMap is Map<String, dynamic>
-        ? GuideModel.fromJson(guideMap)
-        : null;
+    final GuideModel? guide =
+        guideMap is Map<String, dynamic> ? GuideModel.fromJson(guideMap) : null;
 
     final String? thumbnail = r['tourThumbnailUrl'] as String?;
-
     final List<String> languages = _splitToList(guide?.languages);
-
     final List<String> includeItems = _splitToList(r['tourIncludedContent']);
     final List<String> excludeItems = _splitToList(r['tourExcludedContent']);
 
@@ -55,6 +57,16 @@ class TourDetailModel {
 
     final String notes = _toStringSafe(r['tourNotes']);
     final String duration = _extractDuration(notes);
+
+    int _toInt(dynamic v, {int defaultValue = 0}) {
+      if (v == null) return defaultValue;
+      if (v is int) return v;
+      if (v is double) return v.toInt();
+      if (v is num) return v.toInt();
+      final s = v.toString();
+      final n = int.tryParse(s);
+      return n ?? defaultValue;
+    }
 
     return TourDetailModel(
       seq: seq,
@@ -71,6 +83,9 @@ class TourDetailModel {
       languages: languages,
       includeItems: includeItems,
       excludeItems: excludeItems,
+      price: _toInt(r['tourPrice']), // ✅ 핵심
+      privatePrice:
+          r['privatePrice'] != null ? _toInt(r['privatePrice']) : null, // (옵션)
     );
   }
 
@@ -88,7 +103,7 @@ class TourDetailModel {
       reviewCount: 150,
       tags: ['Culture', 'History', 'Walking Tour', 'Seoul'],
       description:
-      '돈벌고싶어? 대기업가고싶어? 뭐해? PACK-UP 안하고? 완벽한 프로젝트 팩업 지금바로 시작 - PlayStore',
+          '돈벌고싶어? 대기업가고싶어? 뭐해? PACK-UP 안하고? 완벽한 프로젝트 팩업 지금바로 시작 - PlayStore',
       duration: '1년',
       languages: ['영어', '준모어', '중국어'],
       includeItems: [
@@ -98,6 +113,8 @@ class TourDetailModel {
         '그냥 정준모',
       ],
       excludeItems: ['개발자 월급', '개발자 워라밸', '잠자는 시간'],
+      price: 55000,
+      privatePrice: 120000,
     );
   }
 }
@@ -110,23 +127,26 @@ bool _isYes(dynamic v) {
   return s == 'Y' || s == 'YES' || s == 'TRUE' || s == 'T' || s == '1';
 }
 
-/// "a,b\nc • d; e | f" 같은 문자열을 항목 리스트로 변환
 List<String> _splitToList(dynamic raw) {
   final s = _toStringSafe(raw);
   if (s.isEmpty) return const [];
-  final parts = s.split(RegExp(r'[,;\n•|]'))
-      .map((e) => e.trim())
-      .where((e) => e.isNotEmpty)
-      .toList();
+  final parts =
+      s
+          .split(RegExp(r'[,;\n•|]'))
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toList();
   return parts.toSet().toList();
 }
 
-/// notes에서 "소요시간: 3시간", "Duration: 2h", "약 90분" 등 간단 추출
 String _extractDuration(String notes) {
   if (notes.isEmpty) return '';
   final candidates = <RegExp>[
     RegExp(r'(소요\s*시간|소요시간)\s*[:：]?\s*([0-9]+(?:\.[0-9]+)?\s*(?:시간|분))'),
-    RegExp(r'(Duration)\s*[:：]?\s*([0-9]+(?:\.[0-9]+)?\s*(?:h|hr|hours|mins|minutes))', caseSensitive: false),
+    RegExp(
+      r'(Duration)\s*[:：]?\s*([0-9]+(?:\.[0-9]+)?\s*(?:h|hr|hours|mins|minutes))',
+      caseSensitive: false,
+    ),
     RegExp(r'약?\s*([0-9]+(?:\.[0-9]+)?\s*(?:시간|분))'),
   ];
   for (final re in candidates) {
