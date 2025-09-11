@@ -6,10 +6,17 @@ class TourFooter extends StatelessWidget {
   final int tourSeq;
   final int pricePerPerson;
 
+  final String? tourTitle;
+  final bool privateAvailable;
+  final int? privateMinPrice;
+
   const TourFooter({
     super.key,
     required this.tourSeq,
     required this.pricePerPerson,
+    this.tourTitle,
+    this.privateAvailable = false,
+    this.privateMinPrice,
   });
 
   @override
@@ -35,6 +42,9 @@ class TourFooter extends StatelessWidget {
                 return _ReservationModalWrapper(
                   tourSeq: tourSeq,
                   pricePerPerson: pricePerPerson,
+                  tourTitle: tourTitle,
+                  privateAvailable: privateAvailable,
+                  privateMinPrice: privateMinPrice,
                 );
               },
             );
@@ -64,10 +74,17 @@ class _ReservationModalWrapper extends StatelessWidget {
   final int tourSeq;
   final int pricePerPerson;
 
+  final String? tourTitle;
+  final bool privateAvailable;
+  final int? privateMinPrice;
+
   const _ReservationModalWrapper({
     super.key,
     required this.tourSeq,
     required this.pricePerPerson,
+    this.tourTitle,
+    this.privateAvailable = false,
+    this.privateMinPrice,
   });
 
   @override
@@ -91,6 +108,9 @@ class _ReservationModalWrapper extends StatelessWidget {
                   scrollController: ScrollController(),
                   tourSeq: tourSeq,
                   pricePerPerson: pricePerPerson,
+                  tourTitle: tourTitle,
+                  privateAvailable: privateAvailable,
+                  privateMinPrice: privateMinPrice,
                 ),
               ),
             ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:packup/provider/tour/reservation/reservation_provider.dart';
+import 'package:packup/view/reservation/detail/reservation_confirm.dart';
 import 'package:provider/provider.dart';
 
 class ReservationSummarySection extends StatelessWidget {
@@ -83,11 +85,6 @@ class ReservationSummarySection extends StatelessWidget {
 
   void _goNext(BuildContext context) {
     final p = context.read<ReservationProvider>();
-    // TODO: 예약 상세/참가자 정보 입력 화면으로 전달
-    // Navigator.pushNamed(context, '/reservation/detail', arguments: {
-    //   'sessionSeq': p.selected!.seq,
-    //   'guestCount': p.guestCount,
-    //   'totalPrice': p.totalPrice,
-    // });
+    context.push('/reservation/confirm', extra: p);
   }
 }

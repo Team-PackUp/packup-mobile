@@ -93,6 +93,9 @@ class _TourDetailState extends State<TourDetail> {
             bottomNavigationBar: TourFooter(
               tourSeq: tour.seq,
               pricePerPerson: tour.price,
+              tourTitle: tour.title,
+              privateAvailable: tour.privateFlag == 'Y',
+              privateMinPrice: tour.privatePrice,
             ),
           );
         },

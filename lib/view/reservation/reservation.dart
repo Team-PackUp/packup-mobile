@@ -8,17 +8,20 @@ import 'package:packup/widget/reservation/section/reservation_time_list_section.
 class ReservationPage extends StatelessWidget {
   final ScrollController scrollController;
 
-  /// 예약하려는 투어 식별자
   final int tourSeq;
-
-  /// 1인 기준 가격(원) - 투어 상세에서 받아와 주입
   final int pricePerPerson;
+  final String? tourTitle;
+  final bool privateAvailable;
+  final int? privateMinPrice;
 
   const ReservationPage({
     super.key,
     required this.scrollController,
     required this.tourSeq,
     required this.pricePerPerson,
+    this.tourTitle,
+    this.privateAvailable = false,
+    this.privateMinPrice,
   });
 
   @override
@@ -28,6 +31,9 @@ class ReservationPage extends StatelessWidget {
           (_) => ReservationProvider(
             tourSeq: tourSeq,
             pricePerPerson: pricePerPerson,
+            tourTitle: tourTitle,
+            privateAvailable: privateAvailable,
+            privateMinPrice: privateMinPrice,
           )..load(),
       child: Scaffold(
         backgroundColor: Colors.white,
