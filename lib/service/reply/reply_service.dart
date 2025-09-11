@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:packup/model/common/fcm_model.dart';
 import 'package:packup/model/reply/reply_model.dart';
 
@@ -36,6 +37,12 @@ class ReplyService {
   }) async {
 
     return DioService().putRequest('/reply/update/$seq', replyModel.toMap());
+  }
+
+  Future<ResultModel> saveImage({
+    required List<XFile> photos
+  }) async {
+    return DioService().multipartListRequest('/reply/save/image', photos);
   }
 
   Future<ResultModel> deleteReply({

@@ -11,6 +11,7 @@ import 'package:packup/widget/tour/user/section/tour_include_section.dart';
 import '../../../widget/common/custom_appbar.dart';
 import '../../../widget/guide/detail/section/review_list_section.dart';
 import '../../../widget/tour/user/section/tour_guide_section.dart';
+import '../../../widget/tour/user/tour_footer.dart';
 
 class TourDetail extends StatefulWidget {
   final int tourSeq;
@@ -86,6 +87,7 @@ class _TourDetailState extends State<TourDetail> {
                 ],
               ),
             ),
+            bottomNavigationBar: const TourFooter(),
           );
         },
       ),

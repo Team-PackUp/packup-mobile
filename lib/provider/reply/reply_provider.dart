@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:packup/model/common/page_model.dart';
 import 'package:packup/model/reply/reply_model.dart';
 import 'package:packup/service/common/loading_service.dart';
@@ -10,6 +11,7 @@ class ReplyProvider extends ChangeNotifier {
   int? targetSeq;
   TargetType? targetType;
   int? replySeq;
+  bool editModeFlag = false;
 
   List<ReplyModel> _replyList = [];
   ReplyModel? replyModel;
@@ -28,6 +30,7 @@ class ReplyProvider extends ChangeNotifier {
 
   void setEditMode({required int seq}) {
     replySeq = seq;
+    editModeFlag = true;
   }
 
   void setTarget({required int targetSeq, required TargetType targetType}) {
@@ -82,8 +85,13 @@ class ReplyProvider extends ChangeNotifier {
     });
   }
 
-  Future<void> upsertReply(BuildContext context, String content, int point) async {
-    String message = (replySeq != null) ? "리뷰가 수정 되었습니다!" : "리뷰가 등록 되었습니다!";
+  Future<void> upsertReply(BuildContext context, String content, int point, List<XFile> photos) async {
+    String message = (editModeFlag) ? "리뷰가 수정 되었습니다!" : "리뷰가 등록 되었습니다!";
+
+    // 첨부 이미지가 있는 경우 먼저 저장
+    if(photos.isNotEmpty) {
+      await _service.saveImage(photos: photos);
+    }
 
     await LoadingService.runHandled(context, () async {
       if (replySeq != null) {
