@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -7,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:packup/model/common/result_model.dart';
 
 import 'package:packup/common/util.dart';
+import 'package:path/path.dart' as p;
 import 'interceptor.dart';
 
 class DioService {
@@ -73,6 +75,24 @@ class DioService {
     final response = await dio.post(url, data: formData);
     return ResultModel.fromJson(response.data);
   }
+
+
+  Future<ResultModel> multipartListRequest(String uri, List<XFile> files) async {
+    final url = httpPrefix + uri;
+
+    final fileParts = await Future.wait(files.map((xf) async =>
+    await MultipartFile.fromFile(xf.path, filename: p.basename(xf.path))
+    ));
+
+    final formData = FormData.fromMap({
+      'file': fileParts,
+    });
+
+    final res = await dio.post(url, data: formData);
+    return ResultModel.fromJson(res.data);
+  }
+
+
 
   Future<ResultModel> multipartRequestWithFields(
     String uri,

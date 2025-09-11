@@ -110,10 +110,10 @@ class _ReplyFormSectionState extends State<ReplyFormSection> {
         context,
         _contentController.text.trim(),
         _point,
+        _photos,
       );
       if (!mounted) return;
       context.pop(true);
-    } catch (e) {
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }
