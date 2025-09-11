@@ -419,7 +419,7 @@ class _PayBar extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text('바로 결제하기', style: TextStyle(fontSize: 16)),
+                  child: const Text('결제하기', style: TextStyle(fontSize: 16)),
                 ),
               ),
             ],
