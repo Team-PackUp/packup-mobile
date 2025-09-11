@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:packup/model/common/app_mode.dart';
 import 'package:packup/model/reply/reply_model.dart';
 import 'package:packup/model/user/user_withdraw_log/user_withdraw_log_model.dart';
+import 'package:packup/provider/tour/reservation/reservation_provider.dart';
 import 'package:packup/provider/user/user_provider.dart';
 import 'package:packup/view/ai_recommend/ai_recommend.dart';
 import 'package:packup/view/chat/chat_message.dart';
@@ -24,6 +25,7 @@ import 'package:packup/view/profile/setting_account/setting/setting_nation.dart'
 import 'package:packup/view/profile/setting_account/setting/setting_withdraw.dart';
 import 'package:packup/view/profile/setting_account/setting/setting_withdraw_confirm.dart';
 import 'package:packup/view/reply/reply_write.dart';
+import 'package:packup/view/reservation/detail/reservation_confirm.dart';
 import 'package:packup/view/search/search.dart';
 import 'package:packup/view/tour/guide/listing/guide_listing.dart';
 import 'package:packup/view/tour/guide/listing/guide_listing_info.dart';
@@ -38,6 +40,7 @@ import 'package:packup/widget/common/custom_error.dart';
 import 'package:packup/view/guide/application/guide_application_submit.dart';
 import 'package:packup/provider/common/app_mode_provider.dart';
 import 'package:packup/widget/common/guide_shell.dart';
+import 'package:provider/provider.dart';
 
 import '../provider/search/search_provider.dart';
 import '../view/ai_recommend/detail/ai_recommend_detail.dart';
@@ -241,7 +244,7 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
         name: 'tourDetail',
         builder: (context, state) {
           int seq = int.parse(state.pathParameters['seq']!);
-          return TourDetail(tourSeq: seq,);
+          return TourDetail(tourSeq: seq);
         },
       ),
       GoRoute(
@@ -378,6 +381,20 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
               final title =
                   state.extra is String ? state.extra as String : null;
               return OpenSessionCreatePage(tourSeq: tourSeq, tourTitle: title);
+            },
+          ),
+          GoRoute(
+            path: '/reservation/confirm',
+            name: 'reservationConfirm',
+            builder: (context, state) {
+              final extra = state.extra;
+              if (extra is! ReservationProvider) {
+                return const CustomError(message: '예약 정보가 없습니다. 다시 시도해주세요.');
+              }
+              return ChangeNotifierProvider<ReservationProvider>.value(
+                value: extra,
+                child: const ReservationConfirmPage(),
+              );
             },
           ),
         ],
