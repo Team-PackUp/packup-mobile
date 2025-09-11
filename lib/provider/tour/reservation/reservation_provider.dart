@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:packup/model/tour/tour_session_model.dart';
 import 'package:packup/service/tour/tour_service.dart';
@@ -7,8 +8,19 @@ class ReservationProvider extends ChangeNotifier {
 
   final int tourSeq;
   final int pricePerPerson;
+  final String? tourTitle;
 
-  ReservationProvider({required this.tourSeq, required this.pricePerPerson});
+  /// 프라이빗 지원/최소요금 (상위에서 주입)
+  final bool privateAvailable;
+  final int? privateMinPrice;
+
+  ReservationProvider({
+    required this.tourSeq,
+    required this.pricePerPerson,
+    this.tourTitle,
+    this.privateAvailable = false,
+    this.privateMinPrice,
+  });
 
   List<TourSessionModel> _sessions = [];
   List<TourSessionModel> get sessions => _sessions;
@@ -22,6 +34,19 @@ class ReservationProvider extends ChangeNotifier {
   int _guestCount = 1;
   int get guestCount => _guestCount;
 
+  bool _isPrivate = false;
+  bool get isPrivate => _isPrivate;
+
+  /// 프라이빗 기능을 쓸 수 있는지
+  bool get supportsPrivate => privateAvailable && (privateMinPrice != null);
+
+  void setPrivate(bool v) {
+    if (!supportsPrivate) return;
+    if (_isPrivate == v) return;
+    _isPrivate = v;
+    notifyListeners();
+  }
+
   int get remaining {
     if (_selected == null) return 99;
     final cap = _selected!.capacity ?? 99;
@@ -30,14 +55,30 @@ class ReservationProvider extends ChangeNotifier {
     return left < 0 ? 0 : left;
   }
 
-  int get maxSelectableGuest {
-    return remaining.clamp(0, 99);
-  }
+  int get maxSelectableGuest => remaining.clamp(0, 99);
 
-  int get totalPrice {
+  /// 프라이빗 미적용 기본 금액
+  int get basePrice {
     if (_selected == null) return 0;
     return pricePerPerson * _guestCount;
   }
+
+  /// 프라이빗 최소 요금까지의 부족분 (업셀 문구용)
+  int get privateShortfall {
+    if (!supportsPrivate) return 0;
+    return math.max(0, (privateMinPrice ?? 0) - basePrice);
+  }
+
+  /// 실제 결제 금액
+  int get totalPrice {
+    if (_selected == null) return 0;
+    if (_isPrivate && supportsPrivate) {
+      return math.max(basePrice, privateMinPrice!);
+    }
+    return basePrice;
+  }
+
+  bool get canProceed => _selected != null && remaining > 0 && _guestCount > 0;
 
   Future<void> load() async {
     _loading = true;
