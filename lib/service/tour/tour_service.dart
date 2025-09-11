@@ -24,21 +24,15 @@ class TourService {
     return await DioService().getRequest('/tour/proxy/$regionCode', query);
   }
 
-  Future<ResultModel> getTourDetail({
-    required int tourSeq,
-  }) async {
+  Future<ResultModel> getTourDetail({required int tourSeq}) async {
     return await DioService().getRequest('/tour/detail/$tourSeq');
   }
 
-  Future<ResultModel> getGuideByTour({
-    required int tourSeq,
-  }) async {
+  Future<ResultModel> getGuideByTour({required int tourSeq}) async {
     return await DioService().getRequest('/tour/detail/guide/$tourSeq');
   }
 
-  Future<ResultModel> getTourListByGuide({
-    required int guideSeq,
-  }) async {
+  Future<ResultModel> getTourListByGuide({required int guideSeq}) async {
     return await DioService().getRequest('/tour/guide/$guideSeq');
   }
 
@@ -106,5 +100,30 @@ class TourService {
       return payload.first as Map<String, dynamic>;
     }
     return <String, dynamic>{};
+  }
+
+  Future<List<TourSessionModel>> fetchOpenSessions({
+    required int tourSeq,
+    DateTime? from,
+  }) async {
+    final query = {if (from != null) 'from': from.toIso8601String()};
+    final ResultModel res = await DioService().getRequest(
+      '/tour/$tourSeq/sessions/open',
+      query,
+    );
+    return _asSessionList(res.response);
+  }
+
+  List<TourSessionModel> _asSessionList(dynamic payload) {
+    final List<dynamic> list = switch (payload) {
+      List<dynamic> l => l,
+      Map<String, dynamic> m when m['content'] is List => m['content'] as List,
+      _ => <dynamic>[],
+    };
+
+    return list
+        .whereType<Map<String, dynamic>>()
+        .map(TourSessionModel.fromJson)
+        .toList();
   }
 }
