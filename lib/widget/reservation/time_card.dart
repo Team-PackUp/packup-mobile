@@ -7,6 +7,7 @@ class TimeCard extends StatelessWidget {
   final String subtitle;
   final String remainText;
   final bool isSelected;
+  final VoidCallback? onTap;
 
   const TimeCard({
     super.key,
@@ -15,42 +16,49 @@ class TimeCard extends StatelessWidget {
     required this.price,
     required this.subtitle,
     required this.remainText,
-    this.isSelected = false,
+    required this.isSelected,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = isSelected ? Colors.black : Colors.transparent;
-
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: borderColor),
-        borderRadius: BorderRadius.circular(12),
-        color: const Color(0xFFF7F7F9),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (dateText.isNotEmpty)
-            Text(dateText, style: const TextStyle(fontWeight: FontWeight.w600)),
-          if (dateText.isNotEmpty) const SizedBox(height: 8),
-          Text(
-            time,
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 4),
-          Text(price, style: const TextStyle(color: Colors.black54)),
-          Text(subtitle, style: const TextStyle(color: Colors.black54)),
-          const SizedBox(height: 4),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              remainText,
-              style: const TextStyle(color: Colors.black87),
+    final border = isSelected ? Colors.black : const Color(0xFFE0E0E0);
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          border: Border.all(color: border),
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (dateText.isNotEmpty)
+              Text(
+                dateText,
+                style: const TextStyle(fontSize: 13, color: Colors.black54),
+              ),
+            if (dateText.isNotEmpty) const SizedBox(height: 6),
+            Text(
+              time,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+            Text(price, style: const TextStyle(fontSize: 14)),
+            const SizedBox(height: 4),
+            Text(
+              subtitle,
+              style: const TextStyle(fontSize: 12, color: Colors.black54),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              remainText,
+              style: const TextStyle(fontSize: 12, color: Colors.black87),
+            ),
+          ],
+        ),
       ),
     );
   }

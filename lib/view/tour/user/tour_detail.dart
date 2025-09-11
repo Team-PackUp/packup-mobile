@@ -55,7 +55,10 @@ class _TourDetailState extends State<TourDetail> {
 
           if (tour == null) {
             return const Scaffold(
-              body: CustomEmptyList(message: "투어가 존재하지 않습니다.", icon: CupertinoIcons.question),
+              body: CustomEmptyList(
+                message: "투어가 존재하지 않습니다.",
+                icon: CupertinoIcons.question,
+              ),
             );
           }
 
@@ -71,7 +74,7 @@ class _TourDetailState extends State<TourDetail> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: [
-                        TourGuideSection(guide: tour.guide!,),
+                        TourGuideSection(guide: tour.guide!),
                         SizedBox(height: screenH * 0.03),
                         TourDescriptionSection(tour: tour),
                         SizedBox(height: screenH * 0.03),
@@ -87,7 +90,10 @@ class _TourDetailState extends State<TourDetail> {
                 ],
               ),
             ),
-            bottomNavigationBar: const TourFooter(),
+            bottomNavigationBar: TourFooter(
+              tourSeq: tour.seq,
+              pricePerPerson: tour.price,
+            ),
           );
         },
       ),
