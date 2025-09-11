@@ -15,7 +15,12 @@ class TourDetailModel {
   final List<String> excludeItems;
 
   final int price;
+
   final int? privatePrice;
+
+  final String? privateFlag;
+
+  bool get privateAvailable => _isYes(privateFlag) || ((privatePrice ?? 0) > 0);
 
   const TourDetailModel({
     required this.seq,
@@ -32,41 +37,38 @@ class TourDetailModel {
     required this.excludeItems,
     required this.price,
     this.privatePrice,
+    this.privateFlag,
   });
 
   factory TourDetailModel.fromJson(Map<String, dynamic> r) {
-    final seq = r['seq'];
+    final seq = (r['seq'] as num).toInt();
     final guideMap = r['guide'];
 
     final GuideModel? guide =
-        guideMap is Map<String, dynamic> ? GuideModel.fromJson(guideMap) : null;
+        (guideMap is Map<String, dynamic>)
+            ? GuideModel.fromJson(guideMap)
+            : null;
 
     final String? thumbnail = r['tourThumbnailUrl'] as String?;
     final List<String> languages = _splitToList(guide?.languages);
     final List<String> includeItems = _splitToList(r['tourIncludedContent']);
     final List<String> excludeItems = _splitToList(r['tourExcludedContent']);
 
+    final String? privateFlag = r['privateFlag']?.toString();
+    final int? privatePrice =
+        (r['privatePrice'] == null) ? null : _toInt(r['privatePrice']);
+
     final List<String> tags = <String>[
       if (_toStringSafe(r['tourStatusLabel']).isNotEmpty)
         _toStringSafe(r['tourStatusLabel']),
       if (_isYes(r['transportServiceFlag'])) 'Transport',
-      if (_isYes(r['privateFlag'])) 'Private',
+      if (_isYes(privateFlag)) 'Private',
       if (_isYes(r['adultContentFlag'])) 'Adult',
       if (r['tourLocationCode'] != null) 'Loc:${r['tourLocationCode']}',
     ];
 
     final String notes = _toStringSafe(r['tourNotes']);
     final String duration = _extractDuration(notes);
-
-    int _toInt(dynamic v, {int defaultValue = 0}) {
-      if (v == null) return defaultValue;
-      if (v is int) return v;
-      if (v is double) return v.toInt();
-      if (v is num) return v.toInt();
-      final s = v.toString();
-      final n = int.tryParse(s);
-      return n ?? defaultValue;
-    }
 
     return TourDetailModel(
       seq: seq,
@@ -83,9 +85,9 @@ class TourDetailModel {
       languages: languages,
       includeItems: includeItems,
       excludeItems: excludeItems,
-      price: _toInt(r['tourPrice']), // ✅ 핵심
-      privatePrice:
-          r['privatePrice'] != null ? _toInt(r['privatePrice']) : null, // (옵션)
+      price: _toInt(r['tourPrice']),
+      privatePrice: privatePrice,
+      privateFlag: privateFlag,
     );
   }
 
@@ -101,7 +103,7 @@ class TourDetailModel {
       ],
       rating: 4.8,
       reviewCount: 150,
-      tags: ['Culture', 'History', 'Walking Tour', 'Seoul'],
+      tags: ['Culture', 'History', 'Walking Tour', 'Seoul', 'Private'],
       description:
           '돈벌고싶어? 대기업가고싶어? 뭐해? PACK-UP 안하고? 완벽한 프로젝트 팩업 지금바로 시작 - PlayStore',
       duration: '1년',
@@ -115,8 +117,17 @@ class TourDetailModel {
       excludeItems: ['개발자 월급', '개발자 워라밸', '잠자는 시간'],
       price: 55000,
       privatePrice: 120000,
+      privateFlag: 'Y',
     );
   }
+}
+
+int _toInt(dynamic v, {int defaultValue = 0}) {
+  if (v == null) return defaultValue;
+  if (v is int) return v;
+  if (v is num) return v.toInt();
+  final n = int.tryParse(v.toString());
+  return n ?? defaultValue;
 }
 
 String _toStringSafe(dynamic v) => (v == null) ? '' : v.toString();
