@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:packup/widget/common/circle_profile_image.dart';
 import 'package:packup/widget/reply/reply_image_gallery.dart';
+import '../../Common/util.dart';
 import '../common/image_viewer/image_viewer.dart';
 
 class ReplyReadCard extends StatefulWidget {
@@ -49,7 +50,7 @@ class _ReplyReadCardState extends State<ReplyReadCard> {
                 Text(widget.nickName, style: const TextStyle(fontWeight: FontWeight.w600)),
                 const Spacer(),
                   Text(
-                    _formatDate(widget.createdAt!),
+                    convertToYmd(widget.createdAt!),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
               ],
@@ -63,10 +64,4 @@ class _ReplyReadCardState extends State<ReplyReadCard> {
       ),
     );
   }
-
-  String _formatDate(DateTime dt) {
-    return '${dt.year}-${_two(dt.month)}-${_two(dt.day)}';
-  }
-
-  String _two(int n) => n.toString().padLeft(2, '0');
 }
