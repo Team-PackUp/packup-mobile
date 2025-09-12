@@ -1,7 +1,10 @@
-import 'dart:io'; // 혹시 이미지 파일 쓰실 때 대비
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:packup/view/payment/toss/toss_payment_page.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/reservation/reservation_provider.dart';
+import 'package:packup/provider/user/user_provider.dart';
 
 class ReservationConfirmPage extends StatelessWidget {
   const ReservationConfirmPage({super.key});
@@ -174,15 +177,39 @@ class ReservationConfirmPage extends StatelessWidget {
     );
   }
 
-  void _onPay(BuildContext context) {
+  void _onPay(BuildContext context) async {
     final p = context.read<ReservationProvider>();
-    if (p.selected == null) return;
+    final s = p.selected;
+    if (s == null) return;
 
-    // TODO: Toss 결제 라우팅 연결
-    // Navigator.pushNamed(context, '/payment/toss', arguments: {...});
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('결제 플로우 연결 예정')));
+    final orderId = 'ORDER_${DateTime.now().millisecondsSinceEpoch}';
+    final orderName = p.tourTitle ?? '투어 예약';
+    final amount = p.totalPrice;
+
+    final userSeq = context.read<UserProvider>().userModel?.userId;
+
+    final customerKey = "user_$userSeq";
+
+    final result = await context.push(
+      '/payment/toss',
+      extra: TossPaymentArgs(
+        orderId: orderId,
+        orderName: orderName,
+        amount: amount,
+        customerKey: customerKey,
+      ),
+    );
+
+    if (result is TossPaymentSuccess) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('결제가 완료되었습니다. 예약을 확정합니다.')));
+      Navigator.pop(context);
+    } else if (result is TossPaymentFail) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('결제 실패: ${result.message ?? '다시 시도해주세요.'}')),
+      );
+    }
   }
 }
 
