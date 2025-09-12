@@ -109,7 +109,7 @@ class _TossPaymentPageState extends State<TossPaymentPage> {
                   const SizedBox(height: 16),
 
                   SizedBox(
-                    height: 420,
+                    height: 460,
                     child: PaymentMethodWidget(
                       paymentWidget: _paymentWidget,
                       selector: 'methods',
@@ -158,7 +158,6 @@ class _TossPaymentPageState extends State<TossPaymentPage> {
       if (!mounted) return;
 
       if (result.success != null) {
-        // ✅ 결제 성공: 호출자에게 결과 반환
         context.pop(
           TossPaymentSuccess(
             orderId: widget.args.orderId,
@@ -167,7 +166,6 @@ class _TossPaymentPageState extends State<TossPaymentPage> {
           ),
         );
       } else if (result.fail != null) {
-        // ⛔ 결제 실패: SDK Fail 타입 필드명 편차 고려 (errorMessage 없으면 toString)
         final msg =
             (result.fail as dynamic)?.errorMessage?.toString() ??
             result.fail.toString();
@@ -179,48 +177,6 @@ class _TossPaymentPageState extends State<TossPaymentPage> {
       if (!mounted) return;
       context.pop(TossPaymentFail(message: '오류: $e'));
     }
-  }
-}
-
-/// ───── UI 보조 위젯 ─────
-class _SummaryCard extends StatelessWidget {
-  final TossPaymentArgs args;
-  const _SummaryCard({required this.args});
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x14000000),
-            blurRadius: 12,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            const Icon(Icons.receipt_long, size: 32),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                '${args.orderName}\n${_price(args.amount)}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  height: 1.3,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
 
