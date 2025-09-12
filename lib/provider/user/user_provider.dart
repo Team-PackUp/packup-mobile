@@ -43,6 +43,8 @@ class UserProvider extends LoadingProvider {
   bool get isResult => _isResult;
   bool get hasDetailInfo => _userModel?.isDetailRegistered ?? false;
 
+  int? get memberSeq => _userModel?.userId;
+
   // 로그인 시도 (Enum 타입을 직접 사용)
   Future<void> checkLogin(SocialLoginType type) async {
     _isLoading = true;
@@ -224,7 +226,6 @@ class UserProvider extends LoadingProvider {
   }
 
   Future<void> updateSettingLanguage(String languageCode) async {
-
     await LoadingService.run(() async {
       await _userService.updateSettingLanguage(languageCode);
       if (_resultModel!.resultFlag!) {
@@ -245,7 +246,6 @@ class UserProvider extends LoadingProvider {
 
     notifyListeners();
   }
-
 
   Future<void> userWithDraw(UserWithDrawLogModel model) async {
     await LoadingService.run(() async {
