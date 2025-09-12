@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/model/payment/toss/toss_payment_result_model.dart';
+import 'package:tosspayments_widget_sdk_flutter/model/tosspayments_result.dart';
+import 'package:packup/service/payment/toss/toss_payment_service.dart';
 import 'package:packup/view/payment/toss/toss_payment_page.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/reservation/reservation_provider.dart';
@@ -188,10 +189,10 @@ class ReservationConfirmPage extends StatelessWidget {
     final amount = p.totalPrice;
 
     final userSeq = context.read<UserProvider>().userModel?.userId;
+    final customerKey = 'user_$userSeq'; // 2자 이상 보장 👍
 
-    final customerKey = "user_$userSeq";
-
-    final result = await context.push(
+    // 1) 결제 페이지로 이동하고 결과 받기
+    final payResult = await context.push(
       '/payment/toss',
       extra: TossPaymentArgs(
         orderId: orderId,
@@ -201,11 +202,41 @@ class ReservationConfirmPage extends StatelessWidget {
       ),
     );
 
-    if (result != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.go('/result', extra: result);
-      });
+    if (payResult == null) return;
+
+    // (선택) 로딩 표시
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    dynamic finalResult = payResult;
+
+    try {
+      if (payResult is Success) {
+        await TossPaymentService().confirmPayment(
+          paymentKey: payResult.paymentKey,
+          orderId: payResult.orderId,
+          amount: payResult.amount.toInt(),
+        );
+        finalResult = payResult;
+      } else {
+        finalResult = payResult;
+      }
+    } catch (e) {
+      if (payResult is Success) {
+        finalResult = Fail('CONFIRM_FAILED', e.toString(), payResult.orderId);
+      } else {
+        finalResult = Fail('CONFIRM_FAILED', e.toString(), '');
+      }
+    } finally {
+      Navigator.of(context, rootNavigator: true).pop();
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.go('/result', extra: finalResult);
+    });
   }
 }
 
@@ -242,7 +273,6 @@ class _RatingLine extends StatelessWidget {
   }
 }
 
-/// 공통 카드
 class _Card extends StatelessWidget {
   final Widget child;
   const _Card({required this.child});
