@@ -54,6 +54,19 @@
 				</array>
 			</dict>
 		</array>
+
+		<!-- toss payment -->
+		<key>CFBundleURLTypes</key>
+		<array>
+		<dict>
+			<key>CFBundleURLName</key><string>packup.toss</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+			<string>packup</string>
+			</array>
+		</dict>
+		</array>
+
 		<!-- Google Sign-In -->
         <key>GIDClientID</key>
         <string>413154186328-vgu30o62g4iq90oiivhd541msavb0175.apps.googleusercontent.com</string>
