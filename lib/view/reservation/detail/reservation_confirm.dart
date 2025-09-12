@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:packup/model/payment/toss/toss_payment_result_model.dart';
 import 'package:packup/view/payment/toss/toss_payment_page.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/reservation/reservation_provider.dart';
@@ -200,15 +201,10 @@ class ReservationConfirmPage extends StatelessWidget {
       ),
     );
 
-    if (result is TossPaymentSuccess) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('결제가 완료되었습니다. 예약을 확정합니다.')));
-      Navigator.pop(context);
-    } else if (result is TossPaymentFail) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('결제 실패: ${result.message ?? '다시 시도해주세요.'}')),
-      );
+    if (result != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.go('/result', extra: result);
+      });
     }
   }
 }

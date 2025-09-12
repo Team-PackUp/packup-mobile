@@ -5,10 +5,7 @@ import 'package:tosspayments_widget_sdk_flutter/model/payment_info.dart';
 import 'package:tosspayments_widget_sdk_flutter/model/payment_widget_options.dart';
 import 'package:tosspayments_widget_sdk_flutter/widgets/payment_method.dart';
 import 'package:tosspayments_widget_sdk_flutter/widgets/agreement.dart';
-// (선택) dotenv 사용 시
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-/// ───── 결제 페이지 파라미터/결과 모델 ─────
 class TossPaymentArgs {
   final String orderId;
   final String orderName;
@@ -22,23 +19,6 @@ class TossPaymentArgs {
   });
 }
 
-class TossPaymentSuccess {
-  final String orderId;
-  final String orderName;
-  final int amount;
-  TossPaymentSuccess({
-    required this.orderId,
-    required this.orderName,
-    required this.amount,
-  });
-}
-
-class TossPaymentFail {
-  final String? message;
-  TossPaymentFail({this.message});
-}
-
-/// ───── 결제 페이지 (GoRouter extra → 생성자 주입) ─────
 class TossPaymentPage extends StatefulWidget {
   final TossPaymentArgs args;
   const TossPaymentPage({super.key, required this.args});
@@ -52,10 +32,9 @@ class _TossPaymentPageState extends State<TossPaymentPage> {
   PaymentMethodWidgetControl? _methodCtl;
   AgreementWidgetControl? _agreeCtl;
 
-  // (1) .env 사용 시: dotenv.env['TOSS_CLIENT_KEY']!
-  // (2) --dart-define 사용 권장:
-  //    flutter run --dart-define=TOSS_CLIENT_KEY=xxxx
-  //    flutter build ... --dart-define=TOSS_CLIENT_KEY=xxxx
+  // 이중 내비 방지
+  bool _navigated = false;
+
   String get _clientKey => const String.fromEnvironment(
     'TOSS_CLIENT_KEY',
     defaultValue: 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm', // 테스트 키
@@ -64,14 +43,11 @@ class _TossPaymentPageState extends State<TossPaymentPage> {
   @override
   void initState() {
     super.initState();
-
-    // 결제 위젯 인스턴스 생성 (args는 생성자 주입된 widget.args 사용)
     _paymentWidget = PaymentWidget(
       clientKey: _clientKey,
       customerKey: widget.args.customerKey,
     );
 
-    // 결제수단/약관 위젯 렌더
     _paymentWidget
         .renderPaymentMethods(
           selector: 'methods',
@@ -107,7 +83,6 @@ class _TossPaymentPageState extends State<TossPaymentPage> {
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                 children: [
                   const SizedBox(height: 16),
-
                   SizedBox(
                     height: 460,
                     child: PaymentMethodWidget(
@@ -123,17 +98,6 @@ class _TossPaymentPageState extends State<TossPaymentPage> {
                       selector: 'agreement',
                     ),
                   ),
-
-                  // PaymentMethodWidget(
-                  //   paymentWidget: _paymentWidget,
-                  //   selector: 'methods',
-                  // ),
-
-                  // const SizedBox(height: 12),
-                  // AgreementWidget(
-                  //   paymentWidget: _paymentWidget,
-                  //   selector: 'agreement',
-                  // ),
                 ],
               ),
             ),
@@ -144,38 +108,35 @@ class _TossPaymentPageState extends State<TossPaymentPage> {
     );
   }
 
+  bool _popped = false;
+
   Future<void> _onPay() async {
     try {
       final result = await _paymentWidget.requestPayment(
         paymentInfo: PaymentInfo(
           orderId: widget.args.orderId,
           orderName: widget.args.orderName,
-          // successUrl / failUrl: 위젯 SDK에선 보통 콜백으로 처리하므로 불필요
-          // 금액은 renderPaymentMethods에서 이미 설정
         ),
       );
 
-      if (!mounted) return;
+      if (!mounted || _popped) return;
 
       if (result.success != null) {
-        context.pop(
-          TossPaymentSuccess(
-            orderId: widget.args.orderId,
-            orderName: widget.args.orderName,
-            amount: widget.args.amount,
-          ),
-        );
+        _popped = true;
+        // 원본 Success 객체를 그대로 넘겨도 되고,
+        // 서버 confirm에 필요한 값만 골라 커스텀으로 넘겨도 됩니다.
+        context.pop(result.success);
       } else if (result.fail != null) {
-        final msg =
-            (result.fail as dynamic)?.errorMessage?.toString() ??
-            result.fail.toString();
-        context.pop(TossPaymentFail(message: msg));
+        _popped = true;
+        context.pop(result.fail);
       } else {
-        context.pop(TossPaymentFail(message: '결과 해석 불가'));
+        _popped = true;
+        context.pop('unknown');
       }
     } catch (e) {
-      if (!mounted) return;
-      context.pop(TossPaymentFail(message: '오류: $e'));
+      if (!mounted || _popped) return;
+      _popped = true;
+      context.pop(e);
     }
   }
 }
