@@ -16,6 +16,8 @@ import 'package:packup/view/home/home_hot_tour_more.dart';
 import 'package:packup/view/login/login.dart';
 import 'package:packup/view/index.dart';
 import 'package:packup/view/menu/guide_menu.dart';
+import 'package:packup/view/payment/toss/toss_payment_page.dart';
+import 'package:packup/view/payment/toss/toss_payment_screen.dart';
 import 'package:packup/view/payment/toss/toss_result_screen.dart';
 import 'package:packup/view/profile/profile_modify/profile_modify.dart';
 import 'package:packup/view/profile/setting_account/reservation_manage/reservation_manage.dart';
@@ -167,6 +169,13 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
       GoRoute(
         path: '/result',
         builder: (context, state) => const TossResultScreen(),
+      ),
+      GoRoute(
+        path: '/payment/toss',
+        builder: (context, state) {
+          final args = state.extra as TossPaymentArgs;
+          return TossPaymentPage(args: args);
+        },
       ),
       GoRoute(
         path: '/preference',
