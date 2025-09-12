@@ -1694,10 +1694,10 @@ packages:
     dependency: "direct main"
     description:
       name: tosspayments_widget_sdk_flutter
-      sha256: "57bf6fdfcbc8489f8bce73a11c83c5b4ff26399a52b69fd7dbe89b6128754e15"
+      sha256: a16eddb26866809832166f5a0967afeaab604debe69726d389ed6be5cd35fd5e
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   typed_data:
     dependency: transitive
     description:

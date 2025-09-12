@@ -46,7 +46,7 @@ dependencies:
   google_sign_in: ^6.2.0
   flutter_signin_button: ^2.0.0
   kakao_flutter_sdk_user: ^1.9.1+2
-  tosspayments_widget_sdk_flutter: ^2.1.1
+  tosspayments_widget_sdk_flutter: ^2.1.2
   get: ^4.6.0
   fluttertoast: ^8.2.2
   dio: ^5.8.0+1
@@ -137,20 +137,20 @@ flutter:
         - asset: assets/fonts/Packup_icons.ttf
     - family: Aggro
       fonts:
-#       - asset: assets/fonts/SB 어그로 M.ttf
-       - asset: assets/fonts/SB 어그로 L.ttf
+        #       - asset: assets/fonts/SB 어그로 M.ttf
+        - asset: assets/fonts/SB 어그로 L.ttf
 #       - asset: assets/fonts/SB 어그로 B.ttf
 
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/to/font-from-package
+#   - family: Schyler
+#     fonts:
+#       - asset: fonts/Schyler-Regular.ttf
+#       - asset: fonts/Schyler-Italic.ttf
+#         style: italic
+#   - family: Trajan Pro
+#     fonts:
+#       - asset: fonts/TrajanPro.ttf
+#       - asset: fonts/TrajanPro_Bold.ttf
+#         weight: 700
+#
+# For details regarding fonts from package dependencies,
+# see https://flutter.dev/to/font-from-package
