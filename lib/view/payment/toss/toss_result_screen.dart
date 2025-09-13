@@ -112,17 +112,29 @@ class PaymentCompleteScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              // Back to Home 버튼: 검은색 텍스트
-              TextButton(
-                onPressed: () => context.go('/home'),
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.black, // <= 요청사항
-                ),
-                child: const Text(
-                  'Back to Home',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+
+              // 메인으로 버튼: 검은색, 전체 너비, 48px 높이, 라운드 12
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () => context.go('/home'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    disabledBackgroundColor: Colors.black12,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 22),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    '메인으로',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
                 ),
               ),
+
               const SizedBox(height: 8),
             ],
           ),
