@@ -36,7 +36,7 @@ class Like extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const TossResultScreen(),
+                    builder: (context) => const PaymentCompleteScreen(),
                   ),
                 );
               },

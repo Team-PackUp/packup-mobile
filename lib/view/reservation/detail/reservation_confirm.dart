@@ -189,9 +189,8 @@ class ReservationConfirmPage extends StatelessWidget {
     final amount = p.totalPrice;
 
     final userSeq = context.read<UserProvider>().userModel?.userId;
-    final customerKey = 'user_$userSeq'; // 2자 이상 보장 👍
+    final customerKey = 'user_$userSeq';
 
-    // 1) 결제 페이지로 이동하고 결과 받기
     final payResult = await context.push(
       '/payment/toss',
       extra: TossPaymentArgs(
@@ -204,7 +203,6 @@ class ReservationConfirmPage extends StatelessWidget {
 
     if (payResult == null) return;
 
-    // (선택) 로딩 표시
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -215,11 +213,11 @@ class ReservationConfirmPage extends StatelessWidget {
 
     try {
       if (payResult is Success) {
-        await TossPaymentService().confirmPayment(
-          paymentKey: payResult.paymentKey,
-          orderId: payResult.orderId,
-          amount: payResult.amount.toInt(),
-        );
+        // await TossPaymentService().confirmPayment(
+        //   paymentKey: payResult.paymentKey,
+        //   orderId: payResult.orderId,
+        //   amount: payResult.amount.toInt(),
+        // );
         finalResult = payResult;
       } else {
         finalResult = payResult;

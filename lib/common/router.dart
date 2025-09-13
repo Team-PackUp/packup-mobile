@@ -168,8 +168,9 @@ GoRouter createRouter(AppModeProvider appMode, UserProvider userProvider) {
       ),
       GoRoute(
         path: '/result',
-        builder: (context, state) => const TossResultScreen(),
+        builder: (context, state) => PaymentCompleteScreen(),
       ),
+
       GoRoute(
         path: '/payment/toss',
         builder: (context, state) {
