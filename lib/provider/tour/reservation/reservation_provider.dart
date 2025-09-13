@@ -10,7 +10,6 @@ class ReservationProvider extends ChangeNotifier {
   final int pricePerPerson;
   final String? tourTitle;
 
-  /// 프라이빗 지원/최소요금 (상위에서 주입)
   final bool privateAvailable;
   final int? privateMinPrice;
 
