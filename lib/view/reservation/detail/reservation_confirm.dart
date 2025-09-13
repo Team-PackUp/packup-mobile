@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:packup/model/booking/booking_create_request.dart';
+import 'package:packup/service/booking/booking_service.dart';
 import 'package:tosspayments_widget_sdk_flutter/model/tosspayments_result.dart';
 import 'package:packup/service/payment/toss/toss_payment_service.dart';
 import 'package:packup/view/payment/toss/toss_payment_page.dart';
@@ -213,6 +215,45 @@ class ReservationConfirmPage extends StatelessWidget {
 
     try {
       if (payResult is Success) {
+        final paymentKey = payResult.paymentKey;
+        final orderIdFromToss = payResult.orderId;
+        final paidAmount = payResult.amount.toInt();
+
+        final bookingService = BookingService();
+        // final confirmRes = await bookingService.confirmTossPayment(
+        //   paymentKey: paymentKey,
+        //   orderId: orderIdFromToss,
+        //   amount: paidAmount,
+        // );
+        // if (confirmRes.resultFlag != true) {
+        //   throw Exception(confirmRes.message ?? '결제 확인 실패');
+        // }
+
+        final p = context.read<ReservationProvider>();
+        final s = p.selected!;
+        final adult = p.guestCount;
+        final privateFlag = p.isPrivate;
+
+        final req = BookingCreateRequest(
+          tourSessionSeq: s.seq,
+          adultCount: adult,
+          privateFlag: privateFlag,
+          orderId: orderIdFromToss,
+          paymentKey: paymentKey,
+          amount: paidAmount,
+        );
+
+        final bookingRes = await bookingService.createBooking(req);
+        if (bookingRes.resultFlag != true) {
+          throw Exception(bookingRes.message ?? '예약 생성 실패');
+        }
+
+        String? bookingSeqStr;
+        final resp = bookingRes.response;
+        if (resp is Map && resp['bookingSeq'] != null) {
+          bookingSeqStr = '${resp['bookingSeq']}';
+        }
+
         finalResult = Success(
           payResult.paymentKey,
           payResult.orderId,
@@ -222,16 +263,18 @@ class ReservationConfirmPage extends StatelessWidget {
               ...payResult.additionalParams!,
             'title': p.tourTitle ?? orderName,
             'date': _formatToday(),
+            if (bookingSeqStr != null) 'bookingSeq': bookingSeqStr,
           },
         );
       } else {
         finalResult = payResult;
       }
     } catch (e) {
-      finalResult =
-          (payResult is Success)
-              ? Fail('CONFIRM_FAILED', e.toString(), payResult.orderId)
-              : Fail('CONFIRM_FAILED', e.toString(), '');
+      finalResult = Fail(
+        'BOOKING_FAILED',
+        e.toString(),
+        payResult is Success ? payResult.orderId : orderId,
+      );
     } finally {
       Navigator.of(context, rootNavigator: true).pop();
     }
