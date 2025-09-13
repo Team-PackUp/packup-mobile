@@ -45,47 +45,40 @@ class WidgetHomeState extends State<WidgetHome> {
           child: ListView(
             children: [
               TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Client Key',
-                ),
+                decoration: const InputDecoration(labelText: 'Client Key'),
                 initialValue: LocalConfig.uiState.clientKey,
                 onSaved: (String? value) {
                   LocalConfig.uiState.clientKey = value!;
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Customer Key',
-                ),
+                decoration: const InputDecoration(labelText: 'Customer Key'),
                 initialValue: LocalConfig.uiState.customerKey,
                 onSaved: (String? value) {
                   LocalConfig.uiState.customerKey = value!;
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  labelText: '주문번호(orderId)',
-                ),
-                initialValue: 'tosspaymentsFlutter_${DateTime.now().millisecondsSinceEpoch}',
+                decoration: const InputDecoration(labelText: '주문번호(orderId)'),
+                initialValue:
+                    'tosspaymentsFlutter_${DateTime.now().millisecondsSinceEpoch}',
                 onSaved: (String? value) {
                   orderId = value!;
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  labelText: '주문명(orderName)',
-                ),
+                decoration: const InputDecoration(labelText: '주문명(orderName)'),
                 initialValue: 'Toss T-shirt',
                 onSaved: (String? value) {
                   orderName = value!;
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  labelText: '결제금액(amount)',
-                ),
+                decoration: const InputDecoration(labelText: '결제금액(amount)'),
                 initialValue: '50000',
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 onSaved: (String? value) {
                   LocalConfig.uiState.amount = int.parse(value!);
                 },
@@ -100,14 +93,18 @@ class WidgetHomeState extends State<WidgetHome> {
                 onChanged: (Currency? newValue) {
                   LocalConfig.uiState.currency = newValue ?? Currency.KRW;
                 },
-                items: Currency.values.map<DropdownMenuItem<Currency>>((Currency c) {
-                  return DropdownMenuItem<Currency>(value: c, child: Text(c.name));
-                }).toList(),
+                items:
+                    Currency.values.map<DropdownMenuItem<Currency>>((
+                      Currency c,
+                    ) {
+                      return DropdownMenuItem<Currency>(
+                        value: c,
+                        child: Text(c.name),
+                      );
+                    }).toList(),
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  labelText: '국가 코드',
-                ),
+                decoration: const InputDecoration(labelText: '국가 코드'),
                 initialValue: LocalConfig.uiState.country,
                 keyboardType: TextInputType.text,
                 onSaved: (String? value) {
@@ -118,13 +115,14 @@ class WidgetHomeState extends State<WidgetHome> {
                 decoration: const InputDecoration(
                   labelText: 'Variant Key (Method)',
                 ),
-                initialValue: (() {
-                  try {
-                    return LocalConfig.uiState.variantKeyMethod;
-                  } catch (e) {
-                    return null;
-                  }
-                })(),
+                initialValue:
+                    (() {
+                      try {
+                        return LocalConfig.uiState.variantKeyMethod;
+                      } catch (e) {
+                        return null;
+                      }
+                    })(),
                 keyboardType: TextInputType.text,
                 onSaved: (String? value) {
                   LocalConfig.uiState.variantKeyMethod = value;
@@ -134,65 +132,68 @@ class WidgetHomeState extends State<WidgetHome> {
                 decoration: const InputDecoration(
                   labelText: 'Variant Key (Agreement)',
                 ),
-                initialValue: (() {
-                  try {
-                    return LocalConfig.uiState.variantKeyAgreement;
-                  } catch (e) {
-                    return null;
-                  }
-                })(),
+                initialValue:
+                    (() {
+                      try {
+                        return LocalConfig.uiState.variantKeyAgreement;
+                      } catch (e) {
+                        return null;
+                      }
+                    })(),
                 keyboardType: TextInputType.text,
                 onSaved: (String? value) {
                   LocalConfig.uiState.variantKeyAgreement = value;
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Redirect Url',
-                ),
-                initialValue: (() {
-                  try {
-                    return LocalConfig.uiState.redirectUrl;
-                  } catch (e) {
-                    return null;
-                  }
-                })(),
+                decoration: const InputDecoration(labelText: 'Redirect Url'),
+                initialValue:
+                    (() {
+                      try {
+                        return LocalConfig.uiState.redirectUrl;
+                      } catch (e) {
+                        return null;
+                      }
+                    })(),
                 keyboardType: TextInputType.text,
                 onSaved: (String? value) {
                   LocalConfig.uiState.redirectUrl = value;
                 },
               ),
               Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      _form.currentState!.save();
-                      PaymentInfo data = PaymentInfo(
-                        orderId: orderId,
-                        orderName: orderName,
-                        appScheme: Platform.isIOS ? 'example://' : null,
-                      );
-                      var result = await Get.to(
-                        () => PaymentWidgetExamplePage(
-                          data: data,
-                          info: LocalConfig.uiState,
-                        ),
-                        popGesture: Platform.isIOS,
-                        fullscreenDialog: Platform.isAndroid,
-                      );
-                      if (result != null) {
-                        Get.toNamed("/result", arguments: result);
-                      }
-                    },
-                    child: const Text(
-                      '결제하기',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    _form.currentState!.save();
+                    PaymentInfo data = PaymentInfo(
+                      orderId: orderId,
+                      orderName: orderName,
+                      appScheme: Platform.isIOS ? 'example://' : null,
+                    );
+                    var result = await Get.to(
+                      () => {
+                        // PaymentWidgetExamplePage(
+                        //   data: data,
+                        //   info: LocalConfig.uiState,
+                        // ),
+                      },
+                      popGesture: Platform.isIOS,
+                      fullscreenDialog: Platform.isAndroid,
+                    );
+                    if (result != null) {
+                      Get.toNamed("/result", arguments: result);
+                    }
+                  },
+                  child: const Text(
+                    '결제하기',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ))
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -211,13 +212,14 @@ class UIState {
   String? variantKeyAgreement;
   String? redirectUrl;
 
-  UIState(
-      {required this.clientKey,
-      required this.customerKey,
-      required this.currency,
-      required this.country,
-      required this.amount,
-      this.variantKeyMethod,
-      this.variantKeyAgreement,
-      this.redirectUrl});
+  UIState({
+    required this.clientKey,
+    required this.customerKey,
+    required this.currency,
+    required this.country,
+    required this.amount,
+    this.variantKeyMethod,
+    this.variantKeyAgreement,
+    this.redirectUrl,
+  });
 }

@@ -33,12 +33,12 @@ class Like extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const PaymentCompleteScreen(),
-                  ),
-                );
+                // Navigator.push(
+                // context,
+                // MaterialPageRoute(
+                //   builder: (context) => const PaymentCompleteScreen(),
+                // ),
+                // );
               },
               child: const Text('예시코드-TossResultScreen'),
             ),

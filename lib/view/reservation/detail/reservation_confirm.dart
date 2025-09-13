@@ -213,21 +213,25 @@ class ReservationConfirmPage extends StatelessWidget {
 
     try {
       if (payResult is Success) {
-        // await TossPaymentService().confirmPayment(
-        //   paymentKey: payResult.paymentKey,
-        //   orderId: payResult.orderId,
-        //   amount: payResult.amount.toInt(),
-        // );
-        finalResult = payResult;
+        finalResult = Success(
+          payResult.paymentKey,
+          payResult.orderId,
+          payResult.amount,
+          <String, String>{
+            if (payResult.additionalParams != null)
+              ...payResult.additionalParams!,
+            'title': p.tourTitle ?? orderName,
+            'date': _formatToday(),
+          },
+        );
       } else {
         finalResult = payResult;
       }
     } catch (e) {
-      if (payResult is Success) {
-        finalResult = Fail('CONFIRM_FAILED', e.toString(), payResult.orderId);
-      } else {
-        finalResult = Fail('CONFIRM_FAILED', e.toString(), '');
-      }
+      finalResult =
+          (payResult is Success)
+              ? Fail('CONFIRM_FAILED', e.toString(), payResult.orderId)
+              : Fail('CONFIRM_FAILED', e.toString(), '');
     } finally {
       Navigator.of(context, rootNavigator: true).pop();
     }
@@ -498,4 +502,10 @@ String _timeRange(DateTime s, DateTime e) {
   }
 
   return '${fmt(s)} - ${fmt(e)}';
+}
+
+String _formatToday() {
+  final now = DateTime.now();
+  String two(int v) => v.toString().padLeft(2, '0');
+  return '${now.year}.${two(now.month)}.${two(now.day)}';
 }

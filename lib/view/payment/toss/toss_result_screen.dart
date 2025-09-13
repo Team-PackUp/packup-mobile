@@ -1,37 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:tosspayments_widget_sdk_flutter/model/tosspayments_result.dart';
 
-/// 결제 완료 화면
-/// - Success: 체크 아이콘 + 상품/위치/날짜/시간/금액 카드
-/// - Fail: 실패 안내
-/// 추가 정보는 result.additionalParams에서 받아옵니다.
-///  - title : 상품/프로그램 이름 (예: "서울숲에서 즐기는 활력 충전 야외 요가")
-///  - location : 위치 (예: "서울시 마포구")
-///  - date : 날짜 (예: "2025.02.01")
-///  - time : 시간 (예: "17:00-19:00")
+import 'package:packup/provider/tour/reservation/reservation_provider.dart';
+
 class PaymentCompleteScreen extends StatelessWidget {
   const PaymentCompleteScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final result = GoRouterState.of(context).extra;
+    final extra = GoRouterState.of(context).extra;
 
-    if (result is Fail) {
-      return _FailureView(fail: result);
+    if (extra is Fail) {
+      return _FailureView(fail: extra);
     }
-    if (result is! Success) {
+    if (extra is! Success) {
       return const Scaffold(
         body: SafeArea(child: Center(child: Text('잘못된 접근입니다.'))),
       );
     }
 
-    final params = result.additionalParams ?? {};
+    final params = extra.additionalParams ?? {};
     final title = params['title'] ?? params['orderName'] ?? '프로그램 이름';
-    final location = params['location'] ?? '위치 정보 없음';
-    final date = params['date'] ?? '날짜 정보 없음';
-    final time = params['time'] ?? '시간 정보 없음';
-    final amount = result.amount.toInt();
+    final dateStr = params['date'] ?? _formatToday();
+    final selected =
+        context.mounted ? context.read<ReservationProvider?>()?.selected : null;
+    final time =
+        selected != null
+            ? _timeRange(selected.startTime, selected.endTime)
+            : (params['time'] ?? '-');
+
+    final amount = extra.amount.toInt();
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +44,7 @@ class PaymentCompleteScreen extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
           child: Column(
             children: [
-              // 상단 완료 카드
+              // 상단 카드
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -56,7 +56,6 @@ class PaymentCompleteScreen extends StatelessWidget {
                   boxShadow: [
                     BoxShadow(
                       blurRadius: 12,
-                      spreadRadius: 0,
                       offset: const Offset(0, 6),
                       color: Colors.black.withOpacity(0.06),
                     ),
@@ -89,15 +88,16 @@ class PaymentCompleteScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     const Divider(height: 1),
                     const SizedBox(height: 14),
-                    _kvRow('위치', location),
-                    const SizedBox(height: 10),
+
+                    // 위치 행 제거, 날짜/시간만 노출
                     Row(
                       children: [
-                        Expanded(child: _kvRow('날짜', date)),
+                        Expanded(child: _kvRow('날짜', dateStr)),
                         const SizedBox(width: 12),
-                        Expanded(child: _kvRow('시간', time)),
+                        // Expanded(child: _kvRow('시간', time)),
                       ],
                     ),
+
                     const SizedBox(height: 16),
                     const Divider(height: 1),
                     const SizedBox(height: 10),
@@ -112,16 +112,18 @@ class PaymentCompleteScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              // 하단 버튼들
+              // Back to Home 버튼: 검은색 텍스트
               TextButton(
                 onPressed: () => context.go('/home'),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.black, // <= 요청사항
+                ),
                 child: const Text(
                   'Back to Home',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
               const SizedBox(height: 8),
-              // “결제내역 보러가기”는 요구사항상 제외
             ],
           ),
         ),
@@ -138,6 +140,18 @@ class PaymentCompleteScreen extends StatelessWidget {
       if (idxFromEnd > 1 && idxFromEnd % 3 == 1) buf.write(',');
     }
     return '${buf.toString()}원';
+  }
+
+  static String _formatToday() {
+    final now = DateTime.now();
+    String two(int v) => v.toString().padLeft(2, '0');
+    return '${now.year}.${two(now.month)}.${two(now.day)}';
+  }
+
+  static String _timeRange(DateTime s, DateTime e) {
+    String fmt(DateTime t) =>
+        '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+    return '${fmt(s)}-${fmt(e)}';
   }
 }
 
@@ -182,7 +196,7 @@ class _FailureView extends StatelessWidget {
     );
   }
 
-  Widget _errorRow(String k, String v) => Row(
+  static Widget _errorRow(String k, String v) => Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       SizedBox(
