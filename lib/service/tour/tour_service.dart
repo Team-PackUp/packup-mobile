@@ -126,4 +126,9 @@ class TourService {
         .map(TourSessionModel.fromJson)
         .toList();
   }
+
+  Future<ResultModel> getBookingTourList() async {
+
+    return await DioService().getRequest('/tour/user/booking');
+  }
 }

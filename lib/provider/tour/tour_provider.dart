@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:packup/model/common/page_response.dart';
 import 'package:packup/model/common/result_model.dart';
 import 'package:packup/model/guide/guide_model.dart';
@@ -10,7 +11,7 @@ import '../../model/tour/tour_detail_model.dart';
 
 /// 투어 목록 관련 상태를 관리하는 Provider 클래스입니다.
 /// 무한 스크롤, 선택된 투어 정보, 로딩 상태 등을 포함합니다.
-class TourProvider extends LoadingProvider {
+class TourProvider extends ChangeNotifier {
   final TourService _tourService = TourService();
 
   // 투어 목록
@@ -24,6 +25,10 @@ class TourProvider extends LoadingProvider {
   // tour detail
   TourDetailModel? _tour;
   TourDetailModel? get tour => _tour;
+
+  // 예약한 투어
+  List<TourModel> _bookingTourList = [];
+  List<TourModel> get bookingTourList => _bookingTourList;
 
   /// 현재 불러온 전체 투어 목록
   List<TourModel> get tourList => _tourList;
@@ -170,5 +175,30 @@ class TourProvider extends LoadingProvider {
     });
 
     notifyListeners();
+  }
+
+  Future<void> getBookingTourList() async {
+
+    _isFetching = true;
+
+    await LoadingService.run(() async {
+      try {
+
+        final ResultModel response;
+
+        response = await _tourService.getBookingTourList();
+
+        final List<dynamic> raw = response.response as List<dynamic>;
+        _bookingTourList = raw
+            .map((e) => TourModel.fromJson(e as Map<String, dynamic>))
+            .toList(growable: false);
+
+        notifyListeners();
+      } catch (e, stack) {
+        print('[TourProvider] 예외 발생: $e\n$stack');
+      } finally {
+        _isFetching = false;
+      }
+    });
   }
 }

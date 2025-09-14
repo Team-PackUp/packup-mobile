@@ -1,20 +1,33 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/model/tour/tour_model.dart';
-
+import 'package:packup/provider/tour/tour_provider.dart';
+import 'package:provider/provider.dart';
 import '../../common/util_widget.dart';
 import '../reservation_list.dart';
 
-class RecentReservationSection extends StatelessWidget {
+class RecentReservationSection extends StatefulWidget {
   final double w;
   final double h;
-  final List<TourModel> tourList;
 
-  const RecentReservationSection({super.key, required this.w, required this.h, required this.tourList});
+  const RecentReservationSection({super.key, required this.w, required this.h});
+
+  @override
+  State<RecentReservationSection> createState() => _RecentReservationSectionState();
+}
+
+class _RecentReservationSectionState extends State<RecentReservationSection> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<TourProvider>().getBookingTourList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<TourProvider>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -23,7 +36,7 @@ class RecentReservationSection extends StatelessWidget {
           children: [
             Expanded(
                 child: Text('최근 예약 내역',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: w * 0.045))),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: widget.w * 0.045))),
             CustomButton.textGestureDetector(
                 context: context,
                 onTap: () {
@@ -32,12 +45,12 @@ class RecentReservationSection extends StatelessWidget {
                 label: '모두보기'),
           ],
         ),
-        SizedBox(height: h * 0.015),
+        SizedBox(height: widget.h * 0.015),
         ReservationList(
-          w: w,
-          h: h,
-          tourList: tourList,
-          scrollable: false
+          w: widget.w,
+          h: widget.h,
+          tourList: provider.bookingTourList,
+          scrollable: false,
         ),
       ],
     );
