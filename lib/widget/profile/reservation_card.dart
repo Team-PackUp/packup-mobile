@@ -39,10 +39,18 @@ class ReservationCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SlideText(
-              title: title,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: w * 0.045),
+            Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SlideText(
+                  title: title,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: w * 0.045),
+                ),
+              _statusLabel(context, statusCode!, statusLabel!),
+              ]
             ),
+
             SizedBox(height: h * 0.02),
 
             Row(
@@ -100,12 +108,6 @@ class ReservationCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
-
-                Column(
-                  children: [
-                    _statusLabel(context, statusCode!, statusLabel!),
-                  ],
                 ),
               ],
             ),
