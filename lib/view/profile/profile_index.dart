@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:packup/provider/tour/tour_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/size_config.dart'; // sX/sY, sw/sh 익스텐션
-import '../../model/guide/guide_model.dart';
-import '../../model/tour/tour_model.dart';
-import '../../provider/alert_center/alert_center_provider.dart';
 import '../../provider/profile/contact_center/faq_provider.dart';
+import '../../provider/tour/reservation/reservation_list_provider.dart';
 import '../../provider/user/user_provider.dart';
 
 import '../../widget/common/alert_bell.dart';
@@ -27,7 +24,7 @@ class ProfileIndex extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => FaqProvider()),
-        ChangeNotifierProvider(create: (_) => TourProvider()),
+        ChangeNotifierProvider(create: (_) => ReservationListProvider()),
       ],
       child: const ProfileIndexContent(),
     );

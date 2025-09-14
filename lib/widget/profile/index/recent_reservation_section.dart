@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:packup/provider/tour/tour_provider.dart';
 import 'package:provider/provider.dart';
+import '../../../provider/tour/reservation/reservation_list_provider.dart';
 import '../../common/util_widget.dart';
 import '../reservation_list.dart';
 
@@ -21,13 +21,13 @@ class _RecentReservationSectionState extends State<RecentReservationSection> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      context.read<TourProvider>().getBookingTourList();
+      context.read<ReservationListProvider>().getBookingTourList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<TourProvider>();
+    final provider = context.watch<ReservationListProvider>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

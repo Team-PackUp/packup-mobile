@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:packup/provider/common/loading_provider.dart';
-import 'package:packup/provider/tour/tour_provider.dart';
+import 'package:packup/provider/tour/reservation/reservation_list_provider.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../widget/common/alert_bell.dart';
 import '../../../../widget/common/custom_appbar.dart';
 import '../../../../widget/profile/setting_account/reservation_manage/reservation_manage_section.dart';
@@ -15,7 +13,7 @@ class ReservationManage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => TourProvider()),
+        ChangeNotifierProvider(create: (_) => ReservationListProvider()),
       ],
       child: const ReservationManageContent(),
     );
@@ -35,7 +33,7 @@ class _ReservationManageContent extends State<ReservationManageContent> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      context.read<TourProvider>().getBookingTourList();
+      context.read<ReservationListProvider>().getBookingTourList();
     });
   }
 
@@ -51,7 +49,7 @@ class _ReservationManageContent extends State<ReservationManageContent> {
               mode: SearchMode.input,
               hint: '제목으로 검색',
               onChanged: (value) {
-                context.read<TourProvider>().filterBookingTourList(value);
+                context.read<ReservationListProvider>().filterBookingTourList(value);
               },
             ),
         ),

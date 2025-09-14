@@ -3,6 +3,7 @@ import 'package:packup/common/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:packup/provider/tour/tour_provider.dart';
 
+import '../../../../provider/tour/reservation/reservation_list_provider.dart';
 import '../../reservation_list.dart';
 
 class ReservationManageSection extends StatefulWidget {
@@ -14,7 +15,7 @@ class ReservationManageSection extends StatefulWidget {
 
 class _ReservationManageSectionState extends State<ReservationManageSection> {
   late final ScrollController _scrollController;
-  late TourProvider _tourProvider;
+  late ReservationListProvider _tourProvider;
 
   @override
   void initState() {
@@ -25,7 +26,7 @@ class _ReservationManageSectionState extends State<ReservationManageSection> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _tourProvider = context.read<TourProvider>();
+    _tourProvider = context.read<ReservationListProvider>();
   }
 
   void _scrollListener() {
@@ -47,7 +48,7 @@ class _ReservationManageSectionState extends State<ReservationManageSection> {
 
   @override
   Widget build(BuildContext context) {
-    final tourProvider = context.watch<TourProvider>();
+    final tourProvider = context.watch<ReservationListProvider>();
     final tourList = tourProvider.bookingTourList;
     final isLoading = tourProvider.isLoading;
 
