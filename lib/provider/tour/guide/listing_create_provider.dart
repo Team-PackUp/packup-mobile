@@ -311,7 +311,6 @@ class ListingCreateProvider extends ChangeNotifier {
     }).toList();
   }
 
-  /// 신규/수정 통합 제출
   Future<bool> submit() async {
     if (isSubmitting) return false;
     isSubmitting = true;
@@ -323,10 +322,8 @@ class ListingCreateProvider extends ChangeNotifier {
       lastRequest = req;
 
       if (_editing) {
-        // ✅ 수정 (id는 String으로 사용)
         await _service.updateListing(_editingId!, req);
       } else {
-        // ✅ 신규 생성
         await _service.createTourReq(req);
       }
 
