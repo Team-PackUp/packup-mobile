@@ -34,7 +34,7 @@ class _ReservationManageSectionState extends State<ReservationManageSection> {
 
     if (pos.pixels >= pos.maxScrollExtent - 100) {
       if (_tourProvider.isLoading) return;
-      _tourProvider.getTourList();
+      _tourProvider.getBookingTourList();
     }
   }
 
@@ -48,7 +48,7 @@ class _ReservationManageSectionState extends State<ReservationManageSection> {
   @override
   Widget build(BuildContext context) {
     final tourProvider = context.watch<TourProvider>();
-    final tourList = tourProvider.tourList;
+    final tourList = tourProvider.bookingTourList;
     final isLoading = tourProvider.isLoading;
 
     return LayoutBuilder(

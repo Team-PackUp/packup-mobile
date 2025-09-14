@@ -34,8 +34,8 @@ class _ReservationManageContent extends State<ReservationManageContent> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<TourProvider>().getTourList();
+    Future.microtask(() {
+      context.read<TourProvider>().getBookingTourList();
     });
   }
 
@@ -49,9 +49,9 @@ class _ReservationManageContent extends State<ReservationManageContent> {
           alert: AlertBell(),
           bottom: CustomSearch(
               mode: SearchMode.input,
-              hint: '제목이나 가이드 이름으로 검색',
+              hint: '제목으로 검색',
               onChanged: (value) {
-                context.read<TourProvider>().filterTourList(value);
+                context.read<TourProvider>().filterBookingTourList(value);
               },
             ),
         ),

@@ -127,8 +127,9 @@ class TourService {
         .toList();
   }
 
-  Future<ResultModel> getBookingTourList() async {
+  Future<ResultModel> getBookingTourList({required page, required size}) async {
+    final params = {'page': page, 'size': size};
 
-    return await DioService().getRequest('/tour/user/booking');
+    return await DioService().getRequest('/tour/user/booking', params);
   }
 }

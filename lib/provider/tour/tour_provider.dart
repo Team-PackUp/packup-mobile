@@ -29,6 +29,8 @@ class TourProvider extends ChangeNotifier {
   // 예약한 투어
   List<TourModel> _bookingTourList = [];
   List<TourModel> get bookingTourList => _bookingTourList;
+  int _bookingSize = 20;
+  int _bookingCurrentPage = 1;
 
   /// 현재 불러온 전체 투어 목록
   List<TourModel> get tourList => _tourList;
@@ -177,7 +179,11 @@ class TourProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getBookingTourList() async {
+  Future<void> getBookingTourList({int? size}) async {
+
+    if(size != null) {
+      _bookingSize = size;
+    }
 
     _isFetching = true;
 
@@ -186,12 +192,19 @@ class TourProvider extends ChangeNotifier {
 
         final ResultModel response;
 
-        response = await _tourService.getBookingTourList();
+        response = await _tourService.getBookingTourList(
+          page: _bookingCurrentPage,
+          size: _bookingSize,
+        );
 
-        final List<dynamic> raw = response.response as List<dynamic>;
-        _bookingTourList = raw
-            .map((e) => TourModel.fromJson(e as Map<String, dynamic>))
-            .toList(growable: false);
+        final data = response.response;
+
+        final page = PageResponse.fromJson(data, (e) => TourModel.fromJson(e));
+
+        _bookingTourList.addAll(page.content);
+        _originalList.addAll(_bookingTourList);
+        _hasNextPage = !page.last;
+        _currentPage++;
 
         notifyListeners();
       } catch (e, stack) {
@@ -200,5 +213,17 @@ class TourProvider extends ChangeNotifier {
         _isFetching = false;
       }
     });
+  }
+
+  void filterBookingTourList(String keyword) {
+    if (keyword.isEmpty) {
+      _bookingTourList = List.from(_originalList);
+    } else {
+      _bookingTourList = _originalList.where((tour) {
+        final title = tour.tourTitle ?? '';
+        return title.contains(keyword);
+      }).toList();
+    }
+    notifyListeners();
   }
 }
