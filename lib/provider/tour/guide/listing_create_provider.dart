@@ -1,5 +1,7 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:packup/model/tour/tour_create_request.dart';
+import 'package:packup/service/common/s3_upload_service.dart';
 import 'package:packup/service/tour/tour_service.dart';
 
 typedef StepBuilder = Widget Function(BuildContext context);
@@ -18,6 +20,11 @@ class ListingStepConfig {
 
 class ListingCreateProvider extends ChangeNotifier {
   String? _gs(Map<String, dynamic> m, String key) => (m[key])?.toString();
+
+  final S3UploadService _s3 = S3UploadService();
+
+  List<double> photoUploadProgress = const [];
+  String? photoUploadError;
 
   int? _gi(Map<String, dynamic> m, String key) {
     final v = m[key];
@@ -144,7 +151,7 @@ class ListingCreateProvider extends ChangeNotifier {
 
   // ----------------- 수정 모드 -----------------
   bool _editing = false;
-  String? _editingId; // 리스팅/투어 ID (서버 키, 문자열로 통일)
+  String? _editingId; // 리스팅/투어 ID
   bool get isEditing => _editing;
   String? get editingId => _editingId;
 
@@ -162,7 +169,6 @@ class ListingCreateProvider extends ChangeNotifier {
     try {
       final Map<String, dynamic> detail = await _service.fetchListingDetail(id);
 
-      // 실제 응답 키에 맞게 수정
       final title = _gs(detail, 'tourTitle') ?? '';
       final introduce = _gs(detail, 'tourIntroduce') ?? '';
       final notes = _gs(detail, 'tourNotes'); // meet.placeLabel
@@ -171,7 +177,7 @@ class ListingCreateProvider extends ChangeNotifier {
       final meetLng = _gd(detail, 'meetUpLng');
       final locationCode = _gi(detail, 'tourLocationCode');
 
-      final photos = _glAsString(detail, 'photos'); // 원격 URL 배열
+      final photos = _glAsString(detail, 'photos'); // 키 or URL
       final activities = (detail['activities'] as List?) ?? const [];
 
       final price = _gi(detail, 'tourPrice') ?? 0;
@@ -185,11 +191,9 @@ class ListingCreateProvider extends ChangeNotifier {
       final memo = _gs(detail, 'memo');
 
       setFields({
-        // 기본 정보
         'basic.title': title.trim(),
         'basic.description': introduce.trim(),
 
-        // 만남 장소/주소
         'meet.placeLabel': notes ?? '',
         'meet.state': meetAddr ?? '',
         'meet.road': '',
@@ -198,42 +202,47 @@ class ListingCreateProvider extends ChangeNotifier {
         'meet.lng': meetLng,
         'meet.locationCode': locationCode,
 
-        // 사진
-        'photos.files': photos,
+        'photos.files': photos, // 서버 보관값(키/URL)
 
-        // 일정표
         'itinerary.items': _mapActivitiesFromMap(activities),
         'itinerary.count': activities.length,
 
-        // 가격
         'pricing.basic': price,
         'pricing.premiumMin': (privateFlag == 'Y') ? (privatePrice ?? 0) : 0,
 
-        // 키워드
         'keywords.selected': keywords,
 
-        // 인원
         'people.min': minHead,
         'people.max': maxHead,
 
-        // 제공/세부정보
         'provision.driveGuests': _ynToBool(transportYN),
         'provision.visitAttractions': _inferVisit(memo),
         'provision.explainHistory': _inferExplain(memo),
       });
+
+      // 프리뷰 URL 확보
+      final keys =
+          <String>[
+            ...(getField<List>('photos.urls') ?? const []).map(
+              (e) => e.toString(),
+            ),
+            ...photos.map((e) => e.toString()),
+          ].where((e) => e.isNotEmpty).toList();
+
+      if (keys.isNotEmpty) {
+        final preview = await _s3.viewUrlsForKeys(keys);
+        setFields({'photos.previewUrls': preview, 'photos.count': keys.length});
+      }
     } catch (e) {
       detailError = e;
     } finally {
       loadingDetail = false;
-
       final i = steps.indexWhere((e) => e.id == 'review');
       if (i >= 0) _index = i;
-
       notifyListeners();
     }
   }
 
-  // 메모 문자열에서 방문/설명 여부 추론 (없으면 null 유지)
   bool? _inferVisit(String? memo) {
     if (memo == null) return null;
     if (memo.contains('관광명소 방문:예')) return true;
@@ -256,7 +265,6 @@ class ListingCreateProvider extends ChangeNotifier {
     return null;
   }
 
-  // 서버 activities(맵 리스트) → 폼 아이템으로 변환
   static List<Map<String, dynamic>> _mapActivitiesFromMap(List raw) {
     return raw.asMap().entries.map((entry) {
       final i = entry.key;
@@ -277,7 +285,6 @@ class ListingCreateProvider extends ChangeNotifier {
       final dur =
           (m['activityDurationMinute'] ?? m['durationMin'] ?? m['minutes']);
 
-      // 썸네일/이미지 경로 수집
       List<String> thumbs = [];
       if (m['thumbnails'] is List) {
         thumbs =
@@ -309,6 +316,100 @@ class ListingCreateProvider extends ChangeNotifier {
         'thumbs': thumbs,
       };
     }).toList();
+  }
+
+  /// 로컬 이미지 업로드 + 표시용 URL 확보
+  Future<bool> ensurePhotosUploaded() async {
+    photoUploadError = null;
+
+    final localPaths =
+        (getField<List>('photos.localPaths') ?? const [])
+            .map((e) => e.toString())
+            .toList();
+
+    // 기존(원격) 값: 키 or URL
+    final existing = <String>[
+      ...(getField<List>('photos.urls') ?? const []).map((e) => e.toString()),
+      ...(getField<List>('photos.files') ?? const []).map((e) => e.toString()),
+    ];
+
+    if (localPaths.isEmpty) {
+      if (existing.isNotEmpty) {
+        final preview = await _s3.viewUrlsForKeys(existing);
+        setFields({
+          'photos.previewUrls': preview,
+          'photos.count': existing.length,
+        });
+      }
+      return true;
+    }
+
+    photoUploadProgress = List<double>.filled(localPaths.length, 0.0);
+    notifyListeners();
+
+    try {
+      final coverIndexCombined = getField<int>('photos.coverIndex') ?? 0;
+
+      // cover가 로컬 영역에 있으면 그것부터 업로드
+      final existingLen = existing.length;
+      final localCoverIndex =
+          (coverIndexCombined >= existingLen)
+              ? (coverIndexCombined - existingLen)
+              : null;
+
+      final order = <int>[
+        if (localCoverIndex != null &&
+            localCoverIndex >= 0 &&
+            localCoverIndex < localPaths.length)
+          localCoverIndex,
+        ...List.generate(
+          localPaths.length,
+          (i) => i,
+        ).where((i) => i != localCoverIndex),
+      ];
+
+      final uploadedKeys = <String>[];
+      for (final idx in order) {
+        final path = localPaths[idx];
+        final xf = XFile(path);
+        final key = await _s3.uploadXFileAndReturnKey(
+          xf,
+          prefix: "tour/gallery/",
+          onProgress: (p) {
+            photoUploadProgress[idx] = p;
+            notifyListeners();
+          },
+        );
+        uploadedKeys.add(key);
+        photoUploadProgress[idx] = 1.0;
+        notifyListeners();
+      }
+
+      // 최종 병합 및 커버 맨 앞으로
+      final merged = <String>[...existing, ...uploadedKeys];
+      if (merged.isNotEmpty &&
+          coverIndexCombined >= 0 &&
+          coverIndexCombined < merged.length) {
+        final coverKey = merged.removeAt(coverIndexCombined);
+        merged.insert(0, coverKey);
+      }
+
+      setFields({
+        'photos.urls': merged, // 서버 저장용(키/URL 혼재 가능)
+        'photos.localPaths': const <String>[],
+        'photos.count': merged.length,
+      });
+
+      // 프리뷰 URL
+      final preview = await _s3.viewUrlsForKeys(merged);
+      setFields({'photos.previewUrls': preview});
+
+      return true;
+    } catch (e) {
+      photoUploadError = e.toString();
+      notifyListeners();
+      return false;
+    }
   }
 
   Future<bool> submit() async {
@@ -370,6 +471,7 @@ class ListingCreateProvider extends ChangeNotifier {
     final lng = getField<double>('meet.lng');
     final locCode = getField<int>('meet.locationCode');
 
+    // 서버로 보내는 소스: photos.urls (키/URL)
     final photoUrls = <String>[
       ...(getField<List>('photos.urls') ?? const <dynamic>[]).map(
         (e) => e.toString(),
@@ -382,7 +484,7 @@ class ListingCreateProvider extends ChangeNotifier {
         ),
       );
     }
-    // 서버에서 내려온 원격 파일 유지
+    // 서버에서 내려온 파일 유지
     final files =
         (getField<List>('photos.files') ?? const <dynamic>[])
             .map((e) => e.toString())
