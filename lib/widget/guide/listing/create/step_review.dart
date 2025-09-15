@@ -15,9 +15,6 @@ class StepReview extends StatelessWidget {
     final title = (p.getField<String>('basic.title') ?? '').trim();
     final desc = (p.getField<String>('basic.description') ?? '').trim();
 
-    // final place = p.getField<String>('meet.placeName') ?? '';
-    // final address = p.getField<String>('meet.address') ?? '';
-
     final state = p.getField<String>('meet.state') ?? '';
     final road = p.getField<String>('meet.road') ?? '';
     final detail = p.getField<String>('meet.detail') ?? '';
@@ -29,11 +26,39 @@ class StepReview extends StatelessWidget {
       detail,
     ].where((e) => e.trim().isNotEmpty).join(' ');
 
+    // 표시 리스트: previewUrls 우선, 없으면 urls 중 http, 없으면 files, 마지막으로 localPaths
+    final preview =
+        (p.getField<List>('photos.previewUrls') ?? const [])
+            .map((e) => e.toString())
+            .toList();
+    final urlsHttp =
+        (p.getField<List>('photos.urls') ?? const [])
+            .map((e) => e.toString())
+            .where((e) => e.startsWith('http'))
+            .toList();
     final files =
-        p.getField<List>('photos.localPaths') ??
-        p.getField<List>('photos.files') ??
-        const [];
-    final cover = files.isNotEmpty ? files.first : null;
+        (p.getField<List>('photos.files') ?? const [])
+            .map((e) => e.toString())
+            .toList();
+    final locals =
+        (p.getField<List>('photos.localPaths') ?? const [])
+            .map((e) => e.toString())
+            .toList();
+
+    final displayList =
+        preview.isNotEmpty
+            ? preview
+            : (urlsHttp.isNotEmpty
+                ? urlsHttp
+                : (files.isNotEmpty ? files : locals));
+
+    final coverIndex = p.getField<int>('photos.coverIndex') ?? 0;
+    final cover =
+        (displayList.isNotEmpty &&
+                coverIndex >= 0 &&
+                coverIndex < displayList.length)
+            ? displayList[coverIndex]
+            : (displayList.isNotEmpty ? displayList.first : null);
 
     final itinCount = p.getField<int>('itinerary.count') ?? 0;
     final basicPrice = p.getField<int>('pricing.basic') ?? 0;
@@ -95,20 +120,12 @@ class StepReview extends StatelessWidget {
               subtitle: fullAddress.isEmpty ? null : fullAddress,
               onTap: () => context.read<ListingCreateProvider>().jumpTo('addr'),
             ),
-            // _NavTile(
-            //   icon: Icons.place_outlined,
-            //   title: place.isEmpty ? '장소 미선택' : place,
-            //   subtitle: address.isEmpty ? null : address,
-            //   onTap:
-            //       () =>
-            //           context.read<ListingCreateProvider>().jumpTo('location'),
-            // ),
             _SectionDivider(),
 
             _NavTile(
               icon: Icons.photo_library_outlined,
               title: '사진',
-              subtitle: '${files.length}장 선택됨',
+              subtitle: '${displayList.length}장 선택됨',
               onTap:
                   () => context.read<ListingCreateProvider>().jumpTo('photos'),
             ),
