@@ -151,10 +151,16 @@ class _BottomBar extends StatelessWidget {
         (p.getField<String>('meet.state')?.isNotEmpty ?? false) &&
         (p.getField<String>('meet.placeLabel')?.isNotEmpty ?? false);
 
-    final photoFiles = p.getField<List>('photos.files');
-    final localPaths = p.getField<List>('photos.localPaths');
-    final photoCount = (photoFiles?.length ?? localPaths?.length ?? 0);
-    final canNextOnPhotos = photoCount >= 5;
+    // 사진 스텝에서 '다음' 버튼을 누를 수 있게 하는 기준(선택 수 == 5)
+    final selectedCount =
+        (p.getField<List>('photos.files') ?? const []).length +
+        (p.getField<List>('photos.localPaths') ?? const []).length;
+    final canNextOnPhotosStep = selectedCount == 5;
+
+    // 최종 제출 단계에서의 사진 완료 기준(업로드 완료)
+    final uploadedKeys = (p.getField<List>('photos.urls') ?? const []);
+    final pendingLocal = (p.getField<List>('photos.localPaths') ?? const []);
+    final photosReady = uploadedKeys.length == 5 && pendingLocal.isEmpty;
 
     final itinCount = p.getField<int>('itinerary.count') ?? 0;
     final canNextOnItinerary = itinCount >= 1;
@@ -164,7 +170,7 @@ class _BottomBar extends StatelessWidget {
         canNextOnTitle &&
         canNextOnDesc &&
         canNextOnLocation &&
-        canNextOnPhotos &&
+        photosReady && // 업로드 완료 기준
         canNextOnItinerary &&
         basic > 0 &&
         canSubmitProvision;
@@ -173,8 +179,10 @@ class _BottomBar extends StatelessWidget {
     if (id == 'keywords') enabled = canNextOnKeywords;
     if (id == 'title') enabled = canNextOnTitle;
     if (id == 'desc') enabled = canNextOnDesc;
+    // 주소 스텝을 강제하려면 다음 줄 주석 해제
     // if (id == 'addr') enabled = canNextOnLocation;
-    if (id == 'photos') enabled = canNextOnPhotos;
+
+    if (id == 'photos') enabled = canNextOnPhotosStep; // 선택 5장 기준
     if (id == 'itinerary') enabled = canNextOnItinerary;
     if (id == 'price_basic') enabled = basic > 0;
     if (id == 'price_premium') enabled = true;
@@ -243,6 +251,7 @@ class _BottomBar extends StatelessWidget {
                                     );
                                   }
                                 } else {
+                                  // 각 스텝 guard 수행(사진 스텝에서 업로드 실행 포함)
                                   await p.nextWithGuard();
                                 }
                               }
